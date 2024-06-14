@@ -12,10 +12,22 @@
     "expo": "~51.0.14",
     "expo-status-bar": "~1.12.1",
     "react": "18.2.0",
-    "react-native": "0.74.2"
+    "react-native": "0.74.2",
+    "react-native-animatable": "^1.4.0",
+    "react-native-magnus": "^1.0.63",
+    "react-native-modal": "^13.0.1",
+    "react-native-vector-icons": "^10.1.0",
+    "react-native-web": "~0.19.10",
+    "react-dom": "18.2.0",
+    "@expo/metro-runtime": "~3.2.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0"
+    "@babel/core": "^7.20.0",
+    "@tsconfig/react-native": "^3.0.5",
+    "@types/jest": "^29.5.12",
+    "@types/react": "^18.3.3",
+    "@types/react-test-renderer": "^18.3.0",
+    "typescript": "^5.4.5"
   },
   "private": true
 }
