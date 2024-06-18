@@ -1,4 +1,5 @@
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
+import InputField from "@/components/partials/InputField";
 import { fontHauora } from "@/constant/constant";
 import React from "react";
 import { FlatList, StyleSheet } from "react-native";
@@ -11,11 +12,11 @@ const formFields = [
   },
   {
     placeholder: "Create a Password",
-    icon: "eye-off-outline",
+    icon: "eye-outline",
   },
   {
     placeholder: "Confirm Password",
-    icon: "eye-off-outline",
+    icon: "eye-outline",
   },
 ];
 
@@ -37,29 +38,11 @@ const Register = () => {
           style={{ marginBottom: 8 }}
           data={formFields}
           renderItem={({ item, index }) => (
-            <Input
+            <InputField
               placeholder={item.placeholder}
-              mb={index === formFields.length - 1 ? 0 : 16}
-              fontFamily={fontHauora}
-              placeholderTextColor={"#494949"}
-              color="#494949"
-              fontSize={18}
-              px={12}
-              py={16}
-              focusBorderColor="#222222"
-              borderColor="#494949"
-              suffix={
-                item.icon ? (
-                  <Icon
-                    name="eye-outline"
-                    color="gray900"
-                    fontFamily="Ionicons"
-                    fontSize={24}
-                  />
-                ) : (
-                  ""
-                )
-              }
+              icon={item.icon || ""}
+              iconFamily="Ionicons"
+              marginBottom={index === formFields.length - 1 ? 0 : 16}
             />
           )}
           keyExtractor={(item, i) => `${i}`}
@@ -98,6 +81,8 @@ const Register = () => {
           fontFamily={fontHauora}
           color="#7B7B7B"
           textAlign="center"
+          maxW={306}
+          mx={"auto"}
         >
           By singing up, I agree to Smoll <Text>Terms & Conditions</Text> and{" "}
           <Text>Privacy Policy</Text>

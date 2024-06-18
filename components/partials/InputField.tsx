@@ -1,6 +1,6 @@
 import { fontHauora } from "@/constant/constant";
-import React, { useState } from "react";
-import { Dimensions, StyleSheet } from "react-native";
+import React, { useRef, useState } from "react";
+import { Animated, StyleProp, StyleSheet, TextStyle } from "react-native";
 import { Button, Div, Icon, Input, Text } from "react-native-magnus";
 import { iconFontFamilyType } from "react-native-magnus/lib/typescript/src/ui/icon/icon.type";
 
@@ -9,23 +9,56 @@ const InputField: React.FC<{
   iconFamily?: iconFontFamilyType;
   placeholder: string;
   marginBottom?: number;
+  floatingPlaceholder?: boolean;
+  borderRadius?: number;
+  inputStyle?: StyleProp<TextStyle>;
 }> = (props) => {
   const [isFocused, setIsFocused] = useState(false);
-  const floatingPlaceholder = true;
+  const { floatingPlaceholder } = props;
+
+  const topPosition = useRef(new Animated.Value(16)).current; // Initial top position
+
+  const handleFocus = () => {
+    setIsFocused(true);
+    Animated.timing(topPosition, {
+      toValue: 8, // New top position when focused
+      duration: 300, // Animation duration in ms
+      useNativeDriver: false, // Set to true if only transforming (translateX, translateY)
+    }).start();
+  };
+
+  const handleBlur = () => {
+    setIsFocused(false);
+    Animated.timing(topPosition, {
+      toValue: 16, // Reset top position when not focused
+      duration: 200, // Animation duration in ms
+      useNativeDriver: false, // Set to true if only transforming (translateX, translateY)
+    }).start();
+  };
+
+  const externalStyles: {} = props.inputStyle || {};
 
   return (
     <Div style={styles.container}>
-      <Text
-        fontSize={isFocused ? "sm" : "xl"}
-        style={{
-          ...styles.floatingLabel,
-          ...(isFocused ? styles.focusedFloatingLabel : {}),
-        }}
-      >
-        {props.placeholder}
-      </Text>
+      {floatingPlaceholder && (
+        <Animated.Text
+          // fontSize={isFocused ? 16 : 18}
+          style={{
+            ...styles.floatingLabel,
+            fontSize: isFocused ? 12 : 18,
+            top: topPosition, // Use Animated.Value for the top style
+            color: "#494949",
+          }}
+        >
+          {props.placeholder}
+        </Animated.Text>
+      )}
 
       <Input
+        style={{
+          borderRadius: props.borderRadius ? props.borderRadius : 8,
+          ...externalStyles,
+        }}
         placeholder={floatingPlaceholder ? "" : props.placeholder}
         mb={props.marginBottom ? props.marginBottom : 0}
         fontFamily={fontHauora}
@@ -37,14 +70,11 @@ const InputField: React.FC<{
         // py={floatingPlaceholder ? 0 : 16}
         pt={floatingPlaceholder ? 24 : 16}
         pb={floatingPlaceholder ? 8 : 16}
-        focusBorderColor="#222222"
+        // focusBorderColor="#222222"
+        focusBorderColor="#427594"
         borderColor="#494949"
-        onFocus={() => {
-          setIsFocused(true);
-        }}
-        onBlur={() => {
-          setIsFocused(false);
-        }}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
         suffix={
           props.icon ? (
             <Button py={0} px={0} bg={"transparent"} ripple>
@@ -72,12 +102,7 @@ const styles = StyleSheet.create({
   },
   floatingLabel: {
     position: "absolute",
-    // zIndex: 10,
     left: 12,
-    top: 16,
     pointerEvents: "none",
-  },
-  focusedFloatingLabel: {
-    top: 8,
   },
 });

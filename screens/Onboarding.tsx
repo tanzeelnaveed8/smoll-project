@@ -82,28 +82,6 @@ const Onboarding = () => {
         source={require("./../assets/logo.png")}
       />
 
-      {/* <ScrollView
-        horizontal
-        style={styles.cardContainer}
-        ref={cardContainerRef}
-      >
-        <OnboardingCard
-          img={require("../../assets/onboarding/slide-1.png")}
-          heading="Talk to veterinarians you can trust"
-          text="Expert, caring vets. Your pet deserves the best."
-        />
-        <OnboardingCard
-          img={require("../../assets/onboarding/slide-1.png")}
-          heading="Talk to veterinarians you can trust"
-          text="Expert, caring vets. Your pet deserves the best."
-        />
-        <OnboardingCard
-          img={require("../../assets/onboarding/slide-1.png")}
-          heading="Talk to veterinarians you can trust"
-          text="Expert, caring vets. Your pet deserves the best."
-        />
-      </ScrollView> */}
-
       <View style={styles.cardContainer}>
         <OnboardingCard
           img={require("../assets/onboarding/slide-1.png")}

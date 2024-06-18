@@ -6,10 +6,13 @@ import { StyleSheet } from "react-native";
 
 import * as Font from "expo-font";
 import { useEffect, useState } from "react";
-import Register from "./screens/Auth/Register";
-import VerifyEmailScreen from "./screens/Auth/VerifyEmailScreen";
+import Register from "./screens/auth/Register";
+import VerifyEmailScreen from "./screens/auth/VerifyEmailScreen";
 import WelcomeMessageScreen from "./screens/WelcomeMessageScreen";
-import LoginScreen from "./screens/Auth/LoginScreen";
+import LoginScreen from "./screens/auth/LoginScreen";
+import UserProfileScreen from "./screens/profile/UserProfileScreen";
+import { fontHauora } from "./constant/constant";
+import PetProfileScreen from "./screens/PetProfile/PetProfileScreen";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -22,6 +25,14 @@ const theme = {
     "5xl": 28,
     xl: 18,
     md: 14,
+  },
+  components: {
+    Text: {
+      fontFamily: fontHauora,
+    },
+    Input: {
+      fontFamily: fontHauora,
+    },
   },
 };
 
@@ -40,9 +51,12 @@ export default function App() {
       <Div style={styles.container}>
         {/* <Onboarding /> */}
         {/* <Register /> */}
+        {/* <LoginScreen /> */}
         {/* <VerifyEmailScreen /> */}
         {/* <WelcomeMessageScreen /> */}
-        <LoginScreen />
+        {/* <LoginScreen /> */}
+        {/* <UserProfileScreen /> */}
+        <PetProfileScreen />
       </Div>
     </ThemeProvider>
   );
