@@ -8,16 +8,20 @@ import { Dimensions } from "react-native";
 import PetNameScreen from "./PetNameScreen";
 import PetGenderScreen from "./PetGenderScreen";
 import PetAnimalTypeScreen from "./PetAnimalTypeScreen";
+import PetBirthDateScreen from "./PetBirthDateScreen";
+import PetBreedScreen from "./PetBreedScreen";
+import PetIsNeutralScreen from "./PetIsNeutralScreen";
+import PetBasicDetails from "./PetBasicDetails";
 
 const windowWidth = Dimensions.get("window").width;
 
 const PetProfileScreen = () => {
   const [progress, setProgress] = useState(0.25);
-  const [currentStep, setCurrentStep] = useState(2);
+  const [currentStep, setCurrentStep] = useState(6);
 
   const nextFormHandler = () => {
     setCurrentStep((prev) => prev + 1);
-    setProgress((prev) => prev + 0.25);
+    setProgress((prev) => prev + 0.22);
   };
 
   return (
@@ -34,9 +38,12 @@ const PetProfileScreen = () => {
 
         {/* screens */}
         {currentStep === 0 && <PetNameScreen />}
-        {/* dob screen */}
+        {currentStep === 1 && <PetBirthDateScreen />}
         {currentStep === 2 && <PetGenderScreen />}
         {currentStep === 3 && <PetAnimalTypeScreen />}
+        {currentStep === 4 && <PetBreedScreen />}
+        {currentStep === 5 && <PetIsNeutralScreen />}
+        {currentStep === 6 && <PetBasicDetails />}
       </Div>
 
       <Div>

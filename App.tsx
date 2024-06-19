@@ -1,8 +1,8 @@
 import { StatusBar } from "expo-status-bar";
-import { Div, Text } from "react-native-magnus";
+import { Div, ScrollDiv, Text } from "react-native-magnus";
 import { ThemeProvider } from "react-native-magnus";
 import Onboarding from "./screens/Onboarding";
-import { StyleSheet } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 
 import * as Font from "expo-font";
 import { useEffect, useState } from "react";
@@ -12,7 +12,9 @@ import WelcomeMessageScreen from "./screens/WelcomeMessageScreen";
 import LoginScreen from "./screens/auth/LoginScreen";
 import UserProfileScreen from "./screens/profile/UserProfileScreen";
 import { fontHauora } from "./constant/constant";
-import PetProfileScreen from "./screens/PetProfile/PetProfileScreen";
+import PetProfileScreen from "./screens/petProfile/PetProfileScreen";
+import { Dimensions } from "react-native";
+import PetBookingScreen from "./screens/bookingForm/PetBookingScreen";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -25,6 +27,7 @@ const theme = {
     "5xl": 28,
     xl: 18,
     md: 14,
+    lg: 16,
   },
   components: {
     Text: {
@@ -33,8 +36,13 @@ const theme = {
     Input: {
       fontFamily: fontHauora,
     },
+    Button: {
+      fontFamily: fontHauora,
+    },
   },
 };
+
+const windowHeight = Dimensions.get("window").height;
 
 export default function App() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -47,24 +55,28 @@ export default function App() {
     return <Text>Loading...</Text>; // Or any other loading component
   }
   return (
-    <ThemeProvider theme={theme}>
-      <Div style={styles.container}>
-        {/* <Onboarding /> */}
-        {/* <Register /> */}
-        {/* <LoginScreen /> */}
-        {/* <VerifyEmailScreen /> */}
-        {/* <WelcomeMessageScreen /> */}
-        {/* <LoginScreen /> */}
-        {/* <UserProfileScreen /> */}
-        <PetProfileScreen />
-      </Div>
-    </ThemeProvider>
+    <ScrollDiv style={{ flex: 1 }}>
+      <ThemeProvider theme={theme}>
+        <Div style={styles.container}>
+          {/* <Onboarding /> */}
+          {/* <Register /> */}
+          {/* <LoginScreen /> */}
+          {/* <VerifyEmailScreen /> */}
+          {/* <WelcomeMessageScreen /> */}
+          {/* <LoginScreen /> */}
+          {/* <UserProfileScreen /> */}
+          {/* <PetProfileScreen /> */}
+          <PetBookingScreen />
+        </Div>
+      </ThemeProvider>
+    </ScrollDiv>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    height: windowHeight - 70,
     // alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 20,

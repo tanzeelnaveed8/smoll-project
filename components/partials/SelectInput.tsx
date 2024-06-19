@@ -2,7 +2,7 @@ import { fontHauora } from "@/constant/constant";
 import React, { RefObject, useState } from "react";
 import { Button, Div, Select, SelectRef, Text } from "react-native-magnus";
 
-const options = [
+const dummyOptions = [
   "option 1",
   "option 2",
   "option 3",
@@ -10,7 +10,12 @@ const options = [
   "option 5",
   "option 6",
 ];
-const SelectInput = () => {
+
+const SelectInput: React.FC<{
+  options?: string[];
+  label?: string;
+  marginBottom?: number;
+}> = ({ options = dummyOptions, label, marginBottom }) => {
   const [selectValue, setSelectedValue] = useState<string>("");
   const selectRef = React.createRef<SelectRef>();
   return (
@@ -39,6 +44,7 @@ const SelectInput = () => {
         rounded={12}
         borderColor="#494949"
         borderWidth={1}
+        mb={marginBottom ? marginBottom : 0}
         ripple
         bg="transparent"
         color="#494949"
@@ -49,7 +55,7 @@ const SelectInput = () => {
           }
         }}
       >
-        {selectValue ? selectValue.toString() : "Select"}
+        {selectValue ? selectValue.toString() : label ? label : "Select"}
       </Button>
 
       <Select
@@ -58,7 +64,7 @@ const SelectInput = () => {
         }}
         ref={selectRef}
         value={selectValue}
-        title="Select Your City"
+        title={label ? label : "Select Your City"}
         mt="md"
         pb="2xl"
         roundedTop="xl"

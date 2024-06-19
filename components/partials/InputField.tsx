@@ -9,9 +9,12 @@ const InputField: React.FC<{
   iconFamily?: iconFontFamilyType;
   placeholder: string;
   marginBottom?: number;
+  marginTop?: number;
   floatingPlaceholder?: boolean;
   borderRadius?: number;
   inputStyle?: StyleProp<TextStyle>;
+  multiline?: boolean;
+  numberOfLines?: number;
 }> = (props) => {
   const [isFocused, setIsFocused] = useState(false);
   const { floatingPlaceholder } = props;
@@ -39,7 +42,11 @@ const InputField: React.FC<{
   const externalStyles: {} = props.inputStyle || {};
 
   return (
-    <Div style={styles.container}>
+    <Div
+      style={styles.container}
+      mb={props.marginBottom ? props.marginBottom : 0}
+      mt={props.marginTop ? props.marginTop : 0}
+    >
       {floatingPlaceholder && (
         <Animated.Text
           // fontSize={isFocused ? 16 : 18}
@@ -60,10 +67,12 @@ const InputField: React.FC<{
           ...externalStyles,
         }}
         placeholder={floatingPlaceholder ? "" : props.placeholder}
-        mb={props.marginBottom ? props.marginBottom : 0}
         fontFamily={fontHauora}
+        textAlignVertical="top"
         placeholderTextColor={"#494949"}
         bg="transparent"
+        multiline={props.multiline}
+        numberOfLines={props.numberOfLines}
         color="#494949"
         fontSize={"xl"}
         px={12}
