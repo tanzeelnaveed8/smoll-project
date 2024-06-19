@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { Div, ScrollDiv, Text } from "react-native-magnus";
+import { Div, Icon, ScrollDiv, Text } from "react-native-magnus";
 import { ThemeProvider } from "react-native-magnus";
 import Onboarding from "./screens/Onboarding";
 import { ScrollView, StyleSheet } from "react-native";
@@ -12,7 +12,7 @@ import WelcomeMessageScreen from "./screens/WelcomeMessageScreen";
 import LoginScreen from "./screens/auth/LoginScreen";
 import UserProfileScreen from "./screens/profile/UserProfileScreen";
 import { fontHauora } from "./constant/constant";
-import PetProfileScreen from "./screens/petProfile/PetProfileScreen";
+import PetProfileScreen from "./screens/petProfileForm/PetProfileScreen";
 import { Dimensions } from "react-native";
 import PetBookingScreen from "./screens/bookingForm/PetBookingScreen";
 
@@ -55,7 +55,7 @@ export default function App() {
     return <Text>Loading...</Text>; // Or any other loading component
   }
   return (
-    <ScrollDiv style={{ flex: 1 }}>
+    <Div style={{ flex: 1 }}>
       <ThemeProvider theme={theme}>
         <Div style={styles.container}>
           {/* <Onboarding /> */}
@@ -69,7 +69,7 @@ export default function App() {
           <PetBookingScreen />
         </Div>
       </ThemeProvider>
-    </ScrollDiv>
+    </Div>
   );
 }
 

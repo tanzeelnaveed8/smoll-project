@@ -9,6 +9,8 @@ import PetRefuseWaterScreen from "./PetRefuseWaterScreen";
 import PetHidingScreen from "./PetHidingScreen";
 import PetVomitingQuestionScreen from "./PetVomitingQuestionScreen";
 import PetContinuousBleedingQuestionScreen from "./PetContinuousBleedingQuestionScreen";
+import PetUnconsciousnessQuestionScreen from "./PetUnconsciousnessQuestionScreen";
+import PetBreathingDifficultyQuestionScreen from "./PetBreathingDifficultyQuestionScreen";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -18,7 +20,7 @@ const PetBookingScreen = () => {
 
   const nextFormHandler = () => {
     setCurrentStep((prev) => prev + 1);
-    setProgress((prev) => prev + 0.22);
+    setProgress((prev) => prev + 1 / 6);
   };
 
   return (
@@ -38,6 +40,8 @@ const PetBookingScreen = () => {
         {currentStep === 1 && <PetHidingScreen />}
         {currentStep === 2 && <PetVomitingQuestionScreen />}
         {currentStep === 3 && <PetContinuousBleedingQuestionScreen />}
+        {currentStep === 4 && <PetUnconsciousnessQuestionScreen />}
+        {currentStep === 5 && <PetBreathingDifficultyQuestionScreen />}
       </Div>
 
       <Div>

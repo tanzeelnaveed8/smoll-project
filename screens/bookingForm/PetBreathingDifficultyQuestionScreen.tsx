@@ -6,13 +6,13 @@ import { Button, Div, Text } from "react-native-magnus";
 
 const data = ["Yes", "No"];
 
-const PetRefuseWaterScreen = () => {
+const PetBreathingDifficultyQuestionScreen = () => {
   const [selectedOption, setSelectedOption] = useState("");
 
   return (
     <Div>
       <Text fontSize={"4xl"} mb={20}>
-        Is your pet unconsciousness?
+        Is your pet choking, or having breathing difficulty?
       </Text>
 
       <FlatList
@@ -33,4 +33,4 @@ const PetRefuseWaterScreen = () => {
   );
 };
 
-export default PetRefuseWaterScreen;
+export default PetBreathingDifficultyQuestionScreen;

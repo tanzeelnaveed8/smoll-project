@@ -1,4 +1,3 @@
-import InputField from "@/components/partials/InputField";
 import RadioButtion from "@/components/partials/RadioButtion";
 import React, { useState } from "react";
 import { FlatList, SafeAreaView, StyleSheet } from "react-native";
@@ -6,7 +5,7 @@ import { Button, Div, Text } from "react-native-magnus";
 
 const data = ["Yes", "No"];
 
-const PetRefuseWaterScreen = () => {
+const PetUnconsciousnessQuestionScreen = () => {
   const [selectedOption, setSelectedOption] = useState("");
 
   return (
@@ -33,4 +32,4 @@ const PetRefuseWaterScreen = () => {
   );
 };
 
-export default PetRefuseWaterScreen;
+export default PetUnconsciousnessQuestionScreen;

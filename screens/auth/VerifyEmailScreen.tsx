@@ -15,13 +15,13 @@ const VerifyEmailScreen = () => {
     >
       <View>
         <Text fontSize={"5xl"} fontFamily={fontHauora} mb={4}>
-          Verify your email
+          Enter your verification code
         </Text>
 
         <Text fontSize={"xl"} mb={24} color="#494949">
-          We have send a 4 digit code to your email address{" "}
+          We have send a 4 digit code to the phone number{" "}
           <Text fontSize={"xl"} color="#222222">
-            fahad92@gmail.com
+            (+971) 82 474 7493
           </Text>
         </Text>
 
