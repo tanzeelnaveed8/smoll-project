@@ -2,7 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import { Div, ScrollDiv, Text } from "react-native-magnus";
 import { ThemeProvider } from "react-native-magnus";
 import Onboarding from "./screens/Onboarding";
-import { ScrollView, StyleSheet } from "react-native";
+import { SafeAreaView, ScrollView, StyleSheet } from "react-native";
 
 import * as Font from "expo-font";
 import { useEffect, useState } from "react";
@@ -55,7 +55,8 @@ export default function App() {
     return <Text>Loading...</Text>; // Or any other loading component
   }
   return (
-    <ScrollDiv style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1 }}>
+      {/* <ScrollDiv style={{ flex: 1 }}> */}
       <ThemeProvider theme={theme}>
         <Div style={styles.container}>
           {/* <Onboarding /> */}
@@ -63,26 +64,26 @@ export default function App() {
           {/* <LoginScreen /> */}
           {/* <VerifyEmailScreen /> */}
           {/* <WelcomeMessageScreen /> */}
-          {/* <LoginScreen /> */}
           {/* <UserProfileScreen /> */}
-          {/* <PetProfileScreen /> */}
-          <PetBookingScreen />
+          <PetProfileScreen />
+          {/* <PetBookingScreen /> */}
         </Div>
       </ThemeProvider>
-    </ScrollDiv>
+      {/* </ScrollDiv> */}
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    height: windowHeight - 70,
+    // height: windowHeight,
     // alignItems: "center",
-    justifyContent: "center",
+    // justifyContent: "center",
     paddingHorizontal: 20,
     fontFamily: "Hauora",
     overflow: "hidden",
-    marginTop: 70,
+    marginTop: 12,
     marginBottom: 34,
     color: "#222222",
   },

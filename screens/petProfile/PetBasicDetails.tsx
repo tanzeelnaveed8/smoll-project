@@ -28,7 +28,7 @@ const PetBasicDetails = () => {
       />
 
       <SelectInput
-        label="Select a breed"
+        label="Weight"
         options={["10Kg", "15Kg", "20Kg", "25Kg", "30Kg"]}
         marginBottom={20}
       />
