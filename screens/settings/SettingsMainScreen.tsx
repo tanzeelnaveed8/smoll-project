@@ -1,7 +1,8 @@
 import { StyleSheet } from "react-native";
 import React from "react";
-import { Div, Text } from "react-native-magnus";
+import { Button, Div, Icon, Text } from "react-native-magnus";
 import { fontHauora } from "@/constant/constant";
+import SettingButton from "@/components/partials/SettingButton";
 
 const SettingsMainScreen = () => {
   return (
@@ -26,9 +27,7 @@ const SettingsMainScreen = () => {
         General
       </Text>
 
-      <Div mb={24}>
-        <Text>Options....</Text>
-      </Div>
+      <SettingButton />
 
       <Text
         fontWeight="400"
@@ -51,8 +50,31 @@ const SettingsMainScreen = () => {
       >
         Billing and Security
       </Text>
-      <Div mb={24}>
+      <Div mb={40}>
         <Text>Options....</Text>
+      </Div>
+
+      <Div mt="auto">
+        <Text
+          fontWeight="400"
+          fontSize={18}
+          fontFamily={fontHauora}
+          lineHeight={24}
+          mb={8}
+          color="#0189F9"
+        >
+          Logout
+        </Text>
+        <Text
+          fontWeight="400"
+          fontSize={18}
+          fontFamily={fontHauora}
+          lineHeight={24}
+          mb={6}
+          color="#7B7B7B"
+        >
+          App v 12.81
+        </Text>
       </Div>
     </Div>
   );
