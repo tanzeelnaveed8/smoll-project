@@ -15,6 +15,7 @@ import { fontHauora } from "./constant/constant";
 import PetProfileScreen from "./screens/petProfile/PetProfileScreen";
 import { Dimensions } from "react-native";
 import PetBookingScreen from "./screens/bookingForm/PetBookingScreen";
+import SettingsMainScreen from "./screens/settings/SettingsMainScreen";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -65,8 +66,9 @@ export default function App() {
           {/* <VerifyEmailScreen /> */}
           {/* <WelcomeMessageScreen /> */}
           {/* <UserProfileScreen /> */}
-          <PetProfileScreen />
+          {/* <PetProfileScreen /> */}
           {/* <PetBookingScreen /> */}
+          <SettingsMainScreen />
         </Div>
       </ThemeProvider>
       {/* </ScrollDiv> */}
