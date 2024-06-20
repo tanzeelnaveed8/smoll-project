@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 import React from "react";
-import { Div, Text } from "react-native-magnus";
+import { Div, Text, ScrollDiv } from "react-native-magnus";
 import { fontHauora } from "@/constant/constant";
 import SettingButton from "@/components/partials/SettingButton";
 
@@ -33,6 +33,7 @@ const options = [
         title: "Push Notification",
         iconName: "notifications-outline",
         iconFamily: "Ionicons",
+        description: "Enable push notifications to receive important messages.",
       },
     ],
   },
@@ -82,7 +83,7 @@ const options = [
 
 const SettingsMainScreen = () => {
   return (
-    <Div style={styles.container}>
+    <ScrollDiv style={styles.container} showsVerticalScrollIndicator={false}>
       <Text
         fontWeight="400"
         fontSize={"5xl"}
@@ -111,13 +112,14 @@ const SettingsMainScreen = () => {
                 iconName={option.iconName}
                 iconFamily={option.iconFamily}
                 iconFontSize={option?.iconFontSize}
+                description={option?.description}
               />
             ))}
           </Div>
         </React.Fragment>
       ))}
 
-      <Div mt="auto">
+      <Div mt="auto" mb={20}>
         <Text
           fontWeight="400"
           fontSize={18}
@@ -139,7 +141,7 @@ const SettingsMainScreen = () => {
           App v 12.81
         </Text>
       </Div>
-    </Div>
+    </ScrollDiv>
   );
 };
 

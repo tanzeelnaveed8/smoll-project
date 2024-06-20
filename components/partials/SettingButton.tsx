@@ -7,20 +7,21 @@ type PropsType = {
   iconFamily: iconFontFamilyType;
   title: string;
   iconFontSize?: number;
+  description?: string;
 };
 function SettingButton(props: PropsType) {
-  const { iconName, iconFamily, title, iconFontSize = 32 } = props;
+  const { iconName, iconFamily, title, iconFontSize = 32, description } = props;
   return (
     <Div
       w="full"
-      h={64}
+      py={16}
       flexDir="row"
       justifyContent="space-between"
       alignItems="center"
       borderBottomWidth={1}
       borderBottomColor="#E0E0E0"
     >
-      <Div flexDir="row">
+      <Div flexDir="row" alignItems="flex-start">
         <Icon
           fontSize={iconFontSize}
           name={iconName}
@@ -28,15 +29,29 @@ function SettingButton(props: PropsType) {
           color="#222222"
           mr={12}
         />
-        <Text
-          color="#222222"
-          fontWeight="400"
-          fontSize={18}
-          fontFamily={fontHauora}
-          lineHeight={24}
-        >
-          {title}
-        </Text>
+        <Div alignSelf="center">
+          <Text
+            color="#222222"
+            fontWeight="400"
+            fontSize={18}
+            fontFamily={fontHauora}
+            lineHeight={24}
+          >
+            {title}
+          </Text>
+          {description && (
+            <Text
+              color="#494949"
+              fontWeight="400"
+              fontSize={14}
+              fontFamily={fontHauora}
+              lineHeight={20}
+              maxW={240}
+            >
+              {description}
+            </Text>
+          )}
+        </Div>
       </Div>
 
       <Icon
