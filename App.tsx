@@ -20,6 +20,7 @@ import SettingPersonalInfoFirstNameScreen from "./screens/settings/SettingPerson
 import SettingPersonalInfoLastNameScreen from "./screens/settings/SettingPersonalInfoLastNameScreen";
 import SettingPersonalInfoEmailScreen from "./screens/settings/SettingPersonalInfoEmailScreen";
 import SettingPersonalInfoPhoneNoScreen from "./screens/settings/SettingPersonalInfoPhoneNoScreen";
+import SettingPersonalInfoScreen from "./screens/settings/SettingPersonalInfoScreen";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -76,7 +77,8 @@ export default function App() {
           {/* <SettingPersonalInfoFirstNameScreen /> */}
           {/* <SettingPersonalInfoLastNameScreen /> */}
           {/* <SettingPersonalInfoEmailScreen /> */}
-          <SettingPersonalInfoPhoneNoScreen />
+          {/* <SettingPersonalInfoPhoneNoScreen /> */}
+          <SettingPersonalInfoScreen />
         </Div>
       </ThemeProvider>
       {/* </ScrollDiv> */}
