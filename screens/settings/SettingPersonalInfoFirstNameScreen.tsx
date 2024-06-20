@@ -4,7 +4,7 @@ import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import InputField from "@/components/partials/InputField";
 import SettingBackButton from "@/components/settings/SettingBackButton";
 
-const SettingPersonalInfoScreen = () => {
+const SettingPersonalInfoFirstNameScreen = () => {
   return (
     <Div pt={20}>
       <Div mb={32}>
@@ -29,4 +29,4 @@ const SettingPersonalInfoScreen = () => {
   );
 };
 
-export default SettingPersonalInfoScreen;
+export default SettingPersonalInfoFirstNameScreen;
