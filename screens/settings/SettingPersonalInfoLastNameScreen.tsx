@@ -4,7 +4,7 @@ import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import InputField from "@/components/partials/InputField";
 import SettingBackButton from "@/components/settings/SettingBackButton";
 
-const SettingPersonalInfoFirstNameScreen = () => {
+const SettingPersonalInfoLastNameScreen = () => {
   return (
     <Div pt={20}>
       <Div mb={32}>
@@ -18,10 +18,10 @@ const SettingPersonalInfoFirstNameScreen = () => {
           mb={24}
           textTransform="capitalize"
         >
-          Edit first name
+          Edit Last name
         </Text>
 
-        <InputField placeholder="First name" floatingPlaceholder />
+        <InputField placeholder="Last name" floatingPlaceholder />
       </Div>
 
       <ButtonPrimary bgColor="primary">Save</ButtonPrimary>
@@ -29,4 +29,4 @@ const SettingPersonalInfoFirstNameScreen = () => {
   );
 };
 
-export default SettingPersonalInfoFirstNameScreen;
+export default SettingPersonalInfoLastNameScreen;

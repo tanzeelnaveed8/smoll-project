@@ -17,6 +17,7 @@ import { Dimensions } from "react-native";
 import PetBookingScreen from "./screens/bookingForm/PetBookingScreen";
 import SettingsMainScreen from "./screens/settings/SettingsMainScreen";
 import SettingPersonalInfoFirstNameScreen from "./screens/settings/SettingPersonalInfoFirstNameScreen";
+import SettingPersonalInfoLastNameScreen from "./screens/settings/SettingPersonalInfoLastNameScreen";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -70,7 +71,8 @@ export default function App() {
           {/* <PetProfileScreen /> */}
           {/* <PetBookingScreen /> */}
           {/* <SettingsMainScreen /> */}
-          <SettingPersonalInfoFirstNameScreen />
+          {/* <SettingPersonalInfoFirstNameScreen /> */}
+          <SettingPersonalInfoLastNameScreen />
         </Div>
       </ThemeProvider>
       {/* </ScrollDiv> */}
