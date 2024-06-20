@@ -3,8 +3,9 @@ import React from "react";
 import { Div, Text, ScrollDiv } from "react-native-magnus";
 import { fontHauora } from "@/constant/constant";
 import SettingButton from "@/components/partials/SettingButton";
+import { iconFontFamilyType } from "react-native-magnus/lib/typescript/src/ui/icon/icon.type";
 
-const options = [
+const options: GroupType[] = [
   {
     id: 1,
     groupName: "General",
@@ -155,3 +156,19 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
 });
+
+interface OptionType {
+  id: number;
+  title: string;
+  iconName: string;
+  iconFamily: iconFontFamilyType;
+  description?: string;
+  toggleBtn?: boolean;
+  iconFontSize?: number;
+}
+
+interface GroupType {
+  id: number;
+  groupName: string;
+  options: OptionType[];
+}
