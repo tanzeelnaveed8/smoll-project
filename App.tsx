@@ -18,6 +18,7 @@ import PetBookingScreen from "./screens/bookingForm/PetBookingScreen";
 import SettingsMainScreen from "./screens/settings/SettingsMainScreen";
 import SettingPersonalInfoFirstNameScreen from "./screens/settings/SettingPersonalInfoFirstNameScreen";
 import SettingPersonalInfoLastNameScreen from "./screens/settings/SettingPersonalInfoLastNameScreen";
+import SettingPersonalInfoEmailScreen from "./screens/settings/SettingPersonalInfoEmailScreen";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -72,7 +73,8 @@ export default function App() {
           {/* <PetBookingScreen /> */}
           {/* <SettingsMainScreen /> */}
           {/* <SettingPersonalInfoFirstNameScreen /> */}
-          <SettingPersonalInfoLastNameScreen />
+          {/* <SettingPersonalInfoLastNameScreen /> */}
+          <SettingPersonalInfoEmailScreen />
         </Div>
       </ThemeProvider>
       {/* </ScrollDiv> */}
