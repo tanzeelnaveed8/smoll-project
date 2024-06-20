@@ -34,6 +34,7 @@ const options = [
         iconName: "notifications-outline",
         iconFamily: "Ionicons",
         description: "Enable push notifications to receive important messages.",
+        toggleBtn: true,
       },
     ],
   },
@@ -113,6 +114,7 @@ const SettingsMainScreen = () => {
                 iconFamily={option.iconFamily}
                 iconFontSize={option?.iconFontSize}
                 description={option?.description}
+                toggleBtn={option?.toggleBtn}
               />
             ))}
           </Div>

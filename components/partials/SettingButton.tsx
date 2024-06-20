@@ -1,5 +1,5 @@
 import { fontHauora } from "@/constant/constant";
-import { Div, Icon, Text } from "react-native-magnus";
+import { Div, Icon, Text, Toggle } from "react-native-magnus";
 import { iconFontFamilyType } from "react-native-magnus/lib/typescript/src/ui/icon/icon.type";
 
 type PropsType = {
@@ -8,9 +8,17 @@ type PropsType = {
   title: string;
   iconFontSize?: number;
   description?: string;
+  toggleBtn?: boolean;
 };
 function SettingButton(props: PropsType) {
-  const { iconName, iconFamily, title, iconFontSize = 32, description } = props;
+  const {
+    iconName,
+    iconFamily,
+    title,
+    iconFontSize = 32,
+    description,
+    toggleBtn = false,
+  } = props;
   return (
     <Div
       w="full"
@@ -54,12 +62,22 @@ function SettingButton(props: PropsType) {
         </Div>
       </Div>
 
-      <Icon
-        fontSize={32}
-        name="chevron-right"
-        fontFamily="EvilIcons"
-        color="#898989"
-      />
+      {!toggleBtn ? (
+        <Icon
+          fontSize={32}
+          name="chevron-right"
+          fontFamily="EvilIcons"
+          color="#898989"
+        />
+      ) : (
+        <Toggle
+          onPress={() => null}
+          on={true}
+          activeBg="#0189F9"
+          w={52}
+          h={32}
+        />
+      )}
     </Div>
   );
 }
