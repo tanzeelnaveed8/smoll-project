@@ -83,6 +83,9 @@ const options: GroupType[] = [
   },
 ];
 
+// Todos:
+// 1. Person icon needs to be changed
+// 2. Remaining icons needs to be added
 const SettingsMainScreen = () => {
   return (
     <ScrollDiv style={styles.container} showsVerticalScrollIndicator={false}>
