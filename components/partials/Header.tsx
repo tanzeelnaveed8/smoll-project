@@ -16,7 +16,7 @@ const Header = (props: PropTypes) => {
         fontSize={26}
       />
 
-      <Text fontWeight="bold" fontSize="xl" lineHeight={24} mx="auto">
+      <Text fontWeight="600" fontSize="xl" lineHeight={24} mx="auto">
         {title}
       </Text>
     </Div>
