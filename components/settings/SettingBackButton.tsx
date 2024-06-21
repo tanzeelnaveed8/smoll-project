@@ -14,6 +14,7 @@ const SettingBackButton = (props: PropsType) => {
           name="chevron-left"
           fontFamily="EvilIcons"
           color="#222222"
+          mt={-4}
         />
         <Text fontWeight="400" fontSize="xl" color="#222222">
           {text}
