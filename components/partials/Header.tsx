@@ -1,5 +1,5 @@
 import { fontHauora } from "@/constant/constant";
-import { Div, Text } from "react-native-magnus";
+import { Div, Icon, Text } from "react-native-magnus";
 
 type PropTypes = {
   title: string;
@@ -8,8 +8,15 @@ type PropTypes = {
 const Header = (props: PropTypes) => {
   const { title } = props;
   return (
-    <Div>
-      <Text fontWeight="bold" fontSize="xl" lineHeight={24} textAlign="center">
+    <Div flexDir="row" alignItems="center" py={9}>
+      <Icon
+        name="arrow-left"
+        fontFamily="Feather"
+        color="#222222"
+        fontSize={26}
+      />
+
+      <Text fontWeight="bold" fontSize="xl" lineHeight={24} mx="auto">
         {title}
       </Text>
     </Div>
