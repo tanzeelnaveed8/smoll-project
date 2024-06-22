@@ -1,9 +1,19 @@
+import React, { ReactElement } from "react";
 import { StyleSheet } from "react-native";
-import React from "react";
 import { Div, Text, ScrollDiv } from "react-native-magnus";
 import { fontHauora } from "@/constant/constant";
 import SettingButton from "@/components/partials/SettingButton";
-import { iconFontFamilyType } from "react-native-magnus/lib/typescript/src/ui/icon/icon.type";
+import {
+  IconUserCircle,
+  IconMap,
+  IconPaw,
+  IconBell,
+  IconPrescription,
+  IconWritingSign,
+  IconCreditCard,
+  IconSquareAsterisk,
+  IconGavel,
+} from "@tabler/icons-react-native";
 
 const options: GroupType[] = [
   {
@@ -13,27 +23,22 @@ const options: GroupType[] = [
       {
         id: 1,
         title: "Personal Info",
-        iconName: "user",
-        iconFamily: "EvilIcons",
-        iconFontSize: 38,
+        Icon: IconUserCircle,
       },
       {
         id: 2,
         title: "Address",
-        iconName: "map-outline",
-        iconFamily: "Ionicons",
+        Icon: IconMap,
       },
       {
         id: 3,
         title: "Pets Profile",
-        iconName: "paw-outline",
-        iconFamily: "Ionicons",
+        Icon: IconPaw,
       },
       {
         id: 4,
         title: "Push Notification",
-        iconName: "notifications-outline",
-        iconFamily: "Ionicons",
+        Icon: IconBell,
         description: "Enable push notifications to receive important messages.",
         toggleBtn: true,
       },
@@ -46,14 +51,12 @@ const options: GroupType[] = [
       {
         id: 1,
         title: "Medicine Order",
-        iconName: "",
-        iconFamily: "",
+        Icon: IconPrescription,
       },
       {
         id: 2,
         title: "Cases",
-        iconName: "",
-        iconFamily: "",
+        Icon: IconWritingSign,
       },
     ],
   },
@@ -64,20 +67,17 @@ const options: GroupType[] = [
       {
         id: 1,
         title: "Payment",
-        iconName: "",
-        iconFamily: "",
+        Icon: IconCreditCard,
       },
       {
         id: 2,
         title: "Change Password",
-        iconName: "",
-        iconFamily: "",
+        Icon: IconSquareAsterisk,
       },
       {
         id: 3,
         title: "Legal",
-        iconName: "",
-        iconFamily: "",
+        Icon: IconGavel,
       },
     ],
   },
@@ -119,6 +119,7 @@ const SettingsMainScreen = () => {
                 iconFontSize={option?.iconFontSize}
                 description={option?.description}
                 toggleBtn={option?.toggleBtn}
+                Icon={option.Icon}
               />
             ))}
           </Div>
@@ -163,11 +164,13 @@ const styles = StyleSheet.create({
 interface OptionType {
   id: number;
   title: string;
-  iconName: string;
-  iconFamily: iconFontFamilyType;
+  //
+  //
+  Icon: IconUserCircle;
   description?: string;
   toggleBtn?: boolean;
   iconFontSize?: number;
+  Icon: ReactElement;
 }
 
 interface GroupType {

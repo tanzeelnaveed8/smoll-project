@@ -2,6 +2,7 @@ import React from "react";
 import { Div, Icon, Text } from "react-native-magnus";
 import { fontHauora } from "@/constant/constant";
 import SettingBackButton from "@/components/settings/SettingBackButton";
+import { IconUser, IconEditCircle } from "@tabler/icons-react-native";
 
 const SettingPersonalInfoScreen = () => {
   return (
@@ -26,10 +27,11 @@ const SettingPersonalInfoScreen = () => {
         rounded={100}
         bg="#EFEFEF"
         justifyContent="flex-end"
-        pb={20}
+        pb={15}
         position="relative"
+        alignItems="center"
       >
-        <Icon name="user" fontSize={52} fontFamily="Feather" color="#222222" />
+        <IconUser size={64} color="#222222" strokeWidth={1.5} />
 
         <Div
           w={32}
@@ -42,12 +44,7 @@ const SettingPersonalInfoScreen = () => {
           alignItems="center"
           justifyContent="center"
         >
-          <Icon
-            name="circle-edit-outline"
-            fontSize={22}
-            fontFamily="MaterialCommunityIcons"
-            color="#222222"
-          />
+          <IconEditCircle size={24} color="#222222" />
         </Div>
       </Div>
 

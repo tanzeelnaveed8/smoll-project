@@ -1,24 +1,17 @@
+import { ReactElement } from "react";
 import { fontHauora } from "@/constant/constant";
-import { Div, Icon, Text, Toggle } from "react-native-magnus";
-import { iconFontFamilyType } from "react-native-magnus/lib/typescript/src/ui/icon/icon.type";
+import { Div, Text, Toggle } from "react-native-magnus";
+import { IconChevronRight } from "@tabler/icons-react-native";
 
 type PropsType = {
-  iconName: string;
-  iconFamily: iconFontFamilyType;
   title: string;
-  iconFontSize?: number;
+  iconSize?: number;
   description?: string;
   toggleBtn?: boolean;
+  Icon: ReactElement;
 };
 function SettingButton(props: PropsType) {
-  const {
-    iconName,
-    iconFamily,
-    title,
-    iconFontSize = 32,
-    description,
-    toggleBtn = false,
-  } = props;
+  const { iconSize = 32, description, toggleBtn = false, Icon, title } = props;
   return (
     <Div
       w="full"
@@ -30,14 +23,8 @@ function SettingButton(props: PropsType) {
       borderBottomColor="#E0E0E0"
     >
       <Div flexDir="row" alignItems="flex-start">
-        <Icon
-          fontSize={iconFontSize}
-          name={iconName}
-          fontFamily={iconFamily}
-          color="#222222"
-          mr={12}
-        />
-        <Div alignSelf="center">
+        <Icon color="#222222" size={32} strokeWidth={1.5} />
+        <Div alignSelf="center" ml={12}>
           <Text
             color="#222222"
             fontWeight="400"
@@ -63,12 +50,7 @@ function SettingButton(props: PropsType) {
       </Div>
 
       {!toggleBtn ? (
-        <Icon
-          fontSize={32}
-          name="chevron-right"
-          fontFamily="EvilIcons"
-          color="#898989"
-        />
+        <IconChevronRight fontSize={32} color="#898989" />
       ) : (
         <Toggle
           onPress={() => null}

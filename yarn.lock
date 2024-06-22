@@ -1664,6 +1664,18 @@
   dependencies:
     "@sinonjs/commons" "^3.0.0"
 
+"@tabler/icons-react-native@^3.6.0":
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/@tabler/icons-react-native/-/icons-react-native-3.6.0.tgz#10d1fba5ff523c7c682421dd17496969cf09d27d"
+  integrity sha512-G8K4iAaz9TN/oWS7SgeFfhjogAE4NPDm4hN7msZu4C7hEGWHTE4LQd6Rf1vg6u8PHdwEV6Hh0/pbbc7WkdlFIw==
+  dependencies:
+    "@tabler/icons" "3.6.0"
+
+"@tabler/icons@3.6.0":
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/@tabler/icons/-/icons-3.6.0.tgz#9d5aeb4108bcd0d97b3c955ea425b645ea79a304"
+  integrity sha512-Zv0Ofc64RCMpZ2F8CvsWAphrSjerx5hEErt/RMmE+W8r4E5l5Lizi+My9KbbZQ4NyAtrtrOX80OY1oROZrRzEA==
+
 "@tsconfig/react-native@^3.0.5":
   version "3.0.5"
   resolved "https://registry.yarnpkg.com/@tsconfig/react-native/-/react-native-3.0.5.tgz#c4971b1eca2e8cdf7b0d25f40193a782039c1abd"
