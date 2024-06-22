@@ -15,6 +15,12 @@ import { fontHauora } from "./constant/constant";
 import PetProfileScreen from "./screens/petProfile/PetProfileScreen";
 import { Dimensions } from "react-native";
 import PetBookingScreen from "./screens/bookingForm/PetBookingScreen";
+import SettingsMainScreen from "./screens/settings/SettingsMainScreen";
+import SettingPersonalInfoFirstNameScreen from "./screens/settings/SettingPersonalInfoFirstNameScreen";
+import SettingPersonalInfoLastNameScreen from "./screens/settings/SettingPersonalInfoLastNameScreen";
+import SettingPersonalInfoEmailScreen from "./screens/settings/SettingPersonalInfoEmailScreen";
+import SettingPersonalInfoPhoneNoScreen from "./screens/settings/SettingPersonalInfoPhoneNoScreen";
+import SettingPersonalInfoScreen from "./screens/settings/SettingPersonalInfoScreen";
 import DoctotsListScreen from "./screens/doctorsScreens/DoctotsListScreen";
 
 async function loadFonts() {
@@ -68,6 +74,12 @@ export default function App() {
           {/* <UserProfileScreen /> */}
           {/* <PetProfileScreen /> */}
           {/* <PetBookingScreen /> */}
+          {/* <SettingsMainScreen /> */}
+          {/* <SettingPersonalInfoFirstNameScreen /> */}
+          {/* <SettingPersonalInfoLastNameScreen /> */}
+          {/* <SettingPersonalInfoEmailScreen /> */}
+          {/* <SettingPersonalInfoPhoneNoScreen /> */}
+          {/* <SettingPersonalInfoScreen /> */}
           <DoctotsListScreen />
         </Div>
       </ThemeProvider>

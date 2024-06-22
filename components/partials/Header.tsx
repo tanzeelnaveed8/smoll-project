@@ -1,4 +1,3 @@
-import { fontHauora } from "@/constant/constant";
 import { Div, Icon, Text } from "react-native-magnus";
 
 type PropTypes = {
