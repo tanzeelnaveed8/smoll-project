@@ -4,7 +4,7 @@ import { IconCircleCheck } from "@tabler/icons-react-native";
 
 const Verified = () => {
   return (
-    <Div flexDir="row">
+    <Div flexDir="row" alignItems="center">
       <IconCircleCheck size={16} color="#2F6E20" />
       <Text
         fontSize={12}

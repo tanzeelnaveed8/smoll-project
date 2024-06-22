@@ -2,20 +2,27 @@ import { Badge, Button, Div, Text } from "react-native-magnus";
 import { IconChevronRight } from "@tabler/icons-react-native";
 import { fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
 import Verified from "./Verified";
+import DoctorCard from "./DoctorCard";
 
 type PropTypes = {
   name: string;
   speciality: string;
   experience: number;
-  verified: boolean;
+  verified?: boolean;
   nextAvailable: string;
 };
 
 const DoctorListCard = (props: PropTypes) => {
-  const { name, speciality, experience, verified, nextAvailable } = props;
+  const {
+    name,
+    speciality,
+    experience,
+    verified = false,
+    nextAvailable,
+  } = props;
   return (
     <Div py={20} borderBottomWidth={1} borderColor="#E0E0E0">
-      <Div flexDir="row">
+      {/* <Div flexDir="row">
         <Badge
           right={34}
           top={8}
@@ -54,7 +61,13 @@ const DoctorListCard = (props: PropTypes) => {
 
           {verified && <Verified />}
         </Div>
-      </Div>
+      </Div> */}
+      <DoctorCard
+        name={name}
+        experience={experience}
+        speciality={speciality}
+        verified={verified}
+      />
 
       {/* card footer */}
       <Div flexDir="row" mt={17} justifyContent="space-between">

@@ -77,14 +77,14 @@ export default function App() {
           {/* <UserProfileScreen /> */}
           {/* <PetProfileScreen /> */}
           {/* <PetBookingScreen /> */}
-          <SettingsMainScreen />
+          {/* <SettingsMainScreen /> */}
           {/* <SettingPersonalInfoFirstNameScreen /> */}
           {/* <SettingPersonalInfoLastNameScreen /> */}
           {/* <SettingPersonalInfoEmailScreen /> */}
           {/* <SettingPersonalInfoPhoneNoScreen /> */}
           {/* <SettingPersonalInfoScreen /> */}
           {/* <DoctotsListScreen /> */}
-          {/* <SlotBookingScreen /> */}
+          <SlotBookingScreen />
         </Div>
       </ThemeProvider>
       {/* </ScrollDiv> */}
