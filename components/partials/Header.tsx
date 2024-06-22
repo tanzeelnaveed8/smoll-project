@@ -1,6 +1,7 @@
 import { Div, Icon, Text } from "react-native-magnus";
 import { IconArrowLeft } from "@tabler/icons-react-native";
 import { fontHauoraSemiBold } from "@/constant/constant";
+import Container from "./Container";
 
 type PropTypes = {
   title: string;
@@ -9,7 +10,7 @@ type PropTypes = {
 const Header = (props: PropTypes) => {
   const { title } = props;
   return (
-    <Div flexDir="row" alignItems="center" py={9}>
+    <Container flexDir="row" alignItems="center" py={9}>
       <IconArrowLeft size={28} color="#222222" strokeWidth={1.5} />
 
       <Text
@@ -21,7 +22,7 @@ const Header = (props: PropTypes) => {
       >
         {title}
       </Text>
-    </Div>
+    </Container>
   );
 };
 
