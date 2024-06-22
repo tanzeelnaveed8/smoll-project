@@ -1,60 +1,63 @@
 import React from "react";
-import { Div, Icon, Text } from "react-native-magnus";
+import { Div, Text } from "react-native-magnus";
 import { fontHauora } from "@/constant/constant";
 import SettingBackButton from "@/components/settings/SettingBackButton";
 import { IconUser, IconEditCircle } from "@tabler/icons-react-native";
+import Container from "@/components/partials/Container";
 
 const SettingPersonalInfoScreen = () => {
   return (
-    <Div pt={20}>
-      <Div mb={24}>
-        <SettingBackButton text="Settings" />
+    <Container>
+      <Div pt={20}>
+        <Div mb={24}>
+          <SettingBackButton text="Settings" />
 
-        <Text
-          fontSize={"5xl"}
-          fontWeight="400"
-          lineHeight={36}
-          fontFamily={fontHauora}
-          textTransform="capitalize"
-        >
-          Personal Info
-        </Text>
-      </Div>
-
-      <Div
-        w={96}
-        h={96}
-        rounded={100}
-        bg="#EFEFEF"
-        justifyContent="flex-end"
-        pb={15}
-        position="relative"
-        alignItems="center"
-      >
-        <IconUser size={64} color="#222222" strokeWidth={1.5} />
+          <Text
+            fontSize={"5xl"}
+            fontWeight="400"
+            lineHeight={36}
+            fontFamily={fontHauora}
+            textTransform="capitalize"
+          >
+            Personal Info
+          </Text>
+        </Div>
 
         <Div
-          w={32}
-          h={32}
+          w={96}
+          h={96}
           rounded={100}
-          bg="#BFBFBF"
-          position="absolute"
-          right={-12}
-          bottom={20}
+          bg="#EFEFEF"
+          justifyContent="flex-end"
+          pb={15}
+          position="relative"
           alignItems="center"
-          justifyContent="center"
         >
-          <IconEditCircle size={24} color="#222222" />
+          <IconUser size={64} color="#222222" strokeWidth={1.5} />
+
+          <Div
+            w={32}
+            h={32}
+            rounded={100}
+            bg="#BFBFBF"
+            position="absolute"
+            right={-12}
+            bottom={20}
+            alignItems="center"
+            justifyContent="center"
+          >
+            <IconEditCircle size={24} color="#222222" />
+          </Div>
+        </Div>
+
+        <Div mt={24}>
+          <Option title="First Name" value="Fahad" />
+          <Option title="Second name" value="Khan" />
+          <Option title="Email address" value="fahad92@gmail.com" varified />
+          <Option title="Phone number" value="(+971) 82 474 7493" varified />
         </Div>
       </Div>
-
-      <Div mt={24}>
-        <Option title="First Name" value="Fahad" />
-        <Option title="Second name" value="Khan" />
-        <Option title="Email address" value="fahad92@gmail.com" varified />
-        <Option title="Phone number" value="(+971) 82 474 7493" varified />
-      </Div>
-    </Div>
+    </Container>
   );
 };
 

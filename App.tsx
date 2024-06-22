@@ -77,14 +77,14 @@ export default function App() {
           {/* <UserProfileScreen /> */}
           {/* <PetProfileScreen /> */}
           {/* <PetBookingScreen /> */}
-          {/* <SettingsMainScreen /> */}
+          <SettingsMainScreen />
           {/* <SettingPersonalInfoFirstNameScreen /> */}
           {/* <SettingPersonalInfoLastNameScreen /> */}
           {/* <SettingPersonalInfoEmailScreen /> */}
           {/* <SettingPersonalInfoPhoneNoScreen /> */}
           {/* <SettingPersonalInfoScreen /> */}
           {/* <DoctotsListScreen /> */}
-          <SlotBookingScreen />
+          {/* <SlotBookingScreen /> */}
         </Div>
       </ThemeProvider>
       {/* </ScrollDiv> */}
@@ -98,7 +98,8 @@ const styles = StyleSheet.create({
     // height: windowHeight,
     // alignItems: "center",
     // justifyContent: "center",
-    paddingHorizontal: 20,
+    // Note: instead of padding horizontal use container component
+    // paddingHorizontal: 20,
     fontFamily: "Hauora",
     overflow: "hidden",
     marginTop: 12,

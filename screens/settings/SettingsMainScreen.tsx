@@ -14,6 +14,7 @@ import {
   IconSquareAsterisk,
   IconGavel,
 } from "@tabler/icons-react-native";
+import Container from "@/components/partials/Container";
 
 const options: GroupType[] = [
   {
@@ -89,65 +90,67 @@ const options: GroupType[] = [
 const SettingsMainScreen = () => {
   return (
     <ScrollDiv style={styles.container} showsVerticalScrollIndicator={false}>
-      <Text
-        fontWeight="400"
-        fontSize={"5xl"}
-        fontFamily={fontHauora}
-        lineHeight={36}
-        mb={24}
-      >
-        Settings
-      </Text>
-      {options.map((group) => (
-        <React.Fragment key={group.id}>
+      <Container>
+        <Text
+          fontWeight="400"
+          fontSize={"5xl"}
+          fontFamily={fontHauora}
+          lineHeight={36}
+          mb={24}
+        >
+          Settings
+        </Text>
+        {options.map((group) => (
+          <React.Fragment key={group.id}>
+            <Text
+              fontWeight="400"
+              fontSize={18}
+              fontFamily={fontHauora}
+              lineHeight={24}
+              mb={8}
+            >
+              {group.groupName}
+            </Text>
+            <Div mb={24}>
+              {group.options.map((option) => (
+                <SettingButton
+                  key={option.id}
+                  title={option.title}
+                  iconName={option.iconName}
+                  iconFamily={option.iconFamily}
+                  iconFontSize={option?.iconFontSize}
+                  description={option?.description}
+                  toggleBtn={option?.toggleBtn}
+                  Icon={option.Icon}
+                />
+              ))}
+            </Div>
+          </React.Fragment>
+        ))}
+
+        <Div mt="auto" mb={20}>
           <Text
             fontWeight="400"
             fontSize={18}
             fontFamily={fontHauora}
             lineHeight={24}
             mb={8}
+            color="#0189F9"
           >
-            {group.groupName}
+            Logout
           </Text>
-          <Div mb={24}>
-            {group.options.map((option) => (
-              <SettingButton
-                key={option.id}
-                title={option.title}
-                iconName={option.iconName}
-                iconFamily={option.iconFamily}
-                iconFontSize={option?.iconFontSize}
-                description={option?.description}
-                toggleBtn={option?.toggleBtn}
-                Icon={option.Icon}
-              />
-            ))}
-          </Div>
-        </React.Fragment>
-      ))}
-
-      <Div mt="auto" mb={20}>
-        <Text
-          fontWeight="400"
-          fontSize={18}
-          fontFamily={fontHauora}
-          lineHeight={24}
-          mb={8}
-          color="#0189F9"
-        >
-          Logout
-        </Text>
-        <Text
-          fontWeight="400"
-          fontSize={18}
-          fontFamily={fontHauora}
-          lineHeight={24}
-          mb={6}
-          color="#7B7B7B"
-        >
-          App v 12.81
-        </Text>
-      </Div>
+          <Text
+            fontWeight="400"
+            fontSize={18}
+            fontFamily={fontHauora}
+            lineHeight={24}
+            mb={6}
+            color="#7B7B7B"
+          >
+            App v 12.81
+          </Text>
+        </Div>
+      </Container>
     </ScrollDiv>
   );
 };
@@ -164,9 +167,6 @@ const styles = StyleSheet.create({
 interface OptionType {
   id: number;
   title: string;
-  //
-  //
-  Icon: IconUserCircle;
   description?: string;
   toggleBtn?: boolean;
   iconFontSize?: number;
