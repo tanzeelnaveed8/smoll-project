@@ -1,6 +1,7 @@
 import { Badge, Button, Div, Text } from "react-native-magnus";
-import { IconChevronRight, IconCircleCheck } from "@tabler/icons-react-native";
+import { IconChevronRight } from "@tabler/icons-react-native";
 import { fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
+import Verified from "./Verified";
 
 type PropTypes = {
   name: string;
@@ -51,19 +52,7 @@ const DoctorListCard = (props: PropTypes) => {
             {experience} yrs of experience
           </Text>
 
-          {verified && (
-            <Div flexDir="row">
-              <IconCircleCheck size={16} color="#2F6E20" />
-              <Text
-                fontSize={12}
-                fontFamily={fontHauoraMedium}
-                color="#494949"
-                lineHeight={16}
-              >
-                Verified
-              </Text>
-            </Div>
-          )}
+          {verified && <Verified />}
         </Div>
       </Div>
 
