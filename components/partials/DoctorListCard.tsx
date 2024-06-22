@@ -2,9 +2,18 @@ import { Badge, Button, Div, Text } from "react-native-magnus";
 import { IconChevronRight, IconCircleCheck } from "@tabler/icons-react-native";
 import { fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
 
-const DoctorListCard = () => {
+type PropTypes = {
+  name: string;
+  speciality: string;
+  experience: number;
+  verified: boolean;
+  nextAvailable: string;
+};
+
+const DoctorListCard = (props: PropTypes) => {
+  const { name, speciality, experience, verified, nextAvailable } = props;
   return (
-    <Div pb={20} borderBottomWidth={1} borderColor="#E0E0E0">
+    <Div py={20} borderBottomWidth={1} borderColor="#E0E0E0">
       <Div flexDir="row">
         <Badge
           right={34}
@@ -23,7 +32,7 @@ const DoctorListCard = () => {
             lineHeight={24}
             color="#222222"
           >
-            Dr. Emily Carter
+            {name}
           </Text>
           <Text
             fontSize="md"
@@ -31,7 +40,7 @@ const DoctorListCard = () => {
             color="#494949"
             lineHeight={20}
           >
-            DVM, GPCERT (FelP)
+            {speciality}
           </Text>
           <Text
             fontSize="md"
@@ -39,20 +48,22 @@ const DoctorListCard = () => {
             color="#494949"
             lineHeight={20}
           >
-            5 yrs of experience
+            {experience} yrs of experience
           </Text>
 
-          <Div flexDir="row">
-            <IconCircleCheck size={16} color="#2F6E20" />
-            <Text
-              fontSize={12}
-              fontFamily={fontHauoraMedium}
-              color="#494949"
-              lineHeight={16}
-            >
-              Verified
-            </Text>
-          </Div>
+          {verified && (
+            <Div flexDir="row">
+              <IconCircleCheck size={16} color="#2F6E20" />
+              <Text
+                fontSize={12}
+                fontFamily={fontHauoraMedium}
+                color="#494949"
+                lineHeight={16}
+              >
+                Verified
+              </Text>
+            </Div>
+          )}
         </Div>
       </Div>
 
@@ -73,7 +84,7 @@ const DoctorListCard = () => {
             color="#494949"
             lineHeight={20}
           >
-            06:45 PM today
+            {nextAvailable}
           </Text>
         </Div>
 

@@ -1,11 +1,11 @@
 import Header from "@/components/partials/Header";
 import { fontHauoraSemiBold } from "@/constant/constant";
-import { Div, Text } from "react-native-magnus";
+import { Div, Text, ScrollDiv } from "react-native-magnus";
 import DoctorListCard from "@/components/partials/DoctorListCard";
 
 const DoctotsListScreen = () => {
   return (
-    <Div pt={20}>
+    <ScrollDiv pt={20} showsVerticalScrollIndicator={false}>
       <Header title="Find your Doctor" />
 
       <Div mt={12}>
@@ -18,9 +18,38 @@ const DoctotsListScreen = () => {
           Discover a veterinarian
         </Text>
 
-        <DoctorListCard />
+        <Div>
+          <DoctorListCard
+            name="Dr. Emily Carter"
+            speciality="DVM, GPCERT (FelP)"
+            experience={5}
+            verified
+            nextAvailable="06:45 PM today"
+          />
+          <DoctorListCard
+            name="Dr. Emily Carter"
+            speciality="DVM, GPCERT (FelP)"
+            experience={5}
+            verified
+            nextAvailable="06:45 PM today"
+          />
+          <DoctorListCard
+            name="Dr. Emily Carter"
+            speciality="DVM, GPCERT (FelP)"
+            experience={5}
+            verified
+            nextAvailable="06:45 PM today"
+          />
+          <DoctorListCard
+            name="Dr. Emily Carter"
+            speciality="DVM, GPCERT (FelP)"
+            experience={5}
+            verified
+            nextAvailable="06:45 PM today"
+          />
+        </Div>
       </Div>
-    </Div>
+    </ScrollDiv>
   );
 };
 
