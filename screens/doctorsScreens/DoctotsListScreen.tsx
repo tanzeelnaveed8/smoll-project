@@ -1,6 +1,7 @@
 import Header from "@/components/partials/Header";
 import { fontHauoraSemiBold } from "@/constant/constant";
 import { Div, Text } from "react-native-magnus";
+import DoctorListCard from "@/components/partials/DoctorListCard";
 
 const DoctotsListScreen = () => {
   return (
@@ -17,7 +18,7 @@ const DoctotsListScreen = () => {
           Discover a veterinarian
         </Text>
 
-        
+        <DoctorListCard />
       </Div>
     </Div>
   );

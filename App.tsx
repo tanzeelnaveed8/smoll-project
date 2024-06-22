@@ -27,6 +27,7 @@ async function loadFonts() {
   await Font.loadAsync({
     Hauora: require("./assets/fonts/Hauora//Hauora-Regular.ttf"),
     HauoraSemiBold: require("./assets/fonts/Hauora/Hauora-SemiBold.ttf"),
+    HauoraMedium: require("./assets/fonts/Hauora/Hauora-Medium.ttf"),
   });
 }
 
