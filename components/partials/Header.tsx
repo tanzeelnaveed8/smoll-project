@@ -1,4 +1,6 @@
 import { Div, Icon, Text } from "react-native-magnus";
+import { IconArrowLeft } from "@tabler/icons-react-native";
+import { fontHauoraSemiBold } from "@/constant/constant";
 
 type PropTypes = {
   title: string;
@@ -8,14 +10,15 @@ const Header = (props: PropTypes) => {
   const { title } = props;
   return (
     <Div flexDir="row" alignItems="center" py={9}>
-      <Icon
-        name="arrow-left"
-        fontFamily="Feather"
-        color="#222222"
-        fontSize={26}
-      />
+      <IconArrowLeft size={28} color="#222222" strokeWidth={1.5} />
 
-      <Text fontWeight="600" fontSize="xl" lineHeight={24} mx="auto">
+      <Text
+        fontWeight="600"
+        fontFamily={fontHauoraSemiBold}
+        fontSize="xl"
+        lineHeight={24}
+        mx="auto"
+      >
         {title}
       </Text>
     </Div>

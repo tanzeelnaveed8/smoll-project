@@ -1,4 +1,5 @@
 import Header from "@/components/partials/Header";
+import { fontHauoraSemiBold } from "@/constant/constant";
 import { Div, Text } from "react-native-magnus";
 
 const DoctotsListScreen = () => {
@@ -7,9 +8,16 @@ const DoctotsListScreen = () => {
       <Header title="Find your Doctor" />
 
       <Div mt={12}>
-        <Text fontWeight="600" fontSize="xl" lineHeight={24} mb={20}>
+        <Text
+          fontSize="xl"
+          fontFamily={fontHauoraSemiBold}
+          lineHeight={24}
+          mb={20}
+        >
           Discover a veterinarian
         </Text>
+
+        
       </Div>
     </Div>
   );
