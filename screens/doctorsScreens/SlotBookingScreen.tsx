@@ -1,3 +1,5 @@
+import AvailabilityAndDateSelector from "@/components/partials/AvailabilityAndDateSelector";
+import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import Container from "@/components/partials/Container";
 import DoctorCard from "@/components/partials/DoctorCard";
 import Header from "@/components/partials/Header";
@@ -20,7 +22,10 @@ const SlotBookingScreen = () => {
       </Div>
 
       <Container>
-        <Text>other things..</Text>
+        <ButtonPrimary bgColor="primary">Instant Consultation</ButtonPrimary>
+        <Div mt={24}>
+          <AvailabilityAndDateSelector />
+        </Div>
       </Container>
     </Div>
   );
