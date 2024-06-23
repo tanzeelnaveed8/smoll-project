@@ -23,6 +23,7 @@ import SettingPersonalInfoPhoneNoScreen from "./screens/settings/SettingPersonal
 import SettingPersonalInfoScreen from "./screens/settings/SettingPersonalInfoScreen";
 import DoctotsListScreen from "./screens/doctorsScreens/DoctotsListScreen";
 import SlotBookingScreen from "./screens/doctorsScreens/SlotBookingScreen";
+import DetailsScreen from "./screens/doctorsScreens/DetailsScreen";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -84,7 +85,8 @@ export default function App() {
           {/* <SettingPersonalInfoPhoneNoScreen /> */}
           {/* <SettingPersonalInfoScreen /> */}
           {/* <DoctotsListScreen /> */}
-          <SlotBookingScreen />
+          {/* <SlotBookingScreen /> */}
+          <DetailsScreen />
         </Div>
       </ThemeProvider>
       {/* </ScrollDiv> */}
