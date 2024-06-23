@@ -23,9 +23,10 @@ const CalendarHeader = ({ date }: { date: string }) => {
 
 const AvailabilityAndDateSelector = () => {
   return (
-    <Div>
-      <CalendarProvider date={formattedDate}>
+    <Div style={{height: 136}}>
+      <CalendarProvider date={formattedDate} >
         <ExpandableCalendar
+        allowShadow={false}
           calendarStyle={{
             borderBottomWidth: 1,
             borderColor: "#E0E0E0",
