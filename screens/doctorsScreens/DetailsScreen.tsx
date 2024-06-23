@@ -9,6 +9,7 @@ import {
   IconReceiptRefund,
 } from "@tabler/icons-react-native";
 import Accordion from "@/components/partials/Accordion";
+import ButtonPrimary from "@/components/partials/ButtonPrimary";
 
 const DetailsScreen = () => {
   return (
@@ -136,12 +137,11 @@ const DetailsScreen = () => {
           fontSize="lg"
           lineHeight={24}
           color="#222222"
-          mb={12}
         >
           (FAQ) Frequently Asked Questions
         </Text>
 
-        <Accordion>
+        <Accordion pt={12}>
           <Accordion.title>
             <Text
               fontFamily={fontHauoraMedium}
@@ -156,6 +156,40 @@ const DetailsScreen = () => {
             <Text>This is a dummy content</Text>
           </Accordion.content>
         </Accordion>
+        <Accordion>
+          <Accordion.title>
+            <Text
+              fontFamily={fontHauoraMedium}
+              fontSize="lg"
+              lineHeight={20}
+              color="#494949"
+            >
+              How often should my pet have a check-up?
+            </Text>
+          </Accordion.title>
+          <Accordion.content>
+            <Text>This is a dummy content 2</Text>
+          </Accordion.content>
+        </Accordion>
+        <Accordion>
+          <Accordion.title>
+            <Text
+              fontFamily={fontHauoraMedium}
+              fontSize="lg"
+              lineHeight={20}
+              color="#494949"
+            >
+              Are there any preparations needed before the appointment?
+            </Text>
+          </Accordion.title>
+          <Accordion.content>
+            <Text>This is a dummy content 3</Text>
+          </Accordion.content>
+        </Accordion>
+      </Container>
+
+      <Container mt={32} pb={20}>
+        <ButtonPrimary>Confirm Appointment</ButtonPrimary>
       </Container>
     </ScrollDiv>
   );
