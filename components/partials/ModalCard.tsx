@@ -7,7 +7,7 @@ const ModalCard: React.FC<{
   children: ReactElement<any, string | JSXElementConstructor<any>>;
 }> = ({ visible, onClose, children }) => {
   return (
-    <Modal isVisible={visible} px={20}>
+    <Modal isVisible={visible} px={20} pb={30}>
       <Button bg="transparent" px={0} onPress={onClose}>
         <Icon fontSize={28} color="#222222" name="close" />
       </Button>

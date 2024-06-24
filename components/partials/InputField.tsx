@@ -6,6 +6,7 @@ import { iconFontFamilyType } from "react-native-magnus/lib/typescript/src/ui/ic
 
 const InputField: React.FC<{
   icon?: string;
+  borderColor?: string;
   iconFamily?: iconFontFamilyType;
   placeholder: string;
   marginBottom?: number;
@@ -15,6 +16,7 @@ const InputField: React.FC<{
   inputStyle?: StyleProp<TextStyle>;
   multiline?: boolean;
   numberOfLines?: number;
+  paddingX?: number;
 }> = (props) => {
   const [isFocused, setIsFocused] = useState(false);
   const { floatingPlaceholder } = props;
@@ -64,6 +66,7 @@ const InputField: React.FC<{
       <Input
         style={{
           borderRadius: props.borderRadius ? props.borderRadius : 8,
+          left: typeof props.paddingX === "number" ? props.paddingX : 12,
           ...externalStyles,
         }}
         placeholder={floatingPlaceholder ? "" : props.placeholder}
@@ -75,13 +78,13 @@ const InputField: React.FC<{
         numberOfLines={props.numberOfLines}
         color="#494949"
         fontSize={"xl"}
-        px={12}
+        px={typeof props.paddingX === "number" ? props.paddingX : 12}
         // py={floatingPlaceholder ? 0 : 16}
         pt={floatingPlaceholder ? 24 : 16}
         pb={floatingPlaceholder ? 8 : 16}
         // focusBorderColor="#222222"
         focusBorderColor="#427594"
-        borderColor="#494949"
+        borderColor={props.borderColor ? props.borderColor : "#494949"}
         onFocus={handleFocus}
         onBlur={handleBlur}
         suffix={
@@ -111,7 +114,7 @@ const styles = StyleSheet.create({
   },
   floatingLabel: {
     position: "absolute",
-    left: 12,
+    // left: 12,
     pointerEvents: "none",
   },
 });

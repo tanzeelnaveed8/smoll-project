@@ -15,6 +15,8 @@ import { fontHauora } from "./constant/constant";
 import PetProfileScreen from "./screens/petProfileForm/PetProfileScreen";
 import { Dimensions } from "react-native";
 import PetBookingScreen from "./screens/bookingForm/PetBookingScreen";
+import RequiresUrgentAttentionScreen from "./screens/RequiresUrgentAttentionScreen";
+import InClinicDetailsScreen from "./screens/bookingForm/InClinicDetailsScreen";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -26,8 +28,8 @@ const theme = {
   fontSize: {
     "5xl": 28,
     xl: 18,
-    md: 14,
     lg: 16,
+    md: 14,
   },
   components: {
     Text: {
@@ -66,7 +68,9 @@ export default function App() {
           {/* <LoginScreen /> */}
           {/* <UserProfileScreen /> */}
           {/* <PetProfileScreen /> */}
-          <PetBookingScreen />
+          {/* <PetBookingScreen /> */}
+          {/* <RequiresUrgentAttentionScreen /> */}
+          <InClinicDetailsScreen />
         </Div>
       </ThemeProvider>
     </Div>
