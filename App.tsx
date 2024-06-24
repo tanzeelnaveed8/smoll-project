@@ -81,6 +81,7 @@ export default function App() {
             {/* <UserProfileScreen /> */}
             {/* <PetProfileScreen /> */}
             {/* <PetBookingScreen /> */}
+            {/* <InClinicDetailsScreen /> */}
             {/* <SettingsMainScreen /> */}
             {/* <SettingPersonalInfoFirstNameScreen /> */}
             {/* <SettingPersonalInfoLastNameScreen /> */}
@@ -92,7 +93,6 @@ export default function App() {
             <DetailsScreen />
             {/* <PetBookingScreen /> */}
             {/* <RequiresUrgentAttentionScreen /> */}
-            <InClinicDetailsScreen />
           </Div>
         </ThemeProvider>
         {/* </ScrollDiv> */}
