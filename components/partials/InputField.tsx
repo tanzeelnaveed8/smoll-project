@@ -65,8 +65,7 @@ const InputField: React.FC<{
 
       <Input
         style={{
-          borderRadius: props.borderRadius ? props.borderRadius : 8,
-          left: typeof props.paddingX === "number" ? props.paddingX : 12,
+          borderRadius: 12,
           ...externalStyles,
         }}
         placeholder={floatingPlaceholder ? "" : props.placeholder}

@@ -2,7 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import { Div, Icon, ScrollDiv, Text } from "react-native-magnus";
 import { ThemeProvider } from "react-native-magnus";
 import Onboarding from "./screens/Onboarding";
-import { ScrollView, StyleSheet } from "react-native";
+import { SafeAreaView, ScrollView, StyleSheet } from "react-native";
 
 import * as Font from "expo-font";
 import { useEffect, useState } from "react";
@@ -17,10 +17,21 @@ import { Dimensions } from "react-native";
 import PetBookingScreen from "./screens/bookingForm/PetBookingScreen";
 import RequiresUrgentAttentionScreen from "./screens/RequiresUrgentAttentionScreen";
 import InClinicDetailsScreen from "./screens/bookingForm/InClinicDetailsScreen";
+import SettingsMainScreen from "./screens/settings/SettingsMainScreen";
+import SettingPersonalInfoFirstNameScreen from "./screens/settings/SettingPersonalInfoFirstNameScreen";
+import SettingPersonalInfoLastNameScreen from "./screens/settings/SettingPersonalInfoLastNameScreen";
+import SettingPersonalInfoEmailScreen from "./screens/settings/SettingPersonalInfoEmailScreen";
+import SettingPersonalInfoPhoneNoScreen from "./screens/settings/SettingPersonalInfoPhoneNoScreen";
+import SettingPersonalInfoScreen from "./screens/settings/SettingPersonalInfoScreen";
+import DoctotsListScreen from "./screens/doctorsScreens/DoctotsListScreen";
+import SlotBookingScreen from "./screens/doctorsScreens/SlotBookingScreen";
+import DetailsScreen from "./screens/doctorsScreens/DetailsScreen";
 
 async function loadFonts() {
   await Font.loadAsync({
     Hauora: require("./assets/fonts/Hauora//Hauora-Regular.ttf"),
+    HauoraSemiBold: require("./assets/fonts/Hauora/Hauora-SemiBold.ttf"),
+    HauoraMedium: require("./assets/fonts/Hauora/Hauora-Medium.ttf"),
   });
 }
 
@@ -58,21 +69,34 @@ export default function App() {
   }
   return (
     <Div style={{ flex: 1 }}>
-      <ThemeProvider theme={theme}>
-        <Div style={styles.container}>
-          {/* <Onboarding /> */}
-          {/* <Register /> */}
-          {/* <LoginScreen /> */}
-          {/* <VerifyEmailScreen /> */}
-          {/* <WelcomeMessageScreen /> */}
-          {/* <LoginScreen /> */}
-          {/* <UserProfileScreen /> */}
-          {/* <PetProfileScreen /> */}
-          {/* <PetBookingScreen /> */}
-          {/* <RequiresUrgentAttentionScreen /> */}
-          <InClinicDetailsScreen />
-        </Div>
-      </ThemeProvider>
+      <SafeAreaView style={{ flex: 1 }}>
+        {/* <ScrollDiv style={{ flex: 1 }}> */}
+        <ThemeProvider theme={theme}>
+          <Div style={styles.container}>
+            {/* <Onboarding /> */}
+            {/* <Register /> */}
+            {/* <LoginScreen /> */}
+            {/* <VerifyEmailScreen /> */}
+            {/* <WelcomeMessageScreen /> */}
+            {/* <UserProfileScreen /> */}
+            {/* <PetProfileScreen /> */}
+            {/* <PetBookingScreen /> */}
+            {/* <SettingsMainScreen /> */}
+            {/* <SettingPersonalInfoFirstNameScreen /> */}
+            {/* <SettingPersonalInfoLastNameScreen /> */}
+            {/* <SettingPersonalInfoEmailScreen /> */}
+            {/* <SettingPersonalInfoPhoneNoScreen /> */}
+            {/* <SettingPersonalInfoScreen /> */}
+            {/* <DoctotsListScreen /> */}
+            {/* <SlotBookingScreen /> */}
+            <DetailsScreen />
+            {/* <PetBookingScreen /> */}
+            {/* <RequiresUrgentAttentionScreen /> */}
+            <InClinicDetailsScreen />
+          </Div>
+        </ThemeProvider>
+        {/* </ScrollDiv> */}
+      </SafeAreaView>
     </Div>
   );
 }
@@ -80,13 +104,14 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    height: windowHeight - 70,
+    // height: windowHeight,
     // alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 20,
+    // justifyContent: "center",
+    // Note: instead of padding horizontal use container component
+    // paddingHorizontal: 20,
     fontFamily: "Hauora",
     overflow: "hidden",
-    marginTop: 70,
+    marginTop: 12,
     marginBottom: 34,
     color: "#222222",
   },

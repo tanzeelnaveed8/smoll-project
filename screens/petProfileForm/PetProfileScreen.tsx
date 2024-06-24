@@ -17,11 +17,11 @@ const windowWidth = Dimensions.get("window").width;
 
 const PetProfileScreen = () => {
   const [progress, setProgress] = useState(0.25);
-  const [currentStep, setCurrentStep] = useState(6);
+  const [currentStep, setCurrentStep] = useState(0);
 
   const nextFormHandler = () => {
     setCurrentStep((prev) => prev + 1);
-    setProgress((prev) => prev + 0.22);
+    setProgress((prev) => prev + 1 / 7);
   };
 
   return (
@@ -48,7 +48,7 @@ const PetProfileScreen = () => {
 
       <Div>
         <ButtonPrimary bgColor="primary" onTouchEnd={nextFormHandler}>
-          Next
+          {currentStep === 6 ? "Confirm" : "Next"}
         </ButtonPrimary>
       </Div>
     </Div>

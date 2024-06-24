@@ -29,6 +29,7 @@ const styles = StyleSheet.create({
   imageContainer: {
     aspectRatio: 350 / 212,
     backgroundColor: "#C5C5C5",
+    marginTop: 64,
     marginBottom: 24,
     width: "100%",
   },
