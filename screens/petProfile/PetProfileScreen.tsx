@@ -12,12 +12,15 @@ import PetBirthDateScreen from "./PetBirthDateScreen";
 import PetBreedScreen from "./PetBreedScreen";
 import PetIsNeutralScreen from "./PetIsNeutralScreen";
 import PetBasicDetails from "./PetBasicDetails";
+import Container from "@/components/partials/Container";
+import PetImageUploadScreen from "./PetImageUploadScreen";
+import BackButton from "@/components/partials/BackButton";
 
 const windowWidth = Dimensions.get("window").width;
 
 const PetProfileScreen = () => {
   const [progress, setProgress] = useState(0.25);
-  const [currentStep, setCurrentStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(7);
 
   const nextFormHandler = () => {
     setCurrentStep((prev) => prev + 1);
@@ -25,15 +28,21 @@ const PetProfileScreen = () => {
   };
 
   return (
-    <Div style={styles.container}>
+    <Container pt={20} style={styles.container}>
       <Div>
+        <BackButton mb={24} />
         {/* progress bar */}
         <Progress.Bar
           progress={progress}
           height={8}
           width={windowWidth - 40}
           borderColor="transparent"
-          style={{ marginBottom: 32, backgroundColor: "#EFEFEF" }}
+          style={{
+            marginBottom: 32,
+            backgroundColor: "#EFEFEF",
+            borderRadius: 100,
+          }}
+          color="#427594"
         />
 
         {/* screens */}
@@ -44,6 +53,7 @@ const PetProfileScreen = () => {
         {currentStep === 4 && <PetBreedScreen />}
         {currentStep === 5 && <PetIsNeutralScreen />}
         {currentStep === 6 && <PetBasicDetails />}
+        {currentStep === 7 && <PetImageUploadScreen />}
       </Div>
 
       <Div>
@@ -51,7 +61,7 @@ const PetProfileScreen = () => {
           {currentStep === 6 ? "Confirm" : "Next"}
         </ButtonPrimary>
       </Div>
-    </Div>
+    </Container>
   );
 };
 

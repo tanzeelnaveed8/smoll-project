@@ -76,7 +76,7 @@ export default function App() {
           {/* <VerifyEmailScreen /> */}
           {/* <WelcomeMessageScreen /> */}
           {/* <UserProfileScreen /> */}
-          {/* <PetProfileScreen /> */}
+          <PetProfileScreen />
           {/* <PetBookingScreen /> */}
           {/* <SettingsMainScreen /> */}
           {/* <SettingPersonalInfoFirstNameScreen /> */}
@@ -86,7 +86,7 @@ export default function App() {
           {/* <SettingPersonalInfoScreen /> */}
           {/* <DoctotsListScreen /> */}
           {/* <SlotBookingScreen /> */}
-          <DetailsScreen />
+          {/* <DetailsScreen /> */}
         </Div>
       </ThemeProvider>
       {/* </ScrollDiv> */}
