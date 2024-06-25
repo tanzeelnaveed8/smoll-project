@@ -15,12 +15,13 @@ import PetBasicDetails from "./PetBasicDetails";
 import Container from "@/components/partials/Container";
 import PetImageUploadScreen from "./PetImageUploadScreen";
 import BackButton from "@/components/partials/BackButton";
+import AddMedicalHistoryScreen from "./AddMedicalHistoryScreen";
 
 const windowWidth = Dimensions.get("window").width;
 
 const PetProfileScreen = () => {
   const [progress, setProgress] = useState(0.25);
-  const [currentStep, setCurrentStep] = useState(7);
+  const [currentStep, setCurrentStep] = useState(8);
 
   const nextFormHandler = () => {
     setCurrentStep((prev) => prev + 1);
@@ -54,11 +55,12 @@ const PetProfileScreen = () => {
         {currentStep === 5 && <PetIsNeutralScreen />}
         {currentStep === 6 && <PetBasicDetails />}
         {currentStep === 7 && <PetImageUploadScreen />}
+        {currentStep === 8 && <AddMedicalHistoryScreen />}
       </Div>
 
       <Div>
         <ButtonPrimary bgColor="primary" onTouchEnd={nextFormHandler}>
-          {currentStep === 6 ? "Confirm" : "Next"}
+          {currentStep === 8 ? "Confirm" : "Next"}
         </ButtonPrimary>
       </Div>
     </Container>
