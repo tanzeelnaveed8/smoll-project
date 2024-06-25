@@ -1,6 +1,9 @@
 import { fontHauoraMedium } from "@/constant/constant";
 import { Div, Text, Button } from "react-native-magnus";
-import { IconSquareRoundedPlus } from "@tabler/icons-react-native";
+import {
+  IconSquareRoundedPlus,
+  IconChevronRight,
+} from "@tabler/icons-react-native";
 
 const AddMedicalHistoryScreen = () => {
   return (
@@ -18,6 +21,27 @@ const AddMedicalHistoryScreen = () => {
         We need your address to suggest the nearest vet clinic for in-clinic
         visits
       </Text>
+
+      <Button
+        mt={20}
+        style={{ width: "100%" }}
+        justifyContent="space-between"
+        alignItems="center"
+        bg="transparent"
+        borderColor="#222222"
+        borderWidth={1}
+        rounded={12}
+        color="#494949"
+        fontSize="xl"
+        lineHeight={24}
+        px={16}
+        py={12}
+        suffix={
+          <IconChevronRight size={24} color="#494949" strokeWidth={1.5} />
+        }
+      >
+        Health history
+      </Button>
 
       <Button
         mt={16}
