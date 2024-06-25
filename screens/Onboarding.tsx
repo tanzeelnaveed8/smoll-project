@@ -1,5 +1,7 @@
+import Layout from "@/components/app/Layout";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import { fontHauora } from "@/constant/constant";
+import { NavigationType } from "@/store/types";
 import React, { useEffect, useRef, useState } from "react";
 import {
   FlatList,
@@ -52,7 +54,9 @@ const OnboardingCard: React.FC<{
 
 const dot = [1, 2, 3];
 
-const Onboarding = () => {
+const Onboarding: React.FC<{ navigation: NavigationType }> = ({
+  navigation,
+}) => {
   const [activeCard, setActiveCard] = useState(0);
   const cardContainerRef = useRef<ScrollView | null>(null);
 
@@ -73,7 +77,7 @@ const Onboarding = () => {
   }, [activeCard]);
 
   return (
-    <Div>
+    <Layout>
       <Image
         w={143}
         h={40}
@@ -112,7 +116,9 @@ const Onboarding = () => {
         ))}
       </Div>
 
-      <ButtonPrimary>Get Started</ButtonPrimary>
+      <ButtonPrimary link="Register" navigation={navigation}>
+        Get Started
+      </ButtonPrimary>
 
       <Div style={styles.linkContainer}>
         <Text fontSize={"xl"} fontFamily={fontHauora} color="#494949">
@@ -128,11 +134,14 @@ const Onboarding = () => {
           py={0}
           fontSize={"xl"}
           fontFamily={fontHauora}
+          onPress={() => {
+            navigation.navigate("Login");
+          }}
         >
           Log in
         </Button>
       </Div>
-    </Div>
+    </Layout>
   );
 };
 

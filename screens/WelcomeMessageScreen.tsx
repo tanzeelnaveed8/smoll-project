@@ -1,12 +1,16 @@
+import Layout from "@/components/app/Layout";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import { fontHauora } from "@/constant/constant";
+import { NavigationType } from "@/store/types";
 import React from "react";
 import { StyleSheet } from "react-native";
 import { Div, Image, Text } from "react-native-magnus";
 
-const WelcomeMessageScreen = () => {
+const WelcomeMessageScreen: React.FC<{ navigation: NavigationType }> = ({
+  navigation,
+}) => {
   return (
-    <Div>
+    <Layout>
       <Div style={styles.imageContainer}></Div>
 
       <Text fontSize={"5xl"} fontFamily={fontHauora} mb={12} textAlign="center">
@@ -18,8 +22,14 @@ const WelcomeMessageScreen = () => {
         crafting a profile for your beloved pet.
       </Text>
 
-      <ButtonPrimary>Build Profile</ButtonPrimary>
-    </Div>
+      <ButtonPrimary
+        link="UserProfileForm"
+        params={{ tab: "userName" }}
+        navigation={navigation}
+      >
+        Build Profile
+      </ButtonPrimary>
+    </Layout>
   );
 };
 

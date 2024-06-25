@@ -1,20 +1,56 @@
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import InputField from "@/components/partials/InputField";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import { Button, Div, Text } from "react-native-magnus";
 import * as Progress from "react-native-progress";
 import { Dimensions } from "react-native";
 import ProfileNameScreen from "./ProfileNameScreen";
 import ProfileNumberScreen from "./ProfileNumberScreen";
-import VerifyEmailScreen from "../auth/VerifyEmailScreen";
 import ProfileAddressScreen from "./ProfileAddressScreen";
+import Layout from "@/components/app/Layout";
+import VerifyNumberScreen from "../auth/VerifyNumberScreen";
+import { NavigationType } from "@/store/types";
+import { NavigationAction } from "@react-navigation/native";
 
 const windowWidth = Dimensions.get("window").width;
 
-const UserProfileScreen = () => {
+const UserProfileScreen: React.FC<{
+  navigation: NavigationType;
+  route: { params: { tab: string } };
+}> = ({ route, navigation }) => {
   const [progress, setProgress] = useState(0.25);
   const [currentStep, setCurrentStep] = useState(0);
+  const { tab } = route.params || "";
+
+  useEffect(() => {
+    if (tab === "userAddress") {
+      setCurrentStep(3);
+      setProgress(1);
+    }
+  }, [tab]);
+
+  // React.useEffect(
+  //   () =>
+  //     navigation.addListener(
+  //       "beforeRemove",
+  //       (e: { preventDefault: () => void }) => {
+  //         e.preventDefault();
+  //         if (currentStep === 0) {
+  //           // If we don't have unsaved changes, then we don't need to do anything
+  //           return;
+  //         }
+  //         console.log("currentStep", currentStep);
+  //         if (currentStep === 3) {
+  //           navigation.navigate("Confirmation");
+  //         }
+
+  //         setCurrentStep((prev) => prev - 1);
+  //         setProgress((prev) => prev - 0.25);
+  //       }
+  //     ),
+  //   [navigation, currentStep]
+  // );
 
   const nextFormHandler = () => {
     setCurrentStep((prev) => prev + 1);
@@ -22,7 +58,7 @@ const UserProfileScreen = () => {
   };
 
   return (
-    <Div style={styles.container}>
+    <Layout style={styles.container}>
       <Div>
         {/* progress bar */}
         <Progress.Bar
@@ -45,7 +81,14 @@ const UserProfileScreen = () => {
 
         {currentStep === 0 && <ProfileNameScreen />}
         {currentStep === 1 && <ProfileNumberScreen />}
-        {currentStep === 2 && <VerifyEmailScreen />}
+        {/* {currentStep === 2 && (
+          <VerifyNumberScreen
+            navigation={navigation}
+            onConfirm={() => {
+              navigation.navigate("UserProfileForm", { tab: "userAddress" });
+            }}
+          />
+        )} */}
         {currentStep === 3 && <ProfileAddressScreen />}
       </Div>
 
@@ -67,7 +110,7 @@ const UserProfileScreen = () => {
           Next
         </ButtonPrimary>
       </Div>
-    </Div>
+    </Layout>
   );
 };
 
@@ -77,5 +120,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "space-between",
+    paddingTop: 20,
   },
 });

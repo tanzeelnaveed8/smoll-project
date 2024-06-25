@@ -1,6 +1,12 @@
 import { fontHauora } from "@/constant/constant";
 import React, { useRef, useState } from "react";
-import { Animated, StyleProp, StyleSheet, TextStyle } from "react-native";
+import {
+  Animated,
+  KeyboardTypeOptions,
+  StyleProp,
+  StyleSheet,
+  TextStyle,
+} from "react-native";
 import { Button, Div, Icon, Input, Text } from "react-native-magnus";
 import { iconFontFamilyType } from "react-native-magnus/lib/typescript/src/ui/icon/icon.type";
 
@@ -17,6 +23,8 @@ const InputField: React.FC<{
   multiline?: boolean;
   numberOfLines?: number;
   paddingX?: number;
+  disabled?: boolean;
+  keyboardType?: KeyboardTypeOptions | undefined;
 }> = (props) => {
   const [isFocused, setIsFocused] = useState(false);
   const { floatingPlaceholder } = props;
@@ -45,7 +53,10 @@ const InputField: React.FC<{
 
   return (
     <Div
-      style={styles.container}
+      style={{
+        ...styles.container,
+        pointerEvents: props.disabled ? "none" : "auto",
+      }}
       mb={props.marginBottom ? props.marginBottom : 0}
       mt={props.marginTop ? props.marginTop : 0}
     >
@@ -57,6 +68,7 @@ const InputField: React.FC<{
             fontSize: isFocused ? 12 : 18,
             top: topPosition, // Use Animated.Value for the top style
             color: "#494949",
+            left: typeof props.paddingX === "number" ? props.paddingX : 12,
           }}
         >
           {props.placeholder}
@@ -75,6 +87,7 @@ const InputField: React.FC<{
         bg="transparent"
         multiline={props.multiline}
         numberOfLines={props.numberOfLines}
+        keyboardType={props.keyboardType}
         color="#494949"
         fontSize={"xl"}
         px={typeof props.paddingX === "number" ? props.paddingX : 12}
@@ -83,7 +96,7 @@ const InputField: React.FC<{
         pb={floatingPlaceholder ? 8 : 16}
         // focusBorderColor="#222222"
         focusBorderColor="#427594"
-        borderColor={props.borderColor ? props.borderColor : "#494949"}
+        borderColor={props.borderColor ? props.borderColor : "#222222"}
         onFocus={handleFocus}
         onBlur={handleBlur}
         suffix={

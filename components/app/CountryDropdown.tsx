@@ -1,16 +1,19 @@
 import React, { useState } from "react";
-import { TouchableOpacity } from "react-native";
+import { StyleProp, TouchableOpacity, ViewStyle } from "react-native";
 import { View } from "react-native-animatable";
 
 import { CountryPicker } from "react-native-country-codes-picker";
 import { Text } from "react-native-magnus";
 
-const CountryDropdown = () => {
+const CountryDropdown: React.FC<{ style?: StyleProp<ViewStyle> }> = ({
+  style,
+}) => {
   const [show, setShow] = useState(false);
   const [countryCode, setCountryCode] = useState("");
+  const externalStyles: {} = style ? style : {};
 
   return (
-    <View style={{}}>
+    <View>
       <TouchableOpacity
         onPress={() => setShow(true)}
         style={{
@@ -19,6 +22,7 @@ const CountryDropdown = () => {
           paddingHorizontal: 12,
           paddingVertical: 16,
           borderRadius: 12,
+          ...externalStyles,
         }}
       >
         <Text
@@ -36,8 +40,7 @@ const CountryDropdown = () => {
         show={show}
         // when picker button press you will get the country object with dial code
         pickerButtonOnPress={(item) => {
-          console.log("item", item);
-          setCountryCode(`${item.flag} ${item.name.en}`);
+          setCountryCode(`${item.flag} (${item.dial_code}) ${item.name.en}`);
           setShow(false);
         }}
       />

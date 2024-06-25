@@ -1,27 +1,29 @@
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import ModalCard from "@/components/partials/ModalCard";
 import { fontHauora } from "@/constant/constant";
+import { NavigationType } from "@/store/types";
+
 import React from "react";
 import { View } from "react-native-animatable";
 import { Button, Div, Input, Text } from "react-native-magnus";
 
-const VerifyEmailScreen = () => {
+const VerifyNumberScreen: React.FC<{
+  onConfirm?: () => void;
+  mobileNumber?: string;
+  onClose?: () => void;
+  visible: boolean;
+}> = ({ visible, onConfirm, mobileNumber = "+91xxxxxxxx", onClose }) => {
   return (
-    <ModalCard
-      visible
-      onClose={() => {
-        console.log("closing");
-      }}
-    >
+    <ModalCard visible={visible} onClose={onClose}>
       <View>
         <Text fontSize={"5xl"} fontFamily={fontHauora} mb={4}>
-          Verify your number
+          Enter your verification code
         </Text>
 
         <Text fontSize={"xl"} mb={24} color="#494949">
           We have send a 4 digit code to the phone number{" "}
           <Text fontSize={"xl"} color="#222222">
-            +91xxxxxxxx
+            {mobileNumber}
           </Text>
         </Text>
 
@@ -50,7 +52,17 @@ const VerifyEmailScreen = () => {
           Resend Code
         </Button>
 
-        <ButtonPrimary bgColor="primary">Confirm</ButtonPrimary>
+        <ButtonPrimary
+          bgColor="primary"
+          onTouchEnd={onConfirm}
+          // onTouchEnd={() => {
+          //   if (onConfirm) {
+          //     onConfirm();
+          //   } else navigation.navigate("SignUpUserName");
+          // }}
+        >
+          Confirm
+        </ButtonPrimary>
 
         <Div mt={24} style={{ flexDirection: "row", justifyContent: "center" }}>
           <Text fontSize={16} color="#6B6B6B" fontFamily={fontHauora}>
@@ -72,4 +84,4 @@ const VerifyEmailScreen = () => {
   );
 };
 
-export default VerifyEmailScreen;
+export default VerifyNumberScreen;

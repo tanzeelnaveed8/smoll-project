@@ -1,9 +1,14 @@
+import CountryDropdown from "@/components/app/CountryDropdown";
+import Layout from "@/components/app/Layout";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import InputField from "@/components/partials/InputField";
+import ModalCard from "@/components/partials/ModalCard";
 import { fontHauora } from "@/constant/constant";
-import React from "react";
+import { NavigationType } from "@/store/types";
+import React, { useEffect, useState } from "react";
 import { FlatList, StyleSheet } from "react-native";
 import { Button, Div, Icon, Image, Input, Text } from "react-native-magnus";
+import VerifyNumberScreen from "./VerifyNumberScreen";
 
 const formFields = [
   {
@@ -20,75 +25,90 @@ const formFields = [
   },
 ];
 
-const Register = () => {
+const Register: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
+  const [showVerificationScreen, setShowVerificationScreen] = useState(false);
+  const [showRegisterForm, setShowRetregisterForm] = useState(false);
+
+  useEffect(() => {
+    setShowRetregisterForm(true);
+  }, []);
+
   return (
-    <Div style={styles.container}>
-      <Div>
-        <Text
-          fontWeight="600"
-          fontSize={"5xl"}
-          fontFamily={fontHauora}
-          lineHeight={36}
-          mb={20}
-        >
-          Let’s Get Started!
-        </Text>
-
-        <FlatList
-          style={{ marginBottom: 8 }}
-          data={formFields}
-          renderItem={({ item, index }) => (
-            <InputField
-              placeholder={item.placeholder}
-              icon={item.icon || ""}
-              iconFamily="Ionicons"
-              marginBottom={index === formFields.length - 1 ? 0 : 16}
-            />
-          )}
-          keyExtractor={(item, i) => `${i}`}
-        />
-
-        <Text fontFamily={fontHauora} color="#7B7B7B" fontSize={"md"} mb={32}>
-          Password must be at least 8 characters, uppercase, lowercase, and a
-          special character.
-        </Text>
-
-        <ButtonPrimary bgColor="primary">Register</ButtonPrimary>
-
-        <Div style={styles.linkContainer}>
-          <Text fontSize={"xl"} fontFamily={fontHauora} color="#7B7B7B">
-            Already have an account?{" "}
-          </Text>
-          {/* <Text fontSize={"xl"} fontFamily={fontHauora} color="#0189F9">
-          Log in
-        </Text> */}
-          <Button
-            color="#0189F9"
-            bg="transparent"
-            px={0}
-            py={0}
-            fontSize={"xl"}
+    <ModalCard
+      visible={showRegisterForm}
+      backBtn
+      onClose={() => {
+        navigation.goBack();
+      }}
+    >
+      <Div style={styles.container}>
+        <Div>
+          <Text
+            fontWeight="600"
+            fontSize={"5xl"}
             fontFamily={fontHauora}
+            lineHeight={36}
+            mb={20}
           >
-            Log in
-          </Button>
+            {/* Let’s Get Started! */}
+            Login/Signup
+          </Text>
+
+          <CountryDropdown
+            style={{ borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }}
+          />
+
+          <InputField
+            placeholder="Enter Phone number"
+            marginBottom={32}
+            borderColor="#222222"
+            keyboardType="number-pad"
+            inputStyle={{
+              borderRadius: 12,
+              borderTopLeftRadius: 0,
+              borderTopRightRadius: 0,
+            }}
+          />
+
+          <ButtonPrimary
+            bgColor="primary"
+            // link="VerifyNumber"
+            // navigation={navigation}
+            onTouchEnd={() => {
+              setShowVerificationScreen(true);
+            }}
+          >
+            Get OTP
+          </ButtonPrimary>
+        </Div>
+
+        {showVerificationScreen && (
+          <VerifyNumberScreen
+            onClose={() => {
+              setShowVerificationScreen(false);
+            }}
+            visible={showVerificationScreen}
+            onConfirm={() => {
+              navigation.navigate("SignUpUserName");
+            }}
+          />
+        )}
+
+        <Div>
+          <Text
+            fontSize={"md"}
+            fontFamily={fontHauora}
+            color="#7B7B7B"
+            textAlign="center"
+            maxW={306}
+            mx={"auto"}
+          >
+            By singing up, I agree to Smoll <Text>Terms & Conditions</Text> and{" "}
+            <Text>Privacy Policy</Text>
+          </Text>
         </Div>
       </Div>
-
-      <Div>
-        <Text
-          fontSize={"md"}
-          fontFamily={fontHauora}
-          color="#7B7B7B"
-          textAlign="center"
-          maxW={306}
-          mx={"auto"}
-        >
-          By singing up, I agree to Smoll <Text>Terms & Conditions</Text> and{" "}
-          <Text>Privacy Policy</Text>
-        </Text>
-      </Div>
-    </Div>
+    </ModalCard>
   );
 };
 
@@ -97,8 +117,10 @@ export default Register;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 20,
     justifyContent: "space-between",
+    paddingTop: 20,
+    // paddingTop: 20,
+    // backgroundColor: "#fff",
   },
   linkContainer: {
     flexDirection: "row",
