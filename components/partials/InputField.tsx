@@ -12,6 +12,7 @@ import { iconFontFamilyType } from "react-native-magnus/lib/typescript/src/ui/ic
 
 const InputField: React.FC<{
   icon?: string;
+  iconColor?: string;
   borderColor?: string;
   iconFamily?: iconFontFamilyType;
   placeholder: string;
@@ -29,7 +30,7 @@ const InputField: React.FC<{
   const [isFocused, setIsFocused] = useState(false);
   const { floatingPlaceholder } = props;
 
-  const topPosition = useRef(new Animated.Value(16)).current; // Initial top position
+  const topPosition = useRef(new Animated.Value(18)).current; // Initial top position
 
   const handleFocus = () => {
     setIsFocused(true);
@@ -91,6 +92,7 @@ const InputField: React.FC<{
         color="#494949"
         fontSize={"xl"}
         px={typeof props.paddingX === "number" ? props.paddingX : 12}
+        pr={props.icon ? 30 : 12}
         // py={floatingPlaceholder ? 0 : 16}
         pt={floatingPlaceholder ? 24 : 16}
         pb={floatingPlaceholder ? 8 : 16}
@@ -99,21 +101,40 @@ const InputField: React.FC<{
         borderColor={props.borderColor ? props.borderColor : "#222222"}
         onFocus={handleFocus}
         onBlur={handleBlur}
-        suffix={
-          props.icon ? (
-            <Button py={0} px={0} bg={"transparent"} ripple>
-              <Icon
-                name={props.icon}
-                color="gray900"
-                fontFamily={props.iconFamily ? props.iconFamily : "Ionicons"}
-                fontSize={24}
-              />
-            </Button>
-          ) : (
-            ""
-          )
-        }
+        // suffix={
+        //   props.icon ? (
+        //     <Button py={0} px={0} bg={"transparent"} ripple>
+        //       <Icon
+        //         name={props.icon}
+        //         color={props.iconColor || "gray900"}
+        //         fontFamily={props.iconFamily ? props.iconFamily : "Ionicons"}
+        //         fontSize={24}
+        //       />
+        //     </Button>
+        //   ) : (
+        //     ""
+        //   )
+        // }
       />
+
+      {props.icon && (
+        <Button
+          py={0}
+          px={0}
+          bg={"transparent"}
+          position="absolute"
+          top={20}
+          right={typeof props.paddingX === "number" ? props.paddingX : 12}
+          ripple
+        >
+          <Icon
+            name={props.icon}
+            color={props.iconColor || "gray900"}
+            fontFamily={props.iconFamily ? props.iconFamily : "Ionicons"}
+            fontSize={24}
+          />
+        </Button>
+      )}
     </Div>
   );
 };
@@ -128,5 +149,16 @@ const styles = StyleSheet.create({
     position: "absolute",
     // left: 12,
     pointerEvents: "none",
+  },
+  iconBtn: {
+    // top: 0,
+    position: "absolute",
+    top: 0,
+    left: 0,
+    zIndex: 50,
+    pointerEvents: "none",
+    backgroundColor: "red",
+    // width: 50,
+    // height: 50,
   },
 });

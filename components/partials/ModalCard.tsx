@@ -2,12 +2,12 @@ import { NavigationType } from "@/store/types";
 import React, { JSXElementConstructor, ReactElement } from "react";
 import { Button, Div, Icon, Modal, Text } from "react-native-magnus";
 
+let initial = true;
 const ModalCard: React.FC<{
-  visible?: boolean;
   onClose?: () => void;
   backBtn?: boolean;
   children: ReactElement<any, string | JSXElementConstructor<any>>;
-}> = ({ visible = true, onClose, children, backBtn }) => {
+}> = ({ onClose, children, backBtn }) => {
   return (
     <Modal isVisible px={20} pb={30}>
       <Button

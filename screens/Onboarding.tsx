@@ -135,7 +135,7 @@ const Onboarding: React.FC<{ navigation: NavigationType }> = ({
           fontSize={"xl"}
           fontFamily={fontHauora}
           onPress={() => {
-            navigation.navigate("Login");
+            navigation.navigate("Register");
           }}
         >
           Log in

@@ -34,7 +34,14 @@ const UserNameScreen: React.FC<{ navigation: NavigationType }> = ({
           marginBottom={32}
         />
 
-        <ButtonPrimary bgColor="primary">Continue</ButtonPrimary>
+        <ButtonPrimary
+          bgColor="primary"
+          onTouchEnd={() => {
+            navigation.navigate("Home");
+          }}
+        >
+          Continue
+        </ButtonPrimary>
       </Div>
     </ModalCard>
   );

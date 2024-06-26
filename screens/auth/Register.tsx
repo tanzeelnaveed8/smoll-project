@@ -75,24 +75,13 @@ const Register: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
             // link="VerifyNumber"
             // navigation={navigation}
             onTouchEnd={() => {
-              setShowVerificationScreen(true);
+              navigation.navigate("VerifyNumber");
+              // setShowVerificationScreen(true);
             }}
           >
             Get OTP
           </ButtonPrimary>
         </Div>
-
-        {showVerificationScreen && (
-          <VerifyNumberScreen
-            onClose={() => {
-              setShowVerificationScreen(false);
-            }}
-            visible={showVerificationScreen}
-            onConfirm={() => {
-              navigation.navigate("SignUpUserName");
-            }}
-          />
-        )}
 
         <Div>
           <Text

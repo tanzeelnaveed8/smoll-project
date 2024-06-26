@@ -1,44 +1,56 @@
 import CountryDropdown from "@/components/app/CountryDropdown";
+import Layout from "@/components/app/Layout";
+import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import InputField from "@/components/partials/InputField";
+import ModalCard from "@/components/partials/ModalCard";
 import SelectInput from "@/components/partials/SelectInput";
+import { NavigationType } from "@/store/types";
 import React from "react";
-import { Div, Text } from "react-native-magnus";
+import { Button, Div, Modal, Text } from "react-native-magnus";
 
-const ProfileAddressScreen = () => {
+const ProfileAddressScreen: React.FC<{ navigation: NavigationType }> = ({
+  navigation,
+}) => {
   return (
-    <Div>
-      <Text fontSize={"4xl"} mb={4}>
-        What’s your address?
-      </Text>
-      <Text fontSize={"xl"} mb={20}>
-        We will use your address for pharmacy fulfillments.
-      </Text>
+    <ModalCard backBtn>
+      <Div flex={1} justifyContent="space-between">
+        <Div>
+          <Text fontSize={"6xl"} mb={4}>
+            What’s your address?
+          </Text>
+          <Text fontSize={"xl"} mb={20}>
+            We need your address to suggest the nearest vet clinic for in-clinic
+            visits
+          </Text>
 
-      <Div style={{ gap: 16 }}>
-        <InputField
-          placeholder="Flat/Villa No"
-          inputStyle={{
-            borderRadius: 12,
-          }}
-        />
-        <InputField
-          placeholder="Street address"
-          inputStyle={{
-            borderRadius: 12,
-          }}
-        />
+          <Div style={{ gap: 16 }}>
+            <InputField
+              placeholder="Flat/Villa No"
+              inputStyle={{
+                borderRadius: 12,
+              }}
+            />
+            <InputField
+              placeholder="Street address"
+              inputStyle={{
+                borderRadius: 12,
+              }}
+            />
 
-        <SelectInput />
-        <CountryDropdown />
+            <SelectInput />
+            <CountryDropdown />
 
-        <InputField
-          placeholder="Postal code"
-          inputStyle={{
-            borderRadius: 12,
-          }}
-        />
+            <InputField
+              placeholder="Postal code"
+              inputStyle={{
+                borderRadius: 12,
+              }}
+            />
+          </Div>
+        </Div>
+        <ButtonPrimary bgColor="primary">Confirm</ButtonPrimary>
       </Div>
-    </Div>
+    </ModalCard>
   );
 };
 

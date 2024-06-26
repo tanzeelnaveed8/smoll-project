@@ -8,13 +8,14 @@ import { View } from "react-native-animatable";
 import { Button, Div, Input, Text } from "react-native-magnus";
 
 const VerifyNumberScreen: React.FC<{
-  onConfirm?: () => void;
-  mobileNumber?: string;
-  onClose?: () => void;
-  visible: boolean;
-}> = ({ visible, onConfirm, mobileNumber = "+91xxxxxxxx", onClose }) => {
+  navigation: NavigationType;
+}> = ({ navigation }) => {
   return (
-    <ModalCard visible={visible} onClose={onClose}>
+    <ModalCard
+      onClose={() => {
+        navigation.goBack();
+      }}
+    >
       <View>
         <Text fontSize={"5xl"} fontFamily={fontHauora} mb={4}>
           Enter your verification code
@@ -23,7 +24,7 @@ const VerifyNumberScreen: React.FC<{
         <Text fontSize={"xl"} mb={24} color="#494949">
           We have send a 4 digit code to the phone number{" "}
           <Text fontSize={"xl"} color="#222222">
-            {mobileNumber}
+            (+971) 82 474 7493
           </Text>
         </Text>
 
@@ -54,12 +55,10 @@ const VerifyNumberScreen: React.FC<{
 
         <ButtonPrimary
           bgColor="primary"
-          onTouchEnd={onConfirm}
-          // onTouchEnd={() => {
-          //   if (onConfirm) {
-          //     onConfirm();
-          //   } else navigation.navigate("SignUpUserName");
-          // }}
+          // onTouchEnd={onConfirm}
+          onTouchEnd={() => {
+            navigation.navigate("SignUpUserName");
+          }}
         >
           Confirm
         </ButtonPrimary>

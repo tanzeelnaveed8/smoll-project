@@ -89,7 +89,7 @@ const UserProfileScreen: React.FC<{
             }}
           />
         )} */}
-        {currentStep === 3 && <ProfileAddressScreen />}
+        {/* {currentStep === 3 && <ProfileAddressScreen />} */}
       </Div>
 
       <Div>
