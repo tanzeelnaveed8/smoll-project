@@ -5466,6 +5466,11 @@ react-native-calendars@^1.1305.0:
   optionalDependencies:
     moment "^2.29.4"
 
+react-native-confetti-cannon@^1.5.2:
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/react-native-confetti-cannon/-/react-native-confetti-cannon-1.5.2.tgz#ca1a05edd2a64b080ea8b6238c49277908e1f123"
+  integrity sha512-IZuWjlW7QsdxEGNnvpD6W+7iKCCQhnd5BvuNvMtirU7Nxm8WS2N6LPGMBz1ZYDuusG+GRZkoXXTNCdoAAGpCTg==
+
 react-native-country-codes-picker@^2.3.5:
   version "2.3.5"
   resolved "https://registry.yarnpkg.com/react-native-country-codes-picker/-/react-native-country-codes-picker-2.3.5.tgz#159cbbcee14716533cdaa9997d457ab1a943038c"

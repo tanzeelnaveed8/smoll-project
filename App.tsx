@@ -24,6 +24,7 @@ import SettingPersonalInfoScreen from "./screens/settings/SettingPersonalInfoScr
 import DoctotsListScreen from "./screens/doctorsScreens/DoctotsListScreen";
 import SlotBookingScreen from "./screens/doctorsScreens/SlotBookingScreen";
 import DetailsScreen from "./screens/doctorsScreens/DetailsScreen";
+import ConfirmationScreen from "./screens/petProfile/ConfirmationScreen";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -76,7 +77,7 @@ export default function App() {
           {/* <VerifyEmailScreen /> */}
           {/* <WelcomeMessageScreen /> */}
           {/* <UserProfileScreen /> */}
-          <PetProfileScreen />
+          {/* <PetProfileScreen /> */}
           {/* <PetBookingScreen /> */}
           {/* <SettingsMainScreen /> */}
           {/* <SettingPersonalInfoFirstNameScreen /> */}
@@ -87,6 +88,7 @@ export default function App() {
           {/* <DoctotsListScreen /> */}
           {/* <SlotBookingScreen /> */}
           {/* <DetailsScreen /> */}
+          <ConfirmationScreen />
         </Div>
       </ThemeProvider>
       {/* </ScrollDiv> */}
