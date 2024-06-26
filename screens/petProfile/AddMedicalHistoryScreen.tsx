@@ -4,6 +4,7 @@ import {
   IconSquareRoundedPlus,
   IconChevronRight,
 } from "@tabler/icons-react-native";
+import PetDetailsModal from "./PetDetailsModal";
 
 const AddMedicalHistoryScreen = () => {
   return (
@@ -62,6 +63,8 @@ const AddMedicalHistoryScreen = () => {
       >
         Add Health History
       </Button>
+
+      <PetDetailsModal />
     </Div>
   );
 };
