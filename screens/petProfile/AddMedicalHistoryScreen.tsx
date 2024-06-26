@@ -5,8 +5,10 @@ import {
   IconChevronRight,
 } from "@tabler/icons-react-native";
 import PetDetailsModal from "./PetDetailsModal";
+import { useState } from "react";
 
 const AddMedicalHistoryScreen = () => {
+  const [open, setOpen] = useState(false);
   return (
     <Div>
       <Text fontSize={32} lineHeight={40} color="#222222" mb={4}>
@@ -40,6 +42,7 @@ const AddMedicalHistoryScreen = () => {
         suffix={
           <IconChevronRight size={24} color="#494949" strokeWidth={1.5} />
         }
+        onPress={() => setOpen(true)}
       >
         Health history
       </Button>
@@ -64,7 +67,7 @@ const AddMedicalHistoryScreen = () => {
         Add Health History
       </Button>
 
-      <PetDetailsModal />
+      <PetDetailsModal open={open} onClose={() => setOpen(false)} />
     </Div>
   );
 };
