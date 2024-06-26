@@ -1,16 +1,27 @@
 import { useEffect, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { IconPlus, IconStarFilled } from "@tabler/icons-react-native";
-import { Button, Div } from "react-native-magnus";
+import { Button, Div, Text } from "react-native-magnus";
+import { fontHauoraSemiBold } from "@/constant/constant";
 
 type PropTypes = {
   isPrimary?: Boolean;
   onChange?: (value: ImagePicker.ImagePickerResult) => void;
   uri?: string;
+  plusIcon?: boolean;
+  w?: number;
+  h?: number;
 };
 
 const ImageUpload = (props: PropTypes) => {
-  const { isPrimary = false, onChange, uri } = props;
+  const {
+    isPrimary = false,
+    onChange,
+    uri,
+    plusIcon = true,
+    w = 102,
+    h = 100,
+  } = props;
   const [image, setImage] = useState<null | string>(null);
 
   const pickImage = async () => {
@@ -33,13 +44,7 @@ const ImageUpload = (props: PropTypes) => {
 
   return image ? (
     <Button px={0} py={0} onPress={pickImage}>
-      <Div
-        w={102}
-        h={100}
-        rounded={8}
-        bgImg={{ uri: image }}
-        position="relative"
-      >
+      <Div w={w} h={h} rounded={8} bgImg={{ uri: image }} position="relative">
         {isPrimary && (
           <IconStarFilled
             size={21}
@@ -51,14 +56,20 @@ const ImageUpload = (props: PropTypes) => {
     </Button>
   ) : (
     <Button
-      w={102}
-      h={100}
+      w={w}
+      h={h}
       bg="#F4F6F8"
       rounded={8}
       position="relative"
       onPress={pickImage}
     >
-      <IconPlus size={32} color="#222222" strokeWidth={1.5} />
+      {plusIcon ? (
+        <IconPlus size={32} color="#222222" strokeWidth={1.5} />
+      ) : (
+        <Text fontFamily={fontHauoraSemiBold} fontSize="xl" lineHeight={24}>
+          Upload
+        </Text>
+      )}
 
       {isPrimary && (
         <IconStarFilled
