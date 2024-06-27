@@ -42,6 +42,8 @@ import ProfileAddressScreen from "./screens/profile/ProfileAddressScreen";
 import VerifyEmailScreen from "./screens/AccountSetup/VerifyEmailScreen";
 import VerifyEmailOtpScreen from "./screens/AccountSetup/VerifyEmailOtpScreen";
 import HomeScreen from "./screens/HomeScreen";
+import MembershipScreen from "./screens/HumanCounselling/MembershipScreen";
+import HumanCounsellingMessageScreen from "./screens/HumanCounselling/HumanCounsellingMessageScreen";
 
 type ScreenComponentType<P, N extends string> = React.ComponentType<P>;
 
@@ -63,10 +65,12 @@ const theme = {
   },
   colors: {
     primary: "#427594",
+    darkGreyText: "#494949",
   },
   components: {
     Text: {
       fontFamily: fontHauora,
+      color: "#222",
     },
     Input: {
       fontFamily: fontHauora,
@@ -95,12 +99,14 @@ const App = () => {
   }
   return (
     <SafeAreaView style={styles.safeAreaViewContainer}>
+      {/* <ScrollDiv contentContainerStyle={{ flexGrow: 1 }}> */}
       <ThemeProvider theme={theme}>
         <NavigationContainer>
           <Stack.Navigator
-            initialRouteName="Onboarding"
+            initialRouteName="Membership"
             screenOptions={{
               headerShown: false,
+              statusBarHidden: true,
             }}
           >
             <Stack.Screen name="Onboarding" component={Onboarding} />
@@ -123,6 +129,11 @@ const App = () => {
               component={VerifyEmailOtpScreen}
             />
             <Stack.Screen name="PetProfileForm" component={PetProfileScreen} />
+            <Stack.Screen name="Membership" component={MembershipScreen} />
+            <Stack.Screen
+              name="HumanCounsellingMessage"
+              component={HumanCounsellingMessageScreen}
+            />
 
             {/* <Stack.Screen
               name="UserProfileForm"
@@ -141,6 +152,7 @@ const App = () => {
           <Tab.Screen name="Settings" component={SettingsScreen} />
         </Tab.Navigator> */}
       </ThemeProvider>
+      {/* </ScrollDiv> */}
     </SafeAreaView>
   );
 };
