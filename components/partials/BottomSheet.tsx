@@ -1,0 +1,39 @@
+import { Modal, Div, ModalProps, Button } from "react-native-magnus";
+import { IconX } from "@tabler/icons-react-native";
+
+interface PropTypes extends ModalProps {
+  showCloseIcon?: boolean;
+  onCloseIconClick?: () => void;
+}
+
+const BottomSheet = (props: PropTypes) => {
+  const {
+    children,
+    showCloseIcon = true,
+    onCloseIconClick,
+    ...restProps
+  } = props;
+  return (
+    <Modal
+      h="80%"
+      roundedTop={12}
+      p={20}
+      swipeDirection={["down"]}
+      {...restProps}
+      onSwipeComplete={onCloseIconClick}
+    >
+      <Div mx="auto" w={44} h={4} rounded={4} bg="#DEDEDE" mb={16} />
+      {showCloseIcon ? (
+        <Button px={0} py={0} bg="transparent" onPress={onCloseIconClick}>
+          <IconX size={24} color="#222222" strokeWidth={1.5} />
+        </Button>
+      ) : (
+        <></>
+      )}
+
+      <Div mt={16}>{children}</Div>
+    </Modal>
+  );
+};
+
+export default BottomSheet;
