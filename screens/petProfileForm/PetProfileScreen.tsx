@@ -14,18 +14,22 @@ import PetIsNeutralScreen from "./PetIsNeutralScreen";
 import PetBasicDetails from "./PetBasicDetails";
 import Layout from "@/components/app/Layout";
 import { NavigationType } from "@/store/types";
+import PetImageUploadScreen from "./PetImageUploadScreen";
+import AddMedicalHistoryScreen from "./AddMedicalHistoryScreen";
+import PetDetailsModal from "./PetDetailsModal";
 
 const windowWidth = Dimensions.get("window").width;
+const totalScreens = 8;
 
 const PetProfileScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
-  const [progress, setProgress] = useState(0.25);
+  const [progress, setProgress] = useState(1 / totalScreens);
   const [currentStep, setCurrentStep] = useState(0);
 
   const nextFormHandler = () => {
     setCurrentStep((prev) => prev + 1);
-    setProgress((prev) => prev + 1 / 7);
+    setProgress((prev) => prev + 1 / totalScreens);
   };
 
   React.useEffect(
@@ -45,7 +49,7 @@ const PetProfileScreen: React.FC<{ navigation: NavigationType }> = ({
           }
 
           setCurrentStep((prev) => prev - 1);
-          setProgress((prev) => prev - 1 / 7);
+          setProgress((prev) => prev - 1 / totalScreens);
         }
       ),
     [navigation, currentStep]
@@ -63,7 +67,6 @@ const PetProfileScreen: React.FC<{ navigation: NavigationType }> = ({
             borderColor="transparent"
             style={{ marginBottom: 32, backgroundColor: "#EFEFEF" }}
           />
-
           {/* screens */}
           {currentStep === 0 && <PetNameScreen />}
           {currentStep === 1 && <PetBirthDateScreen />}
@@ -72,11 +75,21 @@ const PetProfileScreen: React.FC<{ navigation: NavigationType }> = ({
           {currentStep === 4 && <PetBreedScreen />}
           {currentStep === 5 && <PetIsNeutralScreen />}
           {currentStep === 6 && <PetBasicDetails />}
+          {currentStep === 7 && <PetImageUploadScreen />}
+          {currentStep === 8 && <AddMedicalHistoryScreen />}
+          {currentStep === 9 && (
+            <PetDetailsModal
+              onClose={() => {
+                console.log("close");
+              }}
+              open={currentStep === 9}
+            />
+          )}
         </Div>
 
         <Div>
           <ButtonPrimary bgColor="primary" onTouchEnd={nextFormHandler}>
-            {currentStep === 6 ? "Confirm" : "Next"}
+            {currentStep === totalScreens ? "Confirm" : "Next"}
           </ButtonPrimary>
         </Div>
       </Div>

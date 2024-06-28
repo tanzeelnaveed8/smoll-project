@@ -32,6 +32,7 @@ import SettingPersonalInfoScreen from "./screens/settings/SettingPersonalInfoScr
 import DoctotsListScreen from "./screens/doctorsScreens/DoctotsListScreen";
 import SlotBookingScreen from "./screens/doctorsScreens/SlotBookingScreen";
 import DetailsScreen from "./screens/doctorsScreens/DetailsScreen";
+import ConfirmationScreen from "./screens/petProfileForm/ConfirmationScreen";
 
 import { NavigationContainer, ParamListBase } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -103,7 +104,7 @@ const App = () => {
       <ThemeProvider theme={theme}>
         <NavigationContainer>
           <Stack.Navigator
-            initialRouteName="Membership"
+            initialRouteName="Onboarding"
             screenOptions={{
               headerShown: false,
               statusBarHidden: true,

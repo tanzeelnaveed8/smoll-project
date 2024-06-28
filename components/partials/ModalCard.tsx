@@ -15,7 +15,15 @@ const ModalCard: React.FC<{
   title?: string;
 }> = ({ onClose, children, backBtn, pt, title }) => {
   return (
-    <Modal isVisible px={20} pb={30} pt={pt ? pt : 0}>
+    <Modal
+      isVisible
+      px={20}
+      pb={30}
+      pt={pt ? pt : 10}
+      h={"98%"}
+      roundedTop={12}
+      swipeDirection={["down"]}
+    >
       <Div flexDir="row" position="relative">
         <Button
           bg="transparent"

@@ -7,6 +7,15 @@ import * as Progress from "react-native-progress";
 import { Dimensions } from "react-native";
 import Container from "@/components/partials/Container";
 import BackButton from "@/components/partials/BackButton";
+import PetNameScreen from "../petProfileForm/PetNameScreen";
+import PetBirthDateScreen from "../petProfileForm/PetBirthDateScreen";
+import PetGenderScreen from "../petProfileForm/PetGenderScreen";
+import PetAnimalTypeScreen from "../petProfileForm/PetAnimalTypeScreen";
+import PetBreedScreen from "../petProfileForm/PetBreedScreen";
+import PetIsNeutralScreen from "../petProfileForm/PetIsNeutralScreen";
+import PetBasicDetails from "../petProfileForm/PetBasicDetails";
+import PetImageUploadScreen from "../petProfileForm/PetImageUploadScreen";
+import AddMedicalHistoryScreen from "../petProfileForm/AddMedicalHistoryScreen";
 // import PetNameScreen from "./PetNameScreen";
 // import PetGenderScreen from "./PetGenderScreen";
 // import PetAnimalTypeScreen from "./PetAnimalTypeScreen";
@@ -49,7 +58,7 @@ const PetProfileScreen = () => {
         />
 
         {/* screens */}
-        {/* {currentStep === 0 && <PetNameScreen />}
+        {currentStep === 0 && <PetNameScreen />}
         {currentStep === 1 && <PetBirthDateScreen />}
         {currentStep === 2 && <PetGenderScreen />}
         {currentStep === 3 && <PetAnimalTypeScreen />}
@@ -57,7 +66,7 @@ const PetProfileScreen = () => {
         {currentStep === 5 && <PetIsNeutralScreen />}
         {currentStep === 6 && <PetBasicDetails />}
         {currentStep === 7 && <PetImageUploadScreen />}
-        {currentStep === 8 && <AddMedicalHistoryScreen />} */}
+        {currentStep === 8 && <AddMedicalHistoryScreen />}
       </Div>
 
       <Div>
