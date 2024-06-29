@@ -1,3 +1,4 @@
+import BottomSheet from "@/components/partials/BottomSheet";
 import ModalCard from "@/components/partials/ModalCard";
 import {
   fontHauora,
@@ -6,7 +7,8 @@ import {
   fontHauoraSemiBold,
 } from "@/constant/constant";
 import { NavigationType } from "@/store/types";
-import React, { useState } from "react";
+import { useRoute } from "@react-navigation/native";
+import React, { useEffect, useState } from "react";
 import { Dimensions, FlatList, StyleSheet } from "react-native";
 import { Button, Div, Icon, Image, Text } from "react-native-magnus";
 import * as Progress from "react-native-progress";
@@ -31,10 +33,22 @@ const stepsBtn = [
 const AccountSetupScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
+  const route = useRoute();
+  const showModal = true;
+
   const [completedSteps, setCompletedSteps] = useState(["Basic Details"]);
 
+  const [isVisible, setIsVisible] = useState(showModal ? showModal : true);
+
+  useEffect(() => {
+    const showModal = route.params?.showModal === "true";
+    if (showModal) {
+      setIsVisible(showModal);
+    }
+  }, [route.params]);
+
   return (
-    <ModalCard backBtn>
+    <BottomSheet isVisible={isVisible} h="95%">
       <Div>
         <Text fontSize={"6xl"} mb={12}>
           Jane, let’s finish setting up your account
@@ -95,6 +109,7 @@ const AccountSetupScreen: React.FC<{ navigation: NavigationType }> = ({
                 w={"100%"}
                 bg="transparent"
                 onPress={() => {
+                  setIsVisible(false);
                   navigation.navigate(item.link);
                 }}
               >
@@ -137,7 +152,7 @@ const AccountSetupScreen: React.FC<{ navigation: NavigationType }> = ({
           keyExtractor={(item) => item.name}
         />
       </Div>
-    </ModalCard>
+    </BottomSheet>
   );
 };
 

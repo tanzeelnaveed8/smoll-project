@@ -104,10 +104,10 @@ const App = () => {
       <ThemeProvider theme={theme}>
         <NavigationContainer>
           <Stack.Navigator
-            initialRouteName="Onboarding"
+            initialRouteName="AccountSetup"
             screenOptions={{
               headerShown: false,
-              statusBarHidden: true,
+              // statusBarHidden: true,
             }}
           >
             <Stack.Screen name="Onboarding" component={Onboarding} />
@@ -119,7 +119,11 @@ const App = () => {
               component={WelcomeMessageScreen}
             />
             <Stack.Screen name="Home" component={HomeScreen} />
-            <Stack.Screen name="AccountSetup" component={AccountSetupScreen} />
+            <Stack.Screen
+              name="AccountSetup"
+              component={AccountSetupScreen}
+              options={{ headerShown: false }}
+            />
             <Stack.Screen
               name="ProfileAddressScreen"
               component={ProfileAddressScreen}
