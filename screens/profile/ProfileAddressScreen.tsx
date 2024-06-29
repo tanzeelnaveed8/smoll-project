@@ -1,5 +1,6 @@
 import CountryDropdown from "@/components/app/CountryDropdown";
 import Layout from "@/components/app/Layout";
+import BackButton from "@/components/partials/BackButton";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import InputField from "@/components/partials/InputField";
 import ModalCard from "@/components/partials/ModalCard";
@@ -12,7 +13,14 @@ const ProfileAddressScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
   return (
-    <ModalCard backBtn>
+    <Layout>
+      <BackButton
+        onPress={() =>
+          navigation.navigate("AccountSetup", {
+            showModal: "true",
+          })
+        }
+      />
       <Div flex={1} justifyContent="space-between">
         <Div>
           <Text fontSize={"6xl"} mb={4}>
@@ -50,7 +58,7 @@ const ProfileAddressScreen: React.FC<{ navigation: NavigationType }> = ({
         </Div>
         <ButtonPrimary bgColor="primary">Confirm</ButtonPrimary>
       </Div>
-    </ModalCard>
+    </Layout>
   );
 };
 

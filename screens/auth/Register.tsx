@@ -27,17 +27,10 @@ const formFields = [
 ];
 
 const Register: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
-  const [showVerificationScreen, setShowVerificationScreen] = useState(false);
-  const [showRegisterForm, setShowRetregisterForm] = useState(false);
-  const { user } = useAuthState()
-
-  useEffect(() => {
-    setShowRetregisterForm(true);
-  }, []);
+  const { fieldChangeHandler, code, phone } = useAuthState();
 
   return (
     <ModalCard
-      visible={showRegisterForm}
       backBtn
       onClose={() => {
         navigation.goBack();
@@ -53,14 +46,17 @@ const Register: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
             mb={20}
           >
             {/* Let’s Get Started! */}
-            Login/Signup 
+            Login/Signup
           </Text>
 
           <CountryDropdown
             style={{ borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }}
+            onChange={(e) => fieldChangeHandler("ON_CODE_CHANGE", e)}
+            value={code}
           />
 
           <InputField
+            onChangeText={(e) => fieldChangeHandler("ON_PHONE_CHANGE", e)}
             placeholder="Enter Phone number"
             marginBottom={32}
             borderColor="#222222"
@@ -69,7 +65,9 @@ const Register: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
               borderRadius: 12,
               borderTopLeftRadius: 0,
               borderTopRightRadius: 0,
+              borderTopWidth: 0,
             }}
+            value={phone}
           />
 
           <ButtonPrimary

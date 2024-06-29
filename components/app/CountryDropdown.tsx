@@ -1,16 +1,28 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleProp, TouchableOpacity, ViewStyle } from "react-native";
 import { View } from "react-native-animatable";
 
 import { CountryPicker } from "react-native-country-codes-picker";
 import { Text } from "react-native-magnus";
 
-const CountryDropdown: React.FC<{ style?: StyleProp<ViewStyle> }> = ({
-  style,
-}) => {
+const CountryDropdown: React.FC<{
+  style?: StyleProp<ViewStyle>;
+  onChange?: (value: string) => void;
+  value?: string;
+}> = ({ style, onChange, value }) => {
   const [show, setShow] = useState(false);
   const [countryCode, setCountryCode] = useState("");
   const externalStyles: {} = style ? style : {};
+
+  useEffect(() => {
+    if (!onChange) return;
+    onChange(countryCode);
+  }, [countryCode]);
+
+  useEffect(() => {
+    if (!value) return;
+    setCountryCode(value);
+  }, [value]);
 
   return (
     <View>
