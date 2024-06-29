@@ -1,4 +1,5 @@
 import { getApi } from ".";
+import { VerifyOtpResDto } from "./types/auth";
 const api = getApi("/member/auth/");
 
 type AuthArgsType = {
@@ -26,7 +27,7 @@ export function register(data: AuthArgsType) {
 }
 
 export function verifyOtp(data: VerifyOtpArgsType) {
-  return api<VerifyOtpArgsType>({
+  return api<VerifyOtpResDto>({
     method: "post",
     url: "/verify-otp",
     data,
