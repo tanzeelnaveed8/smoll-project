@@ -45,6 +45,7 @@ import VerifyEmailOtpScreen from "./screens/AccountSetup/VerifyEmailOtpScreen";
 import HomeScreen from "./screens/HomeScreen";
 import MembershipScreen from "./screens/HumanCounselling/MembershipScreen";
 import HumanCounsellingMessageScreen from "./screens/HumanCounselling/HumanCounsellingMessageScreen";
+import ChatScreen from "./screens/ChatScreen";
 
 type ScreenComponentType<P, N extends string> = React.ComponentType<P>;
 
@@ -104,7 +105,7 @@ const App = () => {
       <ThemeProvider theme={theme}>
         <NavigationContainer>
           <Stack.Navigator
-            initialRouteName="AccountSetup"
+            initialRouteName="ChatScreen"
             screenOptions={{
               headerShown: false,
               // statusBarHidden: true,
@@ -139,6 +140,8 @@ const App = () => {
               name="HumanCounsellingMessage"
               component={HumanCounsellingMessageScreen}
             />
+
+            <Stack.Screen name="ChatScreen" component={ChatScreen} />
 
             {/* <Stack.Screen
               name="UserProfileForm"
