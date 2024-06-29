@@ -9,6 +9,7 @@ import React, { useEffect, useState } from "react";
 import { FlatList, StyleSheet } from "react-native";
 import { Button, Div, Icon, Image, Input, Text } from "react-native-magnus";
 import VerifyNumberScreen from "./VerifyNumberScreen";
+import { useAuthState } from "@/store/auth/provider";
 
 const formFields = [
   {
@@ -28,6 +29,7 @@ const formFields = [
 const Register: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
   const [showVerificationScreen, setShowVerificationScreen] = useState(false);
   const [showRegisterForm, setShowRetregisterForm] = useState(false);
+  const { user } = useAuthState()
 
   useEffect(() => {
     setShowRetregisterForm(true);
@@ -51,7 +53,7 @@ const Register: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
             mb={20}
           >
             {/* Let’s Get Started! */}
-            Login/Signup
+            Login/Signup 
           </Text>
 
           <CountryDropdown

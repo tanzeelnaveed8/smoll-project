@@ -45,6 +45,7 @@ import VerifyEmailOtpScreen from "./screens/AccountSetup/VerifyEmailOtpScreen";
 import HomeScreen from "./screens/HomeScreen";
 import MembershipScreen from "./screens/HumanCounselling/MembershipScreen";
 import HumanCounsellingMessageScreen from "./screens/HumanCounselling/HumanCounsellingMessageScreen";
+import { AuthStateProvider } from "./store/auth/provider";
 
 type ScreenComponentType<P, N extends string> = React.ComponentType<P>;
 
@@ -102,41 +103,51 @@ const App = () => {
     <SafeAreaView style={styles.safeAreaViewContainer}>
       {/* <ScrollDiv contentContainerStyle={{ flexGrow: 1 }}> */}
       <ThemeProvider theme={theme}>
-        <NavigationContainer>
-          <Stack.Navigator
-            initialRouteName="Onboarding"
-            screenOptions={{
-              headerShown: false,
-              statusBarHidden: true,
-            }}
-          >
-            <Stack.Screen name="Onboarding" component={Onboarding} />
-            <Stack.Screen name="Register" component={Register} />
-            <Stack.Screen name="VerifyNumber" component={VerifyNumberScreen} />
-            <Stack.Screen name="SignUpUserName" component={UserNameScreen} />
-            <Stack.Screen
-              name="Confirmation"
-              component={WelcomeMessageScreen}
-            />
-            <Stack.Screen name="Home" component={HomeScreen} />
-            <Stack.Screen name="AccountSetup" component={AccountSetupScreen} />
-            <Stack.Screen
-              name="ProfileAddressScreen"
-              component={ProfileAddressScreen}
-            />
-            <Stack.Screen name="VerifyEmail" component={VerifyEmailScreen} />
-            <Stack.Screen
-              name="VerifyEmailOtp"
-              component={VerifyEmailOtpScreen}
-            />
-            <Stack.Screen name="PetProfileForm" component={PetProfileScreen} />
-            <Stack.Screen name="Membership" component={MembershipScreen} />
-            <Stack.Screen
-              name="HumanCounsellingMessage"
-              component={HumanCounsellingMessageScreen}
-            />
+        <AuthStateProvider>
+          <NavigationContainer>
+            <Stack.Navigator
+              initialRouteName="Onboarding"
+              screenOptions={{
+                headerShown: false,
+                statusBarHidden: true,
+              }}
+            >
+              <Stack.Screen name="Onboarding" component={Onboarding} />
+              <Stack.Screen name="Register" component={Register} />
+              <Stack.Screen
+                name="VerifyNumber"
+                component={VerifyNumberScreen}
+              />
+              <Stack.Screen name="SignUpUserName" component={UserNameScreen} />
+              <Stack.Screen
+                name="Confirmation"
+                component={WelcomeMessageScreen}
+              />
+              <Stack.Screen name="Home" component={HomeScreen} />
+              <Stack.Screen
+                name="AccountSetup"
+                component={AccountSetupScreen}
+              />
+              <Stack.Screen
+                name="ProfileAddressScreen"
+                component={ProfileAddressScreen}
+              />
+              <Stack.Screen name="VerifyEmail" component={VerifyEmailScreen} />
+              <Stack.Screen
+                name="VerifyEmailOtp"
+                component={VerifyEmailOtpScreen}
+              />
+              <Stack.Screen
+                name="PetProfileForm"
+                component={PetProfileScreen}
+              />
+              <Stack.Screen name="Membership" component={MembershipScreen} />
+              <Stack.Screen
+                name="HumanCounsellingMessage"
+                component={HumanCounsellingMessageScreen}
+              />
 
-            {/* <Stack.Screen
+              {/* <Stack.Screen
               name="UserProfileForm"
               component={
                 UserProfileScreen as ScreenComponentType<
@@ -145,8 +156,9 @@ const App = () => {
                 >
               }
             /> */}
-          </Stack.Navigator>
-        </NavigationContainer>
+            </Stack.Navigator>
+          </NavigationContainer>
+        </AuthStateProvider>
 
         {/* <Tab.Navigator>
           <Tab.Screen name="Home" component={HomeScreen} />
