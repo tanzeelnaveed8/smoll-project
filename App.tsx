@@ -103,8 +103,8 @@ const App = () => {
     <SafeAreaView style={styles.safeAreaViewContainer}>
       {/* <ScrollDiv contentContainerStyle={{ flexGrow: 1 }}> */}
       <ThemeProvider theme={theme}>
-        <AuthStateProvider>
-          <NavigationContainer>
+        <NavigationContainer>
+          <AuthStateProvider>
             <Stack.Navigator
               initialRouteName="Onboarding"
               screenOptions={{
@@ -157,8 +157,8 @@ const App = () => {
               }
             /> */}
             </Stack.Navigator>
-          </NavigationContainer>
-        </AuthStateProvider>
+          </AuthStateProvider>
+        </NavigationContainer>
 
         {/* <Tab.Navigator>
           <Tab.Screen name="Home" component={HomeScreen} />

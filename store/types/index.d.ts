@@ -9,6 +9,7 @@ export interface AuthStateType {
   phone: string;
   otp: string;
   fieldChangeHandler: (type: CHANGE_HANDLER_TYPES, value: string) => void;
+  getOPTHandler: () => void;
 }
 
 export type AuthStateActionType =

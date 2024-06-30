@@ -5,6 +5,10 @@ import {
   CHANGE_HANDLER_TYPES,
 } from "../types/index";
 
+import * as AuthAPI from "../../apis/auth.api";
+import useAsync from "@/hooks/useAsync";
+import { useNavigation } from "@react-navigation/native";
+
 const initialState: AuthStateType = {
   code: "",
   phone: "",
@@ -30,14 +34,30 @@ const reducer = (state: AuthStateType, action: AuthStateActionType) => {
 };
 
 export const AuthStateProvider = ({ children }: any) => {
+  const navigation = useNavigation();
   const [state, dispatch] = useReducer(reducer, initialState);
+  const loginQuery = useAsync((payload: AuthAPI.AuthArgsType) =>
+    AuthAPI.login(payload)
+  );
 
   const fieldChangeHandler = (type: CHANGE_HANDLER_TYPES, value: string) => {
     const payload = { value };
     dispatch({ type, payload });
   };
 
-  const value = { ...state, fieldChangeHandler };
+  const getOPTHandler = async () => {
+    const payload = { phone: `${getCountryCode(state.code)}${state.phone}` };
+    try {
+      console.log("try block");
+      const data = await loginQuery.execute(payload);
+      console.log(data.status, "res");
+    } catch (error) {
+      // TODO: handle errors
+      console.log("error", error);
+    }
+  };
+
+  const value = { ...state, fieldChangeHandler, getOPTHandler };
   return (
     <AuthStateContext.Provider value={value}>
       {children}

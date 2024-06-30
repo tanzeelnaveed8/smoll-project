@@ -27,7 +27,7 @@ const formFields = [
 ];
 
 const Register: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
-  const { fieldChangeHandler, code, phone } = useAuthState();
+  const { fieldChangeHandler, code, phone, getOPTHandler } = useAuthState();
 
   return (
     <ModalCard
@@ -74,10 +74,7 @@ const Register: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
             bgColor="primary"
             // link="VerifyNumber"
             // navigation={navigation}
-            onTouchEnd={() => {
-              navigation.navigate("VerifyNumber");
-              // setShowVerificationScreen(true);
-            }}
+            onTouchEnd={getOPTHandler}
           >
             Get OTP
           </ButtonPrimary>

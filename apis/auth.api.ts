@@ -1,8 +1,7 @@
-import { getApi } from ".";
+import { api } from ".";
 import { VerifyOtpResDto } from "./types/auth";
-const api = getApi("/member/auth/");
 
-type AuthArgsType = {
+export type AuthArgsType = {
   phone: string;
 };
 
@@ -11,11 +10,8 @@ interface VerifyOtpArgsType extends AuthArgsType {
 }
 
 export function login(data: AuthArgsType) {
-  return api({
-    method: "post",
-    url: "/login",
-    data,
-  });
+  console.log("data", data);
+  return api.post("/member/auth/login", { data: { ...data } });
 }
 
 export function register(data: AuthArgsType) {
@@ -27,9 +23,9 @@ export function register(data: AuthArgsType) {
 }
 
 export function verifyOtp(data: VerifyOtpArgsType) {
-  return api<VerifyOtpResDto>({
+  return api({
     method: "post",
     url: "/verify-otp",
-    data,
+    data: { ...data },
   });
 }
