@@ -10,6 +10,11 @@ export interface AuthStateType {
   otp: string;
   fieldChangeHandler: (type: CHANGE_HANDLER_TYPES, value: string) => void;
   getOPTHandler: () => void;
+  isLoginInProgress: boolean;
+  confirmOTPHandler: () => void;
+  isOTPConfrimInProgress: boolean;
+  isLoginModalOpen: boolean;
+  toggleLoginModal: (isOpen?: boolean) => void;
 }
 
 export type AuthStateActionType =

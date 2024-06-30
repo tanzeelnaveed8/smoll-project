@@ -10,9 +10,11 @@ import useAsync from "@/hooks/useAsync";
 import { useNavigation } from "@react-navigation/native";
 
 const initialState: AuthStateType = {
-  code: "",
-  phone: "",
+  code: "🇮🇳 (+91) India",
+  phone: "6395566973",
   otp: "",
+  isLoginInProgress: false,
+  isOTPConfrimInProgress: false,
 } as AuthStateType;
 
 // Create Context
@@ -36,8 +38,11 @@ const reducer = (state: AuthStateType, action: AuthStateActionType) => {
 export const AuthStateProvider = ({ children }: any) => {
   const navigation = useNavigation();
   const [state, dispatch] = useReducer(reducer, initialState);
-  const loginQuery = useAsync((payload: AuthAPI.AuthArgsType) =>
+  const loginQuery = useAsync((payload: AuthAPI.AuthPayloadDto) =>
     AuthAPI.login(payload)
+  );
+  const verifyOTPQuery = useAsync((payload: AuthAPI.VerifyOtpArgsType) =>
+    AuthAPI.verifyOtp(payload)
   );
 
   const fieldChangeHandler = (type: CHANGE_HANDLER_TYPES, value: string) => {
@@ -48,16 +53,43 @@ export const AuthStateProvider = ({ children }: any) => {
   const getOPTHandler = async () => {
     const payload = { phone: `${getCountryCode(state.code)}${state.phone}` };
     try {
-      console.log("try block");
-      const data = await loginQuery.execute(payload);
-      console.log(data.status, "res");
+      await loginQuery.execute(payload);
+      //@ts-ignore
+      navigation.navigate("VerifyNumber");
     } catch (error) {
       // TODO: handle errors
       console.log("error", error);
     }
   };
 
-  const value = { ...state, fieldChangeHandler, getOPTHandler };
+  const confirmOTPHandler = async () => {
+    const payload = {
+      phone: `${getCountryCode(state.code)}${state.phone}`,
+      otp: state.otp,
+    };
+    console.log("payload", payload);
+    try {
+      const data = await verifyOTPQuery.execute(payload);
+      console.log("data", data.status);
+
+      if (data.status === 201) {
+        // @ts-ignore
+        navigation.navigate("SignUpUserName");
+      }
+    } catch (error) {
+      // TODO: handle errors
+      console.log("error", error);
+    }
+  };
+
+  const value: AuthStateType = {
+    ...state,
+    fieldChangeHandler,
+    getOPTHandler,
+    isLoginInProgress: loginQuery.loading,
+    isOTPConfrimInProgress: verifyOTPQuery.loading,
+    confirmOTPHandler,
+  };
   return (
     <AuthStateContext.Provider value={value}>
       {children}

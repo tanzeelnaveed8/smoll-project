@@ -1,43 +1,23 @@
 import CountryDropdown from "@/components/app/CountryDropdown";
-import Layout from "@/components/app/Layout";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import InputField from "@/components/partials/InputField";
-import ModalCard from "@/components/partials/ModalCard";
 import { fontHauora } from "@/constant/constant";
 import { NavigationType } from "@/store/types";
-import React, { useEffect, useState } from "react";
-import { FlatList, StyleSheet } from "react-native";
-import { Button, Div, Icon, Image, Input, Text } from "react-native-magnus";
-import VerifyNumberScreen from "./VerifyNumberScreen";
+import React from "react";
+import { Div, Text } from "react-native-magnus";
 import { useAuthState } from "@/store/auth/provider";
-
-const formFields = [
-  {
-    placeholder: "Email address",
-    icon: "",
-  },
-  {
-    placeholder: "Create a Password",
-    icon: "eye-outline",
-  },
-  {
-    placeholder: "Confirm Password",
-    icon: "eye-outline",
-  },
-];
+import BottomSheet from "@/components/partials/BottomSheet";
+import BackButton from "@/components/partials/BackButton";
 
 const Register: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
-  const { fieldChangeHandler, code, phone, getOPTHandler } = useAuthState();
+  const { fieldChangeHandler, code, phone, getOPTHandler, isLoginInProgress } =
+    useAuthState();
 
   return (
-    <ModalCard
-      backBtn
-      onClose={() => {
-        navigation.goBack();
-      }}
-    >
-      <Div style={styles.container}>
+    <BottomSheet isVisible={true} showCloseIcon={false} h="95%">
+      <Div justifyContent="space-between" pb={24} h="100%">
         <Div>
+          <BackButton mb={20} onPress={() => navigation.goBack()} />
           <Text
             fontWeight="600"
             fontSize={"5xl"}
@@ -72,9 +52,9 @@ const Register: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
 
           <ButtonPrimary
             bgColor="primary"
-            // link="VerifyNumber"
-            // navigation={navigation}
-            onTouchEnd={getOPTHandler}
+            loading={isLoginInProgress}
+            disabled={isLoginInProgress}
+            onPress={getOPTHandler}
           >
             Get OTP
           </ButtonPrimary>
@@ -94,23 +74,8 @@ const Register: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
           </Text>
         </Div>
       </Div>
-    </ModalCard>
+    </BottomSheet>
   );
 };
 
 export default Register;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "space-between",
-    paddingTop: 20,
-    // paddingTop: 20,
-    // backgroundColor: "#fff",
-  },
-  linkContainer: {
-    flexDirection: "row",
-    marginTop: 16,
-    justifyContent: "center",
-  },
-});
