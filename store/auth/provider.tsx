@@ -1,14 +1,11 @@
 import { createContext, useReducer, useMemo, useContext } from "react";
-import {
-  AuthStateActionType,
-  AuthStateType,
-  CHANGE_HANDLER_TYPES,
-} from "../types/index";
+import { AuthStateType, CHANGE_HANDLER_TYPES } from "../types/index";
 
 import * as AuthAPI from "../../apis/auth.api";
 import useAsync from "@/hooks/useAsync";
 import { useNavigation } from "@react-navigation/native";
 import { AuthPayloadDto, VerifyOtpArgsType } from "@/apis/types/auth";
+import { reducer } from "./reducer";
 
 const initialState: AuthStateType = {
   code: "🇮🇳 (+91) India",
@@ -16,25 +13,13 @@ const initialState: AuthStateType = {
   otp: "",
   isLoginInProgress: false,
   isOTPConfrimInProgress: false,
+  firstName: "",
+  lastName: "",
+  isUpdatingUserInProgress: false,
 } as AuthStateType;
 
 // Create Context
 const AuthStateContext = createContext<AuthStateType>(initialState);
-
-// Reducer
-const reducer = (state: AuthStateType, action: AuthStateActionType) => {
-  switch (action.type) {
-    case "ON_CODE_CHANGE":
-      return { ...state, code: action.payload.value };
-    case "ON_PHONE_CHANGE":
-      return { ...state, phone: action.payload.value };
-    case "ON_OTP_CHANGE":
-      return { ...state, otp: action.payload.value };
-
-    default:
-      return state;
-  }
-};
 
 export const AuthStateProvider = ({ children }: any) => {
   const navigation = useNavigation();
@@ -49,6 +34,7 @@ export const AuthStateProvider = ({ children }: any) => {
     AuthAPI.register(payload)
   );
   const getUserDetailsQuery = useAsync(AuthAPI.getUserDetails);
+  const updateUserDetailsQuery = useAsync(AuthAPI.updateUserDetails);
 
   const fieldChangeHandler = (type: CHANGE_HANDLER_TYPES, value: string) => {
     const payload = { value };
@@ -99,8 +85,27 @@ export const AuthStateProvider = ({ children }: any) => {
   const getUserDetails = async () => {
     try {
       const data = await getUserDetailsQuery.execute();
-      console.log("user", data.data);
+      const { name } = data.data;
+      const payload = { ...data.data };
+      dispatch({ type: "UPDATE_USER", payload });
+      const screen = name ? "Home" : "SignUpUserName";
+      // @ts-ignore
+      navigation.navigate(screen);
     } catch (error) {
+      // TODO: Error needs to be handled
+      console.log("Get user error", error);
+    }
+  };
+
+  const updateUserDetailsHandler = async () => {
+    const _payload = { name: `${state.firstName}  ${state.lastName}` };
+    try {
+      const data = await updateUserDetailsQuery.execute(_payload);
+      const payload = { ...data.data };
+      dispatch({ type: "UPDATE_USER", payload });
+      navigation.navigate("Home");
+    } catch (error) {
+      // TODO: Error needs to be handled
       console.log("Get user error", error);
     }
   };
@@ -115,8 +120,6 @@ export const AuthStateProvider = ({ children }: any) => {
 
       if (data.status === 201) {
         await getUserDetails();
-        // @ts-ignore
-        // navigation.navigate("SignUpUserName");
       }
     } catch (error) {
       // TODO: handle errors
@@ -132,6 +135,8 @@ export const AuthStateProvider = ({ children }: any) => {
     isOTPConfrimInProgress:
       verifyOTPQuery.loading || getUserDetailsQuery.loading,
     confirmOTPHandler,
+    isUpdatingUserInProgress: updateUserDetailsQuery.loading,
+    updateUserDetailsHandler,
   };
   return (
     <AuthStateContext.Provider value={value}>

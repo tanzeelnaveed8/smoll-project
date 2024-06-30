@@ -21,3 +21,7 @@ export function verifyOtp(data: VerifyOtpArgsType) {
 export function getUserDetails() {
   return api.get<UserResDto>("/members/me");
 }
+
+export function updateUserDetails(data: Partial<UserResDto>) {
+  return api.patch<UserResDto>("/members/me", { ...data });
+}

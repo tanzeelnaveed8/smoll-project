@@ -7,7 +7,7 @@ interface ConfigType<T, P> {
 }
 
 function useAsync<T, P>(
-  callback: (payload?: P) => Promise<T>,
+  callback: (payload: P) => Promise<T>,
   config: ConfigType<T, P> = {}
 ) {
   const { immediate = false, onSuccess, onError } = config;
@@ -16,7 +16,7 @@ function useAsync<T, P>(
   const [data, setData] = useState<T | null>(null);
 
   const execute = useCallback(
-    (payload?: P): Promise<T> => {
+    (payload: P): Promise<T> => {
       return new Promise(async (resolve, reject) => {
         try {
           setLoading(true);
