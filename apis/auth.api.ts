@@ -1,13 +1,10 @@
+import { UserResDto } from "./types/auth.d";
 import { api } from ".";
-import { VerifyOtpResDto } from "./types/auth";
-
-export type AuthPayloadDto = {
-  phone: string;
-};
-
-export interface VerifyOtpArgsType extends AuthPayloadDto {
-  otp: string;
-}
+import {
+  AuthPayloadDto,
+  VerifyOtpArgsType,
+  VerifyOtpResDto,
+} from "./types/auth";
 
 export function login(data: AuthPayloadDto) {
   return api.post("/member/auth/login", { ...data });
@@ -19,4 +16,8 @@ export function register(data: AuthPayloadDto) {
 
 export function verifyOtp(data: VerifyOtpArgsType) {
   return api.post<VerifyOtpResDto>("/member/auth/verify-otp", { ...data });
+}
+
+export function getUserDetails() {
+  return api.get<UserResDto>("/members/me");
 }

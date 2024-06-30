@@ -8,7 +8,7 @@ import {
 import * as AuthAPI from "../../apis/auth.api";
 import useAsync from "@/hooks/useAsync";
 import { useNavigation } from "@react-navigation/native";
-import { AxiosError } from "axios";
+import { AuthPayloadDto, VerifyOtpArgsType } from "@/apis/types/auth";
 
 const initialState: AuthStateType = {
   code: "🇮🇳 (+91) India",
@@ -39,22 +39,23 @@ const reducer = (state: AuthStateType, action: AuthStateActionType) => {
 export const AuthStateProvider = ({ children }: any) => {
   const navigation = useNavigation();
   const [state, dispatch] = useReducer(reducer, initialState);
-  const loginQuery = useAsync((payload: AuthAPI.AuthPayloadDto) =>
+  const loginQuery = useAsync((payload: AuthPayloadDto) =>
     AuthAPI.login(payload)
   );
-  const verifyOTPQuery = useAsync((payload: AuthAPI.VerifyOtpArgsType) =>
+  const verifyOTPQuery = useAsync((payload: VerifyOtpArgsType) =>
     AuthAPI.verifyOtp(payload)
   );
-  const signupQuery = useAsync((payload: AuthAPI.AuthPayloadDto) =>
+  const signupQuery = useAsync((payload: AuthPayloadDto) =>
     AuthAPI.register(payload)
   );
+  const getUserDetailsQuery = useAsync(AuthAPI.getUserDetails);
 
   const fieldChangeHandler = (type: CHANGE_HANDLER_TYPES, value: string) => {
     const payload = { value };
     dispatch({ type, payload });
   };
 
-  const login = async (payload: AuthAPI.AuthPayloadDto) => {
+  const login = async (payload: AuthPayloadDto) => {
     try {
       await loginQuery.execute(payload);
       // @ts-ignore
@@ -65,7 +66,7 @@ export const AuthStateProvider = ({ children }: any) => {
     }
   };
 
-  const signup = async (payload: AuthAPI.AuthPayloadDto) => {
+  const signup = async (payload: AuthPayloadDto) => {
     try {
       await signupQuery.execute(payload);
       //@ts-ignore
@@ -95,19 +96,27 @@ export const AuthStateProvider = ({ children }: any) => {
     }
   };
 
+  const getUserDetails = async () => {
+    try {
+      const data = await getUserDetailsQuery.execute();
+      console.log("user", data.data);
+    } catch (error) {
+      console.log("Get user error", error);
+    }
+  };
+
   const confirmOTPHandler = async () => {
     const payload = {
       phone: `${getCountryCode(state.code)}${state.phone}`,
       otp: state.otp,
     };
-    console.log("payload", payload);
     try {
       const data = await verifyOTPQuery.execute(payload);
-      console.log("data", data.status);
 
       if (data.status === 201) {
+        await getUserDetails();
         // @ts-ignore
-        navigation.navigate("SignUpUserName");
+        // navigation.navigate("SignUpUserName");
       }
     } catch (error) {
       // TODO: handle errors
@@ -120,7 +129,8 @@ export const AuthStateProvider = ({ children }: any) => {
     fieldChangeHandler,
     getOPTHandler,
     isLoginInProgress: loginQuery.loading || signupQuery.loading,
-    isOTPConfrimInProgress: verifyOTPQuery.loading,
+    isOTPConfrimInProgress:
+      verifyOTPQuery.loading || getUserDetailsQuery.loading,
     confirmOTPHandler,
   };
   return (

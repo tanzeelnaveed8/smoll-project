@@ -1,3 +1,5 @@
+import { UserDto } from "@/apis/types/auth";
+
 type CODE_CHANGE = "ON_CODE_CHANGE";
 type PHONE_CHANGE = "ON_PHONE_CHANGE";
 type OTP_CHANGE = "ON_OTP_CHANGE";
@@ -15,7 +17,7 @@ export interface AuthStateType {
   isOTPConfrimInProgress: boolean;
   isLoginModalOpen: boolean;
   toggleLoginModal: (isOpen?: boolean) => void;
-  // signupHandler: () => void;
+  user: UserDto;
 }
 
 export type AuthStateActionType =
