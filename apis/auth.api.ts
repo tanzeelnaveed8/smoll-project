@@ -14,11 +14,7 @@ export function login(data: AuthPayloadDto) {
 }
 
 export function register(data: AuthPayloadDto) {
-  return api({
-    method: "post",
-    url: "/register",
-    data,
-  });
+  return api.post("/member/auth/register", { ...data });
 }
 
 export function verifyOtp(data: VerifyOtpArgsType) {

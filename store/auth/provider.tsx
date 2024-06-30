@@ -8,6 +8,7 @@ import {
 import * as AuthAPI from "../../apis/auth.api";
 import useAsync from "@/hooks/useAsync";
 import { useNavigation } from "@react-navigation/native";
+import { AxiosError } from "axios";
 
 const initialState: AuthStateType = {
   code: "🇮🇳 (+91) India",
@@ -44,21 +45,53 @@ export const AuthStateProvider = ({ children }: any) => {
   const verifyOTPQuery = useAsync((payload: AuthAPI.VerifyOtpArgsType) =>
     AuthAPI.verifyOtp(payload)
   );
+  const signupQuery = useAsync((payload: AuthAPI.AuthPayloadDto) =>
+    AuthAPI.register(payload)
+  );
 
   const fieldChangeHandler = (type: CHANGE_HANDLER_TYPES, value: string) => {
     const payload = { value };
     dispatch({ type, payload });
   };
 
-  const getOPTHandler = async () => {
-    const payload = { phone: `${getCountryCode(state.code)}${state.phone}` };
+  const login = async (payload: AuthAPI.AuthPayloadDto) => {
     try {
       await loginQuery.execute(payload);
+      // @ts-ignore
+      navigation.navigate("VerifyNumber");
+    } catch (error) {
+      // TODO: Error needs to be handled
+      console.log("Login Error:", error);
+    }
+  };
+
+  const signup = async (payload: AuthAPI.AuthPayloadDto) => {
+    try {
+      await signupQuery.execute(payload);
       //@ts-ignore
       navigation.navigate("VerifyNumber");
     } catch (error) {
-      // TODO: handle errors
-      console.log("error", error);
+      const { statusCode, error: err } = error?.response?.data || {};
+      // if this is true, it means user already exist, then run login
+      if (statusCode === 409 && err === "Conflict") {
+        console.log("Login running...");
+        login(payload);
+        return;
+      }
+
+      // TODO: Error needs to be handled
+      console.log("Signup Error:", error);
+    }
+  };
+
+  const getOPTHandler = async () => {
+    const phone = `${getCountryCode(state.code)}${state.phone}`;
+    const payload = { phone };
+    try {
+      signup(payload);
+    } catch (error) {
+      // TODO: Error needs to be handled
+      console.log("getOPTHandler", error);
     }
   };
 
@@ -86,7 +119,7 @@ export const AuthStateProvider = ({ children }: any) => {
     ...state,
     fieldChangeHandler,
     getOPTHandler,
-    isLoginInProgress: loginQuery.loading,
+    isLoginInProgress: loginQuery.loading || signupQuery.loading,
     isOTPConfrimInProgress: verifyOTPQuery.loading,
     confirmOTPHandler,
   };

@@ -15,6 +15,7 @@ export interface AuthStateType {
   isOTPConfrimInProgress: boolean;
   isLoginModalOpen: boolean;
   toggleLoginModal: (isOpen?: boolean) => void;
+  // signupHandler: () => void;
 }
 
 export type AuthStateActionType =
