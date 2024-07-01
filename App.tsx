@@ -107,7 +107,7 @@ const App = () => {
         <NavigationContainer>
           <AuthStateProvider>
             <Stack.Navigator
-              initialRouteName="Onboarding"
+              initialRouteName="HumanCounsellingMessage"
               screenOptions={{
                 headerShown: false,
                 statusBarHidden: true,
@@ -147,6 +147,8 @@ const App = () => {
                 name="HumanCounsellingMessage"
                 component={HumanCounsellingMessageScreen}
               />
+
+              <Stack.Screen name="ChatScreen" component={ChatScreen} />
 
               {/* <Stack.Screen
               name="UserProfileForm"
