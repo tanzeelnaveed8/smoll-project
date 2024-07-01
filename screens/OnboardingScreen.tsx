@@ -1,4 +1,5 @@
 import Layout from "@/components/app/Layout";
+import OnboardingAuthModal from "@/components/app/onboarding/OnboardingAuthModal";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import { fontHauora } from "@/constant/constant";
 import { NavigationType } from "@/store/types";
@@ -54,11 +55,12 @@ const OnboardingCard: React.FC<{
 
 const dot = [1, 2, 3];
 
-const Onboarding: React.FC<{ navigation: NavigationType }> = ({
+const OnboardingScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
   const [activeCard, setActiveCard] = useState(0);
   const cardContainerRef = useRef<ScrollView | null>(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -116,7 +118,7 @@ const Onboarding: React.FC<{ navigation: NavigationType }> = ({
         ))}
       </Div>
 
-      <ButtonPrimary link="Register" navigation={navigation}>
+      <ButtonPrimary onTouchEnd={() => setIsModalVisible(true)}>
         Get Started
       </ButtonPrimary>
 
@@ -141,11 +143,21 @@ const Onboarding: React.FC<{ navigation: NavigationType }> = ({
           Log in
         </Button>
       </Div>
+
+      <OnboardingAuthModal
+        navigation={navigation}
+        isVisible={isModalVisible}
+        onBack={() => setIsModalVisible(false)}
+        onSuccess={() => {
+          setIsModalVisible(false);
+          navigation.navigate("WelcomeMessageScreen");
+        }}
+      />
     </Layout>
   );
 };
 
-export default Onboarding;
+export default OnboardingScreen;
 
 const styles = StyleSheet.create({
   cardContainer: {

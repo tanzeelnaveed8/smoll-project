@@ -1,16 +1,31 @@
-import { fontHauora } from "@/constant/constant";
-import React, { useRef, useState } from "react";
+import {
+  colorDisableText,
+  colorDisableBg,
+  fontHauora,
+  colorTextPrimary,
+  colorDisableBorder,
+} from "@/constant/constant";
+import React, { useEffect, useImperativeHandle, useRef, useState } from "react";
 import {
   Animated,
+  InputModeOptions,
   KeyboardTypeOptions,
   StyleProp,
   StyleSheet,
+  TextInput,
   TextStyle,
 } from "react-native";
-import { Button, Div, Icon, Input, Text } from "react-native-magnus";
+import {
+  Button,
+  Div,
+  Icon,
+  Input,
+  InputProps,
+  Text,
+} from "react-native-magnus";
 import { iconFontFamilyType } from "react-native-magnus/lib/typescript/src/ui/icon/icon.type";
 
-const InputField: React.FC<{
+interface Props {
   icon?: string;
   iconColor?: string;
   borderColor?: string;
@@ -28,9 +43,15 @@ const InputField: React.FC<{
   keyboardType?: KeyboardTypeOptions | undefined;
   onChangeText?: (text: string) => void;
   value: string;
-}> = (props) => {
+  focus?: boolean;
+  maxLength?: number;
+  inputType?: InputModeOptions;
+}
+
+const InputField: React.FC<Props> = (props) => {
   const [isFocused, setIsFocused] = useState(false);
   const { floatingPlaceholder, onChangeText, value } = props;
+  const inputRef = useRef<any>(null);
 
   const topPosition = useRef(new Animated.Value(18)).current; // Initial top position
 
@@ -53,6 +74,12 @@ const InputField: React.FC<{
   };
 
   const externalStyles: {} = props.inputStyle || {};
+
+  useEffect(() => {
+    if (props.focus) {
+      inputRef.current?.focus();
+    }
+  }, [props.focus]);
 
   return (
     <Div
@@ -83,28 +110,35 @@ const InputField: React.FC<{
           borderRadius: 12,
           ...externalStyles,
         }}
+        ref={inputRef}
         placeholder={floatingPlaceholder ? "" : props.placeholder}
         fontFamily={fontHauora}
         textAlignVertical="top"
         placeholderTextColor={"#494949"}
-        bg="transparent"
+        bg={props.disabled ? colorDisableBg : "transparent"}
+        color={props.disabled ? colorDisableText : colorTextPrimary}
         multiline={props.multiline}
         numberOfLines={props.numberOfLines}
         keyboardType={props.keyboardType}
-        color="#494949"
         fontSize={"xl"}
         px={typeof props.paddingX === "number" ? props.paddingX : 12}
         pr={props.icon ? 30 : 12}
-        // py={floatingPlaceholder ? 0 : 16}
         pt={floatingPlaceholder ? 24 : 16}
         pb={floatingPlaceholder ? 8 : 16}
-        // focusBorderColor="#222222"
         focusBorderColor="#427594"
-        borderColor={props.borderColor ? props.borderColor : "#222222"}
+        borderColor={
+          props.disabled
+            ? colorDisableBorder
+            : props.borderColor
+            ? props.borderColor
+            : "#222222"
+        }
         onFocus={handleFocus}
         onBlur={handleBlur}
         onChangeText={onChangeText}
         value={value}
+        maxLength={props.maxLength}
+        inputMode={props.inputType}
         // suffix={
         //   props.icon ? (
         //     <Button py={0} px={0} bg={"transparent"} ripple>

@@ -1,47 +1,56 @@
-import React, { useEffect, useState } from "react";
+import {
+  colorDisableBg,
+  colorDisableBorder,
+  colorDisableText,
+  colorTextPrimary,
+} from "@/constant/constant";
+import React, { useState } from "react";
 import { StyleProp, TouchableOpacity, ViewStyle } from "react-native";
 import { View } from "react-native-animatable";
 
 import { CountryPicker } from "react-native-country-codes-picker";
 import { Text } from "react-native-magnus";
 
-const CountryDropdown: React.FC<{
+interface Props {
   style?: StyleProp<ViewStyle>;
-  onChange?: (value: string) => void;
-  value?: string;
-}> = ({ style, onChange, value }) => {
+  onChange: (value: { code: string; codeLabel: string; label: string }) => void;
+  value?: { code: string; codeLabel: string; label: string };
+  onSelect?: () => void;
+  isDisabled?: boolean;
+}
+
+const CountryDropdown: React.FC<Props> = ({
+  style,
+  onChange,
+  value,
+  onSelect,
+  isDisabled,
+}) => {
   const [show, setShow] = useState(false);
   const [countryCode, setCountryCode] = useState("");
   const externalStyles: {} = style ? style : {};
-
-  useEffect(() => {
-    if (!onChange) return;
-    onChange(countryCode);
-  }, [countryCode]);
-
-  useEffect(() => {
-    if (!value) return;
-    setCountryCode(value);
-  }, [value]);
 
   return (
     <View>
       <TouchableOpacity
         onPress={() => setShow(true)}
+        disabled={isDisabled}
         style={{
-          borderColor: "#494949",
+          borderColor: isDisabled ? colorDisableBorder : "#494949",
           borderWidth: 1,
           paddingHorizontal: 12,
           paddingVertical: 16,
           borderRadius: 12,
+          backgroundColor: isDisabled ? colorDisableBg : "transparent",
           ...externalStyles,
         }}
       >
         <Text
           style={{
-            color: "#494949",
-            fontSize: 20,
+            color: isDisabled ? colorDisableText : colorTextPrimary,
+            fontSize: 18,
           }}
+          disabled={isDisabled}
         >
           {countryCode ? countryCode : "Select your Country"}
         </Text>
@@ -52,9 +61,21 @@ const CountryDropdown: React.FC<{
         show={show}
         // when picker button press you will get the country object with dial code
         pickerButtonOnPress={(item) => {
+          onChange({
+            code: item.dial_code,
+            codeLabel: `${item.flag} (${item.dial_code})`,
+            label: `${item.flag} (${item.dial_code}) ${item.name.en}`,
+          });
           setCountryCode(`${item.flag} (${item.dial_code}) ${item.name.en}`);
           setShow(false);
+
+          if (onSelect) {
+            onSelect();
+          }
         }}
+        showOnly={["ae", "in"]}
+        onBackdropPress={() => setShow(false)}
+        style={{}}
       />
     </View>
   );

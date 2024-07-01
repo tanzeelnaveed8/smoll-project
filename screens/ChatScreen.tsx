@@ -1,20 +1,14 @@
-import { useEffect, useState } from "react";
-import { StyleSheet, Text } from "react-native";
-import { View } from "react-native-animatable";
+import { NavigationType } from "@/store/types";
+import { CometChat } from "@cometchat/chat-sdk-react-native";
 import {
+  CometChatMessages,
+  CometChatTheme,
   CometChatUIKit,
   UIKitSettings,
-  CometChatMessages,
-  CometChatDate,
-  CometChatUsersWithMessages,
-  CometChatContextProvider,
-  CometChatConversationsWithMessages,
-  CometChatTheme,
 } from "@cometchat/chat-uikit-react-native";
-import { CometChat } from "@cometchat/chat-sdk-react-native";
-import Layout from "@/components/app/Layout";
+import { useEffect, useState } from "react";
+import { Text } from "react-native";
 import { Div } from "react-native-magnus";
-import { NavigationType } from "@/store/types";
 
 const ChatScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
