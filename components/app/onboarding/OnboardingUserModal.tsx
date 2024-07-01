@@ -8,7 +8,7 @@ import { Div, Text } from "react-native-magnus";
 
 interface Props {
   isVisible: boolean;
-  onSuccess: () => void;
+  onSuccess: (isNewUser: boolean) => void;
 }
 
 const OnboardingUserModal: React.FC<Props> = (props) => {
@@ -27,7 +27,7 @@ const OnboardingUserModal: React.FC<Props> = (props) => {
         name: `${firstName} ${lastName}`,
       });
 
-      props.onSuccess();
+      props.onSuccess(true);
     } finally {
       setLoading(false);
     }

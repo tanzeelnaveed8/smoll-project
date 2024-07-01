@@ -148,9 +148,12 @@ const OnboardingScreen: React.FC<{ navigation: NavigationType }> = ({
         navigation={navigation}
         isVisible={isModalVisible}
         onBack={() => setIsModalVisible(false)}
-        onSuccess={() => {
+        onSuccess={(isNewUser?: boolean) => {
           setIsModalVisible(false);
-          navigation.navigate("WelcomeMessageScreen");
+
+          navigation.navigate("HomeScreen", {
+            isNewUser: String(isNewUser),
+          });
         }}
       />
     </Layout>

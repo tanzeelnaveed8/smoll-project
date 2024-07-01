@@ -100,9 +100,9 @@ const App = () => {
                 name="WelcomeMessageScreen"
                 component={WelcomeMessageScreen}
               />
-              <Stack.Screen name="Home" component={HomeScreen} />
+              <Stack.Screen name="HomeScreen" component={HomeScreen} />
               <Stack.Screen
-                name="AccountSetup"
+                name="AccountSetupScreen"
                 component={AccountSetupScreen}
               />
               <Stack.Screen

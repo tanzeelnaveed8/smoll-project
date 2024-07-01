@@ -106,6 +106,7 @@ const OnboardingOtpModal: React.FC<Props> = (props) => {
             maxLength={4}
             inputMode="numeric"
             keyboardType="number-pad"
+            autoFocus
             onChangeText={handleOtpChange}
           />
 

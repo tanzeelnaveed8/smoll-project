@@ -18,7 +18,7 @@ interface Props {
   navigation: NavigationType;
   isVisible: boolean;
   onBack: () => void;
-  onSuccess: () => void;
+  onSuccess: (isNewUser?: boolean) => void;
 }
 
 const OnboardingAuthModal: React.FC<Props> = (props) => {
