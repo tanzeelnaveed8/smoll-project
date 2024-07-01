@@ -3,7 +3,9 @@ import ModalCard from "./ModalCard";
 import { Button, Div, Image, Text } from "react-native-magnus";
 import { IconChevronRight } from "@tabler/icons-react-native";
 
-const HumanCounsellingMessageCard = () => {
+const HumanCounsellingMessageCard: React.FC<{
+  onPress: () => void;
+}> = ({ onPress }) => {
   return (
     <Button
       bg="transparent"
@@ -11,6 +13,7 @@ const HumanCounsellingMessageCard = () => {
       flexDir={"row"}
       alignItems="center"
       style={{ gap: 24 }}
+      onPress={onPress}
     >
       <Image
         w={72}

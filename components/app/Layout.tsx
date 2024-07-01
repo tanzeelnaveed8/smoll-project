@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleProp, StyleSheet, ViewStyle } from "react-native";
+import { StatusBar, StyleProp, StyleSheet, ViewStyle } from "react-native";
 import { Div } from "react-native-magnus";
 
 const Layout: React.FC<{
@@ -20,6 +20,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "#fff",
     paddingHorizontal: 20,
+    paddingBottom: 20,
+    // paddingTop: StatusBar.currentHeight,
     // paddingTop: 20,
   },
 });

@@ -168,8 +168,8 @@ const App = () => {
 const styles = StyleSheet.create({
   safeAreaViewContainer: {
     flex: 1,
-    paddingTop: StatusBar.currentHeight,
-    paddingBottom: 20,
+    // paddingTop: StatusBar.currentHeight,
+    // paddingBottom: 20,
   },
 });
 

@@ -1,15 +1,24 @@
 import { useEffect, useState } from "react";
-import { Text } from "react-native";
+import { StyleSheet, Text } from "react-native";
 import { View } from "react-native-animatable";
 import {
   CometChatUIKit,
   UIKitSettings,
   CometChatMessages,
+  CometChatDate,
+  CometChatUsersWithMessages,
+  CometChatContextProvider,
+  CometChatConversationsWithMessages,
+  CometChatTheme,
 } from "@cometchat/chat-uikit-react-native";
 import { CometChat } from "@cometchat/chat-sdk-react-native";
 import Layout from "@/components/app/Layout";
+import { Div } from "react-native-magnus";
+import { NavigationType } from "@/store/types";
 
-export default function ChatScreen() {
+const ChatScreen: React.FC<{ navigation: NavigationType }> = ({
+  navigation,
+}) => {
   const [chatUser, setChatUser] = useState<CometChat.User>();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -50,13 +59,44 @@ export default function ChatScreen() {
     }
   }, [isLoggedIn]);
 
+  let myTheme: CometChatTheme = new CometChatTheme({});
+  // myTheme.palette.setMode("dark");
+
   return (
-    <Layout>
+    <Div
+      style={{
+        flex: 1,
+        paddingTop: 0,
+        backgroundColor: "#fff",
+        paddingBottom: 10,
+      }}
+    >
       {chatUser ? (
-        <CometChatMessages user={chatUser} />
+        <>
+          {/* <CometChatContextProvider theme={myTheme}>
+            <CometChatConversationsWithMessages user={chatUser} />
+          </CometChatContextProvider> */}
+          <CometChatMessages
+            user={chatUser}
+            messageListConfiguration={{}}
+            messageComposerConfiguration={{
+              hideVoiceRecording: true,
+            }}
+            messageHeaderConfiguration={{
+              onBack: () => {
+                // navigation.navigate("HumanCounsellingMessage");
+              },
+            }}
+            // messageListConfiguration={{ showAvatar: true }}
+            hideDetails
+          />
+          {/* <CometChatUsersWithMessages user={chatUser} /> */}
+        </>
       ) : (
         <Text>User not logged in</Text>
       )}
-    </Layout>
+    </Div>
   );
-}
+};
+
+export default ChatScreen;
