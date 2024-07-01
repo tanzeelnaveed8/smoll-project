@@ -26,9 +26,11 @@ const InputField: React.FC<{
   paddingX?: number;
   disabled?: boolean;
   keyboardType?: KeyboardTypeOptions | undefined;
+  onChangeText?: (text: string) => void;
+  value: string;
 }> = (props) => {
   const [isFocused, setIsFocused] = useState(false);
-  const { floatingPlaceholder } = props;
+  const { floatingPlaceholder, onChangeText, value } = props;
 
   const topPosition = useRef(new Animated.Value(18)).current; // Initial top position
 
@@ -101,6 +103,8 @@ const InputField: React.FC<{
         borderColor={props.borderColor ? props.borderColor : "#222222"}
         onFocus={handleFocus}
         onBlur={handleBlur}
+        onChangeText={onChangeText}
+        value={value}
         // suffix={
         //   props.icon ? (
         //     <Button py={0} px={0} bg={"transparent"} ripple>

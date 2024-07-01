@@ -1,6 +1,9 @@
+import BackButton from "@/components/partials/BackButton";
+import BottomSheet from "@/components/partials/BottomSheet";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import ModalCard from "@/components/partials/ModalCard";
 import { fontHauora } from "@/constant/constant";
+import { useAuthState } from "@/store/auth/provider";
 import { NavigationType } from "@/store/types";
 
 import React from "react";
@@ -10,13 +13,20 @@ import { Button, Div, Input, Text } from "react-native-magnus";
 const VerifyNumberScreen: React.FC<{
   navigation: NavigationType;
 }> = ({ navigation }) => {
+  const { confirmOTPHandler, isOTPConfrimInProgress, fieldChangeHandler } =
+    useAuthState();
   return (
-    <ModalCard
-      onClose={() => {
-        navigation.goBack();
-      }}
+    <BottomSheet
+      // onClose={() => {
+      //   navigation.goBack();
+      // }}
+      isVisible={true}
+      h="95%"
+      showCloseIcon={false}
+      barMb={28}
     >
       <View>
+        <BackButton onPress={() => navigation.goBack()} mb={20} />
         <Text fontSize={"5xl"} fontFamily={fontHauora} mb={4}>
           Enter your verification code
         </Text>
@@ -39,6 +49,7 @@ const VerifyNumberScreen: React.FC<{
           py={16}
           focusBorderColor="#222222"
           borderColor="#494949"
+          onChangeText={(e) => fieldChangeHandler("ON_OTP_CHANGE", e)}
         />
 
         <Button
@@ -55,10 +66,9 @@ const VerifyNumberScreen: React.FC<{
 
         <ButtonPrimary
           bgColor="primary"
-          // onTouchEnd={onConfirm}
-          onTouchEnd={() => {
-            navigation.navigate("SignUpUserName");
-          }}
+          onPress={confirmOTPHandler}
+          loading={isOTPConfrimInProgress}
+          disabled={isOTPConfrimInProgress}
         >
           Confirm
         </ButtonPrimary>
@@ -79,7 +89,7 @@ const VerifyNumberScreen: React.FC<{
           </Button>
         </Div>
       </View>
-    </ModalCard>
+    </BottomSheet>
   );
 };
 
