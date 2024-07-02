@@ -1,3 +1,4 @@
+import AccountSetupProgress from "@/components/partials/AccountSetupProgress";
 import BottomSheet from "@/components/partials/BottomSheet";
 import ModalCard from "@/components/partials/ModalCard";
 import {
@@ -54,7 +55,7 @@ const AccountSetupScreen: React.FC<{ navigation: NavigationType }> = ({
           Jane, let’s finish setting up your account
         </Text>
 
-        <Div style={styles.accountSetupTrackerContainer}>
+        {/* <Div style={styles.accountSetupTrackerContainer}>
           <Div mb={14} flexDir="row" justifyContent="space-between">
             <Div
               flexDir="row"
@@ -95,9 +96,12 @@ const AccountSetupScreen: React.FC<{ navigation: NavigationType }> = ({
             height={8}
             width={windowWidth - 40}
             borderColor="transparent"
+            color="#427594"
             style={{ backgroundColor: "#EFEFEF", width: "100%" }}
           />
-        </Div>
+        </Div> */}
+
+        <AccountSetupProgress mb={42} progress={0.3} />
 
         <FlatList
           data={stepsBtn}

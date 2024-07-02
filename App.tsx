@@ -62,6 +62,7 @@ async function loadFonts() {
 const theme = {
   fontSize: {
     "5xl": 28,
+    "2xl": 20,
     xl: 18,
     lg: 16,
     md: 14,
@@ -107,7 +108,7 @@ const App = () => {
         <NavigationContainer>
           <AuthStateProvider>
             <Stack.Navigator
-              initialRouteName="HumanCounsellingMessage"
+              initialRouteName="Home"
               screenOptions={{
                 headerShown: false,
                 statusBarHidden: true,

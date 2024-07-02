@@ -13,14 +13,15 @@ const ModalCard: React.FC<{
   children: ReactElement<any, string | JSXElementConstructor<any>>;
   pt?: number;
   title?: string;
-}> = ({ onClose, children, backBtn, pt, title }) => {
+  height?: string | number;
+}> = ({ onClose, children, backBtn, pt, title, height }) => {
   return (
     <Modal
       isVisible
       px={20}
       pb={30}
       pt={pt ? pt : 10}
-      h={"98%"}
+      h={height ? height : "98%"}
       roundedTop={12}
       swipeDirection={["down"]}
     >
