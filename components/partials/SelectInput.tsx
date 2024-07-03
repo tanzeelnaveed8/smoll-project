@@ -9,18 +9,16 @@ import {
   SelectRef,
   Text,
 } from "react-native-magnus";
+import BottomSheet from "./BottomSheet";
 
 const dummyOptions = [
-  "option 1",
-  "option 2",
-  "option 3",
-  "option 4",
-  "option 5",
-  "option 6",
+  { label: "option 1", value: "option 1" },
+  { label: "option 2", value: "option 2" },
+  { label: "option 3", value: "option 3" },
 ];
 
 const SelectInput: React.FC<{
-  options?: string[];
+  options?: { label: string; value: string }[];
   label?: string;
   marginBottom?: number;
   selectStyles?: StyleProp<ViewStyle>;
@@ -48,8 +46,9 @@ const SelectInput: React.FC<{
   const externalStyles: {} = selectStyles || {};
 
   return (
-    <Div>
-      <Button
+    <BottomSheet isVisible showCloseIcon title={label}>
+      <Text>Test</Text>
+      {/* <Button
         py={typeof paddingY === "number" ? paddingY : 16}
         px={typeof paddingX === "number" ? paddingX : 12}
         fontSize={18}
@@ -100,8 +99,8 @@ const SelectInput: React.FC<{
             <Text>{item}</Text>
           </Select.Option>
         )}
-      />
-    </Div>
+      /> */}
+    </BottomSheet>
   );
 };
 

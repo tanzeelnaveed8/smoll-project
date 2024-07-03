@@ -1,5 +1,5 @@
 import InputField from "@/components/partials/InputField";
-import RadioButtion from "@/components/partials/RadioButtion";
+import RadioButton from "@/components/partials/RadioButton";
 import React, { useState } from "react";
 import { FlatList, SafeAreaView, StyleSheet } from "react-native";
 import { Button, Div, Text } from "react-native-magnus";
@@ -18,7 +18,7 @@ const PetContinuousBleedingQuestionScreen = () => {
       <FlatList
         data={data}
         renderItem={({ item, index }) => (
-          <RadioButtion
+          <RadioButton
             onTab={() => {
               setSelectedOption(item);
             }}

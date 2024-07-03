@@ -1,5 +1,5 @@
 import InputField from "@/components/partials/InputField";
-import RadioButtion from "@/components/partials/RadioButtion";
+import RadioButton from "@/components/partials/RadioButton";
 import SelectInput from "@/components/partials/SelectInput";
 import React, { useState } from "react";
 import {

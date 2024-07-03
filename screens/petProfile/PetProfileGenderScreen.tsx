@@ -1,18 +1,23 @@
-import InputField from "@/components/partials/InputField";
 import RadioButton from "@/components/partials/RadioButton";
+import { CreatePetPayloadDto, PetGenderEnum } from "@/store/types/pet.d";
 import React, { useState } from "react";
-import { FlatList, SafeAreaView, StyleSheet } from "react-native";
-import { Button, Div, Text } from "react-native-magnus";
+import { FlatList } from "react-native";
+import { Div, Text } from "react-native-magnus";
 
-const data = ["Yes", "No"];
+interface Props {
+  pet: CreatePetPayloadDto;
+  setPet: (pet: CreatePetPayloadDto) => void;
+}
 
-const PetVomitingQuestionScreen = () => {
-  const [selectedOption, setSelectedOption] = useState("");
+const data = [PetGenderEnum.MALE, PetGenderEnum.FEMALE];
+
+const PetProfileGenderScreen: React.FC<Props> = (props) => {
+  const [selectedOption, setSelectedOption] = useState(PetGenderEnum.MALE);
 
   return (
     <Div>
       <Text fontSize={"4xl"} mb={20}>
-        Does your pet experience severe vomiting or diarrhoea?
+        Is {props.pet.name} a Male or a Female?
       </Text>
 
       <FlatList
@@ -33,4 +38,4 @@ const PetVomitingQuestionScreen = () => {
   );
 };
 
-export default PetVomitingQuestionScreen;
+export default PetProfileGenderScreen;

@@ -5,7 +5,6 @@ import * as Font from "expo-font";
 import { useEffect, useState } from "react";
 import { Dimensions } from "react-native";
 import { fontHauora } from "./constant/constant";
-import PetProfileScreen from "./screens/petProfileForm/PetProfileScreen";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
@@ -19,7 +18,7 @@ import AccountSetupEmailOtpScreen from "./screens/AccountSetup/AccountSetupEmail
 import AccountSetupEmailScreen from "./screens/AccountSetup/AccountSetupEmailScreen";
 import ChatScreen from "./screens/ChatScreen";
 import OnboardingScreen from "./screens/OnboardingScreen";
-import ProfileAddressScreen from "./screens/profile/ProfileAddressScreen";
+import PetProfileScreen from "./screens/PetProfile/PetProfileScreen";
 
 type ScreenComponentType<P, N extends string> = React.ComponentType<P>;
 
@@ -87,7 +86,7 @@ const App = () => {
             }}
           >
             <Stack.Navigator
-              initialRouteName="OnboardingScreen"
+              initialRouteName="PetProfileScreen"
               screenOptions={{
                 headerShown: false,
                 // statusBarHidden: true,
