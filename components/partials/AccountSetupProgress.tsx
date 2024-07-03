@@ -4,14 +4,17 @@ import { Dimensions, StyleSheet } from "react-native";
 import { Div, Icon, Image, Text } from "react-native-magnus";
 import * as Progress from "react-native-progress";
 
+interface Props {
+  mb?: number;
+  progress: number;
+  completedStepCount: number;
+}
+
 const windowWidth = Dimensions.get("window").width;
 
-const AccountSetupProgress: React.FC<{ mb?: number; progress: number }> = ({
-  mb,
-  progress,
-}) => {
+const AccountSetupProgress: React.FC<Props> = (props) => {
   return (
-    <Div style={styles.accountSetupTrackerContainer} mb={mb}>
+    <Div style={styles.accountSetupTrackerContainer} mb={props.mb}>
       <Div mb={14} flexDir="row" justifyContent="space-between">
         <Div
           flexDir="row"
@@ -38,13 +41,13 @@ const AccountSetupProgress: React.FC<{ mb?: number; progress: number }> = ({
             source={require("../../assets/images/flag-icon.png")}
           />
           <Text fontFamily={fontHauoraMedium} fontSize={"xl"} color="#222222">
-            1/3
+            {props.completedStepCount}/3
           </Text>
         </Div>
       </Div>
 
       <Progress.Bar
-        progress={progress}
+        progress={props.progress}
         height={8}
         width={windowWidth - 40}
         borderColor="transparent"

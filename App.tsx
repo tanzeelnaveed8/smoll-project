@@ -4,27 +4,24 @@ import { Text, ThemeProvider } from "react-native-magnus";
 import * as Font from "expo-font";
 import { useEffect, useState } from "react";
 import { Dimensions } from "react-native";
-import { TOAST_CONFIGS, fontHauora } from "./constant/constant";
-import WelcomeMessageScreen from "./screens/WelcomeMessageScreen";
+import { fontHauora } from "./constant/constant";
 import PetProfileScreen from "./screens/petProfileForm/PetProfileScreen";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import AccountSetupScreen from "./components/app/account/AccountSetupModal";
 import HomeScreen from "./screens/HomeScreen";
 import HumanCounsellingMessageScreen from "./screens/HumanCounselling/HumanCounsellingMessageScreen";
 import MembershipScreen from "./screens/HumanCounselling/MembershipScreen";
-// import UserNameScreen from "./screens/auth/UserNameScreen";
-import ProfileAddressScreen from "./screens/profile/ProfileAddressScreen";
-import OnboardingScreen from "./screens/OnboardingScreen";
-
-type ScreenComponentType<P, N extends string> = React.ComponentType<P>;
 import { ToastProvider } from "react-native-toast-notifications";
 import AccountSetupAddressScreen from "./screens/AccountSetup/AccountSetupAddressScreen";
-import AccountSetupEmailScreen from "./screens/AccountSetup/AccountSetupEmailScreen";
 import AccountSetupEmailOtpScreen from "./screens/AccountSetup/AccountSetupEmailOtpScreen";
+import AccountSetupEmailScreen from "./screens/AccountSetup/AccountSetupEmailScreen";
 import ChatScreen from "./screens/ChatScreen";
+import OnboardingScreen from "./screens/OnboardingScreen";
+import ProfileAddressScreen from "./screens/profile/ProfileAddressScreen";
+
+type ScreenComponentType<P, N extends string> = React.ComponentType<P>;
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -115,11 +112,7 @@ const App = () => {
 
               <Stack.Screen name="HomeScreen" component={HomeScreen} />
               <Stack.Screen
-                name="ProfileAddressScreen"
-                component={ProfileAddressScreen}
-              />
-              <Stack.Screen
-                name="PetProfileForm"
+                name="PetProfileScreen"
                 component={PetProfileScreen}
               />
               <Stack.Screen name="Membership" component={MembershipScreen} />

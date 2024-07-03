@@ -1,32 +1,20 @@
-import ButtonPrimary from "@/components/partials/ButtonPrimary";
-import InputField from "@/components/partials/InputField";
-import React, { useState } from "react";
-import { StyleSheet } from "react-native";
-import { Button, Div, Text } from "react-native-magnus";
-import * as Progress from "react-native-progress";
-import { Dimensions } from "react-native";
-import Container from "@/components/partials/Container";
 import BackButton from "@/components/partials/BackButton";
-import PetNameScreen from "../petProfileForm/PetNameScreen";
-import PetBirthDateScreen from "../petProfileForm/PetBirthDateScreen";
-import PetGenderScreen from "../petProfileForm/PetGenderScreen";
-import PetAnimalTypeScreen from "../petProfileForm/PetAnimalTypeScreen";
-import PetBreedScreen from "../petProfileForm/PetBreedScreen";
-import PetIsNeutralScreen from "../petProfileForm/PetIsNeutralScreen";
-import PetBasicDetails from "../petProfileForm/PetBasicDetails";
-import PetImageUploadScreen from "../petProfileForm/PetImageUploadScreen";
+import ButtonPrimary from "@/components/partials/ButtonPrimary";
+import Container from "@/components/partials/Container";
+import React, { useState } from "react";
+import { Dimensions, StyleSheet } from "react-native";
+import { Div } from "react-native-magnus";
+import * as Progress from "react-native-progress";
 import AddMedicalHistoryScreen from "../petProfileForm/AddMedicalHistoryScreen";
-// import PetNameScreen from "./PetNameScreen";
-// import PetGenderScreen from "./PetGenderScreen";
-// import PetAnimalTypeScreen from "./PetAnimalTypeScreen";
-// import PetBirthDateScreen from "./PetBirthDateScreen";
-// import PetBreedScreen from "./PetBreedScreen";
-// import PetIsNeutralScreen from "./PetIsNeutralScreen";
-// import PetBasicDetails from "./PetBasicDetails";
-// import Container from "@/components/partials/Container";
-// import PetImageUploadScreen from "./PetImageUploadScreen";
-// import BackButton from "@/components/partials/BackButton";
-// import AddMedicalHistoryScreen from "./AddMedicalHistoryScreen";
+import PetAnimalTypeScreen from "../petProfileForm/PetAnimalTypeScreen";
+import PetBasicDetails from "../petProfileForm/PetBasicDetails";
+import PetBirthDateScreen from "../petProfileForm/PetBirthDateScreen";
+import PetBreedScreen from "../petProfileForm/PetBreedScreen";
+import PetGenderScreen from "../petProfileForm/PetGenderScreen";
+import PetImageUploadScreen from "../petProfileForm/PetImageUploadScreen";
+import PetIsNeutralScreen from "../petProfileForm/PetIsNeutralScreen";
+import PetNameScreen from "../petProfileForm/PetNameScreen";
+import Layout from "@/components/app/Layout";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -40,7 +28,7 @@ const PetProfileScreen = () => {
   };
 
   return (
-    <Container pt={20} style={styles.container}>
+    <Layout style={styles.container}>
       <Div>
         <BackButton mb={24} />
         {/* progress bar */}
@@ -74,7 +62,7 @@ const PetProfileScreen = () => {
           {currentStep === 8 ? "Confirm" : "Next"}
         </ButtonPrimary>
       </Div>
-    </Container>
+    </Layout>
   );
 };
 

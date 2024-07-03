@@ -45,8 +45,7 @@ const OnboardingOtpModal: React.FC<Props> = (props) => {
       if (!user?.name) {
         setShowNameModal(true);
       } else {
-        const isNew = !user.address;
-        props.onSuccess(isNew);
+        props.onSuccess();
       }
     } catch (err) {
       const msg = getAxiosErrMsg(err as AxiosError);
@@ -126,7 +125,7 @@ const OnboardingOtpModal: React.FC<Props> = (props) => {
 
           <ButtonPrimary
             bgColor="primary"
-            onPress={handleConfirm}
+            onPress={() => handleConfirm()}
             loading={isLoading}
             disabled={isLoading || otp.length < 4}
           >

@@ -24,7 +24,7 @@ const OnboardingUserModal: React.FC<Props> = (props) => {
       setLoading(true);
 
       await updateUser({
-        name: `${firstName} ${lastName}`,
+        name: `${firstName} ${lastName}`.trim(),
       });
 
       props.onSuccess(true);

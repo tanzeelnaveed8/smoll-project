@@ -18,8 +18,6 @@ interface Props {
   onBack: () => void;
 }
 
-const windowWidth = Dimensions.get("window").width;
-
 const stepsBtn: {
   name: string;
   value: "basic" | "email" | "pet";
@@ -56,6 +54,8 @@ const AccountSetupModal: React.FC<Props> = (props) => {
     [completedSteps]
   );
 
+  console.log(completedStepCount);
+
   useEffect(() => {
     if (user?.address) {
       setCompletedSteps((s) => ({
@@ -91,56 +91,14 @@ const AccountSetupModal: React.FC<Props> = (props) => {
     <BottomSheet isVisible={props.isVisible} h="92%">
       <Div>
         <Text fontSize={"6xl"} mb={12}>
-          Jane, let’s finish setting up your account
+          {user?.name}, let’s finish setting up your account
         </Text>
 
-        {/* <Div style={styles.accountSetupTrackerContainer}>
-          <Div mb={14} flexDir="row" justifyContent="space-between">
-            <Div
-              flexDir="row"
-              style={{
-                alignItems: "center",
-              }}
-            >
-              <Text fontSize={"xl"} fontFamily={fontHauoraBold} mr={2}>
-                Account setup
-              </Text>
-              <Icon
-                name="info"
-                fontFamily="Feather"
-                fontSize={24}
-                color="#E02A2A"
-                style={{ padding: 2, paddingTop: 5 }}
-              />
-            </Div>
-            <Div flexDir="row" style={{ gap: 4, alignItems: "center" }}>
-              <Image
-                w={24}
-                h={24}
-                mx={"auto"}
-                source={require("../../../assets/images/flag-icon.png")}
-              />
-              <Text
-                fontFamily={fontHauoraMedium}
-                fontSize={"xl"}
-                color="#222222"
-              >
-                {`${completedStepCount}/${stepsBtn.length}`}
-              </Text>
-            </Div>
-          </Div>
-
-          <Progress.Bar
-            progress={completedStepCount / stepsBtn.length}
-            height={8}
-            width={windowWidth - 40}
-            borderColor="transparent"
-            color="#427594"
-            style={{ backgroundColor: "#EFEFEF", width: "100%" }}
-          />
-        </Div> */}
-
-        <AccountSetupProgress mb={42} progress={0.3} />
+        <AccountSetupProgress
+          mb={42}
+          completedStepCount={completedStepCount}
+          progress={completedStepCount / stepsBtn.length}
+        />
 
         <FlatList
           data={stepsBtn}

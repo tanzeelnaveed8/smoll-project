@@ -1,5 +1,5 @@
 import Layout from "@/components/app/Layout";
-import BlankButton from "@/components/partials/BlankButton";
+import IconButton from "@/components/partials/IconButton";
 import {
   fontHauoraBold,
   fontHauoraMedium,
@@ -18,6 +18,7 @@ import { NavigationType } from "@/store/types";
 import { useRoute } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import AccountSetupModal from "@/components/app/account/AccountSetupModal";
+import OnboardingCongratsModal from "@/components/app/onboarding/OnboardingCongratsModal";
 
 interface Props {
   navigation: NavigationType;
@@ -42,10 +43,22 @@ const HomeScreen: React.FC<Props> = (props) => {
   const { user } = useUserStore();
 
   const [showAccountSetupModal, setShowAccountSetupModal] = useState(false);
+  const [showCongratsModal, setShowCongratsModal] = useState(false);
+
+  console.log("s", showAccountSetupModal);
 
   useEffect(() => {
-    const showSetupModal = (route.params as Record<string, string>)
-      ?.showSetupModal;
+    const showSetupModal =
+      (route.params as Record<string, string>)?.showSetupModal === "true";
+
+    const isNewUser =
+      (route.params as Record<string, string>)?.isNewUser === "true";
+
+    console.log("isNewUser", isNewUser, route.params);
+
+    if (isNewUser) {
+      setShowCongratsModal(true);
+    }
 
     if (showSetupModal) {
       setShowAccountSetupModal(true);
@@ -58,15 +71,14 @@ const HomeScreen: React.FC<Props> = (props) => {
     const basicInfoExist = Boolean(user?.address?.length);
     const emailInfoExist = user?.isEmailVerified;
 
-    if (!basicInfoExist || !emailInfoExist) {
-      setShowAccountSetupModal(true);
+    console.log("b", basicInfoExist, user, showCongratsModal);
+
+    if ((!basicInfoExist || !emailInfoExist) && !showCongratsModal) {
+      setTimeout(() => {
+        setShowAccountSetupModal(true);
+      }, 500);
     }
   }, [user]);
-
-  // TODO: remove this when done.
-  setTimeout(() => {
-    setShowAccountSetupModal(true);
-  }, 1000);
 
   return (
     <Layout
@@ -87,22 +99,22 @@ const HomeScreen: React.FC<Props> = (props) => {
         </Div>
 
         <Div flexDir="row" alignItems="center" style={{ gap: 8 }}>
-          <BlankButton>
+          <IconButton>
             <IconBell
               width={32}
               height={32}
               color={"#222222"}
               strokeWidth={1.5}
             />
-          </BlankButton>
-          <BlankButton>
+          </IconButton>
+          <IconButton>
             <IconUserCircle
               width={32}
               height={32}
               color={"#222222"}
               strokeWidth={1.5}
             />
-          </BlankButton>
+          </IconButton>
         </Div>
       </Div>
 
@@ -193,6 +205,17 @@ const HomeScreen: React.FC<Props> = (props) => {
           keyExtractor={(item) => item.name}
         />
       </Div>
+
+      <OnboardingCongratsModal
+        isVisible={showCongratsModal}
+        onSuccess={async () => {
+          setShowCongratsModal(false);
+
+          setTimeout(() => {
+            setShowAccountSetupModal(true);
+          }, 500);
+        }}
+      />
 
       <AccountSetupModal
         isVisible={showAccountSetupModal}
