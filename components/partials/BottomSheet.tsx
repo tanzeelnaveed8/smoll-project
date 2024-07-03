@@ -10,7 +10,7 @@ interface PropTypes extends ModalProps {
 const BottomSheet = (props: PropTypes) => {
   const {
     children,
-    showCloseIcon = true,
+    showCloseIcon = false,
     onCloseIconClick,
     barMb = 16,
     ...restProps

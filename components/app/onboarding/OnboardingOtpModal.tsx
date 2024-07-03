@@ -21,7 +21,7 @@ interface Props {
   phone: string;
   label: string;
   onBack: () => void;
-  onSuccess: () => void;
+  onSuccess: (isNewUser?: boolean) => void;
 }
 
 const OnboardingOtpModal: React.FC<Props> = (props) => {
@@ -45,11 +45,11 @@ const OnboardingOtpModal: React.FC<Props> = (props) => {
       if (!user?.name) {
         setShowNameModal(true);
       } else {
-        props.navigation.navigate("HomeScreen");
+        const isNew = !user.address;
+        props.onSuccess(isNew);
       }
     } catch (err) {
       const msg = getAxiosErrMsg(err as AxiosError);
-
       toastRef.current?.show(msg, {
         type: "danger",
       });
@@ -126,9 +126,9 @@ const OnboardingOtpModal: React.FC<Props> = (props) => {
 
           <ButtonPrimary
             bgColor="primary"
-            onPress={() => handleConfirm()}
+            onPress={handleConfirm}
             loading={isLoading}
-            disabled={isLoading}
+            disabled={isLoading || otp.length < 4}
           >
             Confirm
           </ButtonPrimary>

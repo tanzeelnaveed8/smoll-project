@@ -96,7 +96,6 @@ const OnboardingAuthModal: React.FC<Props> = (props) => {
             value={phone}
             focus={isFocused}
             maxLength={10}
-            inputType="numeric"
           />
 
           <ButtonPrimary

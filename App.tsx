@@ -11,9 +11,7 @@ import PetProfileScreen from "./screens/petProfileForm/PetProfileScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import AccountSetupScreen from "./screens/AccountSetup/AccountSetupScreen";
-import VerifyEmailOtpScreen from "./screens/AccountSetup/VerifyEmailOtpScreen";
-import VerifyEmailScreen from "./screens/AccountSetup/VerifyEmailScreen";
+import AccountSetupScreen from "./components/app/account/AccountSetupModal";
 import HomeScreen from "./screens/HomeScreen";
 import HumanCounsellingMessageScreen from "./screens/HumanCounselling/HumanCounsellingMessageScreen";
 import MembershipScreen from "./screens/HumanCounselling/MembershipScreen";
@@ -23,6 +21,9 @@ import OnboardingScreen from "./screens/OnboardingScreen";
 
 type ScreenComponentType<P, N extends string> = React.ComponentType<P>;
 import { ToastProvider } from "react-native-toast-notifications";
+import AccountSetupAddressScreen from "./screens/AccountSetup/AccountSetupAddressScreen";
+import AccountSetupEmailScreen from "./screens/AccountSetup/AccountSetupEmailScreen";
+import AccountSetupEmailOtpScreen from "./screens/AccountSetup/AccountSetupEmailOtpScreen";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -74,13 +75,14 @@ const App = () => {
   if (!fontsLoaded) {
     return <Text>Loading...</Text>; // Or any other loading component
   }
+
   return (
     <SafeAreaView style={styles.safeAreaViewContainer}>
       {/* <ScrollDiv contentContainerStyle={{ flexGrow: 1 }}> */}
       <ThemeProvider theme={theme}>
         <NavigationContainer>
           <ToastProvider
-            placement="top"
+            placement="center"
             textStyle={{
               textTransform: "capitalize",
             }}
@@ -97,22 +99,22 @@ const App = () => {
                 component={OnboardingScreen}
               />
               <Stack.Screen
-                name="WelcomeMessageScreen"
-                component={WelcomeMessageScreen}
+                name="AccountSetupAddressScreen"
+                component={AccountSetupAddressScreen}
               />
-              <Stack.Screen name="HomeScreen" component={HomeScreen} />
               <Stack.Screen
-                name="AccountSetupScreen"
-                component={AccountSetupScreen}
+                name="AccountSetupEmailScreen"
+                component={AccountSetupEmailScreen}
               />
+              <Stack.Screen
+                name="AccountSetupEmailOtpScreen"
+                component={AccountSetupEmailOtpScreen}
+              />
+
+              <Stack.Screen name="HomeScreen" component={HomeScreen} />
               <Stack.Screen
                 name="ProfileAddressScreen"
                 component={ProfileAddressScreen}
-              />
-              <Stack.Screen name="VerifyEmail" component={VerifyEmailScreen} />
-              <Stack.Screen
-                name="VerifyEmailOtp"
-                component={VerifyEmailOtpScreen}
               />
               <Stack.Screen
                 name="PetProfileForm"

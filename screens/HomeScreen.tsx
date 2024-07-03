@@ -1,9 +1,48 @@
 import Layout from "@/components/app/Layout";
-import React from "react";
+import AccountSetupModal from "@/components/app/account/AccountSetupModal";
+import { useUserStore } from "@/store/modules/user";
+import { NavigationType } from "@/store/types";
+import { useRoute } from "@react-navigation/native";
+import React, { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import { Div, Image, Text } from "react-native-magnus";
 
-const HomeScreen = () => {
+interface Props {
+  navigation: NavigationType;
+  isNewUser?: boolean;
+}
+
+const HomeScreen: React.FC<Props> = (props) => {
+  const route = useRoute();
+  const { user } = useUserStore();
+
+  const [showAccountSetupModal, setShowAccountSetupModal] = useState(false);
+
+  useEffect(() => {
+    const showSetupModal = (route.params as Record<string, string>)
+      ?.showSetupModal;
+
+    if (showSetupModal) {
+      setShowAccountSetupModal(true);
+    }
+  }, [route.params]);
+
+  // TODO: Add pet profile exist check.
+  // Also check if congrats modal is open ( for new user ) if yes, don't do this.
+  useEffect(() => {
+    const basicInfoExist = Boolean(user?.address?.length);
+    const emailInfoExist = user?.isEmailVerified;
+
+    if (!basicInfoExist || !emailInfoExist) {
+      setShowAccountSetupModal(true);
+    }
+  }, [user]);
+
+  // TODO: remove this when done.
+  setTimeout(() => {
+    setShowAccountSetupModal(true);
+  }, 1000);
+
   return (
     <Layout
       style={{
@@ -25,6 +64,12 @@ const HomeScreen = () => {
           />
         </Div>
       </Div>
+
+      <AccountSetupModal
+        isVisible={showAccountSetupModal}
+        onBack={() => setShowAccountSetupModal(false)}
+        navigation={props.navigation}
+      />
     </Layout>
   );
 };

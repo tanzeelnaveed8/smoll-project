@@ -28,4 +28,23 @@ export const useUserStore = create<UserState>((set, get) => ({
 
     return res.data;
   },
+
+  async sendVerificationEmail() {
+    await api.post("/members/send-email-verification");
+  },
+
+  async verifyEmail(otp: string) {
+    await api.post("/members/verify-email", { otp });
+
+    const user = get().user;
+
+    if (!user) return;
+
+    set(() => ({
+      user: {
+        ...user,
+        isEmailVerified: true,
+      },
+    }));
+  },
 }));

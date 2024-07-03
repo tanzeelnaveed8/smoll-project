@@ -30,4 +30,6 @@ export interface UserState {
   user: Nullable<User>;
   findUser: () => Promise<User>;
   updateUser: (payload: UpdateUserPayloadDto) => Promise<User>;
+  sendVerificationEmail: () => Promise<void>;
+  verifyEmail: (otp: string) => Promise<void>;
 }

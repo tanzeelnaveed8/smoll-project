@@ -1,31 +1,23 @@
 import {
-  colorDisableText,
   colorDisableBg,
-  fontHauora,
-  colorTextPrimary,
   colorDisableBorder,
+  colorDisableText,
+  colorTextPrimary,
+  fontHauora,
 } from "@/constant/constant";
-import React, { useEffect, useImperativeHandle, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Animated,
-  InputModeOptions,
   KeyboardTypeOptions,
   StyleProp,
   StyleSheet,
-  TextInput,
   TextStyle,
 } from "react-native";
-import {
-  Button,
-  Div,
-  Icon,
-  Input,
-  InputProps,
-  Text,
-} from "react-native-magnus";
+import { Button, Div, Icon, Input, InputProps } from "react-native-magnus";
 import { iconFontFamilyType } from "react-native-magnus/lib/typescript/src/ui/icon/icon.type";
+import { Keyboard } from "react-native";
 
-interface Props {
+interface rest {
   icon?: string;
   iconColor?: string;
   borderColor?: string;
@@ -44,13 +36,15 @@ interface Props {
   onChangeText?: (text: string) => void;
   value: string;
   focus?: boolean;
-  maxLength?: number;
-  inputType?: InputModeOptions;
 }
 
-const InputField: React.FC<Props> = (props) => {
+const InputField: React.FC<rest & InputProps> = ({
+  marginBottom,
+  marginTop,
+  ...rest
+}) => {
   const [isFocused, setIsFocused] = useState(false);
-  const { floatingPlaceholder, onChangeText, value } = props;
+  const { floatingPlaceholder, onChangeText, value } = rest;
   const inputRef = useRef<any>(null);
 
   const topPosition = useRef(new Animated.Value(18)).current; // Initial top position
@@ -71,24 +65,26 @@ const InputField: React.FC<Props> = (props) => {
       duration: 200, // Animation duration in ms
       useNativeDriver: false, // Set to true if only transforming (translateX, translateY)
     }).start();
+
+    Keyboard.dismiss();
   };
 
-  const externalStyles: {} = props.inputStyle || {};
+  const externalStyles: {} = rest.inputStyle || {};
 
   useEffect(() => {
-    if (props.focus) {
+    if (rest.focus) {
       inputRef.current?.focus();
     }
-  }, [props.focus]);
+  }, [rest.focus]);
 
   return (
     <Div
       style={{
         ...styles.container,
-        pointerEvents: props.disabled ? "none" : "auto",
+        pointerEvents: rest.disabled ? "none" : "auto",
       }}
-      mb={props.marginBottom ? props.marginBottom : 0}
-      mt={props.marginTop ? props.marginTop : 0}
+      mb={marginBottom ? marginBottom : 0}
+      mt={marginTop ? marginTop : 0}
     >
       {floatingPlaceholder && (
         <Animated.Text
@@ -98,54 +94,53 @@ const InputField: React.FC<Props> = (props) => {
             fontSize: isFocused ? 12 : 18,
             top: topPosition, // Use Animated.Value for the top style
             color: "#494949",
-            left: typeof props.paddingX === "number" ? props.paddingX : 12,
+            left: typeof rest.paddingX === "number" ? rest.paddingX : 12,
           }}
         >
-          {props.placeholder}
+          {rest.placeholder}
         </Animated.Text>
       )}
 
       <Input
+        {...rest}
         style={{
           borderRadius: 12,
           ...externalStyles,
         }}
         ref={inputRef}
-        placeholder={floatingPlaceholder ? "" : props.placeholder}
+        placeholder={floatingPlaceholder ? "" : rest.placeholder}
         fontFamily={fontHauora}
         textAlignVertical="top"
         placeholderTextColor={"#494949"}
-        bg={props.disabled ? colorDisableBg : "transparent"}
-        color={props.disabled ? colorDisableText : colorTextPrimary}
-        multiline={props.multiline}
-        numberOfLines={props.numberOfLines}
-        keyboardType={props.keyboardType}
+        bg={rest.disabled ? colorDisableBg : "transparent"}
+        color={rest.disabled ? colorDisableText : colorTextPrimary}
+        multiline={rest.multiline}
+        numberOfLines={rest.numberOfLines}
+        keyboardType={rest.keyboardType}
         fontSize={"xl"}
-        px={typeof props.paddingX === "number" ? props.paddingX : 12}
-        pr={props.icon ? 30 : 12}
+        px={typeof rest.paddingX === "number" ? rest.paddingX : 12}
+        pr={rest.icon ? 30 : 12}
         pt={floatingPlaceholder ? 24 : 16}
         pb={floatingPlaceholder ? 8 : 16}
         focusBorderColor="#427594"
         borderColor={
-          props.disabled
+          rest.disabled
             ? colorDisableBorder
-            : props.borderColor
-            ? props.borderColor
+            : rest.borderColor
+            ? rest.borderColor
             : "#222222"
         }
         onFocus={handleFocus}
         onBlur={handleBlur}
         onChangeText={onChangeText}
         value={value}
-        maxLength={props.maxLength}
-        inputMode={props.inputType}
         // suffix={
-        //   props.icon ? (
+        //   rest.icon ? (
         //     <Button py={0} px={0} bg={"transparent"} ripple>
         //       <Icon
-        //         name={props.icon}
-        //         color={props.iconColor || "gray900"}
-        //         fontFamily={props.iconFamily ? props.iconFamily : "Ionicons"}
+        //         name={rest.icon}
+        //         color={rest.iconColor || "gray900"}
+        //         fontFamily={rest.iconFamily ? rest.iconFamily : "Ionicons"}
         //         fontSize={24}
         //       />
         //     </Button>
@@ -155,20 +150,20 @@ const InputField: React.FC<Props> = (props) => {
         // }
       />
 
-      {props.icon && (
+      {rest.icon && (
         <Button
           py={0}
           px={0}
           bg={"transparent"}
           position="absolute"
           top={20}
-          right={typeof props.paddingX === "number" ? props.paddingX : 12}
+          right={typeof rest.paddingX === "number" ? rest.paddingX : 12}
           ripple
         >
           <Icon
-            name={props.icon}
-            color={props.iconColor || "gray900"}
-            fontFamily={props.iconFamily ? props.iconFamily : "Ionicons"}
+            name={rest.icon}
+            color={rest.iconColor || "gray900"}
+            fontFamily={rest.iconFamily ? rest.iconFamily : "Ionicons"}
             fontSize={24}
           />
         </Button>
