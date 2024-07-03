@@ -46,16 +46,12 @@ const HomeScreen: React.FC<Props> = (props) => {
   const [showAccountSetupModal, setShowAccountSetupModal] = useState(false);
   const [showCongratsModal, setShowCongratsModal] = useState(false);
 
-  console.log("s", showAccountSetupModal);
-
   useEffect(() => {
     const showSetupModal =
       (route.params as Record<string, string>)?.showSetupModal === "true";
 
     const isNewUser =
       (route.params as Record<string, string>)?.isNewUser === "true";
-
-    console.log("isNewUser", isNewUser, route.params);
 
     if (isNewUser) {
       setShowCongratsModal(true);
@@ -71,10 +67,12 @@ const HomeScreen: React.FC<Props> = (props) => {
   useEffect(() => {
     const basicInfoExist = Boolean(user?.address?.length);
     const emailInfoExist = user?.isEmailVerified;
+    const petInfoExist = (user?.petCount ?? 0) > 0;
 
-    console.log("b", basicInfoExist, user, showCongratsModal);
-
-    if ((!basicInfoExist || !emailInfoExist) && !showCongratsModal) {
+    if (
+      (!basicInfoExist || !emailInfoExist || !petInfoExist) &&
+      !showCongratsModal
+    ) {
       setTimeout(() => {
         setShowAccountSetupModal(true);
       }, 500);

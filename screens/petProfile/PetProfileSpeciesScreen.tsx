@@ -12,7 +12,9 @@ interface Props {
 const data = [PetSpeciesEnum.CAT, PetSpeciesEnum.DOG];
 
 const PetProfileSpeciesScreen: React.FC<Props> = (props) => {
-  const [selectedOption, setSelectedOption] = useState(PetSpeciesEnum.CAT);
+  const [selectedOption, setSelectedOption] = useState(
+    props.pet.species || PetSpeciesEnum.CAT
+  );
 
   return (
     <Div>
@@ -24,10 +26,12 @@ const PetProfileSpeciesScreen: React.FC<Props> = (props) => {
         data={data}
         renderItem={({ item, index }) => (
           <RadioButton
-            onTab={() => {
+            onTap={() => {
               setSelectedOption(item);
+              props.setPet({ ...props.pet, species: item });
             }}
             value={item}
+            label={item}
             selectedValue={selectedOption}
             styles={{ marginBottom: index + 1 === data.length ? 0 : 16 }}
           />

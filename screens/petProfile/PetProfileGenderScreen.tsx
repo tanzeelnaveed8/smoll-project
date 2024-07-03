@@ -12,7 +12,9 @@ interface Props {
 const data = [PetGenderEnum.MALE, PetGenderEnum.FEMALE];
 
 const PetProfileGenderScreen: React.FC<Props> = (props) => {
-  const [selectedOption, setSelectedOption] = useState(PetGenderEnum.MALE);
+  const [selectedOption, setSelectedOption] = useState(
+    props.pet.gender || PetGenderEnum.MALE
+  );
 
   return (
     <Div>
@@ -24,10 +26,12 @@ const PetProfileGenderScreen: React.FC<Props> = (props) => {
         data={data}
         renderItem={({ item, index }) => (
           <RadioButton
-            onTab={() => {
+            onTap={() => {
               setSelectedOption(item);
+              props.setPet({ ...props.pet, gender: item });
             }}
             value={item}
+            label={item}
             selectedValue={selectedOption}
             styles={{ marginBottom: index + 1 === data.length ? 0 : 16 }}
           />

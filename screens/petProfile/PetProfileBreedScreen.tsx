@@ -1,7 +1,9 @@
 import InputField from "@/components/partials/InputField";
 import SelectInput from "@/components/partials/SelectInput";
-import { CreatePetPayloadDto } from "@/store/types/pet";
-import React, { useState } from "react";
+import { colorPrimary } from "@/constant/constant";
+import { usePetStore } from "@/store/modules/pet";
+import { CreatePetPayloadDto, PetSpeciesEnum } from "@/store/types/pet.d";
+import React, { useEffect, useMemo, useState } from "react";
 import { Button, Div, Text } from "react-native-magnus";
 
 interface Props {
@@ -10,7 +12,36 @@ interface Props {
 }
 
 const PetProfileBreedScreen: React.FC<Props> = (props) => {
-  const [showManualInput, setShowManualInput] = useState(false);
+  const { petBreeds, fetchPetBreeds } = usePetStore();
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchBreeds();
+  }, []);
+
+  const breeds = useMemo(() => {
+    const species = props.pet.breed === PetSpeciesEnum.DOG ? "dogs" : "cats";
+
+    return (
+      petBreeds?.[species]?.map((breed) => ({
+        label: breed,
+        value: breed,
+      })) ?? []
+    );
+  }, [petBreeds]);
+
+  const fetchBreeds = async () => {
+    try {
+      setLoading(true);
+
+      if (!petBreeds) {
+        await fetchPetBreeds();
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Div>
@@ -18,9 +49,17 @@ const PetProfileBreedScreen: React.FC<Props> = (props) => {
         What breed is {props.pet.name}?
       </Text>
 
-      <SelectInput label="Select a breed" />
+      <SelectInput
+        label="Select a breed"
+        loading={loading}
+        options={breeds}
+        onSelect={(val) => {
+          props.setPet({ ...props.pet, breed: val.value });
+        }}
+        selectedValue={props.pet.breed}
+      />
 
-      {showManualInput && (
+      {/* {showManualInput && (
         <InputField
           value={props.pet.breed}
           onChangeText={(text) => {
@@ -30,13 +69,14 @@ const PetProfileBreedScreen: React.FC<Props> = (props) => {
           marginTop={16}
           floatingPlaceholder
           inputStyle={{ borderRadius: 12 }}
+          loading={loading}
+          disabled={loading}
         />
-      )}
+      )} */}
 
-      <Button
-        mt={12}
+      {/* <Button
         fontSize={"lg"}
-        color="#6B6B6B"
+        color={colorPrimary}
         px={0}
         py={0}
         bg={"transparent"}
@@ -45,7 +85,7 @@ const PetProfileBreedScreen: React.FC<Props> = (props) => {
         }}
       >
         My pet's breed is missing?
-      </Button>
+      </Button> */}
     </Div>
   );
 };
