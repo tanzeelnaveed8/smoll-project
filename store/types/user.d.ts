@@ -22,6 +22,7 @@ export interface User {
   country: Nullable<string>;
   postalCode: Nullable<string>;
   timeZone: Nullable<string>;
+  petCount: number;
   createdAt: string;
   updatedAt: string;
 }

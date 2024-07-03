@@ -19,9 +19,10 @@ const PetBreathingDifficultyQuestionScreen = () => {
         data={data}
         renderItem={({ item, index }) => (
           <RadioButton
-            onTab={() => {
+            onTap={() => {
               setSelectedOption(item);
             }}
+            label={item}
             value={item}
             selectedValue={selectedOption}
             styles={{ marginBottom: index + 1 === data.length ? 0 : 16 }}

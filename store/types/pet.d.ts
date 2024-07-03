@@ -28,8 +28,15 @@ export interface Pet extends Pick<PetDetail, ["id", "name", "photos"]> {}
 export interface CreatePetPayloadDto extends Omit<PetDetail, ["photos"]> {}
 export interface UpdatePetPayloadDto extends Partial<PetDetail> {}
 
+export interface PetBreeds {
+  cats: string[];
+  dogs: string[];
+}
+
 export interface PetState {
   petsDetailMap: Map<string, Nullable<PetDetail>>;
-  createPet: (pet: CreatePetPayloadDto) => Promise<PetDetail>;
+  petBreeds: Nullable<PetBreeds>;
+  fetchPetBreeds: () => Promise<void>;
+  addPet: (pet: CreatePetPayloadDto) => Promise<PetDetail>;
   updatePet: (id: string, payload: UpdatePetPayloadDto) => Promise<PetDetail>;
 }

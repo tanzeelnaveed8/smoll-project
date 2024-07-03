@@ -19,10 +19,11 @@ const PetContinuousBleedingQuestionScreen = () => {
         data={data}
         renderItem={({ item, index }) => (
           <RadioButton
-            onTab={() => {
+            onTap={() => {
               setSelectedOption(item);
             }}
             value={item}
+            label={item}
             selectedValue={selectedOption}
             styles={{ marginBottom: index + 1 === data.length ? 0 : 16 }}
           />

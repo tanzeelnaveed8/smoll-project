@@ -29,18 +29,18 @@ interface rest {
   borderRadius?: number;
   inputStyle?: StyleProp<TextStyle>;
   multiline?: boolean;
-  numberOfLines?: number;
   paddingX?: number;
   disabled?: boolean;
   keyboardType?: KeyboardTypeOptions | undefined;
   onChangeText?: (text: string) => void;
-  value: string;
+  value?: string;
   focus?: boolean;
 }
 
 const InputField: React.FC<rest & InputProps> = ({
   marginBottom,
   marginTop,
+  borderRadius,
   ...rest
 }) => {
   const [isFocused, setIsFocused] = useState(false);
@@ -104,24 +104,23 @@ const InputField: React.FC<rest & InputProps> = ({
       <Input
         {...rest}
         style={{
-          borderRadius: 12,
+          borderRadius: borderRadius ?? 12,
           ...externalStyles,
         }}
         ref={inputRef}
         placeholder={floatingPlaceholder ? "" : rest.placeholder}
         fontFamily={fontHauora}
         textAlignVertical="top"
-        placeholderTextColor={"#494949"}
-        bg={rest.disabled ? colorDisableBg : "transparent"}
+        placeholderTextColor={colorTextPrimary}
+        bg={rest.disabled ? colorDisableBg : rest.bg ? rest.bg : "transparent"}
         color={rest.disabled ? colorDisableText : colorTextPrimary}
-        multiline={rest.multiline}
-        numberOfLines={rest.numberOfLines}
-        keyboardType={rest.keyboardType}
         fontSize={"xl"}
-        px={typeof rest.paddingX === "number" ? rest.paddingX : 12}
-        pr={rest.icon ? 30 : 12}
-        pt={floatingPlaceholder ? 24 : 16}
-        pb={floatingPlaceholder ? 8 : 16}
+        h={56}
+        loaderColor={colorTextPrimary}
+        // px={typeof rest.paddingX === "number" ? rest.paddingX : 12}
+        // pr={rest.icon ? 30 : 12}
+        // pt={floatingPlaceholder ? 24 : 16}
+        // pb={floatingPlaceholder ? 8 : 16}
         focusBorderColor="#427594"
         borderColor={
           rest.disabled
@@ -134,40 +133,7 @@ const InputField: React.FC<rest & InputProps> = ({
         onBlur={handleBlur}
         onChangeText={onChangeText}
         value={value}
-        // suffix={
-        //   rest.icon ? (
-        //     <Button py={0} px={0} bg={"transparent"} ripple>
-        //       <Icon
-        //         name={rest.icon}
-        //         color={rest.iconColor || "gray900"}
-        //         fontFamily={rest.iconFamily ? rest.iconFamily : "Ionicons"}
-        //         fontSize={24}
-        //       />
-        //     </Button>
-        //   ) : (
-        //     ""
-        //   )
-        // }
       />
-
-      {rest.icon && (
-        <Button
-          py={0}
-          px={0}
-          bg={"transparent"}
-          position="absolute"
-          top={20}
-          right={typeof rest.paddingX === "number" ? rest.paddingX : 12}
-          ripple
-        >
-          <Icon
-            name={rest.icon}
-            color={rest.iconColor || "gray900"}
-            fontFamily={rest.iconFamily ? rest.iconFamily : "Ionicons"}
-            fontSize={24}
-          />
-        </Button>
-      )}
     </Div>
   );
 };

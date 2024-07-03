@@ -2,12 +2,21 @@ import React from "react";
 import { StyleProp, StyleSheet, ViewStyle } from "react-native";
 import { Button, Div, Text } from "react-native-magnus";
 
-const RadioButton: React.FC<{
-  onTab: () => void;
-  selectedValue: string;
+interface Props {
+  onTap: () => void;
   value: string;
+  selectedValue: string;
+  label: string;
   styles?: StyleProp<ViewStyle>;
-}> = ({ onTab, value, selectedValue, styles: externalStyling }) => {
+}
+
+const RadioButton: React.FC<Props> = ({
+  onTap,
+  value,
+  selectedValue,
+  label,
+  styles: externalStyling,
+}) => {
   const externalStyles: {} = externalStyling ? externalStyling : {};
 
   return (
@@ -19,10 +28,10 @@ const RadioButton: React.FC<{
         ...styles.radio,
         ...externalStyles,
       }}
-      onTouchEnd={onTab}
+      onTouchEnd={onTap}
     >
       <Text fontSize={"xl"} textTransform="capitalize">
-        {value}
+        {label}
       </Text>
       <Div
         style={{

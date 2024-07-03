@@ -80,13 +80,14 @@ const App = () => {
       <ThemeProvider theme={theme}>
         <NavigationContainer>
           <ToastProvider
-            placement="center"
+            placement="bottom"
             textStyle={{
               textTransform: "capitalize",
             }}
+            duration={1500}
           >
             <Stack.Navigator
-              initialRouteName="PetProfileScreen"
+              initialRouteName="OnboardingScreen"
               screenOptions={{
                 headerShown: false,
                 // statusBarHidden: true,
@@ -114,13 +115,13 @@ const App = () => {
                 name="PetProfileScreen"
                 component={PetProfileScreen}
               />
-              <Stack.Screen name="Membership" component={MembershipScreen} />
+              {/* <Stack.Screen name="Membership" component={MembershipScreen} />
               <Stack.Screen
                 name="HumanCounsellingMessage"
                 component={HumanCounsellingMessageScreen}
               />
 
-              <Stack.Screen name="ChatScreen" component={ChatScreen} />
+              <Stack.Screen name="ChatScreen" component={ChatScreen} /> */}
 
               {/* <Stack.Screen
               name="UserProfileForm"

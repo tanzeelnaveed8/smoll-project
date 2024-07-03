@@ -58,10 +58,13 @@ const OnboardingAuthModal: React.FC<Props> = (props) => {
   };
 
   return (
-    <BottomSheet isVisible={props.isVisible} showCloseIcon={false} h="95%">
+    <BottomSheet
+      isVisible={props.isVisible}
+      h="93%"
+      onSwipeCancel={props.onBack}
+    >
       <Div justifyContent="space-between" pb={24} h="100%">
         <Div>
-          <BackButton mb={20} onPress={props.onBack} />
           <Text
             fontWeight="600"
             fontSize={"5xl"}
