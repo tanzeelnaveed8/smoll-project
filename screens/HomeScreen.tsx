@@ -16,7 +16,7 @@ import { Button, Div, Icon, Image, Text } from "react-native-magnus";
 import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
 import { useRoute } from "@react-navigation/native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import AccountSetupModal from "@/components/app/account/AccountSetupModal";
 import OnboardingCongratsModal from "@/components/app/onboarding/OnboardingCongratsModal";
 import TouchableWrapper from "@/components/partials/TouchableWrapper";
@@ -43,6 +43,7 @@ const HomeScreen: React.FC<Props> = (props) => {
   const route = useRoute();
   const { user } = useUserStore();
 
+  const congratModalInProgress = useRef(false);
   const [showAccountSetupModal, setShowAccountSetupModal] = useState(false);
   const [showCongratsModal, setShowCongratsModal] = useState(false);
 
@@ -54,7 +55,11 @@ const HomeScreen: React.FC<Props> = (props) => {
       (route.params as Record<string, string>)?.isNewUser === "true";
 
     if (isNewUser) {
-      setShowCongratsModal(true);
+      congratModalInProgress.current = true;
+
+      setTimeout(() => {
+        setShowCongratsModal(true);
+      }, 500);
     }
 
     if (showSetupModal) {
@@ -62,8 +67,6 @@ const HomeScreen: React.FC<Props> = (props) => {
     }
   }, [route.params]);
 
-  // TODO: Add pet profile exist check.
-  // Also check if congrats modal is open ( for new user ) if yes, don't do this.
   useEffect(() => {
     const basicInfoExist = Boolean(user?.address?.length);
     const emailInfoExist = user?.isEmailVerified;
@@ -71,13 +74,13 @@ const HomeScreen: React.FC<Props> = (props) => {
 
     if (
       (!basicInfoExist || !emailInfoExist || !petInfoExist) &&
-      !showCongratsModal
+      !congratModalInProgress.current
     ) {
       setTimeout(() => {
         setShowAccountSetupModal(true);
       }, 500);
     }
-  }, [user]);
+  }, [user, showCongratsModal]);
 
   return (
     <Layout
@@ -212,6 +215,7 @@ const HomeScreen: React.FC<Props> = (props) => {
       <OnboardingCongratsModal
         isVisible={showCongratsModal}
         onSuccess={async () => {
+          congratModalInProgress.current = false;
           setShowCongratsModal(false);
 
           setTimeout(() => {
@@ -221,11 +225,11 @@ const HomeScreen: React.FC<Props> = (props) => {
       />
 
       {/* remove it for now */}
-      {/* <AccountSetupModal
+      <AccountSetupModal
         isVisible={showAccountSetupModal}
         onBack={() => setShowAccountSetupModal(false)}
         navigation={props.navigation}
-      /> */}
+      />
     </Layout>
   );
 };

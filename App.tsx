@@ -11,7 +11,11 @@ import {
 } from "./constant/constant";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { NavigationContainer } from "@react-navigation/native";
+import {
+  NavigationContainer,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "./screens/HomeScreen";
 import HumanCounsellingMessageScreen from "./screens/HumanCounselling/HumanCounsellingMessageScreen";
@@ -22,7 +26,6 @@ import AccountSetupEmailScreen from "./screens/AccountSetup/AccountSetupEmailScr
 import ChatScreen from "./screens/ChatScreen";
 import PartnerClinicScreen from "./screens/partnerClinics/PartnerClinicScreen";
 import OnboardingScreen from "./screens/OnboardingScreen";
-import PetProfileScreen from "./screens/petProfile/PetProfileScreen";
 
 import { ToastProvider } from "react-native-toast-notifications";
 import SettingsMainScreen from "./screens/settings/SettingsMainScreen";
@@ -33,6 +36,7 @@ import {
   IconSettings,
   IconWindow,
 } from "@tabler/icons-react-native";
+import PetProfileScreen from "./screens/PetProfile/PetProfileScreen";
 
 type ScreenComponentType<P, N extends string> = React.ComponentType<P>;
 
@@ -97,7 +101,7 @@ function TabNavigation() {
       }}
     >
       <Tab.Screen
-        name="Home"
+        name="HomeScreen"
         component={HomeScreen}
         options={{
           headerShown: false,
@@ -191,12 +195,6 @@ const App = () => {
                 // statusBarHidden: true,
               }}
             >
-              <Stack.Screen
-                name="LandingScreen"
-                component={TabNavigation}
-                options={{ headerShown: false }}
-              />
-
               {/* <Stack.Screen name="Onboarding" component={Onboarding} /> */}
               <Stack.Screen
                 name="OnboardingScreen"
@@ -230,7 +228,12 @@ const App = () => {
                 component={AccountSetupEmailOtpScreen}
               />
 
-              <Stack.Screen name="HomeScreen" component={HomeScreen} />
+              <Stack.Screen
+                name="HomeScreen"
+                component={HomeScreen}
+                options={{ headerShown: false }}
+              />
+
               <Stack.Screen
                 name="PetProfileScreen"
                 component={PetProfileScreen}

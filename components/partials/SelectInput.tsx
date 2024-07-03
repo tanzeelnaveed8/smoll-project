@@ -4,8 +4,9 @@ import React, { useState } from "react";
 import BottomSheet from "./BottomSheet";
 import InputField from "./InputField";
 import RadioButton from "./RadioButton";
-import { ScrollView } from "react-native";
+import { ScrollView, TouchableOpacity } from "react-native";
 import { Div, ScrollDiv } from "react-native-magnus";
+import TouchableWrapper from "./TouchableWrapper";
 
 interface Props {
   options: { label: string; value: string }[];
@@ -33,15 +34,16 @@ const SelectInput: React.FC<Props> = ({
 
   return (
     <>
-      <InputField
-        placeholder={label ?? "Select"}
-        onTouchEnd={() => setShowMenu(true)}
-        suffix={<IconChevronDown color={colorTextPrimary} />}
-        readOnly
-        loading={loading}
-        disabled={loading}
-        value={selectValue}
-      />
+      <TouchableOpacity onPress={(e) => setShowMenu(true)}>
+        <InputField
+          placeholder={label ?? "Select"}
+          suffix={<IconChevronDown color={colorTextPrimary} />}
+          loading={loading}
+          disabled={loading}
+          readOnly
+          value={selectValue}
+        />
+      </TouchableOpacity>
       <BottomSheet
         isVisible={showMenu}
         showCloseIcon

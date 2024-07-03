@@ -4,6 +4,7 @@ import InputField from "@/components/partials/InputField";
 import { fontHauora } from "@/constant/constant";
 import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
+import { IconCircleCheck } from "@tabler/icons-react-native";
 
 import React, { useMemo, useState } from "react";
 import { View } from "react-native-animatable";
@@ -16,7 +17,7 @@ interface Props {
 const AccountSetupEmailScreen: React.FC<Props> = (props) => {
   const { updateUser, sendVerificationEmail } = useUserStore();
 
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState("mohibarshi834@gmail.com");
   const [loading, setLoading] = useState(false);
 
   const isValidEmail = useMemo(() => {
@@ -61,9 +62,9 @@ const AccountSetupEmailScreen: React.FC<Props> = (props) => {
             value={email}
             placeholder="Email address"
             floatingPlaceholder
-            icon={isValidEmail ? "checkcircleo" : undefined}
-            iconFamily="AntDesign"
-            iconColor={isValidEmail ? "#2F6E20" : "#FF453A"}
+            suffix={
+              isValidEmail ? <IconCircleCheck color="#2F6E20" /> : undefined
+            }
             keyboardType="email-address"
             onChangeText={(text) => setEmail(text)}
             disabled={loading}

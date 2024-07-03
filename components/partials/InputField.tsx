@@ -53,7 +53,7 @@ const InputField: React.FC<rest & InputProps> = ({
   const handleFocus = () => {
     setIsFocused(true);
     Animated.timing(topPosition, {
-      toValue: 8, // New top position when focused
+      toValue: 4, // New top position when focused
       duration: 300, // Animation duration in ms
       useNativeDriver: false, // Set to true if only transforming (translateX, translateY)
     }).start();
@@ -122,7 +122,7 @@ const InputField: React.FC<rest & InputProps> = ({
         loaderColor={colorTextPrimary}
         // px={typeof rest.paddingX === "number" ? rest.paddingX : 12}
         // pr={rest.icon ? 30 : 12}
-        // pt={floatingPlaceholder ? 24 : 16}
+        // pt={16}
         // pb={floatingPlaceholder ? 8 : 16}
         focusBorderColor="#427594"
         borderColor={

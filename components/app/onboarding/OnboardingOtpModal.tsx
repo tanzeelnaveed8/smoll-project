@@ -14,6 +14,7 @@ import { Button, Div, Input, Text } from "react-native-magnus";
 import Toast from "react-native-toast-notifications";
 import ToastContainer from "react-native-toast-notifications/lib/typescript/toast-container";
 import OnboardingUserModal from "./OnboardingUserModal";
+import InputField from "@/components/partials/InputField";
 
 interface Props {
   navigation: NavigationType;
@@ -41,6 +42,12 @@ const OnboardingOtpModal: React.FC<Props> = (props) => {
 
       await verifyOtp({ phone: props.phone, otp: _otp ?? otp });
       const user = await findUser();
+
+      await new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(null);
+        }, 2000);
+      });
 
       if (!user?.name) {
         setShowNameModal(true);
@@ -90,23 +97,15 @@ const OnboardingOtpModal: React.FC<Props> = (props) => {
             </Text>
           </Text>
 
-          <Input
-            placeholder={"Verification Code"}
-            mb={8}
-            fontFamily={fontHauora}
-            placeholderTextColor={"#494949"}
-            color="#494949"
-            fontSize={18}
-            px={12}
-            py={16}
+          <InputField
+            placeholder="Verification Code"
             value={otp}
-            focusBorderColor="#222222"
-            borderColor="#494949"
+            mb={8}
+            onChangeText={handleOtpChange}
             maxLength={4}
             inputMode="numeric"
             keyboardType="number-pad"
             autoFocus
-            onChangeText={handleOtpChange}
           />
 
           <Button
