@@ -4,13 +4,13 @@ import { IconX } from "@tabler/icons-react-native";
 interface PropTypes extends ModalProps {
   showCloseIcon?: boolean;
   onCloseIconClick?: () => void;
-  barMb?: number
+  barMb?: number;
 }
 
 const BottomSheet = (props: PropTypes) => {
   const {
     children,
-    showCloseIcon = true,
+    showCloseIcon = false,
     onCloseIconClick,
     barMb = 16,
     ...restProps
@@ -21,6 +21,7 @@ const BottomSheet = (props: PropTypes) => {
       roundedTop={12}
       p={20}
       swipeDirection={["down"]}
+      coverScreen={true}
       {...restProps}
       onSwipeComplete={onCloseIconClick}
     >

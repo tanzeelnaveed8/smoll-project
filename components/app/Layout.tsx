@@ -1,14 +1,27 @@
 import React from "react";
-import { StatusBar, StyleProp, StyleSheet, ViewStyle } from "react-native";
+import { StyleProp, StyleSheet, ViewStyle } from "react-native";
 import { Div } from "react-native-magnus";
+import BackButton from "../partials/BackButton";
 
-const Layout: React.FC<{
+interface Props {
   children: React.ReactNode;
   style?: StyleProp<ViewStyle>;
-}> = ({ children, style }) => {
+  showBack?: boolean;
+  onBackPress?: () => void;
+}
+
+const Layout: React.FC<Props> = ({
+  children,
+  style,
+  onBackPress,
+  showBack,
+}) => {
   const externalStyles: {} = style ? style : {};
   return (
-    <Div style={{ ...styles.container, ...externalStyles }}>{children}</Div>
+    <Div style={{ ...styles.container, ...externalStyles }}>
+      {showBack && <BackButton onPress={onBackPress} mb={20} />}
+      {children}
+    </Div>
   );
 };
 

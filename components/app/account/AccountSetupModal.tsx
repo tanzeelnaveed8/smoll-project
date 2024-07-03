@@ -1,55 +1,94 @@
 import AccountSetupProgress from "@/components/partials/AccountSetupProgress";
 import BottomSheet from "@/components/partials/BottomSheet";
-import ModalCard from "@/components/partials/ModalCard";
 import {
-  fontHauora,
   fontHauoraBold,
   fontHauoraMedium,
   fontHauoraSemiBold,
 } from "@/constant/constant";
+import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
-import { useRoute } from "@react-navigation/native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Dimensions, FlatList, StyleSheet } from "react-native";
 import { Button, Div, Icon, Image, Text } from "react-native-magnus";
 import * as Progress from "react-native-progress";
 
+interface Props {
+  navigation: NavigationType;
+  isVisible: boolean;
+  onBack: () => void;
+}
+
 const windowWidth = Dimensions.get("window").width;
 
-const stepsBtn = [
+const stepsBtn: {
+  name: string;
+  value: "basic" | "email" | "pet";
+  link: string;
+}[] = [
   {
     name: "Basic Details",
+    value: "basic",
     link: "ProfileAddressScreen",
   },
   {
     name: "Email Verification",
+    value: "email",
     link: "VerifyEmail",
   },
   {
     name: "Pet Profile",
+    value: "pet",
     link: "PetProfileForm",
   },
 ];
 
-const AccountSetupScreen: React.FC<{ navigation: NavigationType }> = ({
-  navigation,
-}) => {
-  const route = useRoute();
-  const showModal = true;
+const AccountSetupModal: React.FC<Props> = (props) => {
+  const { user } = useUserStore();
 
-  const [completedSteps, setCompletedSteps] = useState(["Basic Details"]);
+  const [completedSteps, setCompletedSteps] = useState({
+    basic: false,
+    email: false,
+    pet: false,
+  });
 
-  const [isVisible, setIsVisible] = useState(showModal ? showModal : true);
+  const completedStepCount = useMemo(
+    () => Object.values(completedSteps).filter((step) => step).length,
+    [completedSteps]
+  );
 
   useEffect(() => {
-    const showModal = route.params?.showModal === "true";
-    if (showModal) {
-      setIsVisible(showModal);
+    if (user?.address) {
+      setCompletedSteps((s) => ({
+        ...s,
+        basic: true,
+      }));
     }
-  }, [route.params]);
+
+    if (user?.email && user.isEmailVerified) {
+      setCompletedSteps((s) => ({
+        ...s,
+        email: true,
+      }));
+    }
+
+    // if(user.pet)
+  }, [user]);
+
+  const handleStepPress = (value: "basic" | "email" | "pet") => {
+    // closing the modal
+    props.onBack();
+
+    if (value === "basic") {
+      props.navigation.navigate("AccountSetupAddressScreen");
+    } else if (value === "email") {
+      props.navigation.navigate("AccountSetupEmailScreen");
+    } else if (value === "pet") {
+      props.navigation.navigate("PetProfileForm");
+    }
+  };
 
   return (
-    <BottomSheet isVisible={isVisible} h="95%">
+    <BottomSheet isVisible={props.isVisible} h="92%">
       <Div>
         <Text fontSize={"6xl"} mb={12}>
           Jane, let’s finish setting up your account
@@ -79,20 +118,20 @@ const AccountSetupScreen: React.FC<{ navigation: NavigationType }> = ({
                 w={24}
                 h={24}
                 mx={"auto"}
-                source={require("../../assets/images/flag-icon.png")}
+                source={require("../../../assets/images/flag-icon.png")}
               />
               <Text
                 fontFamily={fontHauoraMedium}
                 fontSize={"xl"}
                 color="#222222"
               >
-                1/3
+                {`${completedStepCount}/${stepsBtn.length}`}
               </Text>
             </Div>
           </Div>
 
           <Progress.Bar
-            progress={0.3}
+            progress={completedStepCount / stepsBtn.length}
             height={8}
             width={windowWidth - 40}
             borderColor="transparent"
@@ -112,17 +151,15 @@ const AccountSetupScreen: React.FC<{ navigation: NavigationType }> = ({
                 p={0}
                 w={"100%"}
                 bg="transparent"
-                onPress={() => {
-                  setIsVisible(false);
-                  navigation.navigate(item.link);
-                }}
+                disabled={completedSteps[item.value]}
+                onPress={() => handleStepPress(item.value)}
               >
                 <Div style={styles.btnTextContainer}>
                   <Text
                     fontSize={"xl"}
                     fontFamily={fontHauoraSemiBold}
                     style={{
-                      ...(completedSteps.includes(item.name)
+                      ...(completedSteps[item.value]
                         ? styles.completedStepStyle
                         : {}),
                     }}
@@ -130,7 +167,7 @@ const AccountSetupScreen: React.FC<{ navigation: NavigationType }> = ({
                     {item.name}
                   </Text>
 
-                  {!completedSteps.includes(item.name) && (
+                  {!completedSteps[item.value] && (
                     <Icon
                       name="chevron-right"
                       fontFamily="Feather"
@@ -140,7 +177,7 @@ const AccountSetupScreen: React.FC<{ navigation: NavigationType }> = ({
                   )}
                 </Div>
 
-                {completedSteps.includes(item.name) ? (
+                {completedSteps[item.value] ? (
                   <Icon
                     name="checkcircle"
                     fontFamily="AntDesign"
@@ -160,7 +197,7 @@ const AccountSetupScreen: React.FC<{ navigation: NavigationType }> = ({
   );
 };
 
-export default AccountSetupScreen;
+export default AccountSetupModal;
 
 const styles = StyleSheet.create({
   accountSetupTrackerContainer: {
