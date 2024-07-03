@@ -12,7 +12,7 @@ interface BlankPrimaryProps extends ButtonProps {
   navigation?: NavigationType;
 }
 
-const BlankButton: React.FC<BlankPrimaryProps> = ({
+const IconButton: React.FC<BlankPrimaryProps> = ({
   children,
   onTouchEnd,
   link,
@@ -41,4 +41,4 @@ const BlankButton: React.FC<BlankPrimaryProps> = ({
   );
 };
 
-export default BlankButton;
+export default IconButton;

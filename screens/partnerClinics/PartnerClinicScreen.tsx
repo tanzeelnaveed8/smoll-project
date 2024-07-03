@@ -1,5 +1,5 @@
 import Layout from "@/components/app/Layout";
-import BlankButton from "@/components/partials/BlankButton";
+// import BlankButton from "@/components/partials/BlankButton";
 import { fontHauoraBold, fontHauoraSemiBold } from "@/constant/constant";
 import React from "react";
 import { FlatList } from "react-native";
@@ -34,7 +34,14 @@ const PartnerClinicScreen = () => {
             data={list}
             renderItem={({ item, index }) => (
               <Div mb={index + 1 === list.length ? 0 : 12}>
-                <BlankButton flexDir="row" alignItems="center" mb={12}>
+                <Button
+                  bg="transparent"
+                  p={0}
+                  underlayColor="#f3f3f3"
+                  flexDir="row"
+                  alignItems="center"
+                  mb={12}
+                >
                   <Image
                     source={require("../../assets/images/dog.png")}
                     w={56}
@@ -79,7 +86,7 @@ const PartnerClinicScreen = () => {
                       </Text>
                     </Div>
                   </Div>
-                </BlankButton>
+                </Button>
 
                 <Div
                   py={8}

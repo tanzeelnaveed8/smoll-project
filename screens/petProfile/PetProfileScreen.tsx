@@ -1,48 +1,61 @@
+import Layout from "@/components/app/Layout";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
-import InputField from "@/components/partials/InputField";
-import React, { useState } from "react";
-import { StyleSheet } from "react-native";
-import { Button, Div, Text } from "react-native-magnus";
+import { CreatePetPayloadDto, PetGenderEnum } from "@/store/types/pet.d";
+import React, { useMemo, useState } from "react";
+import { Dimensions, StyleSheet } from "react-native";
+import { Div } from "react-native-magnus";
 import * as Progress from "react-native-progress";
-import { Dimensions } from "react-native";
-import Container from "@/components/partials/Container";
-import BackButton from "@/components/partials/BackButton";
-import PetNameScreen from "../petProfileForm/PetNameScreen";
-import PetBirthDateScreen from "../petProfileForm/PetBirthDateScreen";
-import PetGenderScreen from "../petProfileForm/PetGenderScreen";
-import PetAnimalTypeScreen from "../petProfileForm/PetAnimalTypeScreen";
-import PetBreedScreen from "../petProfileForm/PetBreedScreen";
-import PetIsNeutralScreen from "../petProfileForm/PetIsNeutralScreen";
-import PetBasicDetails from "../petProfileForm/PetBasicDetails";
-import PetImageUploadScreen from "../petProfileForm/PetImageUploadScreen";
 import AddMedicalHistoryScreen from "../petProfileForm/AddMedicalHistoryScreen";
-// import PetNameScreen from "./PetNameScreen";
-// import PetGenderScreen from "./PetGenderScreen";
-// import PetAnimalTypeScreen from "./PetAnimalTypeScreen";
-// import PetBirthDateScreen from "./PetBirthDateScreen";
-// import PetBreedScreen from "./PetBreedScreen";
-// import PetIsNeutralScreen from "./PetIsNeutralScreen";
-// import PetBasicDetails from "./PetBasicDetails";
-// import Container from "@/components/partials/Container";
-// import PetImageUploadScreen from "./PetImageUploadScreen";
-// import BackButton from "@/components/partials/BackButton";
-// import AddMedicalHistoryScreen from "./AddMedicalHistoryScreen";
+import PetAnimalTypeScreen from "./PetProfileSpeciesScreen";
+import PetBasicDetails from "../petProfileForm/PetBasicDetails";
+import PetBreedScreen from "./PetProfileBreedScreen";
+import PetImageUploadScreen from "../petProfileForm/PetImageUploadScreen";
+import PetIsNeutralScreen from "../petProfileForm/PetIsNeutralScreen";
+import PetProfileDOBScreen from "./PetProfileDOBScreen";
+import PetProfileGenderScreen from "./PetProfileGenderScreen";
+import PetProfileNameScreen from "./PetProfileNameScreen";
+import PetProfileSpeciesScreen from "./PetProfileSpeciesScreen";
+import PetProfileBreedScreen from "./PetProfileBreedScreen";
 
 const windowWidth = Dimensions.get("window").width;
 
 const PetProfileScreen = () => {
-  const [progress, setProgress] = useState(0.25);
-  const [currentStep, setCurrentStep] = useState(8);
+  const [currentStep, setCurrentStep] = useState(4);
+  const progress = useMemo(() => (currentStep + 1) / 7, [currentStep]);
 
-  const nextFormHandler = () => {
-    setCurrentStep((prev) => prev + 1);
-    setProgress((prev) => prev + 1 / 7);
-  };
+  const [pet, setPet] = useState<CreatePetPayloadDto>({
+    name: "",
+    age: 0,
+    weight: 0,
+    species: "",
+    gender: PetGenderEnum.MALE,
+    spayedOrNeutered: false,
+    photos: [],
+    breed: "",
+    dob: new Date().toString(),
+    chipNumber: 0,
+  });
+
+  const isActionDisabled = useMemo(() => {
+    switch (currentStep) {
+      case 0:
+        return !pet.name.length;
+      case 1:
+        return !pet.dob.length;
+      case 2:
+        return !pet.gender.length;
+    }
+
+    return false;
+  }, [currentStep, pet]);
 
   return (
-    <Container pt={20} style={styles.container}>
-      <Div>
-        <BackButton mb={24} />
+    <Layout
+      showBack
+      onBackPress={() => setCurrentStep((step) => step - 1)}
+      style={styles.container}
+    >
+      <Div style={{ flex: 1 }}>
         {/* progress bar */}
         <Progress.Bar
           progress={progress}
@@ -58,11 +71,19 @@ const PetProfileScreen = () => {
         />
 
         {/* screens */}
-        {currentStep === 0 && <PetNameScreen />}
-        {currentStep === 1 && <PetBirthDateScreen />}
-        {currentStep === 2 && <PetGenderScreen />}
-        {currentStep === 3 && <PetAnimalTypeScreen />}
-        {currentStep === 4 && <PetBreedScreen />}
+        {currentStep === 0 && (
+          <PetProfileNameScreen pet={pet} setPet={setPet} />
+        )}
+        {currentStep === 1 && <PetProfileDOBScreen pet={pet} setPet={setPet} />}
+        {currentStep === 2 && (
+          <PetProfileGenderScreen pet={pet} setPet={setPet} />
+        )}
+        {currentStep === 3 && (
+          <PetProfileSpeciesScreen pet={pet} setPet={setPet} />
+        )}
+        {currentStep === 4 && (
+          <PetProfileBreedScreen pet={pet} setPet={setPet} />
+        )}
         {currentStep === 5 && <PetIsNeutralScreen />}
         {currentStep === 6 && <PetBasicDetails />}
         {currentStep === 7 && <PetImageUploadScreen />}
@@ -70,11 +91,15 @@ const PetProfileScreen = () => {
       </Div>
 
       <Div>
-        <ButtonPrimary bgColor="primary" onTouchEnd={nextFormHandler}>
+        <ButtonPrimary
+          bgColor="primary"
+          onTouchEnd={() => setCurrentStep((prev) => prev + 1)}
+          disabled={isActionDisabled}
+        >
           {currentStep === 8 ? "Confirm" : "Next"}
         </ButtonPrimary>
       </Div>
-    </Container>
+    </Layout>
   );
 };
 

@@ -2,7 +2,7 @@ import React from "react";
 import { StyleProp, StyleSheet, ViewStyle } from "react-native";
 import { Button, Div, Text } from "react-native-magnus";
 
-const RadioButtion: React.FC<{
+const RadioButton: React.FC<{
   onTab: () => void;
   selectedValue: string;
   value: string;
@@ -21,7 +21,9 @@ const RadioButtion: React.FC<{
       }}
       onTouchEnd={onTab}
     >
-      <Text fontSize={"xl"}>{value}</Text>
+      <Text fontSize={"xl"} textTransform="capitalize">
+        {value}
+      </Text>
       <Div
         style={{
           ...styles.radioCircle,
@@ -37,7 +39,7 @@ const RadioButtion: React.FC<{
   );
 };
 
-export default RadioButtion;
+export default RadioButton;
 
 const styles = StyleSheet.create({
   radio: {

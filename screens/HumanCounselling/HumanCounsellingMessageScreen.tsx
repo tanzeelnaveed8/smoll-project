@@ -17,8 +17,8 @@ const HumanCounsellingMessage: React.FC<{ navigation: NavigationType }> = ({
 
   return (
     <>
-      <ModalCard pt={10} title="Messages">
-        <Div>
+      <Layout>
+        <Div flex={1}>
           <Div flexDir="row" style={styles.tabContainer}>
             {btns.map((item) => (
               <Button
@@ -60,7 +60,7 @@ const HumanCounsellingMessage: React.FC<{ navigation: NavigationType }> = ({
             />
           </Div>
         </Div>
-      </ModalCard>
+      </Layout>
     </>
   );
 };

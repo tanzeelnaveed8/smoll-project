@@ -1,19 +1,33 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Div } from "react-native-magnus";
 import dayjs from "dayjs";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
-const DatePickerComponent = () => {
-  const [date, setDate] = useState(new Date());
+interface DatePickerComponentProps {
+  value: string;
+  onChange: (dob: any) => void;
+}
+
+const DatePickerComponent: React.FC<DatePickerComponentProps> = ({
+  value,
+  onChange,
+}) => {
+  const [date, setDate] = useState(new Date(value));
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    setDate(new Date(value));
+  }, [value]);
 
   const hideDatePicker = () => {
     setOpen(false);
   };
 
   const handleConfirm = (date: any) => {
-    console.warn("A date has been picked: ", date);
-    setDate;
+    setDate(date);
+    onChange(date);
+
+    hideDatePicker();
   };
 
   return (

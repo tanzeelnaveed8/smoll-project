@@ -1,23 +1,31 @@
 import InputField from "@/components/partials/InputField";
-import RadioButtion from "@/components/partials/RadioButtion";
 import SelectInput from "@/components/partials/SelectInput";
+import { CreatePetPayloadDto } from "@/store/types/pet";
 import React, { useState } from "react";
-import { FlatList, SafeAreaView, StyleSheet } from "react-native";
 import { Button, Div, Text } from "react-native-magnus";
 
-const PetBreedScreen = () => {
+interface Props {
+  pet: CreatePetPayloadDto;
+  setPet: (pet: CreatePetPayloadDto) => void;
+}
+
+const PetProfileBreedScreen: React.FC<Props> = (props) => {
   const [showManualInput, setShowManualInput] = useState(false);
 
   return (
     <Div>
       <Text fontSize={"4xl"} mb={20}>
-        What breed is Lucy?
+        What breed is {props.pet.name}?
       </Text>
 
       <SelectInput label="Select a breed" />
 
       {showManualInput && (
         <InputField
+          value={props.pet.breed}
+          onChangeText={(text) => {
+            props.setPet({ ...props.pet, breed: text });
+          }}
           placeholder="Name"
           marginTop={16}
           floatingPlaceholder
@@ -42,4 +50,4 @@ const PetBreedScreen = () => {
   );
 };
 
-export default PetBreedScreen;
+export default PetProfileBreedScreen;

@@ -1,8 +1,14 @@
 import InputField from "@/components/partials/InputField";
+import { CreatePetPayloadDto } from "@/store/types/pet";
 import React from "react";
 import { Div, Text } from "react-native-magnus";
 
-const PetNameScreen = () => {
+interface Props {
+  pet: CreatePetPayloadDto;
+  setPet: (pet: CreatePetPayloadDto) => void;
+}
+
+const PetProfileNameScreen: React.FC<Props> = (props) => {
   return (
     <Div>
       <Text fontSize={"4xl"} mb={20}>
@@ -13,9 +19,11 @@ const PetNameScreen = () => {
         marginBottom={16}
         floatingPlaceholder
         inputStyle={{ borderRadius: 12 }}
+        value={props.pet.name}
+        onChangeText={(name) => props.setPet({ ...props.pet, name })}
       />
     </Div>
   );
 };
 
-export default PetNameScreen;
+export default PetProfileNameScreen;
