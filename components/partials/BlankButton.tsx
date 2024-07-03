@@ -31,7 +31,8 @@ const BlankButton: React.FC<BlankPrimaryProps> = ({
       }}
       py={0}
       px={0}
-      bg={bgColor ? bgColor : "transparent"}
+      bg={bgColor ? bgColor : "#fff"}
+      underlayColor="#f3f3f3"
       fontFamily={fontHauora}
       {...restProps}
     >

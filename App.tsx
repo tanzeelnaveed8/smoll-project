@@ -47,6 +47,7 @@ import MembershipScreen from "./screens/HumanCounselling/MembershipScreen";
 import HumanCounsellingMessageScreen from "./screens/HumanCounselling/HumanCounsellingMessageScreen";
 import ChatScreen from "./screens/ChatScreen";
 import { AuthStateProvider } from "./store/auth/provider";
+import PartnerClinicScreen from "./screens/partnerClinics/PartnerClinicScreen";
 
 type ScreenComponentType<P, N extends string> = React.ComponentType<P>;
 
@@ -69,6 +70,8 @@ const theme = {
   },
   colors: {
     primary: "#427594",
+    primaryLight: "#518cb0",
+    // primaryLight: "#f10",
     darkGreyText: "#494949",
   },
   components: {
@@ -91,6 +94,33 @@ const windowHeight = Dimensions.get("window").height;
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
+function TabNavigation() {
+  return (
+    <Tab.Navigator>
+      <Tab.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="PartnerClinic"
+        component={PartnerClinicScreen}
+        options={{ title: "Partner", headerShown: false }}
+      />
+      <Tab.Screen
+        name="Settings"
+        component={PetProfileScreen}
+        options={{ headerShown: false }}
+      />
+      <Tab.Screen
+        name="Account"
+        component={SettingsMainScreen}
+        options={{ headerShown: false }}
+      />
+    </Tab.Navigator>
+  );
+}
+
 const App = () => {
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
@@ -108,12 +138,18 @@ const App = () => {
         <NavigationContainer>
           <AuthStateProvider>
             <Stack.Navigator
-              initialRouteName="Home"
+              initialRouteName="Landing"
               screenOptions={{
                 headerShown: false,
                 statusBarHidden: true,
               }}
             >
+              <Stack.Screen
+                name="Landing"
+                component={TabNavigation}
+                options={{ headerShown: false }}
+              />
+
               <Stack.Screen name="Onboarding" component={Onboarding} />
               <Stack.Screen name="Register" component={Register} />
               <Stack.Screen
@@ -125,7 +161,7 @@ const App = () => {
                 name="Confirmation"
                 component={WelcomeMessageScreen}
               />
-              <Stack.Screen name="Home" component={HomeScreen} />
+
               <Stack.Screen
                 name="AccountSetup"
                 component={AccountSetupScreen}
@@ -148,7 +184,6 @@ const App = () => {
                 name="HumanCounsellingMessage"
                 component={HumanCounsellingMessageScreen}
               />
-
               <Stack.Screen name="ChatScreen" component={ChatScreen} />
 
               {/* <Stack.Screen
