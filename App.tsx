@@ -11,7 +11,11 @@ import {
 } from "./constant/constant";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { NavigationContainer } from "@react-navigation/native";
+import {
+  NavigationContainer,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "./screens/HomeScreen";
 import HumanCounsellingMessageScreen from "./screens/HumanCounselling/HumanCounsellingMessageScreen";
@@ -21,7 +25,6 @@ import AccountSetupEmailOtpScreen from "./screens/AccountSetup/AccountSetupEmail
 import AccountSetupEmailScreen from "./screens/AccountSetup/AccountSetupEmailScreen";
 import ChatScreen from "./screens/ChatScreen";
 import OnboardingScreen from "./screens/OnboardingScreen";
-import PetProfileScreen from "./screens/petProfile/PetProfileScreen";
 
 import { ToastProvider } from "react-native-toast-notifications";
 import SettingsMainScreen from "./screens/settings/SettingsMainScreen";
@@ -35,6 +38,7 @@ import {
 import PartnerCaseDetailsScreen from "./screens/partnerClinics/PartnerCaseDetailsScreen";
 import DoctotsListScreen from "./screens/doctorsScreens/DoctotsListScreen";
 import PartnerCasesListScreen from "./screens/partnerClinics/PartnerCasesListScreen";
+import PetProfileScreen from "./screens/petProfile/PetProfileScreen";
 
 type ScreenComponentType<P, N extends string> = React.ComponentType<P>;
 
@@ -96,10 +100,11 @@ const App = () => {
       <ThemeProvider theme={theme}>
         <NavigationContainer>
           <ToastProvider
-            placement="center"
+            placement="bottom"
             textStyle={{
               textTransform: "capitalize",
             }}
+            duration={1500}
           >
             <Stack.Navigator
               initialRouteName="HomeScreen"
@@ -109,7 +114,6 @@ const App = () => {
               }}
             >
               <Stack.Screen name="HomeScreen" component={HomeScreen} />
-              {/* <Stack.Screen name="Onboarding" component={Onboarding} /> */}
               <Stack.Screen
                 name="OnboardingScreen"
                 component={OnboardingScreen}

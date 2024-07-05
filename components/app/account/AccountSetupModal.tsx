@@ -10,7 +10,6 @@ import { NavigationType } from "@/store/types";
 import React, { useEffect, useMemo, useState } from "react";
 import { Dimensions, FlatList, StyleSheet } from "react-native";
 import { Button, Div, Icon, Image, Text } from "react-native-magnus";
-import * as Progress from "react-native-progress";
 
 interface Props {
   navigation: NavigationType;
@@ -83,7 +82,7 @@ const AccountSetupModal: React.FC<Props> = (props) => {
     } else if (value === "email") {
       props.navigation.navigate("AccountSetupEmailScreen");
     } else if (value === "pet") {
-      props.navigation.navigate("PetProfileForm");
+      props.navigation.navigate("PetProfileScreen");
     }
   };
 

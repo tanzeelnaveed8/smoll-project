@@ -10,16 +10,17 @@ import {
   IconChevronRight,
   IconUserCircle,
 } from "@tabler/icons-react-native";
-import { FlatList, StyleSheet } from "react-native";
+import { FlatList, StyleSheet, TouchableOpacity } from "react-native";
 import { Button, Div, Icon, Image, Text } from "react-native-magnus";
 
 import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
 import { useRoute } from "@react-navigation/native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import AccountSetupModal from "@/components/app/account/AccountSetupModal";
 import OnboardingCongratsModal from "@/components/app/onboarding/OnboardingCongratsModal";
 import TouchableWrapper from "@/components/partials/TouchableWrapper";
+import AccountSetupProgress from "@/components/partials/AccountSetupProgress";
 import TabNaivationBar from "@/components/app/TabNaivationBar";
 
 interface Props {
@@ -47,8 +48,6 @@ const HomeScreen: React.FC<Props> = (props) => {
   const [showAccountSetupModal, setShowAccountSetupModal] = useState(false);
   const [showCongratsModal, setShowCongratsModal] = useState(false);
 
-  console.log("s", showAccountSetupModal);
-
   useEffect(() => {
     const showSetupModal =
       (route.params as Record<string, string>)?.showSetupModal === "true";
@@ -56,30 +55,29 @@ const HomeScreen: React.FC<Props> = (props) => {
     const isNewUser =
       (route.params as Record<string, string>)?.isNewUser === "true";
 
-    console.log("isNewUser", isNewUser, route.params);
-
     if (isNewUser) {
-      setShowCongratsModal(true);
+      setTimeout(() => {
+        setShowCongratsModal(true);
+      }, 500);
     }
+
+    console.log("s", showSetupModal);
 
     if (showSetupModal) {
       setShowAccountSetupModal(true);
     }
   }, [route.params]);
 
-  // TODO: Add pet profile exist check.
-  // Also check if congrats modal is open ( for new user ) if yes, don't do this.
-  useEffect(() => {
+  const completedStep = useMemo(() => {
     const basicInfoExist = Boolean(user?.address?.length);
     const emailInfoExist = user?.isEmailVerified;
+    const petInfoExist = (user?.petCount ?? 0) > 0;
 
-    console.log("b", basicInfoExist, user, showCongratsModal);
+    const completedStep = [basicInfoExist, emailInfoExist, petInfoExist].filter(
+      (step) => step
+    ).length;
 
-    if ((!basicInfoExist || !emailInfoExist) && !showCongratsModal) {
-      setTimeout(() => {
-        setShowAccountSetupModal(true);
-      }, 500);
-    }
+    return completedStep;
   }, [user]);
 
   return (
@@ -122,9 +120,24 @@ const HomeScreen: React.FC<Props> = (props) => {
         </Div>
 
         <Div mb={16}>
-          <Text fontSize={"5xl"}>Hi, Jane Doe</Text>
+          <Text fontSize={"5xl"}>Hi, {user?.name}</Text>
           <Text fontSize={"lg"}>How can we help you today?</Text>
         </Div>
+
+        {completedStep < 3 && (
+          <Div mb={16}>
+            <TouchableOpacity
+              onPress={() => {
+                setShowAccountSetupModal(true);
+              }}
+            >
+              <AccountSetupProgress
+                progress={(completedStep + 0.35) / 3}
+                completedStepCount={completedStep}
+              />
+            </TouchableOpacity>
+          </Div>
+        )}
 
         <Div
           bg="#F3F9FC"
@@ -217,20 +230,17 @@ const HomeScreen: React.FC<Props> = (props) => {
           isVisible={showCongratsModal}
           onSuccess={async () => {
             setShowCongratsModal(false);
-
-            setTimeout(() => {
-              setShowAccountSetupModal(true);
-            }, 500);
           }}
         />
 
         {/* remove it for now */}
-        {/* <AccountSetupModal
-        isVisible={showAccountSetupModal}
-        onBack={() => setShowAccountSetupModal(false)}
-        navigation={props.navigation}
-      /> */}
+        <AccountSetupModal
+          isVisible={showAccountSetupModal}
+          onBack={() => setShowAccountSetupModal(false)}
+          navigation={props.navigation}
+        />
       </Layout>
+
       <TabNaivationBar navigation={props.navigation} />
     </>
   );

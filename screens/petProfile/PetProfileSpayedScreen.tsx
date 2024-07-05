@@ -1,17 +1,25 @@
 import RadioButton from "@/components/partials/RadioButton";
+import { CreatePetPayloadDto } from "@/store/types/pet";
 import React, { useState } from "react";
-import { FlatList, SafeAreaView, StyleSheet } from "react-native";
-import { Button, Div, Text } from "react-native-magnus";
+import { FlatList } from "react-native";
+import { Div, Text } from "react-native-magnus";
+
+interface Props {
+  pet: CreatePetPayloadDto;
+  setPet: (pet: CreatePetPayloadDto) => void;
+}
 
 const data = ["Yes", "No"];
 
-const PetUnconsciousnessQuestionScreen = () => {
-  const [selectedOption, setSelectedOption] = useState("");
+const PetProfileSpayedScreen: React.FC<Props> = (props) => {
+  const [selectedOption, setSelectedOption] = useState(
+    props.pet.spayedOrNeutered ? "Yes" : "No"
+  );
 
   return (
     <Div>
       <Text fontSize={"4xl"} mb={20}>
-        Is your pet unconsciousness?
+        Is {props.pet.name} Spayed/Neutered
       </Text>
 
       <FlatList
@@ -20,6 +28,7 @@ const PetUnconsciousnessQuestionScreen = () => {
           <RadioButton
             onTap={() => {
               setSelectedOption(item);
+              props.setPet({ ...props.pet, spayedOrNeutered: item === "Yes" });
             }}
             value={item}
             label={item}
@@ -33,4 +42,4 @@ const PetUnconsciousnessQuestionScreen = () => {
   );
 };
 
-export default PetUnconsciousnessQuestionScreen;
+export default PetProfileSpayedScreen;

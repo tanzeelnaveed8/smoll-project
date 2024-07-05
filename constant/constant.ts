@@ -7,6 +7,7 @@ export const fontHauoraBold = "HauoraBold";
 
 /** Colors */
 export const colorGray49 = "#494949";
+export const colorPrimary = "#427594";
 export const colorTextPrimary = "#494949";
 export const colorDisableBg = "#fff";
 export const colorDisableBorder = "#BDBDBD";

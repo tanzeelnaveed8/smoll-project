@@ -6,23 +6,25 @@ import { Dimensions, StyleSheet } from "react-native";
 import { Div } from "react-native-magnus";
 import * as Progress from "react-native-progress";
 import AddMedicalHistoryScreen from "../petProfileForm/AddMedicalHistoryScreen";
-import PetAnimalTypeScreen from "./PetProfileSpeciesScreen";
-import PetBasicDetails from "../petProfileForm/PetBasicDetails";
-import PetBreedScreen from "./PetProfileBreedScreen";
 import PetImageUploadScreen from "../petProfileForm/PetImageUploadScreen";
-import PetIsNeutralScreen from "../petProfileForm/PetIsNeutralScreen";
+import PetProfileBasicDetailScreens from "./PetProfileBasicDetailScreens";
+import PetProfileBreedScreen from "./PetProfileBreedScreen";
 import PetProfileDOBScreen from "./PetProfileDOBScreen";
 import PetProfileGenderScreen from "./PetProfileGenderScreen";
 import PetProfileNameScreen from "./PetProfileNameScreen";
+import PetProfileSpayedScreen from "./PetProfileSpayedScreen";
 import PetProfileSpeciesScreen from "./PetProfileSpeciesScreen";
-import PetProfileBreedScreen from "./PetProfileBreedScreen";
+import { usePetStore } from "@/store/modules/pet";
+import { useToast } from "react-native-toast-notifications";
 
 const windowWidth = Dimensions.get("window").width;
 
 const PetProfileScreen = () => {
-  const [currentStep, setCurrentStep] = useState(4);
-  const progress = useMemo(() => (currentStep + 1) / 7, [currentStep]);
+  const toast = useToast();
+  const { addPet } = usePetStore();
 
+  const [currentStep, setCurrentStep] = useState(0);
+  const [loading, setLoading] = useState(false);
   const [pet, setPet] = useState<CreatePetPayloadDto>({
     name: "",
     age: 0,
@@ -36,18 +38,38 @@ const PetProfileScreen = () => {
     chipNumber: 0,
   });
 
+  const progress = useMemo(() => (currentStep + 1) / 7, [currentStep]);
+
   const isActionDisabled = useMemo(() => {
     switch (currentStep) {
       case 0:
         return !pet.name.length;
-      case 1:
-        return !pet.dob.length;
       case 2:
         return !pet.gender.length;
+      case 4:
+        return !pet.breed.length;
+      case 6:
+        return !pet.weight;
     }
 
     return false;
   }, [currentStep, pet]);
+
+  const handleNext = async () => {
+    if (currentStep === 6) {
+      try {
+        setLoading(true);
+
+        await addPet(pet);
+
+        toast.show("Pet profile created successfully");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    setCurrentStep((step) => step + 1);
+  };
 
   return (
     <Layout
@@ -84,8 +106,12 @@ const PetProfileScreen = () => {
         {currentStep === 4 && (
           <PetProfileBreedScreen pet={pet} setPet={setPet} />
         )}
-        {currentStep === 5 && <PetIsNeutralScreen />}
-        {currentStep === 6 && <PetBasicDetails />}
+        {currentStep === 5 && (
+          <PetProfileSpayedScreen pet={pet} setPet={setPet} />
+        )}
+        {currentStep === 6 && (
+          <PetProfileBasicDetailScreens pet={pet} setPet={setPet} />
+        )}
         {currentStep === 7 && <PetImageUploadScreen />}
         {currentStep === 8 && <AddMedicalHistoryScreen />}
       </Div>
@@ -93,8 +119,9 @@ const PetProfileScreen = () => {
       <Div>
         <ButtonPrimary
           bgColor="primary"
-          onTouchEnd={() => setCurrentStep((prev) => prev + 1)}
-          disabled={isActionDisabled}
+          onPress={handleNext}
+          disabled={isActionDisabled || loading}
+          loading={loading}
         >
           {currentStep === 8 ? "Confirm" : "Next"}
         </ButtonPrimary>

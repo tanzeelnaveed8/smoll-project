@@ -2,7 +2,7 @@ import Layout from "@/components/app/Layout";
 // import BlankButton from "@/components/partials/BlankButton";
 import { fontHauoraBold, fontHauoraSemiBold } from "@/constant/constant";
 import { NavigationType } from "@/store/types";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FlatList, StyleSheet } from "react-native";
 import { Button, Div, Image, Text } from "react-native-magnus";
 
@@ -21,6 +21,10 @@ const PartnerCasesListScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
   const [activeTab, setActiveTab] = useState("Open");
+  const [isLoading, setIsLoading] = useState(false);
+  const [casesData, setCasesData] = useState([]);
+
+  useEffect(() => {}, []);
 
   return (
     <Layout showBack backBtnText="">
