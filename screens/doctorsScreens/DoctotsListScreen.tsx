@@ -3,10 +3,11 @@ import { fontHauoraSemiBold } from "@/constant/constant";
 import { Div, Text, ScrollDiv } from "react-native-magnus";
 import DoctorListCard from "@/components/partials/DoctorListCard";
 import Container from "@/components/partials/Container";
+import Layout from "@/components/app/Layout";
 
 const DoctotsListScreen = () => {
   return (
-    <Container>
+    <Layout>
       <ScrollDiv pt={20} showsVerticalScrollIndicator={false}>
         <Header title="Find your Doctor" />
 
@@ -52,7 +53,7 @@ const DoctotsListScreen = () => {
           </Div>
         </Div>
       </ScrollDiv>
-    </Container>
+    </Layout>
   );
 };
 

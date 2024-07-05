@@ -17,9 +17,15 @@ const HumanCounsellingMessage: React.FC<{ navigation: NavigationType }> = ({
 
   return (
     <>
-      <Layout>
+      <Layout
+        showBack
+        backBtnText=""
+        onBackPress={() => {
+          navigation.goBack();
+        }}
+      >
         <Div flex={1}>
-          <Div flexDir="row" style={styles.tabContainer}>
+          {/* <Div flexDir="row" style={styles.tabContainer}>
             {btns.map((item) => (
               <Button
                 color="#222222"
@@ -40,7 +46,7 @@ const HumanCounsellingMessage: React.FC<{ navigation: NavigationType }> = ({
                 {item}
               </Button>
             ))}
-          </Div>
+          </Div> */}
 
           <Div>
             <Text fontSize={"6xl"} textAlign="center" mb={8}>

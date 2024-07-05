@@ -1,8 +1,9 @@
 import Layout from "@/components/app/Layout";
 // import BlankButton from "@/components/partials/BlankButton";
 import { fontHauoraBold, fontHauoraSemiBold } from "@/constant/constant";
-import React from "react";
-import { FlatList } from "react-native";
+import { NavigationType } from "@/store/types";
+import React, { useState } from "react";
+import { FlatList, StyleSheet } from "react-native";
 import { Button, Div, Image, Text } from "react-native-magnus";
 
 const list = [
@@ -14,16 +15,46 @@ const list = [
   },
 ];
 
-const PartnerClinicScreen = () => {
+const btns = ["Open", "Archive"];
+
+const PartnerCasesListScreen: React.FC<{ navigation: NavigationType }> = ({
+  navigation,
+}) => {
+  const [activeTab, setActiveTab] = useState("Open");
+
   return (
-    <Layout style={{ paddingVertical: 32 }}>
+    <Layout showBack backBtnText="">
       <Div flex={1}>
         <Text fontSize={"6xl"} mb={24}>
-          Partner Clinics
+          Partner Cases
         </Text>
-        <Text fontSize={"xl"} mb={20} fontFamily={fontHauoraBold}>
+
+        <Div flexDir="row" style={styles.tabContainer}>
+          {btns.map((item) => (
+            <Button
+              color="#222222"
+              fontFamily={fontHauoraSemiBold}
+              fontSize={"lg"}
+              p={0}
+              m={0}
+              onPress={() => {
+                setActiveTab(item);
+              }}
+              key={item}
+              bg="transparent"
+              style={{
+                ...styles.btn,
+                ...(activeTab === item ? styles.activeBtn : {}),
+              }}
+            >
+              {item}
+            </Button>
+          ))}
+        </Div>
+
+        {/* <Text fontSize={"xl"} mb={20} fontFamily={fontHauoraBold}>
           In-Clinic Request
-        </Text>
+        </Text> */}
 
         <Div>
           <Text fontSize={"md"} mb={8} fontFamily={fontHauoraSemiBold}>
@@ -106,6 +137,9 @@ const PartnerClinicScreen = () => {
                     p={0}
                     fontFamily={fontHauoraSemiBold}
                     color="primary"
+                    onPress={() => {
+                      navigation.navigate("PartnerCaseDetails");
+                    }}
                   >
                     View Request
                   </Button>
@@ -120,4 +154,29 @@ const PartnerClinicScreen = () => {
   );
 };
 
-export default PartnerClinicScreen;
+export default PartnerCasesListScreen;
+
+const styles = StyleSheet.create({
+  tabContainer: {
+    flexDirection: "row",
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 100,
+    backgroundColor: "#EFEFEF",
+    justifyContent: "space-around",
+    marginBottom: 32,
+  },
+  btn: {
+    padding: 8,
+    // fontSize: 16,
+    borderWidth: 1,
+    borderRadius: 34,
+    borderColor: "transparent",
+    width: "60%",
+  },
+  activeBtn: {
+    paddingHorizontal: 30,
+    backgroundColor: "#fff",
+    borderColor: "#427594",
+  },
+});

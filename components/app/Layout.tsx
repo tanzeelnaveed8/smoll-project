@@ -8,6 +8,7 @@ interface Props {
   style?: StyleProp<ViewStyle>;
   showBack?: boolean;
   onBackPress?: () => void;
+  backBtnText?: string;
 }
 
 const Layout: React.FC<Props> = ({
@@ -15,11 +16,14 @@ const Layout: React.FC<Props> = ({
   style,
   onBackPress,
   showBack,
+  backBtnText = "Back",
 }) => {
   const externalStyles: {} = style ? style : {};
   return (
     <Div style={{ ...styles.container, ...externalStyles }}>
-      {showBack && <BackButton onPress={onBackPress} mb={20} />}
+      {showBack && (
+        <BackButton onPress={onBackPress} mb={20} text={backBtnText} />
+      )}
       {children}
     </Div>
   );

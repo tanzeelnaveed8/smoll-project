@@ -20,7 +20,6 @@ import AccountSetupAddressScreen from "./screens/AccountSetup/AccountSetupAddres
 import AccountSetupEmailOtpScreen from "./screens/AccountSetup/AccountSetupEmailOtpScreen";
 import AccountSetupEmailScreen from "./screens/AccountSetup/AccountSetupEmailScreen";
 import ChatScreen from "./screens/ChatScreen";
-import PartnerClinicScreen from "./screens/partnerClinics/PartnerClinicScreen";
 import OnboardingScreen from "./screens/OnboardingScreen";
 import PetProfileScreen from "./screens/petProfile/PetProfileScreen";
 
@@ -33,6 +32,9 @@ import {
   IconSettings,
   IconWindow,
 } from "@tabler/icons-react-native";
+import PartnerCaseDetailsScreen from "./screens/partnerClinics/PartnerCaseDetailsScreen";
+import DoctotsListScreen from "./screens/doctorsScreens/DoctotsListScreen";
+import PartnerCasesListScreen from "./screens/partnerClinics/PartnerCasesListScreen";
 
 type ScreenComponentType<P, N extends string> = React.ComponentType<P>;
 
@@ -77,90 +79,6 @@ const windowHeight = Dimensions.get("window").height;
 
 // const screensData = [<Onboarding />, <Register />];
 const Stack = createNativeStackNavigator();
-const Tab = createBottomTabNavigator();
-
-function TabNavigation() {
-  return (
-    <Tab.Navigator
-      screenOptions={{
-        tabBarStyle: {
-          height: 60,
-          paddingBottom: 6,
-          paddingTop: 6,
-        },
-        tabBarLabelStyle: {
-          fontSize: 14,
-          fontFamily: fontHauoraSemiBold,
-        },
-        tabBarInactiveTintColor: "#494949",
-        tabBarActiveTintColor: "#427594",
-      }}
-    >
-      <Tab.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{
-          headerShown: false,
-          tabBarIcon: ({ focused }) => (
-            <IconWindow
-              width={28}
-              height={28}
-              color={focused ? "#427594" : "#494949"}
-            />
-          ),
-        }}
-      />
-
-      <Tab.Screen
-        name="HumanCounsellingMessage"
-        component={HumanCounsellingMessageScreen}
-        options={{
-          title: "Chats",
-          headerShown: false,
-          tabBarIcon: ({ focused }) => (
-            <IconMessage
-              width={28}
-              height={28}
-              color={focused ? "#427594" : "#494949"}
-            />
-          ),
-        }}
-      />
-
-      <Tab.Screen
-        name="PartnerClinic"
-        component={PartnerClinicScreen}
-        options={{
-          title: "Partner",
-          headerShown: false,
-          tabBarIcon: ({ focused }) => (
-            <IconBuildingHospital
-              width={28}
-              height={28}
-              color={focused ? "#427594" : "#494949"}
-            />
-          ),
-        }}
-      />
-
-      <Tab.Screen
-        name="Account"
-        component={SettingsMainScreen}
-        options={{
-          headerShown: false,
-          tabBarIcon: ({ focused }) => (
-            <IconSettings
-              width={28}
-              height={28}
-              color={focused ? "#427594" : "#494949"}
-            />
-          ),
-        }}
-      />
-    </Tab.Navigator>
-  );
-}
-
 const App = () => {
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
@@ -184,38 +102,22 @@ const App = () => {
             }}
           >
             <Stack.Navigator
-              initialRouteName="LandingScreen"
+              initialRouteName="HomeScreen"
               screenOptions={{
                 headerShown: false,
                 // statusBarHidden: true,
               }}
             >
-              <Stack.Screen
-                name="LandingScreen"
-                component={TabNavigation}
-                options={{ headerShown: false }}
-              />
-
+              <Stack.Screen name="HomeScreen" component={HomeScreen} />
               {/* <Stack.Screen name="Onboarding" component={Onboarding} /> */}
               <Stack.Screen
                 name="OnboardingScreen"
                 component={OnboardingScreen}
               />
-              {/* <Stack.Screen name="Register" component={Register} /> */}
-              {/* <Stack.Screen
-                name="VerifyNumber"
-                component={VerifyNumberScreen}
-              /> */}
-              {/* <Stack.Screen name="SignUpUserName" component={UserNameScreen} /> */}
               <Stack.Screen
                 name="Confirmation"
                 component={WelcomeMessageScreen}
               />
-
-              {/* <Stack.Screen
-                name="AccountSetup"
-                component={AccountSetupScreen}
-              /> */}
               <Stack.Screen
                 name="AccountSetupAddressScreen"
                 component={AccountSetupAddressScreen}
@@ -228,17 +130,27 @@ const App = () => {
                 name="AccountSetupEmailOtpScreen"
                 component={AccountSetupEmailOtpScreen}
               />
+              <Stack.Screen
+                // name="PartnerClinic"
+                name="PartnerCasesList"
+                component={PartnerCasesListScreen}
+              />
+              <Stack.Screen
+                name="PartnerCaseDetails"
+                component={PartnerCaseDetailsScreen}
+              />
 
-              <Stack.Screen name="HomeScreen" component={HomeScreen} />
+              <Stack.Screen name="Account" component={SettingsMainScreen} />
               <Stack.Screen
                 name="PetProfileScreen"
                 component={PetProfileScreen}
               />
+              <Stack.Screen name="DoctotsList" component={DoctotsListScreen} />
               <Stack.Screen name="Membership" component={MembershipScreen} />
-              {/* <Stack.Screen
+              <Stack.Screen
                 name="HumanCounsellingMessage"
                 component={HumanCounsellingMessageScreen}
-              /> */}
+              />
               <Stack.Screen name="ChatScreen" component={ChatScreen} />
             </Stack.Navigator>
           </ToastProvider>
