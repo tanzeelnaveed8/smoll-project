@@ -43,12 +43,6 @@ const OnboardingOtpModal: React.FC<Props> = (props) => {
       await verifyOtp({ phone: props.phone, otp: _otp ?? otp });
       const user = await findUser();
 
-      await new Promise((resolve) => {
-        setTimeout(() => {
-          resolve(null);
-        }, 2000);
-      });
-
       if (!user?.name) {
         setShowNameModal(true);
       } else {

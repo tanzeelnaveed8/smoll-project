@@ -1,9 +1,14 @@
 import React from "react";
-import { StyleProp, StyleSheet, ViewStyle } from "react-native";
+import {
+  StyleProp,
+  StyleSheet,
+  TouchableOpacity,
+  ViewStyle,
+} from "react-native";
 import { Button, Div, Text } from "react-native-magnus";
 
 interface Props {
-  onTap: () => void;
+  onTap?: () => void;
   value: string;
   selectedValue: string;
   label: string;
@@ -20,31 +25,33 @@ const RadioButton: React.FC<Props> = ({
   const externalStyles: {} = externalStyling ? externalStyling : {};
 
   return (
-    <Button
-      bg="transparent"
-      py={0}
-      px={0}
-      style={{
-        ...styles.radio,
-        ...externalStyles,
-      }}
-      onTouchEnd={onTap}
-    >
-      <Text fontSize={"xl"} textTransform="capitalize">
-        {label}
-      </Text>
-      <Div
+    <TouchableOpacity onPress={onTap}>
+      <Button
+        bg="transparent"
+        py={0}
+        px={0}
         style={{
-          ...styles.radioCircle,
+          ...styles.radio,
+          ...externalStyles,
         }}
+        pointerEvents="none"
       >
-        {value === selectedValue ? (
-          <Div style={styles.activeRadioCircle} />
-        ) : (
-          ""
-        )}
-      </Div>
-    </Button>
+        <Text fontSize={"xl"} textTransform="capitalize">
+          {label}
+        </Text>
+        <Div
+          style={{
+            ...styles.radioCircle,
+          }}
+        >
+          {value === selectedValue ? (
+            <Div style={styles.activeRadioCircle} />
+          ) : (
+            ""
+          )}
+        </Div>
+      </Button>
+    </TouchableOpacity>
   );
 };
 

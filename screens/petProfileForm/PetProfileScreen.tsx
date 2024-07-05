@@ -14,7 +14,7 @@ import PetIsNeutralScreen from "../PetProfile/PetProfileSpayedScreen";
 import PetBasicDetails from "../PetProfile/PetProfileBasicDetailScreens";
 import Layout from "@/components/app/Layout";
 import { NavigationType } from "@/store/types";
-import PetImageUploadScreen from "./PetImageUploadScreen";
+import PetImageUploadScreen from "../PetProfile/PetProfileImageScreen";
 import AddMedicalHistoryScreen from "./AddMedicalHistoryScreen";
 import PetDetailsModal from "./PetDetailsModal";
 

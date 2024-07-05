@@ -17,7 +17,7 @@ interface Props {
 const AccountSetupEmailScreen: React.FC<Props> = (props) => {
   const { updateUser, sendVerificationEmail } = useUserStore();
 
-  const [email, setEmail] = useState("mohibarshi834@gmail.com");
+  const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
 
   const isValidEmail = useMemo(() => {

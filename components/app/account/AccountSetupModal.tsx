@@ -8,7 +8,12 @@ import {
 import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
 import React, { useEffect, useMemo, useState } from "react";
-import { Dimensions, FlatList, StyleSheet } from "react-native";
+import {
+  Dimensions,
+  FlatList,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import { Button, Div, Icon, Image, Text } from "react-native-magnus";
 
 interface Props {
@@ -53,8 +58,6 @@ const AccountSetupModal: React.FC<Props> = (props) => {
     [completedSteps]
   );
 
-  console.log(completedStepCount);
-
   useEffect(() => {
     if (user?.address) {
       setCompletedSteps((s) => ({
@@ -82,12 +85,19 @@ const AccountSetupModal: React.FC<Props> = (props) => {
     } else if (value === "email") {
       props.navigation.navigate("AccountSetupEmailScreen");
     } else if (value === "pet") {
-      props.navigation.navigate("PetProfileScreen");
+      props.navigation.navigate("PetProfileScreen", {
+        from: "modal",
+      });
     }
   };
 
   return (
-    <BottomSheet isVisible={props.isVisible} h="92%">
+    <BottomSheet
+      showCloseIcon
+      onCloseIconClick={props.onBack}
+      isVisible={props.isVisible}
+      h="92%"
+    >
       <Div>
         <Text fontSize={"6xl"} mb={12}>
           {user?.name}, let’s finish setting up your account
@@ -103,48 +113,53 @@ const AccountSetupModal: React.FC<Props> = (props) => {
           data={stepsBtn}
           renderItem={({ item }) => {
             return (
-              <Button
+              <TouchableOpacity
                 style={styles.stepBtn}
-                p={0}
-                w={"100%"}
-                bg="transparent"
                 disabled={completedSteps[item.value]}
                 onPress={() => handleStepPress(item.value)}
               >
-                <Div style={styles.btnTextContainer}>
-                  <Text
-                    fontSize={"xl"}
-                    fontFamily={fontHauoraSemiBold}
-                    style={{
-                      ...(completedSteps[item.value]
-                        ? styles.completedStepStyle
-                        : {}),
-                    }}
-                  >
-                    {item.name}
-                  </Text>
+                <Button
+                  pointerEvents="none"
+                  disabled={completedSteps[item.value]}
+                  p={0}
+                  bg="transparent"
+                  w={"100%"}
+                >
+                  <Div style={styles.btnTextContainer}>
+                    <Text
+                      fontSize={"xl"}
+                      fontFamily={fontHauoraSemiBold}
+                      style={{
+                        ...(completedSteps[item.value]
+                          ? styles.completedStepStyle
+                          : {}),
+                      }}
+                    >
+                      {item.name}
+                    </Text>
 
-                  {!completedSteps[item.value] && (
+                    {!completedSteps[item.value] && (
+                      <Icon
+                        name="chevron-right"
+                        fontFamily="Feather"
+                        color="#222222"
+                        fontSize={24}
+                      />
+                    )}
+                  </Div>
+
+                  {completedSteps[item.value] ? (
                     <Icon
-                      name="chevron-right"
-                      fontFamily="Feather"
-                      color="#222222"
+                      name="checkcircle"
+                      fontFamily="AntDesign"
                       fontSize={24}
+                      color="#368526"
                     />
+                  ) : (
+                    <Div style={styles.emptyCheckbox} />
                   )}
-                </Div>
-
-                {completedSteps[item.value] ? (
-                  <Icon
-                    name="checkcircle"
-                    fontFamily="AntDesign"
-                    fontSize={24}
-                    color="#368526"
-                  />
-                ) : (
-                  <Div style={styles.emptyCheckbox} />
-                )}
-              </Button>
+                </Button>
+              </TouchableOpacity>
             );
           }}
           keyExtractor={(item) => item.name}

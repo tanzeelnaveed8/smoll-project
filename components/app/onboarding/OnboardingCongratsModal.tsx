@@ -32,7 +32,7 @@ const OnboardingCongratsModal: React.FC<Props> = (props) => {
         </Div>
 
         <ButtonPrimary bgColor="primary" onPress={props.onSuccess}>
-          Start now
+          Let's Go
         </ButtonPrimary>
       </Div>
     </BottomSheet>

@@ -10,16 +10,17 @@ import {
   IconChevronRight,
   IconUserCircle,
 } from "@tabler/icons-react-native";
-import { FlatList, StyleSheet } from "react-native";
+import { FlatList, StyleSheet, TouchableOpacity } from "react-native";
 import { Button, Div, Icon, Image, Text } from "react-native-magnus";
 
 import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
 import { useRoute } from "@react-navigation/native";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import AccountSetupModal from "@/components/app/account/AccountSetupModal";
 import OnboardingCongratsModal from "@/components/app/onboarding/OnboardingCongratsModal";
 import TouchableWrapper from "@/components/partials/TouchableWrapper";
+import AccountSetupProgress from "@/components/partials/AccountSetupProgress";
 
 interface Props {
   navigation: NavigationType;
@@ -43,7 +44,6 @@ const HomeScreen: React.FC<Props> = (props) => {
   const route = useRoute();
   const { user } = useUserStore();
 
-  const congratModalInProgress = useRef(false);
   const [showAccountSetupModal, setShowAccountSetupModal] = useState(false);
   const [showCongratsModal, setShowCongratsModal] = useState(false);
 
@@ -55,32 +55,29 @@ const HomeScreen: React.FC<Props> = (props) => {
       (route.params as Record<string, string>)?.isNewUser === "true";
 
     if (isNewUser) {
-      congratModalInProgress.current = true;
-
       setTimeout(() => {
         setShowCongratsModal(true);
       }, 500);
     }
+
+    console.log("s", showSetupModal);
 
     if (showSetupModal) {
       setShowAccountSetupModal(true);
     }
   }, [route.params]);
 
-  useEffect(() => {
+  const completedStep = useMemo(() => {
     const basicInfoExist = Boolean(user?.address?.length);
     const emailInfoExist = user?.isEmailVerified;
     const petInfoExist = (user?.petCount ?? 0) > 0;
 
-    if (
-      (!basicInfoExist || !emailInfoExist || !petInfoExist) &&
-      !congratModalInProgress.current
-    ) {
-      setTimeout(() => {
-        setShowAccountSetupModal(true);
-      }, 500);
-    }
-  }, [user, showCongratsModal]);
+    const completedStep = [basicInfoExist, emailInfoExist, petInfoExist].filter(
+      (step) => step
+    ).length;
+
+    return completedStep;
+  }, [user]);
 
   return (
     <Layout
@@ -121,9 +118,24 @@ const HomeScreen: React.FC<Props> = (props) => {
       </Div>
 
       <Div mb={16}>
-        <Text fontSize={"5xl"}>Hi, Jane Doe</Text>
+        <Text fontSize={"5xl"}>Hi, {user?.name}</Text>
         <Text fontSize={"lg"}>How can we help you today?</Text>
       </Div>
+
+      {completedStep < 3 && (
+        <Div mb={16}>
+          <TouchableOpacity
+            onPress={() => {
+              setShowAccountSetupModal(true);
+            }}
+          >
+            <AccountSetupProgress
+              progress={(completedStep + 0.35) / 3}
+              completedStepCount={completedStep}
+            />
+          </TouchableOpacity>
+        </Div>
+      )}
 
       <Div
         bg="#F3F9FC"
@@ -215,12 +227,7 @@ const HomeScreen: React.FC<Props> = (props) => {
       <OnboardingCongratsModal
         isVisible={showCongratsModal}
         onSuccess={async () => {
-          congratModalInProgress.current = false;
           setShowCongratsModal(false);
-
-          setTimeout(() => {
-            setShowAccountSetupModal(true);
-          }, 500);
         }}
       />
 

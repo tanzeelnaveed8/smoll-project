@@ -2,13 +2,13 @@ import InputField from "@/components/partials/InputField";
 import SelectInput from "@/components/partials/SelectInput";
 import { colorPrimary } from "@/constant/constant";
 import { usePetStore } from "@/store/modules/pet";
-import { CreatePetPayloadDto, PetSpeciesEnum } from "@/store/types/pet.d";
+import { PetPayloadDto, PetSpeciesEnum } from "@/store/types/pet.d";
 import React, { useEffect, useMemo, useState } from "react";
 import { Button, Div, Text } from "react-native-magnus";
 
 interface Props {
-  pet: CreatePetPayloadDto;
-  setPet: (pet: CreatePetPayloadDto) => void;
+  pet: PetPayloadDto;
+  setPet: (pet: PetPayloadDto) => void;
 }
 
 const PetProfileBreedScreen: React.FC<Props> = (props) => {

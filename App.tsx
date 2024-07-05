@@ -186,7 +186,7 @@ const App = () => {
             textStyle={{
               textTransform: "capitalize",
             }}
-            duration={1500}
+            duration={2500}
           >
             <Stack.Navigator
               initialRouteName="OnboardingScreen"
