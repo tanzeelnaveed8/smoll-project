@@ -4,41 +4,30 @@ import { Text, ThemeProvider } from "react-native-magnus";
 import * as Font from "expo-font";
 import { useEffect, useState } from "react";
 import { Dimensions } from "react-native";
-import {
-  fontHauora,
-  fontHauoraMedium,
-  fontHauoraSemiBold,
-} from "./constant/constant";
+import { fontHauora, fontHauoraSemiBold } from "./constant/constant";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import {
-  NavigationContainer,
-  useNavigation,
-  useRoute,
-} from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import HomeScreen from "./screens/HomeScreen";
-import HumanCounsellingMessageScreen from "./screens/HumanCounselling/HumanCounsellingMessageScreen";
-import MembershipScreen from "./screens/HumanCounselling/MembershipScreen";
 import AccountSetupAddressScreen from "./screens/AccountSetup/AccountSetupAddressScreen";
 import AccountSetupEmailOtpScreen from "./screens/AccountSetup/AccountSetupEmailOtpScreen";
 import AccountSetupEmailScreen from "./screens/AccountSetup/AccountSetupEmailScreen";
-import ChatScreen from "./screens/ChatScreen";
-import PartnerClinicScreen from "./screens/partnerClinics/PartnerClinicScreen";
+import HomeScreen from "./screens/HomeScreen";
 import OnboardingScreen from "./screens/OnboardingScreen";
+import PartnerClinicScreen from "./screens/partnerClinics/PartnerClinicScreen";
 
-import { ToastProvider } from "react-native-toast-notifications";
-import SettingsMainScreen from "./screens/settings/SettingsMainScreen";
-import WelcomeMessageScreen from "./screens/WelcomeMessageScreen";
 import {
   IconBuildingHospital,
-  IconMessage,
   IconSettings,
   IconWindow,
 } from "@tabler/icons-react-native";
+import { ToastProvider } from "react-native-toast-notifications";
 import PetProfileScreen from "./screens/PetProfile/PetProfileScreen";
-
-type ScreenComponentType<P, N extends string> = React.ComponentType<P>;
+import WelcomeMessageScreen from "./screens/WelcomeMessageScreen";
+import SettingsMainScreen from "./screens/settings/SettingsMainScreen";
+import CounsellingRequestScreen from "./screens/HumanCounselling/CounsellingRequestScreen";
+import { SocketProvider } from "./socket/provider";
+import ChatScreen from "./screens/ChatScreen";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -79,7 +68,6 @@ const theme = {
 
 const windowHeight = Dimensions.get("window").height;
 
-// const screensData = [<Onboarding />, <Register />];
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -115,7 +103,7 @@ function TabNavigation() {
         }}
       />
 
-      <Tab.Screen
+      {/* <Tab.Screen
         name="HumanCounsellingMessage"
         component={HumanCounsellingMessageScreen}
         options={{
@@ -129,7 +117,7 @@ function TabNavigation() {
             />
           ),
         }}
-      />
+      /> */}
 
       <Tab.Screen
         name="PartnerClinic"
@@ -188,65 +176,71 @@ const App = () => {
             }}
             duration={2500}
           >
-            <Stack.Navigator
-              initialRouteName="OnboardingScreen"
-              screenOptions={{
-                headerShown: false,
-                // statusBarHidden: true,
-              }}
-            >
-              {/* <Stack.Screen name="Onboarding" component={Onboarding} /> */}
-              <Stack.Screen
-                name="OnboardingScreen"
-                component={OnboardingScreen}
-              />
-              {/* <Stack.Screen name="Register" component={Register} /> */}
-              {/* <Stack.Screen
+            <SocketProvider>
+              <Stack.Navigator
+                initialRouteName="ChatScreen"
+                screenOptions={{
+                  headerShown: false,
+                  // statusBarHidden: true,
+                }}
+              >
+                {/* <Stack.Screen name="Onboarding" component={Onboarding} /> */}
+                <Stack.Screen
+                  name="OnboardingScreen"
+                  component={OnboardingScreen}
+                />
+                {/* <Stack.Screen name="Register" component={Register} /> */}
+                {/* <Stack.Screen
                 name="VerifyNumber"
                 component={VerifyNumberScreen}
               /> */}
-              {/* <Stack.Screen name="SignUpUserName" component={UserNameScreen} /> */}
-              <Stack.Screen
-                name="Confirmation"
-                component={WelcomeMessageScreen}
-              />
+                {/* <Stack.Screen name="SignUpUserName" component={UserNameScreen} /> */}
+                <Stack.Screen
+                  name="Confirmation"
+                  component={WelcomeMessageScreen}
+                />
 
-              {/* <Stack.Screen
+                {/* <Stack.Screen
                 name="AccountSetup"
                 component={AccountSetupScreen}
               /> */}
-              <Stack.Screen
-                name="AccountSetupAddressScreen"
-                component={AccountSetupAddressScreen}
-              />
-              <Stack.Screen
-                name="AccountSetupEmailScreen"
-                component={AccountSetupEmailScreen}
-              />
-              <Stack.Screen
-                name="AccountSetupEmailOtpScreen"
-                component={AccountSetupEmailOtpScreen}
-              />
+                <Stack.Screen
+                  name="AccountSetupAddressScreen"
+                  component={AccountSetupAddressScreen}
+                />
+                <Stack.Screen
+                  name="AccountSetupEmailScreen"
+                  component={AccountSetupEmailScreen}
+                />
+                <Stack.Screen
+                  name="AccountSetupEmailOtpScreen"
+                  component={AccountSetupEmailOtpScreen}
+                />
 
-              <Stack.Screen
-                name="HomeScreen"
-                component={HomeScreen}
-                options={{ headerShown: false }}
-              />
+                <Stack.Screen
+                  name="HomeScreen"
+                  component={HomeScreen}
+                  options={{ headerShown: false }}
+                />
 
-              <Stack.Screen
-                name="PetProfileScreen"
-                component={PetProfileScreen}
-              />
-              {/* <Stack.Screen name="Membership" component={MembershipScreen} />
-              <Stack.Screen
-                name="HumanCounsellingMessage"
-                component={HumanCounsellingMessageScreen}
-              />
+                <Stack.Screen
+                  name="PetProfileScreen"
+                  component={PetProfileScreen}
+                />
+
+                <Stack.Screen
+                  name="CounsellingRequestScreen"
+                  component={CounsellingRequestScreen}
+                />
+
+                <Stack.Screen name="ChatScreen" component={ChatScreen} />
+
+                {/* <Stack.Screen name="Membership" component={MembershipScreen} />
+          
 
               <Stack.Screen name="ChatScreen" component={ChatScreen} /> */}
 
-              {/* <Stack.Screen
+                {/* <Stack.Screen
               name="UserProfileForm"
               component={
                 UserProfileScreen as ScreenComponentType<
@@ -255,7 +249,8 @@ const App = () => {
                 >
               }
             /> */}
-            </Stack.Navigator>
+              </Stack.Navigator>
+            </SocketProvider>
           </ToastProvider>
         </NavigationContainer>
       </ThemeProvider>

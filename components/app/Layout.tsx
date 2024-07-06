@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleProp, StyleSheet, ViewStyle } from "react-native";
-import { Div } from "react-native-magnus";
+import { Div, Text } from "react-native-magnus";
 import BackButton from "../partials/BackButton";
 
 interface Props {
@@ -8,6 +8,7 @@ interface Props {
   style?: StyleProp<ViewStyle>;
   showBack?: boolean;
   onBackPress?: () => void;
+  title?: string;
 }
 
 const Layout: React.FC<Props> = ({
@@ -15,11 +16,32 @@ const Layout: React.FC<Props> = ({
   style,
   onBackPress,
   showBack,
+  title,
 }) => {
   const externalStyles: {} = style ? style : {};
   return (
     <Div style={{ ...styles.container, ...externalStyles }}>
-      {showBack && <BackButton onPress={onBackPress} mb={20} />}
+      <Div row style={styles.titleContainer}>
+        <Div row justifyContent="space-between" alignItems="center" pb={24}>
+          {showBack && (
+            <Div flex={1}>
+              <BackButton onPress={onBackPress} />
+            </Div>
+          )}
+          <Div flex={1}>
+            <Text
+              fontSize={"xl"}
+              fontWeight="600"
+              textAlign="center"
+              flex={1}
+              lineHeight={28}
+            >
+              {title}
+            </Text>
+          </Div>
+          <Div flex={1} />
+        </Div>
+      </Div>
       {children}
     </Div>
   );
@@ -34,7 +56,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     paddingHorizontal: 20,
     paddingBottom: 20,
-    // paddingTop: StatusBar.currentHeight,
-    // paddingTop: 20,
+  },
+  titleContainer: {
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  title: {
+    fontSize: 18,
+    lineHeight: 21,
   },
 });

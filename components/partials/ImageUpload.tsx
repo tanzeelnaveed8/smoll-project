@@ -40,8 +40,6 @@ const ImageUpload: React.FC<Props> = ({
       const response = await fetch(result.assets[0].uri);
       const blob = await response.blob();
 
-      console.log("b", blob, response);
-
       const file = {
         fieldname: "file",
         originalname: result.assets[0].fileName!,
