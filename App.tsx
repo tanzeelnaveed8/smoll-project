@@ -35,9 +35,9 @@ import {
   IconSettings,
   IconWindow,
 } from "@tabler/icons-react-native";
-import PartnerCaseDetailsScreen from "./screens/partnerClinics/PartnerCaseDetailsScreen";
+import CasesRequestScreen from "./screens/Cases/CasesRequestScreen";
 import DoctotsListScreen from "./screens/doctorsScreens/DoctotsListScreen";
-import PartnerCasesListScreen from "./screens/partnerClinics/PartnerCasesListScreen";
+import CasesListScreen from "./screens/Cases/CasesListScreen";
 import PetProfileScreen from "./screens/petProfile/PetProfileScreen";
 
 type ScreenComponentType<P, N extends string> = React.ComponentType<P>;
@@ -136,12 +136,12 @@ const App = () => {
               />
               <Stack.Screen
                 // name="PartnerClinic"
-                name="PartnerCasesList"
-                component={PartnerCasesListScreen}
+                name="CasesListScreen"
+                component={CasesListScreen}
               />
               <Stack.Screen
-                name="PartnerCaseDetails"
-                component={PartnerCaseDetailsScreen}
+                name="CasesRequestScreen"
+                component={CasesRequestScreen}
               />
 
               <Stack.Screen name="Account" component={SettingsMainScreen} />

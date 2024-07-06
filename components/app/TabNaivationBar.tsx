@@ -36,7 +36,7 @@ const tabList = [
   },
   {
     name: "Partner",
-    link: "PartnerCasesList",
+    link: "CasesListScreen",
     icon: (active?: boolean) => (
       <IconBuildingHospital
         width={28}

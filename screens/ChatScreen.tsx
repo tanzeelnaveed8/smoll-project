@@ -32,7 +32,7 @@ const ChatScreen: React.FC<{ navigation: NavigationType }> = ({
       .then(() => {
         console.log("CometChatUiKit successfully initialized");
 
-        CometChatUIKit.login({ uid: "sywfkkl6cl" })
+        CometChatUIKit.login({ uid: "bxkpjfuvtd" })
           .then((user) => {
             console.log("User logged in successfully", user.getName());
             setIsLoggedIn(true);
@@ -47,7 +47,7 @@ const ChatScreen: React.FC<{ navigation: NavigationType }> = ({
       });
 
     if (isLoggedIn) {
-      CometChat.getUser("1j6sfqvrrm")
+      CometChat.getUser("pfon8yoh0o")
         .then((user) => {
           setChatUser(user);
         })
@@ -72,25 +72,25 @@ const ChatScreen: React.FC<{ navigation: NavigationType }> = ({
   });
   myTheme.palette.setMode("light");
 
-  const sendMessageHandler = () => {
-    const inputValue = inputMessageRef;
-    console.log("inputValue", inputValue);
+  // const sendMessageHandler = () => {
+  //   const inputValue = inputMessageRef;
+  //   console.log("inputValue", inputValue);
 
-    let textMessage = new CometChat.TextMessage(
-      "sywfkkl6cl",
-      "testing",
-      CometChat.RECEIVER_TYPE.USER
-    );
+  //   let textMessage = new CometChat.TextMessage(
+  //     "sywfkkl6cl",
+  //     "testing",
+  //     CometChat.RECEIVER_TYPE.USER
+  //   );
 
-    CometChat.sendMessage(textMessage).then(
-      (message) => {
-        console.log("Message sent successfully:", message);
-      },
-      (error) => {
-        console.log("Message sending failed with error:", error);
-      }
-    );
-  };
+  //   CometChat.sendMessage(textMessage).then(
+  //     (message) => {
+  //       console.log("Message sent successfully:", message);
+  //     },
+  //     (error) => {
+  //       console.log("Message sending failed with error:", error);
+  //     }
+  //   );
+  // };
 
   const messageChangeHandler = (e: string) => {
     console.log(e);
@@ -154,22 +154,22 @@ const ChatScreen: React.FC<{ navigation: NavigationType }> = ({
                 //   );
                 // },
 
-                messageComposerConfiguration: {
-                  hideVoiceRecording: true,
+                // messageComposerConfiguration: {
+                //   hideVoiceRecording: true,
 
-                  SendButtonView: () => (
-                    <Button
-                      bg="primary"
-                      p={0}
-                      w={40}
-                      h={40}
-                      rounded={50}
-                      mt={10}
-                    >
-                      <IconSend2 width={23} height={22} color={"#fff"} />
-                    </Button>
-                  ),
-                },
+                //   SendButtonView: () => (
+                //     <Button
+                //       bg="primary"
+                //       p={0}
+                //       w={40}
+                //       h={40}
+                //       rounded={50}
+                //       mt={10}
+                //     >
+                //       <IconSend2 width={23} height={22} color={"#fff"} />
+                //     </Button>
+                //   ),
+                // },
 
                 messageListConfiguration: {
                   // alignment: "leftAligned",
@@ -181,7 +181,7 @@ const ChatScreen: React.FC<{ navigation: NavigationType }> = ({
                     borderRadius: 20,
                   },
                   messageListStyle: {
-                    timestampTextColor: "#fff",
+                    // timestampTextColor: "#fff",
                   },
                 },
               }}
