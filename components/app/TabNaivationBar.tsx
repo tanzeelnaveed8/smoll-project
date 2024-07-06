@@ -25,7 +25,7 @@ const tabList = [
   },
   {
     name: "Chats",
-    link: "HumanCounsellingMessage",
+    link: "CounsellingRequestScreen",
     icon: (active?: boolean) => (
       <IconMessage
         width={28}

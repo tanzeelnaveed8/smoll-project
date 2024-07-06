@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Div } from "react-native-magnus";
 import dayjs from "dayjs";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { TouchableOpacity } from "react-native";
 
 interface DatePickerComponentProps {
   value: string;
@@ -32,23 +33,26 @@ const DatePickerComponent: React.FC<DatePickerComponentProps> = ({
 
   return (
     <Div>
-      <Button
-        py={16}
-        px={12}
-        fontSize={18}
-        rounded={12}
-        borderColor="#494949"
-        borderWidth={1}
-        ripple
-        bg="transparent"
-        color="#494949"
-        w={"100%"}
-        textAlign="left"
-        style={{ flex: 1, justifyContent: "flex-start" }}
-        onPress={() => setOpen(true)}
-      >
-        {date ? dayjs(date).format("MMMM DD YYYY") : "Date of birth"}
-      </Button>
+      <TouchableOpacity onPress={() => setOpen(true)}>
+        <Button
+          py={16}
+          px={12}
+          fontSize={18}
+          rounded={12}
+          borderColor="#494949"
+          borderWidth={1}
+          ripple
+          bg="transparent"
+          color="#494949"
+          w={"100%"}
+          textAlign="left"
+          style={{ flex: 1, justifyContent: "flex-start" }}
+          pointerEvents="none"
+        >
+          {date ? dayjs(date).format("MMMM DD YYYY") : "Date of birth"}
+        </Button>
+      </TouchableOpacity>
+
       <DateTimePickerModal
         isVisible={open}
         mode="date"

@@ -7,9 +7,9 @@ import Layout from "@/components/app/Layout";
 
 const DoctotsListScreen = () => {
   return (
-    <Layout>
-      <ScrollDiv pt={20} showsVerticalScrollIndicator={false}>
-        <Header title="Find your Doctor" />
+    <Layout showBack backBtnText="" title="Find your Doctor">
+      <ScrollDiv showsVerticalScrollIndicator={false}>
+        {/* <Header title="Find your Doctor" /> */}
 
         <Div mt={12}>
           <Text

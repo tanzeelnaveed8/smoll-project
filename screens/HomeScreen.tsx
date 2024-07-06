@@ -1,6 +1,7 @@
 import Layout from "@/components/app/Layout";
 import IconButton from "@/components/partials/IconButton";
 import {
+  colorPrimary,
   fontHauoraBold,
   fontHauoraMedium,
   fontHauoraSemiBold,
@@ -10,7 +11,12 @@ import {
   IconChevronRight,
   IconUserCircle,
 } from "@tabler/icons-react-native";
-import { FlatList, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import { Button, Div, Icon, Image, Text } from "react-native-magnus";
 
 import { useUserStore } from "@/store/modules/user";
@@ -21,6 +27,8 @@ import AccountSetupModal from "@/components/app/account/AccountSetupModal";
 import OnboardingCongratsModal from "@/components/app/onboarding/OnboardingCongratsModal";
 import TouchableWrapper from "@/components/partials/TouchableWrapper";
 import AccountSetupProgress from "@/components/partials/AccountSetupProgress";
+import { useCounsellorStore } from "@/store/modules/counsellor";
+import { Session } from "@/store/types/counsellor";
 import TabNaivationBar from "@/components/app/TabNaivationBar";
 
 interface Props {
@@ -28,22 +36,32 @@ interface Props {
   isNewUser?: boolean;
 }
 
-const suggestionList = [
-  {
-    name: "Human Counselling",
-    description: "Therapy aids coping, enhances functioning",
-    link: "",
-  },
-  {
-    name: "Chat with Vet",
-    description: "Ask vet about food, concerns",
-    link: "",
-  },
-];
+interface OptionTab {
+  name: string;
+  description: string;
+  value: "counselling" | "vet";
+  loading: boolean;
+}
 
 const HomeScreen: React.FC<Props> = (props) => {
   const route = useRoute();
   const { user } = useUserStore();
+  const { sessions, fetchSessions } = useCounsellorStore();
+
+  const [options, setOptions] = useState<OptionTab[]>([
+    {
+      name: "Human Counselling",
+      value: "counselling",
+      description: "Therapy aids coping, enhances functioning",
+      loading: false,
+    },
+    {
+      name: "Chat with Vet",
+      value: "vet",
+      description: "Ask vet about food, concerns",
+      loading: false,
+    },
+  ]);
 
   const [showAccountSetupModal, setShowAccountSetupModal] = useState(false);
   const [showCongratsModal, setShowCongratsModal] = useState(false);
@@ -61,8 +79,6 @@ const HomeScreen: React.FC<Props> = (props) => {
       }, 500);
     }
 
-    console.log("s", showSetupModal);
-
     if (showSetupModal) {
       setShowAccountSetupModal(true);
     }
@@ -79,6 +95,40 @@ const HomeScreen: React.FC<Props> = (props) => {
 
     return completedStep;
   }, [user]);
+
+  const setLoading = (option: OptionTab["value"], loading: boolean) => {
+    setOptions((prev) => {
+      const newOptions = [...prev];
+      const counsellingTab = newOptions.find((tab) => tab.value === option);
+      if (counsellingTab) counsellingTab.loading = loading;
+      return newOptions;
+    });
+  };
+
+  const handleOptionTabPress = async (item: OptionTab) => {
+    if (item.value === "counselling") {
+      let _sessions = sessions;
+
+      if (!sessions) {
+        try {
+          setLoading("counselling", true);
+          _sessions = await fetchSessions();
+        } finally {
+          setLoading("counselling", false);
+        }
+      }
+
+      if (!_sessions?.length) {
+        props.navigation.navigate("CounsellingRequestScreen");
+      } else {
+        props.navigation.navigate("");
+      }
+    }
+  };
+
+  useEffect(() => {
+    console.log("ss", sessions);
+  }, [sessions]);
 
   return (
     <>
@@ -198,16 +248,18 @@ const HomeScreen: React.FC<Props> = (props) => {
           </Div>
 
           <FlatList
-            data={suggestionList}
+            data={options}
             renderItem={({ item, index }) => (
               <Button
                 px={16}
                 py={12}
                 borderWidth={1}
                 borderColor="#D0D7DC"
-                mb={index + 1 === suggestionList.length ? 0 : 8}
+                mb={index + 1 === options.length ? 0 : 8}
                 rounded={12}
                 w={"100%"}
+                disabled={item.loading}
+                onPress={() => handleOptionTabPress(item)}
                 bg="#fff"
                 underlayColor="#f3f3f3"
               >
@@ -219,7 +271,11 @@ const HomeScreen: React.FC<Props> = (props) => {
                     {item.description}
                   </Text>
                 </Div>
-                <IconChevronRight width={24} height={24} color={"#222222"} />
+                {item.loading ? (
+                  <ActivityIndicator color={colorPrimary} />
+                ) : (
+                  <IconChevronRight width={24} height={24} color={"#222222"} />
+                )}
               </Button>
             )}
             keyExtractor={(item) => item.name}

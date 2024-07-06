@@ -73,7 +73,7 @@ const CasesRequestScreen: React.FC<{ navigation: NavigationType }> = ({
                     justifyContent: "space-between",
                   }}
                   onPress={() => {
-                    navigation.navigate("DoctotsList");
+                    navigation.navigate("PartnerVetScreen");
                   }}
                 >
                   <Div>

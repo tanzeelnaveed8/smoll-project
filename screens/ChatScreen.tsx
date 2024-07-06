@@ -1,8 +1,13 @@
+import Layout from "@/components/app/Layout";
+import { colorTextPrimary } from "@/constant/constant";
 import { NavigationType } from "@/store/types";
 import { CometChat } from "@cometchat/chat-sdk-react-native";
 import {
   CometChatContextProvider,
   CometChatConversationsWithMessages,
+  CometChatMessageComposer,
+  CometChatMessageHeader,
+  CometChatMessageList,
   CometChatTheme,
   CometChatUIKit,
   UIKitSettings,
@@ -58,18 +63,22 @@ const ChatScreen: React.FC<{ navigation: NavigationType }> = ({
   }, [isLoggedIn]);
 
   let myTheme: CometChatTheme = new CometChatTheme({});
+
   myTheme.palette.setPrimary({
     light: "#222222",
     dark: "#fff",
   });
+
   myTheme.palette.setSecondary({
     light: "#fff",
     dark: "#f10",
   });
+
   myTheme.palette.setAccent({
     light: "#f10",
     dark: "#f10",
   });
+
   myTheme.palette.setMode("light");
 
   // const sendMessageHandler = () => {
@@ -107,86 +116,36 @@ const ChatScreen: React.FC<{ navigation: NavigationType }> = ({
     >
       {chatUser ? (
         <>
-          <CometChatContextProvider theme={myTheme}>
-            <CometChatConversationsWithMessages
-              user={chatUser}
-              messagesConfigurations={{
-                // hideMessageComposer: true,
+          <Layout showBack title={"Dr. Mohib"}>
+            <Div flex={1}>
+              <CometChatContextProvider theme={myTheme}>
+                <Div flex={1}>
+                  <CometChatMessageList
+                    user={chatUser}
+                    dateSeperatorStyle={{
+                      textColor: colorTextPrimary,
+                    }}
+                    wrapperMessageBubbleStyle={{}}
+                    // messageListConfiguration={{
+                    //   showAvatar: true,
+                    // }}
+                  />
+                </Div>
 
-                /** message input */
-                // MessageComposerView: () => {
-                //   return (
-                //     <Div px={20} py={8}>
-                //       <Div
-                //         flexDir="row"
-                //         bg="#EFEFEF"
-                //         rounded={8}
-                //         px={14}
-                //         // py={2}
-                //       >
-                //         <Input
-                //           multiline
-                //           flex={1}
-                //           bg="transparent"
-                //           borderWidth={0}
-                //           placeholder="Type a Message..."
-                //           fontFamily={fontHauoraSemiBold}
-                //           fontSize={"lg"}
-                //           p={0}
-                //           px={0}
-                //           py={16}
-                //           maxH={56}
-                //           onChangeText={messageChangeHandler}
-                //         />
-                //         <Button
-                //           bg="primary"
-                //           p={0}
-                //           w={40}
-                //           h={40}
-                //           rounded={50}
-                //           alignSelf="center"
-                //           onPress={sendMessageHandler}
-                //         >
-                //           <IconSend2 width={23} height={22} color={"#fff"} />
-                //         </Button>
-                //       </Div>
-                //     </Div>
-                //   );
-                // },
-
-                // messageComposerConfiguration: {
-                //   hideVoiceRecording: true,
-
-                //   SendButtonView: () => (
-                //     <Button
-                //       bg="primary"
-                //       p={0}
-                //       w={40}
-                //       h={40}
-                //       rounded={50}
-                //       mt={10}
-                //     >
-                //       <IconSend2 width={23} height={22} color={"#fff"} />
-                //     </Button>
-                //   ),
-                // },
-
-                messageListConfiguration: {
-                  // alignment: "leftAligned",
-                  scrollToBottomOnNewMessage: true,
-                  dateSeperatorStyle: { textColor: "#494949" },
-
-                  wrapperMessageBubbleStyle: {
-                    backgroundColor: "red",
-                    borderRadius: 20,
-                  },
-                  messageListStyle: {
-                    // timestampTextColor: "#fff",
-                  },
-                },
-              }}
-            ></CometChatConversationsWithMessages>
-          </CometChatContextProvider>
+                <Div>
+                  <CometChatMessageComposer
+                    messageComposerStyle={{
+                      backgroundColor: "#EFEFEF",
+                      borderRadius: 10,
+                      dividerTint: "transparent",
+                    }}
+                    placeHolderText="Type a Message..."
+                  />
+                </Div>
+                {/* <CometChatMessageList /> */}
+              </CometChatContextProvider>
+            </Div>
+          </Layout>
 
           {/* <CometChatMessages
             user={chatUser}

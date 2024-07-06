@@ -4,22 +4,11 @@ import { Text, ThemeProvider } from "react-native-magnus";
 import * as Font from "expo-font";
 import { useEffect, useState } from "react";
 import { Dimensions } from "react-native";
-import {
-  fontHauora,
-  fontHauoraMedium,
-  fontHauoraSemiBold,
-} from "./constant/constant";
+import { fontHauora, fontHauoraSemiBold } from "./constant/constant";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import {
-  NavigationContainer,
-  useNavigation,
-  useRoute,
-} from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import HomeScreen from "./screens/HomeScreen";
-import HumanCounsellingMessageScreen from "./screens/HumanCounselling/HumanCounsellingMessageScreen";
-import MembershipScreen from "./screens/HumanCounselling/MembershipScreen";
 import AccountSetupAddressScreen from "./screens/AccountSetup/AccountSetupAddressScreen";
 import AccountSetupEmailOtpScreen from "./screens/AccountSetup/AccountSetupEmailOtpScreen";
 import AccountSetupEmailScreen from "./screens/AccountSetup/AccountSetupEmailScreen";
@@ -27,20 +16,17 @@ import ChatScreen from "./screens/ChatScreen";
 import OnboardingScreen from "./screens/OnboardingScreen";
 
 import { ToastProvider } from "react-native-toast-notifications";
-import SettingsMainScreen from "./screens/settings/SettingsMainScreen";
+import PetProfileScreen from "./screens/petProfile/PetProfileScreen";
 import WelcomeMessageScreen from "./screens/WelcomeMessageScreen";
-import {
-  IconBuildingHospital,
-  IconMessage,
-  IconSettings,
-  IconWindow,
-} from "@tabler/icons-react-native";
+import SettingsMainScreen from "./screens/settings/SettingsMainScreen";
+import CounsellingRequestScreen from "./screens/HumanCounselling/CounsellingRequestScreen";
+import { SocketProvider } from "./socket/provider";
+import HomeScreen from "./screens/HomeScreen";
+import CasesListScreen from "./screens/Cases/CasesListScreen";
 import CasesRequestScreen from "./screens/Cases/CasesRequestScreen";
 import DoctotsListScreen from "./screens/doctorsScreens/DoctotsListScreen";
-import CasesListScreen from "./screens/Cases/CasesListScreen";
-import PetProfileScreen from "./screens/petProfile/PetProfileScreen";
-
-type ScreenComponentType<P, N extends string> = React.ComponentType<P>;
+import MembershipScreen from "./screens/HumanCounselling/MembershipScreen";
+import PartnerVetScreen from "./screens/Cases/PartnerVetScreen";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -81,7 +67,6 @@ const theme = {
 
 const windowHeight = Dimensions.get("window").height;
 
-// const screensData = [<Onboarding />, <Register />];
 const Stack = createNativeStackNavigator();
 const App = () => {
   const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -104,7 +89,7 @@ const App = () => {
             textStyle={{
               textTransform: "capitalize",
             }}
-            duration={1500}
+            duration={2500}
           >
             <Stack.Navigator
               initialRouteName="HomeScreen"
@@ -143,7 +128,10 @@ const App = () => {
                 name="CasesRequestScreen"
                 component={CasesRequestScreen}
               />
-
+              <Stack.Screen
+                name="PartnerVetScreen"
+                component={PartnerVetScreen}
+              />
               <Stack.Screen name="Account" component={SettingsMainScreen} />
               <Stack.Screen
                 name="PetProfileScreen"
@@ -151,9 +139,13 @@ const App = () => {
               />
               <Stack.Screen name="DoctotsList" component={DoctotsListScreen} />
               <Stack.Screen name="Membership" component={MembershipScreen} />
-              <Stack.Screen
+              {/* <Stack.Screen
                 name="HumanCounsellingMessage"
                 component={HumanCounsellingMessageScreen}
+              /> */}
+              <Stack.Screen
+                name="CounsellingRequestScreen"
+                component={CounsellingRequestScreen}
               />
               <Stack.Screen name="ChatScreen" component={ChatScreen} />
             </Stack.Navigator>

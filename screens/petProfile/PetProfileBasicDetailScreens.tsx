@@ -1,11 +1,11 @@
 import InputField from "@/components/partials/InputField";
-import { CreatePetPayloadDto } from "@/store/types/pet";
+import { PetPayloadDto } from "@/store/types/pet";
 import React, { useState } from "react";
 import { Div, Text } from "react-native-magnus";
 
 interface Props {
-  pet: CreatePetPayloadDto;
-  setPet: (pet: CreatePetPayloadDto) => void;
+  pet: PetPayloadDto;
+  setPet: (pet: PetPayloadDto) => void;
 }
 
 const PetProfileBasicDetailScreens: React.FC<Props> = (props) => {

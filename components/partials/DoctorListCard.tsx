@@ -10,6 +10,7 @@ type PropTypes = {
   experience: number;
   verified?: boolean;
   nextAvailable: string;
+  mb?: number;
 };
 
 const DoctorListCard = (props: PropTypes) => {
@@ -19,9 +20,10 @@ const DoctorListCard = (props: PropTypes) => {
     experience,
     verified = false,
     nextAvailable,
+    mb,
   } = props;
   return (
-    <Div py={20} borderBottomWidth={1} borderColor="#E0E0E0">
+    <Div pb={20} borderBottomWidth={1} borderColor="#E0E0E0" mb={mb}>
       {/* <Div flexDir="row">
         <Badge
           right={34}
@@ -94,6 +96,8 @@ const DoctorListCard = (props: PropTypes) => {
           bg="#427594"
           rounded={100}
           fontSize="lg"
+          fontFamily={fontHauoraMedium}
+          color="#fff"
           py={8}
           px={12}
           suffix={

@@ -41,6 +41,7 @@ const SelectInput: React.FC<Props> = ({
           loading={loading}
           disabled={loading}
           readOnly
+          pointerEvents="none"
           value={selectValue}
         />
       </TouchableOpacity>
@@ -63,23 +64,22 @@ const SelectInput: React.FC<Props> = ({
 
         <ScrollDiv>
           {filteredOptions.map((option) => (
-            <Div key={option.value}>
-              <RadioButton
-                styles={{
-                  borderColor: "transparent",
-                }}
-                onTap={() => {
-                  setSelectedValue(option.value);
+            <RadioButton
+              key={option.value}
+              styles={{
+                borderColor: "transparent",
+              }}
+              onTap={() => {
+                setSelectedValue(option.value);
 
-                  if (onSelect) onSelect(option);
+                if (onSelect) onSelect(option);
 
-                  setShowMenu(false);
-                }}
-                label={option.label}
-                value={option.value}
-                selectedValue={selectValue}
-              />
-            </Div>
+                setShowMenu(false);
+              }}
+              label={option.label}
+              value={option.value}
+              selectedValue={selectValue}
+            />
           ))}
         </ScrollDiv>
       </BottomSheet>

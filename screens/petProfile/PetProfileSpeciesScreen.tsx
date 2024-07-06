@@ -1,12 +1,12 @@
 import RadioButton from "@/components/partials/RadioButton";
-import { CreatePetPayloadDto, PetSpeciesEnum } from "@/store/types/pet.d";
+import { PetPayloadDto, PetSpeciesEnum } from "@/store/types/pet.d";
 import React, { useState } from "react";
 import { FlatList } from "react-native";
 import { Div, Text } from "react-native-magnus";
 
 interface Props {
-  pet: CreatePetPayloadDto;
-  setPet: (pet: CreatePetPayloadDto) => void;
+  pet: PetPayloadDto;
+  setPet: (pet: PetPayloadDto) => void;
 }
 
 const data = [PetSpeciesEnum.CAT, PetSpeciesEnum.DOG];

@@ -1,5 +1,6 @@
 import { Modal, Div, ModalProps, Button, Text } from "react-native-magnus";
 import { IconX } from "@tabler/icons-react-native";
+import { TouchableOpacity } from "react-native";
 
 interface Props extends ModalProps {
   showCloseIcon?: boolean;
@@ -56,6 +57,26 @@ const BottomSheet: React.FC<Props> = (props) => {
               </Text>
               <Div w={24} />
             </Div>
+          </Div>
+        </Div>
+      ) : (
+        <></>
+      )}
+
+      {!title && showCloseIcon ? (
+        <Div px={20}>
+          <Div row justifyContent="space-between" alignItems="center">
+            {showCloseIcon ? (
+              <Button px={0} py={0} bg="transparent" onPress={onCloseIconClick}>
+                <IconX size={24} color="#222222" strokeWidth={1.5} />
+              </Button>
+            ) : (
+              <Div w={24} />
+            )}
+            <Text fontSize={"xl"} fontWeight="600" textAlign="center" flex={1}>
+              {title}
+            </Text>
+            <Div w={24} />
           </Div>
         </Div>
       ) : (

@@ -3,37 +3,59 @@ import * as ImagePicker from "expo-image-picker";
 import { IconPlus, IconStarFilled } from "@tabler/icons-react-native";
 import { Button, Div, Text } from "react-native-magnus";
 import { fontHauoraSemiBold } from "@/constant/constant";
+import { useFileStore } from "@/store/modules/file";
+import { UploadedFile } from "@/store/types/file";
 
-type PropTypes = {
-  isPrimary?: Boolean;
-  onChange?: (value: ImagePicker.ImagePickerResult) => void;
+interface Props {
+  isPrimary?: boolean;
+  onChange?: (files: UploadedFile[]) => void;
   uri?: string;
   plusIcon?: boolean;
   w?: number;
   h?: number;
-};
+}
 
-const ImageUpload = (props: PropTypes) => {
-  const {
-    isPrimary = false,
-    onChange,
-    uri,
-    plusIcon = true,
-    w = 102,
-    h = 100,
-  } = props;
+const ImageUpload: React.FC<Props> = ({
+  isPrimary = false,
+  onChange,
+  uri,
+  plusIcon = true,
+  w = 102,
+  h = 100,
+}) => {
+  const { uploadFile } = useFileStore();
+
+  const [loading, setLoading] = useState(false);
   const [image, setImage] = useState<null | string>(null);
 
   const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 1,
     });
 
     if (!result.canceled) {
-      onChange && onChange(result);
       setImage(result?.assets[0]?.uri);
+
+      const response = await fetch(result.assets[0].uri);
+      const blob = await response.blob();
+
+      const file = {
+        fieldname: "file",
+        originalname: result.assets[0].fileName!,
+        encoding: "7bit",
+        mimetype: result.assets[0].mimeType,
+        buffer: await blob.arrayBuffer(),
+        size: blob.size,
+      } as unknown as File;
+
+      console.log("f", file);
+
+      const uploadedFile = await uploadFile([file]);
+
+      if (onChange) {
+        onChange(uploadedFile);
+      }
     }
   };
 

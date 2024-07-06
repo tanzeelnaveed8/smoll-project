@@ -1,35 +1,46 @@
 import Layout from "@/components/app/Layout";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
-import { CreatePetPayloadDto, PetGenderEnum } from "@/store/types/pet.d";
+import {
+  PetPayloadDto,
+  PetGenderEnum,
+  PetSpeciesEnum,
+} from "@/store/types/pet.d";
 import React, { useMemo, useState } from "react";
 import { Dimensions, StyleSheet } from "react-native";
 import { Div } from "react-native-magnus";
 import * as Progress from "react-native-progress";
 import AddMedicalHistoryScreen from "../petProfileForm/AddMedicalHistoryScreen";
-import PetImageUploadScreen from "../petProfileForm/PetImageUploadScreen";
-import PetProfileBasicDetailScreens from "./PetProfileBasicDetailScreens";
+import PetImageUploadScreen from "./PetProfileImageScreen";
 import PetProfileBreedScreen from "./PetProfileBreedScreen";
 import PetProfileDOBScreen from "./PetProfileDOBScreen";
 import PetProfileGenderScreen from "./PetProfileGenderScreen";
 import PetProfileNameScreen from "./PetProfileNameScreen";
-import PetProfileSpayedScreen from "./PetProfileSpayedScreen";
 import PetProfileSpeciesScreen from "./PetProfileSpeciesScreen";
 import { usePetStore } from "@/store/modules/pet";
 import { useToast } from "react-native-toast-notifications";
+import PetProfileSpayedScreen from "./PetProfileSpayedScreen";
+import PetProfileBasicDetailScreens from "./PetProfileBasicDetailScreens";
+import { useRoute } from "@react-navigation/native";
+import { NavigationType } from "@/store/types";
 
 const windowWidth = Dimensions.get("window").width;
 
-const PetProfileScreen = () => {
+interface Props {
+  navigation: NavigationType;
+}
+
+const PetProfileScreen: React.FC<Props> = (props) => {
+  const route = useRoute();
   const toast = useToast();
   const { addPet } = usePetStore();
 
   const [currentStep, setCurrentStep] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [pet, setPet] = useState<CreatePetPayloadDto>({
+  const [pet, setPet] = useState<PetPayloadDto>({
     name: "",
     age: 0,
     weight: 0,
-    species: "",
+    species: PetSpeciesEnum.CAT,
     gender: PetGenderEnum.MALE,
     spayedOrNeutered: false,
     photos: [],
@@ -38,7 +49,9 @@ const PetProfileScreen = () => {
     chipNumber: 0,
   });
 
-  const progress = useMemo(() => (currentStep + 1) / 7, [currentStep]);
+  console.log("pet", pet);
+
+  const progress = useMemo(() => (currentStep + 1) / 8, [currentStep]);
 
   const isActionDisabled = useMemo(() => {
     switch (currentStep) {
@@ -50,6 +63,8 @@ const PetProfileScreen = () => {
         return !pet.breed.length;
       case 6:
         return !pet.weight;
+      case 7:
+        return !pet.photos.length;
     }
 
     return false;
@@ -71,12 +86,26 @@ const PetProfileScreen = () => {
     setCurrentStep((step) => step + 1);
   };
 
+  const handleBack = () => {
+    const comingFrom = (route.params as Record<string, string>)?.from;
+
+    if (currentStep === 0) {
+      if (comingFrom === "modal") {
+        props.navigation.navigate("HomeScreen", {
+          showSetupModal: "true",
+        });
+
+        return;
+      }
+
+      props.navigation.goBack();
+    }
+
+    setCurrentStep((step) => step - 1);
+  };
+
   return (
-    <Layout
-      showBack
-      onBackPress={() => setCurrentStep((step) => step - 1)}
-      style={styles.container}
-    >
+    <Layout showBack onBackPress={handleBack} style={styles.container}>
       <Div style={{ flex: 1 }}>
         {/* progress bar */}
         <Progress.Bar
@@ -112,7 +141,13 @@ const PetProfileScreen = () => {
         {currentStep === 6 && (
           <PetProfileBasicDetailScreens pet={pet} setPet={setPet} />
         )}
-        {currentStep === 7 && <PetImageUploadScreen />}
+        {currentStep === 7 && (
+          <PetImageUploadScreen
+            navigation={props.navigation}
+            pet={pet}
+            setPet={setPet}
+          />
+        )}
         {currentStep === 8 && <AddMedicalHistoryScreen />}
       </Div>
 
