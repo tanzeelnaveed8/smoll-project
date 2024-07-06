@@ -34,28 +34,24 @@ const ImageUpload: React.FC<Props> = ({
       quality: 1,
     });
 
-    if (!result.canceled) {
-      setImage(result?.assets[0]?.uri);
+    if (result.canceled) return;
 
-      const response = await fetch(result.assets[0].uri);
-      const blob = await response.blob();
+    setImage(result?.assets[0]?.uri);
+    // ImagePicker saves the taken photo to disk and returns a local URI to it
+    const localUri = result.assets[0]?.uri;
+    const filename = localUri.split("/").pop() as string;
 
-      const file = {
-        fieldname: "file",
-        originalname: result.assets[0].fileName!,
-        encoding: "7bit",
-        mimetype: result.assets[0].mimeType,
-        buffer: await blob.arrayBuffer(),
-        size: blob.size,
-      } as unknown as File;
+    // Infer the type of the image
+    const match = /\.(\w+)$/.exec(filename);
+    const type = match ? `image/${match[1]}` : `image`;
 
-      console.log("f", file);
+    const file = { uri: localUri, name: filename, type } as unknown as File;
 
-      const uploadedFile = await uploadFile([file]);
-
-      if (onChange) {
-        onChange(uploadedFile);
-      }
+    setLoading(true);
+    const uploadedFile = await uploadFile([file]);
+    setLoading(false);
+    if (onChange) {
+      onChange(uploadedFile);
     }
   };
 

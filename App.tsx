@@ -178,7 +178,7 @@ const App = () => {
           >
             <SocketProvider>
               <Stack.Navigator
-                initialRouteName="ChatScreen"
+                initialRouteName="OnboardingScreen"
                 screenOptions={{
                   headerShown: false,
                   // statusBarHidden: true,
