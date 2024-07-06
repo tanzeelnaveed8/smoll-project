@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { IconPlus, IconStarFilled } from "@tabler/icons-react-native";
 import { Button, Div, Text } from "react-native-magnus";
-import { fontHauoraSemiBold } from "@/constant/constant";
+import { colorPrimary, fontHauoraSemiBold } from "@/constant/constant";
 import { useFileStore } from "@/store/modules/file";
 import { UploadedFile } from "@/store/types/file";
+import { ActivityIndicator } from "react-native";
 
 interface Props {
   isPrimary?: boolean;
@@ -61,8 +62,16 @@ const ImageUpload: React.FC<Props> = ({
   }, [uri]);
 
   return image ? (
-    <Button px={0} py={0} onPress={pickImage}>
-      <Div w={w} h={h} rounded={8} bgImg={{ uri: image }} position="relative">
+    <Button px={0} py={0} onPress={pickImage} disabled={loading}>
+      <Div
+        w={w}
+        h={h}
+        rounded={8}
+        bgImg={{ uri: image }}
+        position="relative"
+        alignItems="center"
+        justifyContent="center"
+      >
         {isPrimary && (
           <IconStarFilled
             size={21}
@@ -70,6 +79,7 @@ const ImageUpload: React.FC<Props> = ({
             style={{ position: "absolute", right: 8, bottom: 8 }}
           />
         )}
+        {loading && <ActivityIndicator size="large" color={colorPrimary} />}
       </Div>
     </Button>
   ) : (
