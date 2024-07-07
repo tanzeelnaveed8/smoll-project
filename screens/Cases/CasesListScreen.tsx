@@ -43,7 +43,7 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
     } finally {
       setTimeout(() => {
         setIsLoading(false);
-      }, 2000);
+      }, 1000);
     }
   };
 
@@ -104,6 +104,9 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
                     flexDir="row"
                     alignItems="center"
                     mb={12}
+                    onPress={() => {
+                      navigation.navigate("CasesRequestScreen");
+                    }}
                   >
                     <Image
                       source={require("../../assets/images/dog.png")}

@@ -34,7 +34,7 @@ const Layout: React.FC<Props> = ({
           // bg="yellow"
         >
           {showBack && (
-            <Div position="absolute" top={2}>
+            <Div top={2}>
               <BackButton onPress={onBackPress} text={backBtnText} />
             </Div>
           )}
@@ -46,6 +46,7 @@ const Layout: React.FC<Props> = ({
             flex={1}
             lineHeight={28}
             fontFamily={fontHauoraSemiBold}
+            style={{ position: "absolute", width: "100%", zIndex: -1, top: 0 }}
           >
             {title}
           </Text>

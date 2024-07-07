@@ -4,8 +4,11 @@ import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import Container from "@/components/partials/Container";
 import DoctorCard from "@/components/partials/DoctorCard";
 import Header from "@/components/partials/Header";
+import StarRating from "@/components/partials/StarRating";
+import Verified from "@/components/partials/Verified";
 import { fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
-import { Button, Div, Text, ScrollDiv } from "react-native-magnus";
+import { NavigationType } from "@/store/types";
+import { Button, Div, Text, ScrollDiv, Image } from "react-native-magnus";
 
 const availabTime = [
   {
@@ -20,26 +23,69 @@ const availabTime = [
   },
 ];
 
-const SlotBookingScreen = () => {
+const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
+  navigation,
+}) => {
   return (
-    <Layout showBack backBtnText="" title="Dr. Emily Carter">
-      <ScrollDiv flex={1} pt={20} showsVerticalScrollIndicator={false}>
+    <Layout
+      showBack
+      backBtnText=""
+      title="Dr. Emily Carter"
+      onBackPress={() => {
+        navigation.goBack();
+      }}
+    >
+      <ScrollDiv flex={1} showsVerticalScrollIndicator={false}>
         {/* <Header title="Book a Slot" /> */}
-        <Div bg="#FDF4E3" py={20} mb={20}>
-          <Container>
-            <DoctorCard
-              name="Dr. Emily Carter"
-              speciality="DVM, GPCERT (FelP)"
-              experience={5}
-              verified
-              slotScreen
-            />
-          </Container>
+
+        <Div flexDir="row" style={{ gap: 24 }} mb={20}>
+          <Image
+            source={require("../../assets/images/doctor-img.png")}
+            w={100}
+            h={100}
+            rounded={100}
+          />
+
+          <Div style={{ gap: 4 }}>
+            <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold}>
+              Dr. Emily Carter
+            </Text>
+            <Text
+              fontSize={"md"}
+              fontFamily={fontHauoraMedium}
+              color="darkGreyText"
+            >
+              DVM, GPCERT (FelP)
+            </Text>
+            <Text
+              fontSize={"md"}
+              fontFamily={fontHauoraMedium}
+              color="darkGreyText"
+            >
+              5 yrs of experience
+            </Text>
+            <Verified />
+          </Div>
+        </Div>
+        <Div maxW={350} mb={20}>
+          <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold} mb={4}>
+            Address - Harmony Vet Clinic
+          </Text>
+          <Text
+            color="darkGreyText"
+            mb={6}
+            fontSize={"lg"}
+            fontFamily={fontHauoraMedium}
+          >
+            Villa 12, Street 24, Jumeirah 3, Dubai, United Arab Emirates
+          </Text>
+
+          <StarRating rating={4} />
         </Div>
 
-        <Container pb={20}>
-          <ButtonPrimary bgColor="primary">Instant Consultation</ButtonPrimary>
-          <Div mt={24}>
+        <Div pb={20} borderTopWidth={1} borderColor="#D0D7DC">
+          {/* <ButtonPrimary bgColor="primary">Instant Consultation</ButtonPrimary> */}
+          <Div>
             <AvailabilityAndDateSelector />
 
             <Div mt={16}>
@@ -90,12 +136,18 @@ const SlotBookingScreen = () => {
             </Div>
           </Div>
           <Div mt={80}>
-            <ButtonPrimary>Proceed</ButtonPrimary>
+            <ButtonPrimary
+              onPress={() => {
+                navigation.navigate("PartnerVetConfirmationScreen");
+              }}
+            >
+              Proceed
+            </ButtonPrimary>
           </Div>
-        </Container>
+        </Div>
       </ScrollDiv>
     </Layout>
   );
 };
 
-export default SlotBookingScreen;
+export default PartnerVetDetailScreen;

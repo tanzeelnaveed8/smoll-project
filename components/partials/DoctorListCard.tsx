@@ -11,6 +11,7 @@ type PropTypes = {
   verified?: boolean;
   nextAvailable: string;
   mb?: number;
+  onCheckAvailability?: () => void;
 };
 
 const DoctorListCard = (props: PropTypes) => {
@@ -21,6 +22,7 @@ const DoctorListCard = (props: PropTypes) => {
     verified = false,
     nextAvailable,
     mb,
+    onCheckAvailability,
   } = props;
   return (
     <Div pb={20} borderBottomWidth={1} borderColor="#E0E0E0" mb={mb}>
@@ -104,6 +106,7 @@ const DoctorListCard = (props: PropTypes) => {
             <IconChevronRight color="#FFFFFF" size={24} strokeWidth={1.5} />
           }
           lineHeight={24}
+          onPress={onCheckAvailability}
         >
           Check availability
         </Button>

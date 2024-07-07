@@ -1,10 +1,13 @@
 import Header from "@/components/partials/Header";
-import { fontHauoraSemiBold } from "@/constant/constant";
+import { colorPrimary, fontHauoraSemiBold } from "@/constant/constant";
 import { Div, Text, ScrollDiv } from "react-native-magnus";
 import DoctorListCard from "@/components/partials/DoctorListCard";
 import Container from "@/components/partials/Container";
 import Layout from "@/components/app/Layout";
-import { FlatList } from "react-native";
+import { ActivityIndicator, Dimensions, FlatList } from "react-native";
+import { useEffect, useState } from "react";
+import { useCasesStore } from "@/store/modules/cases";
+import { NavigationType } from "@/store/types";
 
 const doctorList = [
   {
@@ -37,9 +40,41 @@ const doctorList = [
   },
 ];
 
-const PartnerVetScreen = () => {
+const windowHeight = Dimensions.get("window").height;
+
+const PartnerVetScreen: React.FC<{ navigation: NavigationType }> = ({
+  navigation,
+}) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const { vetDoctorList, fetchVetDoctors } = useCasesStore();
+
+  useEffect(() => {
+    handleFetchRequests();
+  }, []);
+
+  const handleFetchRequests = async () => {
+    try {
+      setIsLoading(true);
+
+      if (vetDoctorList.length === 0) {
+        await fetchVetDoctors();
+      }
+    } finally {
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1000);
+    }
+  };
+
   return (
-    <Layout showBack backBtnText="" title="Harmony Vet Clinic">
+    <Layout
+      showBack
+      backBtnText=""
+      title="Harmony Vet Clinic"
+      onBackPress={() => {
+        navigation.goBack();
+      }}
+    >
       <ScrollDiv showsVerticalScrollIndicator={false}>
         {/* <Header title="Find your Doctor" /> */}
 
@@ -53,7 +88,7 @@ const PartnerVetScreen = () => {
             Find your Doctor
           </Text>
 
-          <Div>
+          {!isLoading && (
             <FlatList
               data={doctorList}
               renderItem={({ item, index }) => (
@@ -64,11 +99,20 @@ const PartnerVetScreen = () => {
                   experience={5}
                   verified
                   nextAvailable="06:45 PM today"
+                  onCheckAvailability={() => {
+                    navigation.navigate("PartnerVetDetailScreen");
+                  }}
                 />
               )}
               keyExtractor={(item, i) => `${i}`}
             />
-          </Div>
+          )}
+
+          {isLoading && (
+            <Div flex={1} justifyContent="center" minH={windowHeight / 1.4}>
+              <ActivityIndicator size="large" color={colorPrimary} />
+            </Div>
+          )}
         </Div>
       </ScrollDiv>
     </Layout>

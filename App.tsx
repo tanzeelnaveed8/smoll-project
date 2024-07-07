@@ -27,6 +27,9 @@ import CasesRequestScreen from "./screens/Cases/CasesRequestScreen";
 import DoctotsListScreen from "./screens/doctorsScreens/DoctotsListScreen";
 import MembershipScreen from "./screens/HumanCounselling/MembershipScreen";
 import PartnerVetScreen from "./screens/Cases/PartnerVetScreen";
+import SlotBookingScreen from "./screens/doctorsScreens/SlotBookingScreen";
+import PartnerVetDetailScreen from "./screens/Cases/PartnerVetDetailScreen";
+import PartnerVetConfirmationScreen from "./screens/Cases/PartnerVetConfirmationScreen";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -132,6 +135,19 @@ const App = () => {
                 name="PartnerVetScreen"
                 component={PartnerVetScreen}
               />
+              <Stack.Screen
+                name="SlotBookingScreen"
+                component={SlotBookingScreen}
+              />
+              <Stack.Screen
+                name="PartnerVetDetailScreen"
+                component={PartnerVetDetailScreen}
+              />
+              <Stack.Screen
+                name="PartnerVetConfirmationScreen"
+                component={PartnerVetConfirmationScreen}
+              />
+
               <Stack.Screen name="Account" component={SettingsMainScreen} />
               <Stack.Screen
                 name="PetProfileScreen"

@@ -134,7 +134,6 @@ const HomeScreen: React.FC<Props> = (props) => {
     <>
       <Layout
         style={{
-          paddingTop: 20,
           justifyContent: "flex-start",
         }}
       >
