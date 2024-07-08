@@ -32,7 +32,7 @@ const CasesRequestScreen: React.FC<{ navigation: NavigationType }> = ({
   const { caseRequests, fetchCaseRequests } = useCasesStore();
 
   useEffect(() => {
-    // handleFetchRequests();
+    handleFetchRequests();
   }, []);
 
   const handleFetchRequests = async () => {
@@ -40,7 +40,7 @@ const CasesRequestScreen: React.FC<{ navigation: NavigationType }> = ({
       setIsLoading(true);
 
       if (caseRequests.length === 0) {
-        await fetchCaseRequests();
+        // await fetchCaseRequests();
       }
     } finally {
       setTimeout(() => {

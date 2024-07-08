@@ -7,8 +7,17 @@ import Header from "@/components/partials/Header";
 import StarRating from "@/components/partials/StarRating";
 import Verified from "@/components/partials/Verified";
 import { fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
+import { useCasesStore } from "@/store/modules/cases";
 import { NavigationType } from "@/store/types";
-import { Button, Div, Text, ScrollDiv, Image } from "react-native-magnus";
+import { useEffect, useState } from "react";
+import {
+  Button,
+  Div,
+  Text,
+  ScrollDiv,
+  Image,
+  Skeleton,
+} from "react-native-magnus";
 
 const availabTime = [
   {
@@ -23,9 +32,28 @@ const availabTime = [
   },
 ];
 
+const dummyData = [1, 2, 3, 4, 5, 6, 7, 8];
+
 const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
+  const [selectedTime, setSelectedTime] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    handleFetchVetDetails();
+  }, []);
+
+  const handleFetchVetDetails = async () => {
+    try {
+      setIsLoading(true);
+    } finally {
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1000);
+    }
+  };
+
   return (
     <Layout
       showBack
@@ -62,7 +90,7 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
               fontFamily={fontHauoraMedium}
               color="darkGreyText"
             >
-              5 yrs of experience
+              4 yrs of experience
             </Text>
             <Verified />
           </Div>
@@ -94,45 +122,71 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
                 fontSize="xl"
                 lineHeight={24}
                 color="#222222"
+                mb={16}
               >
                 Availability
               </Text>
-              {availabTime.map((t) => (
-                <Div
-                  key={t.id}
-                  py={12}
-                  borderBottomWidth={1}
-                  borderColor="#E0E0E0"
-                >
-                  <Text
-                    fontFamily={fontHauoraSemiBold}
-                    fontSize="xl"
-                    lineHeight={24}
-                    color="#222222"
+              {!isLoading &&
+                availabTime.map((t) => (
+                  <Div
+                    key={t.id}
+                    // py={12}
+                    pb={12}
                     mb={12}
+                    borderBottomWidth={1}
+                    borderColor="#E0E0E0"
                   >
-                    {t.day}
-                  </Text>
+                    <Text
+                      fontFamily={fontHauoraSemiBold}
+                      fontSize="xl"
+                      lineHeight={24}
+                      color="#222222"
+                      mb={12}
+                    >
+                      {t.day}
+                    </Text>
+                    <Div flexDir="row" flexWrap="wrap" style={{ gap: 8 }}>
+                      {t.timeSlots.map((slot) => (
+                        <Button
+                          key={slot}
+                          fontFamily={fontHauoraMedium}
+                          fontSize="lg"
+                          lineHeight={20}
+                          p={10}
+                          borderWidth={1}
+                          color={
+                            selectedTime === `${t.id}${slot}`
+                              ? "#fff"
+                              : "#494949"
+                          }
+                          borderColor="#E0E0E0"
+                          rounded={4}
+                          bg={
+                            selectedTime === `${t.id}${slot}`
+                              ? "primary"
+                              : "transparent"
+                          }
+                          onPress={() => {
+                            setSelectedTime(`${t.id}${slot}`);
+                          }}
+                        >
+                          {slot}
+                        </Button>
+                      ))}
+                    </Div>
+                  </Div>
+                ))}
+
+              {isLoading && (
+                <Div flex={1}>
+                  <Skeleton.Box mt="sm" w={100} h={25} mb={4} />
                   <Div flexDir="row" flexWrap="wrap" style={{ gap: 8 }}>
-                    {t.timeSlots.map((slot) => (
-                      <Button
-                        key={slot}
-                        fontFamily={fontHauoraMedium}
-                        fontSize="lg"
-                        lineHeight={20}
-                        p={10}
-                        borderWidth={1}
-                        color="#494949"
-                        borderColor="#E0E0E0"
-                        rounded={4}
-                        bg="transparent"
-                      >
-                        {slot}
-                      </Button>
+                    {dummyData.map((item) => (
+                      <Skeleton.Box mt="sm" h={40} w={80} />
                     ))}
                   </Div>
                 </Div>
-              ))}
+              )}
             </Div>
           </Div>
           <Div mt={80}>

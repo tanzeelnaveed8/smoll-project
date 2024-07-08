@@ -30,7 +30,7 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
   const { casesList, fetchCases } = useCasesStore();
 
   useEffect(() => {
-    // handleFetchCases();
+    handleFetchCases();
   }, []);
 
   const handleFetchCases = async () => {
@@ -38,7 +38,7 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
       setIsLoading(true);
 
       if (casesList.length === 0) {
-        await fetchCases();
+        // await fetchCases();
       }
     } finally {
       setTimeout(() => {
@@ -47,7 +47,7 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
     }
   };
 
-  console.log('isLoading', isLoading)
+  console.log("isLoading", isLoading);
 
   return (
     <Layout

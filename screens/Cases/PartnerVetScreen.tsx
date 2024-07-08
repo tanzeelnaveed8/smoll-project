@@ -49,7 +49,7 @@ const PartnerVetScreen: React.FC<{ navigation: NavigationType }> = ({
   const { vetDoctorList, fetchVetDoctors } = useCasesStore();
 
   useEffect(() => {
-    // handleFetchRequests();
+    handleFetchRequests();
   }, []);
 
   const handleFetchRequests = async () => {
@@ -57,7 +57,7 @@ const PartnerVetScreen: React.FC<{ navigation: NavigationType }> = ({
       setIsLoading(true);
 
       if (vetDoctorList.length === 0) {
-        await fetchVetDoctors();
+        // await fetchVetDoctors();
       }
     } finally {
       setTimeout(() => {
