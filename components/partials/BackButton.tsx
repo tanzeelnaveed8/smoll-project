@@ -1,15 +1,16 @@
 import { fontHauoraMedium } from "@/constant/constant";
 import { Button, ButtonProps } from "react-native-magnus";
-import { IconArrowLeft } from "@tabler/icons-react-native";
+import { IconArrowLeft, IconX } from "@tabler/icons-react-native";
 import { TouchableOpacity } from "react-native";
 
 interface PropTypes extends ButtonProps {
   text?: string;
   onPress?: () => void;
+  showCloseIcon?: boolean;
 }
 
 const BackButton = (props: PropTypes) => {
-  const { text = "Back", onPress, ...restProps } = props;
+  const { text = "Back", onPress, showCloseIcon, ...restProps } = props;
   return (
     <TouchableOpacity onPress={onPress}>
       <Button
@@ -24,12 +25,21 @@ const BackButton = (props: PropTypes) => {
         lineHeight={20}
         color="#222222"
         prefix={
-          <IconArrowLeft
-            size={28}
-            color="#222222"
-            strokeWidth={1.5}
-            style={{ marginBottom: 4, marginRight: 4 }}
-          />
+          showCloseIcon ? (
+            <IconX
+              size={28}
+              color="#222222"
+              strokeWidth={1.5}
+              style={{ marginBottom: 4, marginRight: 4 }}
+            />
+          ) : (
+            <IconArrowLeft
+              size={28}
+              color="#222222"
+              strokeWidth={1.5}
+              style={{ marginBottom: 4, marginRight: 4 }}
+            />
+          )
         }
       >
         {text}

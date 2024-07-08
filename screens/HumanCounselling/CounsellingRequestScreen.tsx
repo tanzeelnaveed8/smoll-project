@@ -7,6 +7,7 @@ import { NavigationType } from "@/store/types";
 import React, { useEffect } from "react";
 import { ActivityIndicator } from "react-native";
 import { Div, Text } from "react-native-magnus";
+import StartNewConversationActionModal from "./StartNewConversationActionModal";
 
 const CounsellingRequestScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
@@ -49,6 +50,8 @@ const CounsellingRequestScreen: React.FC<{ navigation: NavigationType }> = ({
             </Text>
           </Div>
         </Div>
+
+        <StartNewConversationActionModal />
       </Layout>
     </>
   );

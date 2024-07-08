@@ -1,12 +1,14 @@
 import { Modal, Div, ModalProps, Button, Text } from "react-native-magnus";
 import { IconX } from "@tabler/icons-react-native";
 import { TouchableOpacity } from "react-native";
+import { fontHauoraSemiBold } from "@/constant/constant";
 
 interface Props extends ModalProps {
   showCloseIcon?: boolean;
   onCloseIconClick?: () => void;
   barMb?: number;
   title?: string;
+  height?: string | number;
 }
 
 const BottomSheet: React.FC<Props> = (props) => {
@@ -16,12 +18,13 @@ const BottomSheet: React.FC<Props> = (props) => {
     title,
     onCloseIconClick,
     barMb = 28,
+    height,
     ...restProps
   } = props;
 
   return (
     <Modal
-      h="80%"
+      h={height ? height : "80%"}
       roundedTop={12}
       pb={20}
       swipeDirection={["down"]}
@@ -50,6 +53,7 @@ const BottomSheet: React.FC<Props> = (props) => {
               <Text
                 fontSize={"xl"}
                 fontWeight="600"
+                fontFamily={fontHauoraSemiBold}
                 textAlign="center"
                 flex={1}
               >

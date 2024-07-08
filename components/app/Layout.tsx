@@ -11,6 +11,7 @@ interface Props {
   onBackPress?: () => void;
   backBtnText?: string;
   title?: string;
+  showCloseIcon?: boolean;
 }
 
 const Layout: React.FC<Props> = ({
@@ -20,6 +21,7 @@ const Layout: React.FC<Props> = ({
   showBack,
   backBtnText = "Back",
   title,
+  showCloseIcon,
 }) => {
   const externalStyles: {} = style ? style : {};
   return (
@@ -33,9 +35,13 @@ const Layout: React.FC<Props> = ({
           flex={1}
           // bg="yellow"
         >
-          {showBack && (
+          {(showBack || showCloseIcon) && (
             <Div top={2}>
-              <BackButton onPress={onBackPress} text={backBtnText} />
+              <BackButton
+                onPress={onBackPress}
+                text={backBtnText}
+                showCloseIcon={showCloseIcon}
+              />
             </Div>
           )}
           {/* <Div flex={1} minH={34}> */}

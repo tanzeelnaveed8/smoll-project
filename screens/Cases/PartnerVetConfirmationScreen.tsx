@@ -165,7 +165,13 @@ const PartnerVetConfirmationScreen: React.FC<{
         </Div>
 
         <Div mt={32} pb={20}>
-          <ButtonPrimary>Pay 10 AED</ButtonPrimary>
+          <ButtonPrimary
+            onPress={() => {
+              navigation.navigate("PartnerVetSuccessfullScreen");
+            }}
+          >
+            Pay 10 AED
+          </ButtonPrimary>
         </Div>
       </ScrollDiv>
     </Layout>

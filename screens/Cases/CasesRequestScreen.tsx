@@ -32,7 +32,7 @@ const CasesRequestScreen: React.FC<{ navigation: NavigationType }> = ({
   const { caseRequests, fetchCaseRequests } = useCasesStore();
 
   useEffect(() => {
-    handleFetchRequests();
+    // handleFetchRequests();
   }, []);
 
   const handleFetchRequests = async () => {

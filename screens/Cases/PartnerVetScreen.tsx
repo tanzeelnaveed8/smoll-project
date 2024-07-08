@@ -49,7 +49,7 @@ const PartnerVetScreen: React.FC<{ navigation: NavigationType }> = ({
   const { vetDoctorList, fetchVetDoctors } = useCasesStore();
 
   useEffect(() => {
-    handleFetchRequests();
+    // handleFetchRequests();
   }, []);
 
   const handleFetchRequests = async () => {
