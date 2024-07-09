@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { IconPlus, IconStarFilled } from "@tabler/icons-react-native";
 import { Button, Div, Text } from "react-native-magnus";
-import { fontHauoraSemiBold } from "@/constant/constant";
+import { colorPrimary, fontHauoraSemiBold } from "@/constant/constant";
 import { useFileStore } from "@/store/modules/file";
 import { UploadedFile } from "@/store/types/file";
+import { ActivityIndicator } from "react-native";
 
 interface Props {
   isPrimary?: boolean;
@@ -34,28 +35,24 @@ const ImageUpload: React.FC<Props> = ({
       quality: 1,
     });
 
-    if (!result.canceled) {
-      setImage(result?.assets[0]?.uri);
+    if (result.canceled) return;
 
-      const response = await fetch(result.assets[0].uri);
-      const blob = await response.blob();
+    setImage(result?.assets[0]?.uri);
+    // ImagePicker saves the taken photo to disk and returns a local URI to it
+    const localUri = result.assets[0]?.uri;
+    const filename = localUri.split("/").pop() as string;
 
-      const file = {
-        fieldname: "file",
-        originalname: result.assets[0].fileName!,
-        encoding: "7bit",
-        mimetype: result.assets[0].mimeType,
-        buffer: await blob.arrayBuffer(),
-        size: blob.size,
-      } as unknown as File;
+    // Infer the type of the image
+    const match = /\.(\w+)$/.exec(filename);
+    const type = match ? `image/${match[1]}` : `image`;
 
-      console.log("f", file);
+    const file = { uri: localUri, name: filename, type } as unknown as File;
 
-      const uploadedFile = await uploadFile([file]);
-
-      if (onChange) {
-        onChange(uploadedFile);
-      }
+    setLoading(true);
+    const uploadedFile = await uploadFile([file]);
+    setLoading(false);
+    if (onChange) {
+      onChange(uploadedFile);
     }
   };
 
@@ -65,8 +62,16 @@ const ImageUpload: React.FC<Props> = ({
   }, [uri]);
 
   return image ? (
-    <Button px={0} py={0} onPress={pickImage}>
-      <Div w={w} h={h} rounded={8} bgImg={{ uri: image }} position="relative">
+    <Button px={0} py={0} onPress={pickImage} disabled={loading}>
+      <Div
+        w={w}
+        h={h}
+        rounded={8}
+        bgImg={{ uri: image }}
+        position="relative"
+        alignItems="center"
+        justifyContent="center"
+      >
         {isPrimary && (
           <IconStarFilled
             size={21}
@@ -74,6 +79,7 @@ const ImageUpload: React.FC<Props> = ({
             style={{ position: "absolute", right: 8, bottom: 8 }}
           />
         )}
+        {loading && <ActivityIndicator size="large" color={colorPrimary} />}
       </Div>
     </Button>
   ) : (
