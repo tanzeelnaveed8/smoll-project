@@ -2,13 +2,16 @@ import React from "react";
 import { StyleProp, StyleSheet, ViewStyle } from "react-native";
 import { Div, Text } from "react-native-magnus";
 import BackButton from "../partials/BackButton";
+import { fontHauoraSemiBold } from "@/constant/constant";
 
 interface Props {
   children: React.ReactNode;
   style?: StyleProp<ViewStyle>;
   showBack?: boolean;
   onBackPress?: () => void;
+  backBtnText?: string;
   title?: string;
+  showCloseIcon?: boolean;
 }
 
 const Layout: React.FC<Props> = ({
@@ -16,30 +19,45 @@ const Layout: React.FC<Props> = ({
   style,
   onBackPress,
   showBack,
+  backBtnText = "Back",
   title,
+  showCloseIcon,
 }) => {
   const externalStyles: {} = style ? style : {};
   return (
     <Div style={{ ...styles.container, ...externalStyles }}>
       <Div row style={styles.titleContainer}>
-        <Div row justifyContent="space-between" alignItems="center" pb={24}>
-          {showBack && (
-            <Div flex={1}>
-              <BackButton onPress={onBackPress} />
+        <Div
+          row
+          justifyContent="space-between"
+          alignItems="center"
+          position="relative"
+          flex={1}
+          // bg="yellow"
+        >
+          {(showBack || showCloseIcon) && (
+            <Div top={2}>
+              <BackButton
+                onPress={onBackPress}
+                text={backBtnText}
+                showCloseIcon={showCloseIcon}
+              />
             </Div>
           )}
-          <Div flex={1}>
-            <Text
-              fontSize={"xl"}
-              fontWeight="600"
-              textAlign="center"
-              flex={1}
-              lineHeight={28}
-            >
-              {title}
-            </Text>
-          </Div>
-          <Div flex={1} />
+          {/* <Div flex={1} minH={34}> */}
+          <Text
+            fontSize={"xl"}
+            fontWeight="600"
+            textAlign="center"
+            flex={1}
+            lineHeight={28}
+            fontFamily={fontHauoraSemiBold}
+            style={{ position: "absolute", width: "100%", zIndex: -1, top: 0 }}
+          >
+            {title}
+          </Text>
+          {/* </Div> */}
+          {/* <Div flex={1} /> */}
         </Div>
       </Div>
       {children}

@@ -1,3 +1,4 @@
+import Layout from "@/components/app/Layout";
 import AvailabilityAndDateSelector from "@/components/partials/AvailabilityAndDateSelector";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import Container from "@/components/partials/Container";
@@ -21,77 +22,79 @@ const availabTime = [
 
 const SlotBookingScreen = () => {
   return (
-    <ScrollDiv flex={1} pt={20} showsVerticalScrollIndicator={false}>
-      <Header title="Book a Slot" />
-      <Div bg="#FDF4E3" py={20} mb={20}>
-        <Container>
-          <DoctorCard
-            name="Dr. Emily Carter"
-            speciality="DVM, GPCERT (FelP)"
-            experience={5}
-            verified
-            slotScreen
-          />
-        </Container>
-      </Div>
+    <Layout showBack backBtnText="" title="Dr. Emily Carter">
+      <ScrollDiv flex={1} pt={20} showsVerticalScrollIndicator={false}>
+        {/* <Header title="Book a Slot" /> */}
+        <Div bg="#FDF4E3" py={20} mb={20}>
+          <Container>
+            <DoctorCard
+              name="Dr. Emily Carter"
+              speciality="DVM, GPCERT (FelP)"
+              experience={5}
+              verified
+              slotScreen
+            />
+          </Container>
+        </Div>
 
-      <Container pb={20}>
-        <ButtonPrimary bgColor="primary">Instant Consultation</ButtonPrimary>
-        <Div mt={24}>
-          <AvailabilityAndDateSelector />
+        <Container pb={20}>
+          <ButtonPrimary bgColor="primary">Instant Consultation</ButtonPrimary>
+          <Div mt={24}>
+            <AvailabilityAndDateSelector />
 
-          <Div mt={16}>
-            <Text
-              fontFamily={fontHauoraSemiBold}
-              fontSize="xl"
-              lineHeight={24}
-              color="#222222"
-            >
-              Availability
-            </Text>
-            {availabTime.map((t) => (
-              <Div
-                key={t.id}
-                py={12}
-                borderBottomWidth={1}
-                borderColor="#E0E0E0"
+            <Div mt={16}>
+              <Text
+                fontFamily={fontHauoraSemiBold}
+                fontSize="xl"
+                lineHeight={24}
+                color="#222222"
               >
-                <Text
-                  fontFamily={fontHauoraSemiBold}
-                  fontSize="xl"
-                  lineHeight={24}
-                  color="#222222"
-                  mb={12}
+                Availability
+              </Text>
+              {availabTime.map((t) => (
+                <Div
+                  key={t.id}
+                  py={12}
+                  borderBottomWidth={1}
+                  borderColor="#E0E0E0"
                 >
-                  {t.day}
-                </Text>
-                <Div flexDir="row" flexWrap="wrap" style={{ gap: 8 }}>
-                  {t.timeSlots.map((slot) => (
-                    <Button
-                      key={slot}
-                      fontFamily={fontHauoraMedium}
-                      fontSize="lg"
-                      lineHeight={20}
-                      p={10}
-                      borderWidth={1}
-                      color="#494949"
-                      borderColor="#E0E0E0"
-                      rounded={4}
-                      bg="transparent"
-                    >
-                      {slot}
-                    </Button>
-                  ))}
+                  <Text
+                    fontFamily={fontHauoraSemiBold}
+                    fontSize="xl"
+                    lineHeight={24}
+                    color="#222222"
+                    mb={12}
+                  >
+                    {t.day}
+                  </Text>
+                  <Div flexDir="row" flexWrap="wrap" style={{ gap: 8 }}>
+                    {t.timeSlots.map((slot) => (
+                      <Button
+                        key={slot}
+                        fontFamily={fontHauoraMedium}
+                        fontSize="lg"
+                        lineHeight={20}
+                        p={10}
+                        borderWidth={1}
+                        color="#494949"
+                        borderColor="#E0E0E0"
+                        rounded={4}
+                        bg="transparent"
+                      >
+                        {slot}
+                      </Button>
+                    ))}
+                  </Div>
                 </Div>
-              </Div>
-            ))}
+              ))}
+            </Div>
           </Div>
-        </Div>
-        <Div mt={80}>
-          <ButtonPrimary>Proceed</ButtonPrimary>
-        </Div>
-      </Container>
-    </ScrollDiv>
+          <Div mt={80}>
+            <ButtonPrimary>Proceed</ButtonPrimary>
+          </Div>
+        </Container>
+      </ScrollDiv>
+    </Layout>
   );
 };
 

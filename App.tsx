@@ -4,33 +4,23 @@ import { Text, ThemeProvider } from "react-native-magnus";
 import * as Font from "expo-font";
 import { useEffect, useState } from "react";
 import { Dimensions } from "react-native";
-import { fontHauora, fontHauoraSemiBold } from "./constant/constant";
+import { fontHauora } from "./constant/constant";
 
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AccountSetupAddressScreen from "./screens/AccountSetup/AccountSetupAddressScreen";
 import AccountSetupEmailOtpScreen from "./screens/AccountSetup/AccountSetupEmailOtpScreen";
 import AccountSetupEmailScreen from "./screens/AccountSetup/AccountSetupEmailScreen";
-import HomeScreen from "./screens/HomeScreen";
 import OnboardingScreen from "./screens/OnboardingScreen";
-import PartnerClinicScreen from "./screens/partnerClinics/PartnerClinicScreen";
 
-import {
-  IconBuildingHospital,
-  IconSettings,
-  IconWindow,
-} from "@tabler/icons-react-native";
 import { ToastProvider } from "react-native-toast-notifications";
-import PetProfileScreen from "./screens/PetProfile/PetProfileScreen";
-import WelcomeMessageScreen from "./screens/WelcomeMessageScreen";
-import SettingsMainScreen from "./screens/settings/SettingsMainScreen";
-import CounsellingRequestScreen from "./screens/Counselling/CounsellingRequestScreen";
-import { SocketProvider } from "./socket/provider";
-import ChatScreen from "./screens/ChatScreen";
-import CounsellingInboxScreen from "./screens/Counselling/CounsellingInboxScreen";
 import CounsellingChatScreen from "./screens/Counselling/CounsellingChatScreen";
+import CounsellingInboxScreen from "./screens/Counselling/CounsellingInboxScreen";
+import CounsellingRequestScreen from "./screens/Counselling/CounsellingRequestScreen";
+import HomeScreen from "./screens/HomeScreen";
+import { SocketProvider } from "./socket/provider";
 import { CometChatWrapper } from "./utils/chat";
+import PetProfileScreen from "./screens/PetProfile/PetProfileScreen";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -72,90 +62,6 @@ const theme = {
 const windowHeight = Dimensions.get("window").height;
 
 const Stack = createNativeStackNavigator();
-const Tab = createBottomTabNavigator();
-
-function TabNavigation() {
-  return (
-    <Tab.Navigator
-      screenOptions={{
-        tabBarStyle: {
-          height: 60,
-          paddingBottom: 6,
-          paddingTop: 6,
-        },
-        tabBarLabelStyle: {
-          fontSize: 14,
-          fontFamily: fontHauoraSemiBold,
-        },
-        tabBarInactiveTintColor: "#494949",
-        tabBarActiveTintColor: "#427594",
-      }}
-    >
-      <Tab.Screen
-        name="HomeScreen"
-        component={HomeScreen}
-        options={{
-          headerShown: false,
-          tabBarIcon: ({ focused }) => (
-            <IconWindow
-              width={28}
-              height={28}
-              color={focused ? "#427594" : "#494949"}
-            />
-          ),
-        }}
-      />
-
-      {/* <Tab.Screen
-        name="HumanCounsellingMessage"
-        component={HumanCounsellingMessageScreen}
-        options={{
-          title: "Chats",
-          headerShown: false,
-          tabBarIcon: ({ focused }) => (
-            <IconMessage
-              width={28}
-              height={28}
-              color={focused ? "#427594" : "#494949"}
-            />
-          ),
-        }}
-      /> */}
-
-      <Tab.Screen
-        name="PartnerClinic"
-        component={PartnerClinicScreen}
-        options={{
-          title: "Partner",
-          headerShown: false,
-          tabBarIcon: ({ focused }) => (
-            <IconBuildingHospital
-              width={28}
-              height={28}
-              color={focused ? "#427594" : "#494949"}
-            />
-          ),
-        }}
-      />
-
-      <Tab.Screen
-        name="Account"
-        component={SettingsMainScreen}
-        options={{
-          headerShown: false,
-          tabBarIcon: ({ focused }) => (
-            <IconSettings
-              width={28}
-              height={28}
-              color={focused ? "#427594" : "#494949"}
-            />
-          ),
-        }}
-      />
-    </Tab.Navigator>
-  );
-}
-
 const App = () => {
   const [fontsLoaded, setFontsLoaded] = useState(false);
 

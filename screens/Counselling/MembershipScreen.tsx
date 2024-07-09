@@ -101,8 +101,7 @@ const MembershipScreen: React.FC<{ navigation: NavigationType }> = ({
                       fontFamily={fontHauoraMedium}
                       maxW={294}
                     >
-                      Schedule a personalised video session with a professional
-                      counsellor.
+                      {item.text}
                     </Text>
                   </Div>
                 </Div>
