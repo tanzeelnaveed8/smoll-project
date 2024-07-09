@@ -15,6 +15,7 @@ import Toast from "react-native-toast-notifications";
 import ToastContainer from "react-native-toast-notifications/lib/typescript/toast-container";
 import OnboardingUserModal from "./OnboardingUserModal";
 import InputField from "@/components/partials/InputField";
+import { CometChatWrapper } from "@/utils/chat";
 
 interface Props {
   navigation: NavigationType;

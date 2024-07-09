@@ -120,7 +120,7 @@ const HomeScreen: React.FC<Props> = (props) => {
       if (!_sessions?.length) {
         props.navigation.navigate("CounsellingRequestScreen");
       } else {
-        props.navigation.navigate("");
+        props.navigation.navigate("CounsellingInboxScreen");
       }
     }
   };

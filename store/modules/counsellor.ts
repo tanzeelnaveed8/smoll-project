@@ -6,7 +6,11 @@ export const useCounsellorStore = create<CounsellorState>((set, get) => ({
   sessions: null,
 
   fetchSessions: async () => {
-    const response = await api.get("/member/counsellors/sessions");
+    const response = await api.get("/member/counsellors/sessions", {
+      params: {
+        status: "accepted",
+      },
+    });
 
     set(() => ({ sessions: response.data }));
     return response.data;

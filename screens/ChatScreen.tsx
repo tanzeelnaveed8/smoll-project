@@ -1,172 +1,72 @@
 import Layout from "@/components/app/Layout";
-import { colorTextPrimary } from "@/constant/constant";
-import { NavigationType } from "@/store/types";
-import { CometChat } from "@cometchat/chat-sdk-react-native";
-import {
-  CometChatContextProvider,
-  CometChatConversationsWithMessages,
-  CometChatMessageComposer,
-  CometChatMessageHeader,
-  CometChatMessageList,
-  CometChatTheme,
-  CometChatUIKit,
-  UIKitSettings,
-} from "@cometchat/chat-uikit-react-native";
-import { IconSend2 } from "@tabler/icons-react-native";
-import { useEffect, useRef, useState } from "react";
-import { Text, TextInput } from "react-native";
-import { Button, Div } from "react-native-magnus";
+import Chat from "@/components/app/chat/Chat";
+import ChatBubble from "@/components/app/chat/ChatBubble";
+import ChatComposer from "@/components/app/chat/ChatComposer";
+import { useCallback, useEffect, useState } from "react";
+import { Bubble, GiftedChat, IMessage } from "react-native-gifted-chat";
+import { Div, Text } from "react-native-magnus";
 
-const ChatScreen: React.FC<{ navigation: NavigationType }> = ({
-  navigation,
-}) => {
-  const [chatUser, setChatUser] = useState<CometChat.User>();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  // const [inputMessage, setInputMessage] = useState("");
-  const inputMessageRef = useRef<null | TextInput>(null);
+const ChatScreen: React.FC = () => {
+  const [messages, setMessages] = useState<IMessage[]>([]);
 
   useEffect(() => {
-    let uikitSettings: UIKitSettings = {
-      appId: "259470d3b9e30637",
-      authKey: "7f548f7be265876668136a6c1cb6b7b59f42bbee",
-      region: "in",
-      subscriptionType: "ALL_USERS",
-    };
-
-    CometChatUIKit.init(uikitSettings)
-      .then(() => {
-        console.log("CometChatUiKit successfully initialized");
-
-        CometChatUIKit.login({ uid: "bxkpjfuvtd" })
-          .then((user) => {
-            console.log("User logged in successfully", user.getName());
-            setIsLoggedIn(true);
-          })
-          .catch((error) => {
-            console.log("Login failed with exception:", error);
-            setIsLoggedIn(false);
-          });
-      })
-      .catch((error) => {
-        console.log("Initialization failed with exception:", error);
-      });
-
-    if (isLoggedIn) {
-      CometChat.getUser("pfon8yoh0o")
-        .then((user) => {
-          setChatUser(user);
-        })
-        .catch((error) => {
-          console.log("Failed to get user:", error);
-        });
-    }
-  }, [isLoggedIn]);
-
-  let myTheme: CometChatTheme = new CometChatTheme({});
-
-  myTheme.palette.setPrimary({
-    light: "#222222",
-    dark: "#fff",
-  });
-
-  myTheme.palette.setSecondary({
-    light: "#fff",
-    dark: "#f10",
-  });
-
-  myTheme.palette.setAccent({
-    light: "#f10",
-    dark: "#f10",
-  });
-
-  myTheme.palette.setMode("light");
-
-  const sendMessageHandler = () => {
-    const inputValue = inputMessageRef;
-    console.log("inputValue", inputValue);
-
-    let textMessage = new CometChat.TextMessage(
-      "sywfkkl6cl",
-      "testing",
-      CometChat.RECEIVER_TYPE.USER
-    );
-
-    CometChat.sendMessage(textMessage).then(
-      (message) => {
-        console.log("Message sent successfully:", message);
+    setMessages([
+      {
+        _id: 1,
+        text: "Hello developer",
+        createdAt: new Date(),
+        user: {
+          _id: 2,
+          name: "React Native",
+          avatar: "https://placeimg.com/140/140/any",
+        },
       },
-      (error) => {
-        console.log("Message sending failed with error:", error);
-      }
-    );
-  };
-
-  const messageChangeHandler = (e: string) => {
-    console.log(e);
-  };
+      {
+        _id: 2,
+        text: "My message",
+        createdAt: new Date(Date.UTC(2016, 5, 11, 17, 20, 0)),
+        user: {
+          _id: 2,
+          name: "React Native",
+          avatar: "https://facebook.github.io/react/img/logo_og.png",
+        },
+        image: "https://facebook.github.io/react/img/logo_og.png",
+        // Mark the message as sent, using one tick
+        sent: true,
+        // Mark the message as received, using two tick
+        received: true,
+        // Mark the message as pending with a clock loader
+        pending: true,
+        // Any additional custom parameters are passed through
+      },
+      {
+        _id: 3,
+        text: "My message",
+        createdAt: new Date(Date.UTC(2016, 5, 11, 17, 20, 0)),
+        user: {
+          _id: 2,
+          name: "React Native",
+          avatar: "https://facebook.github.io/react/img/logo_og.png",
+        },
+        image: "https://facebook.github.io/react/img/logo_og.png",
+        // You can also add a video prop:
+        video:
+          "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+        // Mark the message as sent, using one tick
+        sent: true,
+        // Mark the message as received, using two tick
+        received: true,
+        // Mark the message as pending with a clock loader
+        pending: true,
+        // Any additional custom parameters are passed through
+      },
+    ]);
+  }, []);
 
   return (
-    <Div
-      style={{
-        flex: 1,
-        paddingTop: 0,
-        backgroundColor: "#fff",
-        paddingBottom: 10,
-      }}
-    >
-      {chatUser ? (
-        <>
-          <Layout showBack title={"Dr. Mohib"}>
-            <Div flex={1}>
-              <CometChatContextProvider theme={myTheme}>
-                <Div flex={1}>
-                  <CometChatMessageList
-                    user={chatUser}
-                    dateSeperatorStyle={{
-                      textColor: colorTextPrimary,
-                    }}
-                    wrapperMessageBubbleStyle={{}}
-                    // messageListConfiguration={{
-                    //   showAvatar: true,
-                    // }}
-                  />
-                </Div>
-
-                <Div>
-                  <CometChatMessageComposer
-                    messageComposerStyle={{
-                      backgroundColor: "#EFEFEF",
-                      borderRadius: 10,
-                      dividerTint: "transparent",
-                    }}
-                    placeHolderText="Type a Message..."
-                  />
-                </Div>
-                {/* <CometChatMessageList /> */}
-              </CometChatContextProvider>
-            </Div>
-          </Layout>
-
-          {/* <CometChatMessages
-            user={chatUser}
-            messageListConfiguration={{}}
-            messageComposerConfiguration={{
-              hideVoiceRecording: true,
-            }}
-            messageHeaderConfiguration={{
-              onBack: () => {
-                // navigation.navigate("HumanCounsellingMessage");
-              },
-            }}
-            // messageListConfiguration={{ showAvatar: true }}
-            hideDetails
-          /> */}
-          {/* <CometChatUsersWithMessages user={chatUser} /> */}
-        </>
-      ) : (
-        <Text>User not logged in</Text>
-      )}
-    </Div>
+    <Layout title="Chat" showBack>
+      <Chat messages={messages} />
+    </Layout>
   );
 };
 

@@ -25,9 +25,12 @@ import { ToastProvider } from "react-native-toast-notifications";
 import PetProfileScreen from "./screens/PetProfile/PetProfileScreen";
 import WelcomeMessageScreen from "./screens/WelcomeMessageScreen";
 import SettingsMainScreen from "./screens/settings/SettingsMainScreen";
-import CounsellingRequestScreen from "./screens/HumanCounselling/CounsellingRequestScreen";
+import CounsellingRequestScreen from "./screens/Counselling/CounsellingRequestScreen";
 import { SocketProvider } from "./socket/provider";
 import ChatScreen from "./screens/ChatScreen";
+import CounsellingInboxScreen from "./screens/Counselling/CounsellingInboxScreen";
+import CounsellingChatScreen from "./screens/Counselling/CounsellingChatScreen";
+import { CometChatWrapper } from "./utils/chat";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -158,6 +161,7 @@ const App = () => {
 
   useEffect(() => {
     loadFonts().then(() => setFontsLoaded(true));
+    CometChatWrapper.init();
   }, []);
 
   if (!fontsLoaded) {
@@ -178,32 +182,15 @@ const App = () => {
           >
             <SocketProvider>
               <Stack.Navigator
-                initialRouteName="ChatScreen"
+                initialRouteName="OnboardingScreen"
                 screenOptions={{
                   headerShown: false,
-                  // statusBarHidden: true,
                 }}
               >
-                {/* <Stack.Screen name="Onboarding" component={Onboarding} /> */}
                 <Stack.Screen
                   name="OnboardingScreen"
                   component={OnboardingScreen}
                 />
-                {/* <Stack.Screen name="Register" component={Register} /> */}
-                {/* <Stack.Screen
-                name="VerifyNumber"
-                component={VerifyNumberScreen}
-              /> */}
-                {/* <Stack.Screen name="SignUpUserName" component={UserNameScreen} /> */}
-                <Stack.Screen
-                  name="Confirmation"
-                  component={WelcomeMessageScreen}
-                />
-
-                {/* <Stack.Screen
-                name="AccountSetup"
-                component={AccountSetupScreen}
-              /> */}
                 <Stack.Screen
                   name="AccountSetupAddressScreen"
                   component={AccountSetupAddressScreen}
@@ -233,7 +220,15 @@ const App = () => {
                   component={CounsellingRequestScreen}
                 />
 
-                <Stack.Screen name="ChatScreen" component={ChatScreen} />
+                <Stack.Screen
+                  name="CounsellingInboxScreen"
+                  component={CounsellingInboxScreen}
+                />
+
+                <Stack.Screen
+                  name="CounsellingChatScreen"
+                  component={CounsellingChatScreen}
+                />
 
                 {/* <Stack.Screen name="Membership" component={MembershipScreen} />
           

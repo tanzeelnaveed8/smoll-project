@@ -10,6 +10,7 @@ interface BlankPrimaryProps extends ButtonProps {
   link?: string;
   params?: { [key: string]: string };
   navigation?: NavigationType;
+  disableUnderlayColor?: boolean;
 }
 
 const IconButton: React.FC<BlankPrimaryProps> = ({
@@ -19,6 +20,7 @@ const IconButton: React.FC<BlankPrimaryProps> = ({
   navigation,
   bgColor,
   params = {},
+  disableUnderlayColor,
   ...restProps
 }) => {
   return (
@@ -32,7 +34,7 @@ const IconButton: React.FC<BlankPrimaryProps> = ({
       py={0}
       px={0}
       bg={bgColor ? bgColor : "#fff"}
-      underlayColor="#f3f3f3"
+      {...(disableUnderlayColor ? {} : { underlayColor: "#f3f3f3" })}
       fontFamily={fontHauora}
       {...restProps}
     >

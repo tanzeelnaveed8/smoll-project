@@ -16,11 +16,14 @@ const CounsellingRequestScreen: React.FC<{ navigation: NavigationType }> = ({
 
   useEffect(() => {
     if (socket) {
-      socket.on(SocketEventEnum.SESSION_ACCEPTED, async () => {
+      socket.on(SocketEventEnum.SESSION_ACCEPTED, async (data) => {
         // fetch the session
         await fetchSessions();
         // redirect to the session screen
-        navigation.navigate("HomeScreen");
+        navigation.navigate("CounsellingChatScreen", {
+          counsellorId: data.counsellorId,
+          counsellorName: data.counsellorName,
+        });
       });
     }
 
