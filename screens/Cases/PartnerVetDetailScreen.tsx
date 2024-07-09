@@ -4,7 +4,7 @@ import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import Container from "@/components/partials/Container";
 import DoctorCard from "@/components/partials/DoctorCard";
 import Header from "@/components/partials/Header";
-import StarRating from "@/components/partials/StarRating";
+import PartnerVetStarRating from "@/screens/Cases/PartnerVetStarRating";
 import Verified from "@/components/partials/Verified";
 import { fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
 import { useCasesStore } from "@/store/modules/cases";
@@ -108,7 +108,7 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
             Villa 12, Street 24, Jumeirah 3, Dubai, United Arab Emirates
           </Text>
 
-          <StarRating rating={4} />
+          <PartnerVetStarRating rating={4} />
         </Div>
 
         <Div pb={20} borderTopWidth={1} borderColor="#D0D7DC">

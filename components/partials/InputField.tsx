@@ -35,12 +35,15 @@ interface rest {
   onChangeText?: (text: string) => void;
   value?: string;
   focus?: boolean;
+  numberOfLines?: number;
 }
 
 const InputField: React.FC<rest & InputProps> = ({
   marginBottom,
   marginTop,
   borderRadius,
+  multiline,
+  numberOfLines,
   ...rest
 }) => {
   const [valueExist, setValueExist] = useState(false);
@@ -118,7 +121,7 @@ const InputField: React.FC<rest & InputProps> = ({
         bg={rest.disabled ? colorDisableBg : rest.bg ? rest.bg : "transparent"}
         color={rest.disabled ? colorDisableText : colorTextPrimary}
         fontSize={"xl"}
-        h={56}
+        h={multiline ? "auto" : 56}
         loaderColor={colorTextPrimary}
         // px={typeof rest.paddingX === "number" ? rest.paddingX : 12}
         // pr={rest.icon ? 30 : 12}
@@ -146,6 +149,8 @@ const InputField: React.FC<rest & InputProps> = ({
           }
         }}
         value={value}
+        multiline={multiline}
+        numberOfLines={numberOfLines}
       />
     </Div>
   );

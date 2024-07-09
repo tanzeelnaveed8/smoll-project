@@ -31,6 +31,9 @@ import SlotBookingScreen from "./screens/doctorsScreens/SlotBookingScreen";
 import PartnerVetDetailScreen from "./screens/Cases/PartnerVetDetailScreen";
 import PartnerVetConfirmationScreen from "./screens/Cases/PartnerVetConfirmationScreen";
 import PartnerVetSuccessfullScreen from "./screens/Cases/PartnerVetSuccessfullScreen";
+import CaseBriefScreen from "./screens/VideoConsultation/CaseBriefScreen";
+import WaitingRoomScreen from "./screens/VideoConsultation/WaitingRoomScreen";
+import VideoConsultationFeedbackScreen from "./screens/VideoConsultation/VideoConsultationFeedbackScreen";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -96,7 +99,7 @@ const App = () => {
             duration={2500}
           >
             <Stack.Navigator
-              initialRouteName="HomeScreen"
+              initialRouteName="CaseBriefScreen"
               screenOptions={{
                 headerShown: false,
                 // statusBarHidden: true,
@@ -152,7 +155,21 @@ const App = () => {
                 name="PartnerVetSuccessfullScreen"
                 component={PartnerVetSuccessfullScreen}
               />
+              {/* VideoConsultationScreens */}
+              <Stack.Screen
+                name="CaseBriefScreen"
+                component={CaseBriefScreen}
+              />
+              <Stack.Screen
+                name="WaitingRoomScreen"
+                component={WaitingRoomScreen}
+              />
+              <Stack.Screen
+                name="VideoConsultationFeedbackScreen"
+                component={VideoConsultationFeedbackScreen}
+              />
 
+              {/*  */}
               <Stack.Screen name="Account" component={SettingsMainScreen} />
               <Stack.Screen
                 name="PetProfileScreen"

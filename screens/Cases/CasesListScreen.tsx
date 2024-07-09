@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 34,
     borderColor: "transparent",
-    width: "60%",
+    width: "65%",
   },
   activeBtn: {
     paddingHorizontal: 30,
