@@ -5,6 +5,7 @@ import { fontHauora, fontHauoraSemiBold } from "@/constant/constant";
 import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
 import { getAxiosErrMsg } from "@/utils/helpers";
+import { useRoute } from "@react-navigation/native";
 import { AxiosError } from "axios";
 
 import React, { useState } from "react";
@@ -17,6 +18,10 @@ interface Props {
 }
 
 const AccountSetupEmailOtpScreen: React.FC<Props> = (props) => {
+  const route = useRoute();
+  const isUpdatingEmail = (route.params as { updatingEmail: string })
+    ?.updatingEmail;
+
   const toast = useToast();
   const { user, verifyEmail, sendVerificationEmail } = useUserStore();
 
@@ -39,9 +44,13 @@ const AccountSetupEmailOtpScreen: React.FC<Props> = (props) => {
     try {
       await verifyEmail(_otp ?? otp);
 
-      props.navigation.navigate("HomeScreen", {
-        showSetupModal: "true",
-      });
+      if (isUpdatingEmail) {
+        props.navigation.navigate("SettingPersonalInfoScreen");
+      } else {
+        props.navigation.navigate("HomeScreen", {
+          showSetupModal: "true",
+        });
+      }
     } catch (err) {
       const errMsg = getAxiosErrMsg(err as AxiosError);
 

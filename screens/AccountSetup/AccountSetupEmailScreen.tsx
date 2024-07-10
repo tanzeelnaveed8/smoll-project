@@ -4,6 +4,7 @@ import InputField from "@/components/partials/InputField";
 import { fontHauora } from "@/constant/constant";
 import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
+import { useRoute } from "@react-navigation/native";
 import { IconCircleCheck } from "@tabler/icons-react-native";
 
 import React, { useMemo, useState } from "react";
@@ -15,6 +16,10 @@ interface Props {
 }
 
 const AccountSetupEmailScreen: React.FC<Props> = (props) => {
+  const route = useRoute();
+  const isUpdatingEmail = (route.params as { updateEmail: string })
+    ?.updateEmail;
+
   const { updateUser, sendVerificationEmail } = useUserStore();
 
   const [email, setEmail] = useState("");
@@ -34,7 +39,9 @@ const AccountSetupEmailScreen: React.FC<Props> = (props) => {
       await updateUser({ email });
       await sendVerificationEmail();
 
-      props.navigation.navigate("AccountSetupEmailOtpScreen");
+      props.navigation.navigate("AccountSetupEmailOtpScreen", {
+        updatingEmail: isUpdatingEmail,
+      });
     } finally {
       setLoading(false);
     }
@@ -43,11 +50,15 @@ const AccountSetupEmailScreen: React.FC<Props> = (props) => {
   return (
     <Layout
       showBack
-      onBackPress={() =>
-        props.navigation.navigate("HomeScreen", {
-          showSetupModal: "true",
-        })
-      }
+      onBackPress={() => {
+        if (isUpdatingEmail) {
+          props.navigation.navigate("SettingPersonalInfoScreen");
+        } else {
+          props.navigation.navigate("HomeScreen", {
+            showSetupModal: "true",
+          });
+        }
+      }}
     >
       <View style={{ justifyContent: "space-between", flex: 1 }}>
         <Div>

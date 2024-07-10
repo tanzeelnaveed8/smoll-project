@@ -1,73 +1,141 @@
-import React from "react";
-import { Div, Text } from "react-native-magnus";
-import { fontHauora } from "@/constant/constant";
+import React, { useEffect, useState } from "react";
+import { Div, ScrollDiv, Text } from "react-native-magnus";
+import {
+  fontHauora,
+  fontHauoraMedium,
+  fontHauoraSemiBold,
+} from "@/constant/constant";
 import SettingBackButton from "@/components/settings/SettingBackButton";
 import { IconUser, IconEditCircle } from "@tabler/icons-react-native";
 import Container from "@/components/partials/Container";
+import Layout from "@/components/app/Layout";
+import { StyleSheet, TouchableOpacity } from "react-native";
+import { useUserStore } from "@/store/modules/user";
+import { NavigationType } from "@/store/types";
 
-const SettingPersonalInfoScreen = () => {
+const SettingPersonalInfoScreen: React.FC<{ navigation: NavigationType }> = ({
+  navigation,
+}) => {
+  const { user } = useUserStore();
+  const [userDetials, setUserDetails] = useState({ ...user });
+  console.log("userDetails", userDetials);
+
+  useEffect(() => {
+    const obj = {
+      name: user?.name,
+      email: user?.email,
+      villa: user?.villa,
+      city: user?.city,
+      country: user?.country,
+    };
+    setUserDetails(obj);
+  }, [user]);
+
   return (
-    <Container>
-      <Div pt={20}>
-        <Div mb={24}>
-          <SettingBackButton text="Settings" />
-
-          <Text
-            fontSize={"5xl"}
-            fontWeight="400"
-            lineHeight={36}
-            fontFamily={fontHauora}
-            textTransform="capitalize"
+    <Layout
+      showBack
+      backBtnText=""
+      title="Personal Info"
+      onBackPress={() => {
+        navigation.goBack();
+      }}
+    >
+      <ScrollDiv style={styles.container} showsVerticalScrollIndicator={false}>
+        <Div flex={1}>
+          <Div
+            mb={24}
+            w={96}
+            h={96}
+            rounded={100}
+            bg="#EFEFEF"
+            justifyContent="flex-end"
+            pb={15}
+            position="relative"
+            alignItems="center"
           >
-            Personal Info
-          </Text>
-        </Div>
+            <IconUser size={64} color="#222222" strokeWidth={1.5} />
 
-        <Div
-          w={96}
-          h={96}
-          rounded={100}
-          bg="#EFEFEF"
-          justifyContent="flex-end"
-          pb={15}
-          position="relative"
-          alignItems="center"
-        >
-          <IconUser size={64} color="#222222" strokeWidth={1.5} />
+            <Div
+              w={32}
+              h={32}
+              rounded={100}
+              bg="#BFBFBF"
+              position="absolute"
+              right={-12}
+              bottom={20}
+              alignItems="center"
+              justifyContent="center"
+            >
+              <IconEditCircle size={24} color="#222222" />
+            </Div>
+          </Div>
+
+          <Text mb={4} fontSize={"xl"} fontFamily={fontHauoraSemiBold}>
+            Basic Details
+          </Text>
+          <Div mb={32}>
+            <Option title="Name" value={userDetials.name} editable />
+            <Option
+              title="Email address"
+              value={userDetials.email}
+              varified={user?.isEmailVerified}
+              editable
+              onEdit={() => {
+                navigation.navigate("AccountSetupEmailScreen", {
+                  updateEmail: "true",
+                });
+              }}
+            />
+            <Option title="Phone number" value={user?.phone} varified />
+          </Div>
 
           <Div
-            w={32}
-            h={32}
-            rounded={100}
-            bg="#BFBFBF"
-            position="absolute"
-            right={-12}
-            bottom={20}
+            mb={4}
+            flexDir="row"
+            justifyContent="space-between"
             alignItems="center"
-            justifyContent="center"
           >
-            <IconEditCircle size={24} color="#222222" />
+            <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold}>
+              Address
+            </Text>
+            <TouchableOpacity>
+              <Text fontSize={16} lineHeight={24} color="primary">
+                Edit
+              </Text>
+            </TouchableOpacity>
+          </Div>
+
+          <Div>
+            <Option title="Flat/Villa No" value="08" />
+            <Option
+              title="Street address"
+              value="Computer St, Khalid Bin Al Wale..."
+            />
+            <Option title="City" value="Dubai" />
+            <Option title="Postal code" value="116566" />
           </Div>
         </Div>
-
-        <Div mt={24}>
-          <Option title="First Name" value="Fahad" />
-          <Option title="Second name" value="Khan" />
-          <Option title="Email address" value="fahad92@gmail.com" varified />
-          <Option title="Phone number" value="(+971) 82 474 7493" varified />
-        </Div>
-      </Div>
-    </Container>
+      </ScrollDiv>
+    </Layout>
   );
 };
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingTop: 20,
+  },
+});
+
 type OptionPropTypes = {
   title: string;
-  value: string;
+  value: string | undefined | null;
   varified?: boolean;
+  editable?: boolean;
+  onEdit?: () => void;
 };
 const Option = (props: OptionPropTypes) => {
-  const { title, value, varified } = props;
+  const { title, value, varified, onEdit, editable } = props;
   return (
     <React.Fragment>
       <Div
@@ -80,7 +148,12 @@ const Option = (props: OptionPropTypes) => {
         borderBottomColor="#E0E0E0"
       >
         <Div>
-          <Text color="#494949" fontSize="sm" lineHeight={16}>
+          <Text
+            color="#494949"
+            fontSize="sm"
+            fontFamily={fontHauoraMedium}
+            lineHeight={16}
+          >
             {title}
           </Text>
           <Text color="#222222" fontSize={18} lineHeight={24}>
@@ -88,12 +161,22 @@ const Option = (props: OptionPropTypes) => {
           </Text>
         </Div>
 
-        <Text fontSize={16} lineHeight={24} color="#0189F9">
-          Edit
-        </Text>
+        {editable && (
+          <TouchableOpacity onPress={onEdit}>
+            <Text fontSize={16} lineHeight={24} color="primary">
+              {value ? "Edit" : "Add"}
+            </Text>
+          </TouchableOpacity>
+        )}
       </Div>
       {varified && (
-        <Text fontSize="md" lineHeight={20} color="#2F6E20" mt={4}>
+        <Text
+          fontSize="md"
+          lineHeight={20}
+          color="#2F6E20"
+          fontFamily={fontHauoraMedium}
+          mt={4}
+        >
           Verified
         </Text>
       )}

@@ -20,7 +20,20 @@ import CounsellingRequestScreen from "./screens/Counselling/CounsellingRequestSc
 import HomeScreen from "./screens/HomeScreen";
 import { SocketProvider } from "./socket/provider";
 import { CometChatWrapper } from "./utils/chat";
-import PetProfileScreen from "./screens/PetProfile/PetProfileScreen";
+// import PetProfileScreen from "./screens/petProfile/PetProfileScreen";
+// import PetProfileScreen from "./screens/petProfile/PetProfileScreen";
+import CasesListScreen from "./screens/Cases/CasesListScreen";
+import CasesRequestScreen from "./screens/Cases/CasesRequestScreen";
+import PartnerVetScreen from "./screens/Cases/PartnerVetScreen";
+import SlotBookingScreen from "./screens/doctorsScreens/SlotBookingScreen";
+import PartnerVetDetailScreen from "./screens/Cases/PartnerVetDetailScreen";
+import PartnerVetConfirmationScreen from "./screens/Cases/PartnerVetConfirmationScreen";
+import PartnerVetSuccessfullScreen from "./screens/Cases/PartnerVetSuccessfullScreen";
+import CaseBriefScreen from "./screens/VideoConsultation/CaseBriefScreen";
+import WaitingRoomScreen from "./screens/VideoConsultation/WaitingRoomScreen";
+import VideoConsultationFeedbackScreen from "./screens/VideoConsultation/VideoConsultationFeedbackScreen";
+import SettingsMainScreen from "./screens/settings/SettingsMainScreen";
+import SettingPersonalInfoScreen from "./screens/settings/SettingPersonalInfoScreen";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -109,38 +122,80 @@ const App = () => {
                   name="AccountSetupEmailOtpScreen"
                   component={AccountSetupEmailOtpScreen}
                 />
-
                 <Stack.Screen
                   name="HomeScreen"
                   component={HomeScreen}
                   options={{ headerShown: false }}
                 />
-
-                <Stack.Screen
+                {/* <Stack.Screen
                   name="PetProfileScreen"
                   component={PetProfileScreen}
-                />
-
+                /> */}
                 <Stack.Screen
                   name="CounsellingRequestScreen"
                   component={CounsellingRequestScreen}
                 />
-
                 <Stack.Screen
                   name="CounsellingInboxScreen"
                   component={CounsellingInboxScreen}
                 />
-
                 <Stack.Screen
                   name="CounsellingChatScreen"
                   component={CounsellingChatScreen}
+                />
+                <Stack.Screen
+                  // name="PartnerClinic"
+                  name="CasesListScreen"
+                  component={CasesListScreen}
+                />
+                <Stack.Screen
+                  name="CasesRequestScreen"
+                  component={CasesRequestScreen}
+                />
+                <Stack.Screen
+                  name="PartnerVetScreen"
+                  component={PartnerVetScreen}
+                />
+                <Stack.Screen
+                  name="SlotBookingScreen"
+                  component={SlotBookingScreen}
+                />
+                <Stack.Screen
+                  name="PartnerVetDetailScreen"
+                  component={PartnerVetDetailScreen}
+                />
+                <Stack.Screen
+                  name="PartnerVetConfirmationScreen"
+                  component={PartnerVetConfirmationScreen}
+                />
+                <Stack.Screen
+                  name="PartnerVetSuccessfullScreen"
+                  component={PartnerVetSuccessfullScreen}
+                />
+                {/* VideoConsultationScreens */}
+                <Stack.Screen
+                  name="CaseBriefScreen"
+                  component={CaseBriefScreen}
+                />
+                <Stack.Screen
+                  name="WaitingRoomScreen"
+                  component={WaitingRoomScreen}
+                />
+                <Stack.Screen
+                  name="VideoConsultationFeedbackScreen"
+                  component={VideoConsultationFeedbackScreen}
+                />
+                {/*  */}
+                <Stack.Screen name="Account" component={SettingsMainScreen} />
+                <Stack.Screen
+                  name="SettingPersonalInfoScreen"
+                  component={SettingPersonalInfoScreen}
                 />
 
                 {/* <Stack.Screen name="Membership" component={MembershipScreen} />
           
 
               <Stack.Screen name="ChatScreen" component={ChatScreen} /> */}
-
                 {/* <Stack.Screen
               name="UserProfileForm"
               component={

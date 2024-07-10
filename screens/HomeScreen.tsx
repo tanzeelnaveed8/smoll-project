@@ -157,7 +157,11 @@ const HomeScreen: React.FC<Props> = (props) => {
                 strokeWidth={1.5}
               />
             </IconButton>
-            <IconButton>
+            <IconButton
+              onPress={() => {
+                props.navigation.navigate("Account");
+              }}
+            >
               <IconUserCircle
                 width={32}
                 height={32}

@@ -2,6 +2,7 @@ import { ReactElement } from "react";
 import { fontHauora } from "@/constant/constant";
 import { Div, Text, Toggle } from "react-native-magnus";
 import { IconChevronRight } from "@tabler/icons-react-native";
+import { TouchableOpacity } from "react-native";
 
 type PropsType = {
   title: string;
@@ -9,59 +10,69 @@ type PropsType = {
   description?: string;
   toggleBtn?: boolean;
   Icon: ReactElement;
+  onPress?: () => void;
 };
-function SettingButton(props: PropsType) {
-  const { iconSize = 32, description, toggleBtn = false, Icon, title } = props;
+const SettingButton: React.FC<PropsType> = (props) => {
+  const {
+    iconSize = 32,
+    description,
+    toggleBtn = false,
+    Icon,
+    title,
+    onPress,
+  } = props;
   return (
-    <Div
-      w="full"
-      py={16}
-      flexDir="row"
-      justifyContent="space-between"
-      alignItems="center"
-      borderBottomWidth={1}
-      borderBottomColor="#E0E0E0"
-    >
-      <Div flexDir="row" alignItems="flex-start">
-        <Icon color="#222222" size={32} strokeWidth={1.5} />
-        <Div alignSelf="center" ml={12}>
-          <Text
-            color="#222222"
-            fontWeight="400"
-            fontSize={18}
-            fontFamily={fontHauora}
-            lineHeight={24}
-          >
-            {title}
-          </Text>
-          {description && (
+    <TouchableOpacity onPress={onPress}>
+      <Div
+        w="full"
+        py={16}
+        flexDir="row"
+        justifyContent="space-between"
+        alignItems="center"
+        borderBottomWidth={1}
+        borderBottomColor="#E0E0E0"
+      >
+        <Div flexDir="row" alignItems="flex-start">
+          <Icon color="#222222" size={32} strokeWidth={1.5} />
+          <Div alignSelf="center" ml={12}>
             <Text
-              color="#494949"
+              color="#222222"
               fontWeight="400"
-              fontSize={14}
+              fontSize={18}
               fontFamily={fontHauora}
-              lineHeight={20}
-              maxW={240}
+              lineHeight={24}
             >
-              {description}
+              {title}
             </Text>
-          )}
+            {description && (
+              <Text
+                color="#494949"
+                fontWeight="400"
+                fontSize={14}
+                fontFamily={fontHauora}
+                lineHeight={20}
+                maxW={240}
+              >
+                {description}
+              </Text>
+            )}
+          </Div>
         </Div>
-      </Div>
 
-      {!toggleBtn ? (
-        <IconChevronRight fontSize={32} color="#898989" />
-      ) : (
-        <Toggle
-          onPress={() => null}
-          on={true}
-          activeBg="#0189F9"
-          w={52}
-          h={32}
-        />
-      )}
-    </Div>
+        {!toggleBtn ? (
+          <IconChevronRight fontSize={32} color="#898989" />
+        ) : (
+          <Toggle
+            onPress={() => null}
+            on={true}
+            activeBg="#0189F9"
+            w={52}
+            h={32}
+          />
+        )}
+      </Div>
+    </TouchableOpacity>
   );
-}
+};
 
 export default SettingButton;

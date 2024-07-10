@@ -16,6 +16,7 @@ import {
 } from "@tabler/icons-react-native";
 import Container from "@/components/partials/Container";
 import Layout from "@/components/app/Layout";
+import { NavigationType } from "@/store/types";
 
 const options: GroupType[] = [
   {
@@ -26,16 +27,19 @@ const options: GroupType[] = [
         id: 1,
         title: "Personal Info",
         Icon: IconUserCircle,
+        link: "SettingPersonalInfoScreen",
       },
       {
         id: 2,
         title: "Address",
         Icon: IconMap,
+        link: "",
       },
       {
         id: 3,
         title: "Pets Profile",
         Icon: IconPaw,
+        link: "",
       },
       {
         id: 4,
@@ -43,6 +47,7 @@ const options: GroupType[] = [
         Icon: IconBell,
         description: "Enable push notifications to receive important messages.",
         toggleBtn: true,
+        link: "",
       },
     ],
   },
@@ -88,11 +93,13 @@ const options: GroupType[] = [
 // Todos:
 // 1. Person icon needs to be changed
 // 2. Remaining icons needs to be added
-const SettingsMainScreen = () => {
+const SettingsMainScreen: React.FC<{ navigation: NavigationType }> = ({
+  navigation,
+}) => {
   return (
     <Layout>
       <ScrollDiv style={styles.container} showsVerticalScrollIndicator={false}>
-        <Container>
+        <Div>
           <Text
             fontWeight="400"
             fontSize={"5xl"}
@@ -106,7 +113,7 @@ const SettingsMainScreen = () => {
             <React.Fragment key={group.id}>
               <Text
                 fontWeight="400"
-                fontSize={18}
+                fontSize={"xl"}
                 fontFamily={fontHauora}
                 lineHeight={24}
                 mb={8}
@@ -124,6 +131,9 @@ const SettingsMainScreen = () => {
                     description={option?.description}
                     toggleBtn={option?.toggleBtn}
                     Icon={option.Icon}
+                    onPress={() => {
+                      option.link && navigation.navigate(option.link);
+                    }}
                   />
                 ))}
               </Div>
@@ -152,7 +162,7 @@ const SettingsMainScreen = () => {
               App v 12.81
             </Text>
           </Div>
-        </Container>
+        </Div>
       </ScrollDiv>
     </Layout>
   );
@@ -174,6 +184,7 @@ interface OptionType {
   toggleBtn?: boolean;
   iconFontSize?: number;
   Icon: ReactElement;
+  link?: string;
 }
 
 interface GroupType {
