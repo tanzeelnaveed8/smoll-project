@@ -49,8 +49,6 @@ const PetProfileScreen: React.FC<Props> = (props) => {
     chipNumber: 0,
   });
 
-  console.log("pet", pet);
-
   const progress = useMemo(() => (currentStep + 1) / 8, [currentStep]);
 
   const isActionDisabled = useMemo(() => {

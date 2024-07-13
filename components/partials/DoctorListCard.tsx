@@ -1,7 +1,6 @@
-import { Badge, Button, Div, Text } from "react-native-magnus";
+import { fontHauoraMedium } from "@/constant/constant";
 import { IconChevronRight } from "@tabler/icons-react-native";
-import { fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
-import Verified from "./Verified";
+import { Button, Div, Text } from "react-native-magnus";
 import DoctorCard from "./DoctorCard";
 
 type PropTypes = {
@@ -12,65 +11,32 @@ type PropTypes = {
   nextAvailable: string;
   mb?: number;
   onCheckAvailability?: () => void;
+  isOnline?: boolean;
+  image?: string;
 };
 
-const DoctorListCard = (props: PropTypes) => {
+const DoctorListCard: React.FC<PropTypes> = (props) => {
   const {
     name,
     speciality,
     experience,
-    verified = false,
+    verified,
     nextAvailable,
     mb,
     onCheckAvailability,
+    isOnline,
+    image,
   } = props;
+
   return (
     <Div pb={20} borderBottomWidth={1} borderColor="#E0E0E0" mb={mb}>
-      {/* <Div flexDir="row">
-        <Badge
-          right={34}
-          top={8}
-          h={8}
-          w={8}
-          borderWidth={2}
-          borderColor="#fff"
-        >
-          <Div w={100} h={100} rounded={100} bg="#eeeeee" mr={24}></Div>
-        </Badge>
-        <Div style={{ gap: 4 }}>
-          <Text
-            fontFamily={fontHauoraSemiBold}
-            fontSize="xl"
-            lineHeight={24}
-            color="#222222"
-          >
-            {name}
-          </Text>
-          <Text
-            fontSize="md"
-            fontFamily={fontHauoraMedium}
-            color="#494949"
-            lineHeight={20}
-          >
-            {speciality}
-          </Text>
-          <Text
-            fontSize="md"
-            fontFamily={fontHauoraMedium}
-            color="#494949"
-            lineHeight={20}
-          >
-            {experience} yrs of experience
-          </Text>
-
-          {verified && <Verified />}
-        </Div>
-      </Div> */}
       <DoctorCard
         name={name}
         experience={experience}
         speciality={speciality}
         verified={verified}
+        isOnline={isOnline}
+        image={image}
       />
 
       {/* card footer */}
@@ -82,7 +48,7 @@ const DoctorListCard = (props: PropTypes) => {
             color="#494949"
             lineHeight={20}
           >
-            Next Avaialble at
+            Next Available at
           </Text>
           <Text
             fontSize="md"

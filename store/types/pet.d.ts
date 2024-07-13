@@ -10,7 +10,7 @@ export enum PetSpeciesEnum {
   CAT = "cat",
 }
 
-export type PetDetail = {
+export interface PetDetail {
   name: string;
   age: number;
   weight: number;
@@ -21,20 +21,27 @@ export type PetDetail = {
   dob: string;
   chipNumber: number;
   photos: UploadedFile[];
-};
+}
 
-export interface Pet extends Pick<PetDetail, ["id", "name", "photos"]> {}
+export interface Pet {
+  id: string;
+  name: string;
+  photos: UploadedFile[];
+}
+
 export interface PetPayloadDto extends PetDetail {}
-
 export interface PetBreeds {
   cats: string[];
   dogs: string[];
 }
 
 export interface PetState {
+  pets: Nullable<Pet[]>;
   petsDetailMap: Map<string, Nullable<PetDetail>>;
   petBreeds: Nullable<PetBreeds>;
+
   fetchPetBreeds: () => Promise<void>;
+  fetchPets: () => Promise<void>;
   addPet: (pet: PetPayloadDto) => Promise<PetDetail>;
   updatePet: (id: string, payload: UpdatePetPayloadDto) => Promise<PetDetail>;
 }

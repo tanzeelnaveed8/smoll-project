@@ -2,11 +2,14 @@ import { CalendarProvider, ExpandableCalendar } from "react-native-calendars";
 import { Div, Text } from "react-native-magnus";
 import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react-native";
 import { fontHauoraSemiBold } from "@/constant/constant";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import dayjs from "dayjs";
+import { ExpertAvailability } from "@/store/types/expert";
 
-// Todo: it needs to be revisited
-const currentDate = new Date();
-// Format the date
-const formattedDate = currentDate.toISOString().slice(0, 10);
+interface Props {
+  onSelect?: (date: string) => void;
+  // allAvailability: ExpertAvailability[];
+}
 
 const CalendarHeader = ({ date }: { date: string }) => {
   return (
@@ -21,11 +24,53 @@ const CalendarHeader = ({ date }: { date: string }) => {
   );
 };
 
-const AvailabilityAndDateSelector = () => {
+const AvailabilityAndDateSelector: React.FC<Props> = ({
+  onSelect,
+  // allAvailability,
+}) => {
+  const [selectedDate, setSelectedDate] = useState(new Date().toString());
+
+  const handleDateSelect = (date: string) => {
+    const formattedDate = dayjs(date).format("YYYY-MM-DD");
+    setSelectedDate(formattedDate);
+
+    if (onSelect) {
+      onSelect(formattedDate);
+    }
+  };
+
+  useEffect(() => {
+    console.log(selectedDate);
+  }, [selectedDate]);
+
+  // const isDateEnabled = useCallback(
+  //   (date: string) => {
+  //     const enabledDays = allAvailability.map((a) => a.dayOfWeek);
+  //     const enabledDates = allAvailability.map((a) => a.date);
+
+  //     return (
+  //       enabledDates.includes(date) ||
+  //       enabledDays.includes(dayjs(date).format("ddd").toLowerCase())
+  //     );
+  //   },
+  //   [allAvailability]
+  // );
+
+  // const datesCollection = useMemo(
+  //   () =>
+  //     Array.from({ length: 180 }, (_, i) => {
+  //       // Changed 365 to 180 for 6 months
+  //       const date = dayjs().add(i, "day").format("YYYY-MM-DD");
+  //       return { [date]: { disabled: !isDateEnabled(date) } };
+  //     }).reduce((acc, cur) => ({ ...acc, ...cur }), {}),
+  //   [isDateEnabled]
+  // );
+
   return (
     <Div style={{ height: 136 }}>
-      <CalendarProvider date={formattedDate}>
+      <CalendarProvider date={selectedDate}>
         <ExpandableCalendar
+          disableWeekScroll
           allowShadow={false}
           calendarStyle={{
             borderBottomWidth: 1,
@@ -33,27 +78,30 @@ const AvailabilityAndDateSelector = () => {
             paddingBottom: 16,
             paddingHorizontal: 0,
           }}
-          headerStyle={{ paddingHorizontal: 0 }}
-          // style={{ paddingHorizontal: 0 }}
-          // indicatorStyle=""
-          // style={{}}
-          // numColumns={4}
+          // headerStyle={{ paddingHorizontal: 0 }}
           columnWrapperStyle={{ padding: 0, backgroundColor: "red" }}
           disablePan
           hideKnob
-          monthFormat="dddd, MMM d yyyy"
+          markedDates={{}}
+          current={selectedDate}
+          animateScroll={true}
+          minDate={dayjs().format("YYYY-MM-DD")}
+          disableAllTouchEventsForDisabledDays
+          // monthFormat="dddd, MMM d yyyy"
           renderHeader={(date) => (
-            <CalendarHeader date={date.toString("dddd, MMM d yyyy")} />
+            <CalendarHeader date={dayjs(selectedDate).format("dddd, MMM D")} />
           )}
           renderArrow={(direction) => (
-            <Text>
-              {direction === "left" ? (
+            <Div>
+              {direction === "left" &&
+              dayjs(selectedDate).isAfter(dayjs(), "day") ? (
                 <IconChevronLeft size={24} color="#494949" strokeWidth={1.5} />
-              ) : (
+              ) : direction === "right" ? (
                 <IconChevronRight size={24} color="#494949" strokeWidth={1.5} />
-              )}
-            </Text>
+              ) : null}
+            </Div>
           )}
+          onDayPress={(day) => handleDateSelect(day.dateString)}
         />
       </CalendarProvider>
     </Div>

@@ -11,8 +11,6 @@ interface Props {
 const CounsellingInboxScreen: React.FC<Props> = (props) => {
   const { sessions } = useCounsellorStore();
 
-  console.log("s", sessions);
-
   return (
     <Layout
       showBack

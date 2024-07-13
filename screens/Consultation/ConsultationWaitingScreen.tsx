@@ -1,25 +1,57 @@
 import Layout from "@/components/app/Layout";
-import { fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
+import {
+  colorPrimary,
+  fontHauoraMedium,
+  fontHauoraSemiBold,
+} from "@/constant/constant";
+import { useExpertStore } from "@/store/modules/expert";
 import { NavigationType } from "@/store/types";
+import { FindOneConsultationResDto } from "@/store/types/expert";
+import { useRoute } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { Dimensions, TouchableOpacity } from "react-native";
-import { Button, Div, Image, Text } from "react-native-magnus";
-import * as Progress from "react-native-progress";
+import { ActivityIndicator, TouchableOpacity } from "react-native";
+import { Div, Image, Text } from "react-native-magnus";
 
-const WaitingRoomScreen: React.FC<{ navigation: NavigationType }> = ({
+const ConsultationWaitingScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
-  const initialTime = 154;
-  const [time, setTime] = useState(initialTime); // Initial time in seconds (2:34)
+  const route = useRoute();
+  const { findOneConsultation } = useExpertStore();
+
+  const consultationId = (route.params as Record<string, string>)
+    ?.consultationId;
+
+  const [loading, setLoading] = useState(true);
+  const [consultation, setConsultation] = useState<FindOneConsultationResDto>();
 
   useEffect(() => {
-    if (time > 0) {
-      const timerId = setInterval(() => {
-        setTime((prevTime) => prevTime - 1);
-      }, 1000);
-      return () => clearInterval(timerId);
+    findConsultation();
+  }, []);
+
+  // const initialTime = 154;
+  // const [time, setTime] = useState(initialTime);
+
+  // useEffect(() => {
+  //   if (time > 0) {
+  //     const timerId = setInterval(() => {
+  //       setTime((prevTime) => prevTime - 1);
+  //     }, 1000);
+  //     return () => clearInterval(timerId);
+  //   }
+  // }, [time]);
+
+  const findConsultation = async () => {
+    try {
+      setLoading(true);
+
+      const consultation = await findOneConsultation(consultationId);
+      console.log("c", consultation);
+
+      setConsultation(consultation);
+    } finally {
+      setLoading(false);
     }
-  }, [time]);
+  };
 
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
@@ -28,7 +60,7 @@ const WaitingRoomScreen: React.FC<{ navigation: NavigationType }> = ({
   };
 
   return (
-    <Layout showCloseIcon backBtnText="" title="Waiting Room">
+    <Layout title="Waiting Room" loading={loading || !consultation}>
       <Div flex={1} mt={72} alignItems="center" w={252} mx={"auto"}>
         <Image
           w={84}
@@ -38,7 +70,7 @@ const WaitingRoomScreen: React.FC<{ navigation: NavigationType }> = ({
           mb={12}
         />
         <Text fontSize={"xl"} fontFamily={fontHauoraMedium}>
-          Dr. Abbas Sheikh
+          {consultation?.vet.name}
         </Text>
         <Text
           color="darkGreyText"
@@ -46,10 +78,14 @@ const WaitingRoomScreen: React.FC<{ navigation: NavigationType }> = ({
           fontFamily={fontHauoraMedium}
           mb={32}
         >
-          DVM, GPCERT (FelP)
+          {consultation?.vet.designation}
         </Text>
 
-        <Text fontSize={40}>{formatTime(time)}</Text>
+        <Div mt={18} mb={24}>
+          <ActivityIndicator size="large" color={colorPrimary} />
+        </Div>
+
+        {/* <Text fontSize={40}>{formatTime(time)}</Text>
 
         <Text fontSize={"lg"} fontFamily={fontHauoraMedium} mb={12}>
           Time left
@@ -67,10 +103,10 @@ const WaitingRoomScreen: React.FC<{ navigation: NavigationType }> = ({
             width: "100%",
             marginBottom: 32,
           }}
-        />
+        /> */}
 
         <Text fontSize={"xl"} fontFamily={fontHauoraMedium} textAlign="center">
-          Hang on, Dr Abbas Sheikh is checking Lucy case
+          Hang on, {consultation?.vet.name} is checking Lucy case
         </Text>
       </Div>
 
@@ -92,4 +128,4 @@ const WaitingRoomScreen: React.FC<{ navigation: NavigationType }> = ({
   );
 };
 
-export default WaitingRoomScreen;
+export default ConsultationWaitingScreen;

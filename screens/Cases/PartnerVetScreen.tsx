@@ -6,7 +6,7 @@ import Container from "@/components/partials/Container";
 import Layout from "@/components/app/Layout";
 import { ActivityIndicator, Dimensions, FlatList } from "react-native";
 import { useEffect, useState } from "react";
-import { useCasesStore } from "@/store/modules/cases";
+import { useCasesStore } from "@/store/modules/case";
 import { NavigationType } from "@/store/types";
 
 const doctorList = [

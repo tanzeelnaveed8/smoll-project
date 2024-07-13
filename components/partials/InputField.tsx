@@ -35,7 +35,6 @@ interface rest {
   onChangeText?: (text: string) => void;
   value?: string;
   focus?: boolean;
-  numberOfLines?: number;
 }
 
 const InputField: React.FC<rest & InputProps> = ({
@@ -43,7 +42,6 @@ const InputField: React.FC<rest & InputProps> = ({
   marginTop,
   borderRadius,
   multiline,
-  numberOfLines,
   ...rest
 }) => {
   const [valueExist, setValueExist] = useState(false);
@@ -150,7 +148,6 @@ const InputField: React.FC<rest & InputProps> = ({
         }}
         value={value}
         multiline={multiline}
-        numberOfLines={numberOfLines}
       />
     </Div>
   );

@@ -21,6 +21,12 @@ import HomeScreen from "./screens/HomeScreen";
 import { SocketProvider } from "./socket/provider";
 import { CometChatWrapper } from "./utils/chat";
 import PetProfileScreen from "./screens/PetProfile/PetProfileScreen";
+import ExpertsListScreen from "./screens/Experts/ExpertsListScreen";
+import ExpertsListDetailScreen from "./screens/Experts/ExpertsListDetailScreen";
+import ExpertsChatScreen from "./screens/Experts/ExpertsChatScreen";
+import ExpertsInboxScreen from "./screens/Experts/ExpertsInboxScreen";
+import ConsultationCaseBriefScreen from "./screens/Consultation/ConsultationCaseBriefScreen";
+import ConsultationWaitingScreen from "./screens/Consultation/ConsultationWaitingScreen";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -134,6 +140,36 @@ const App = () => {
                 <Stack.Screen
                   name="CounsellingChatScreen"
                   component={CounsellingChatScreen}
+                />
+
+                <Stack.Screen
+                  name="ExpertsListScreen"
+                  component={ExpertsListScreen}
+                />
+
+                <Stack.Screen
+                  name="ExpertsListDetailScreen"
+                  component={ExpertsListDetailScreen}
+                />
+
+                <Stack.Screen
+                  name="ExpertsInboxScreen"
+                  component={ExpertsInboxScreen}
+                />
+
+                <Stack.Screen
+                  name="ExpertsChatScreen"
+                  component={ExpertsChatScreen}
+                />
+
+                <Stack.Screen
+                  name="ConsultationCaseBriefScreen"
+                  component={ConsultationCaseBriefScreen}
+                />
+
+                <Stack.Screen
+                  name="ConsultationWaitingScreen"
+                  component={ConsultationWaitingScreen}
                 />
 
                 {/* <Stack.Screen name="Membership" component={MembershipScreen} />
