@@ -17,19 +17,19 @@ const SettingPersonalInfoScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
   const { user } = useUserStore();
-  const [userDetials, setUserDetails] = useState({ ...user });
-  console.log("userDetails", userDetials);
+  console.log("user", user);
 
-  useEffect(() => {
-    const obj = {
-      name: user?.name,
-      email: user?.email,
-      villa: user?.villa,
-      city: user?.city,
-      country: user?.country,
-    };
-    setUserDetails(obj);
-  }, [user]);
+  // const [userDetials, setUserDetails] = useState({ ...user });
+  // useEffect(() => {
+  //   const obj = {
+  //     name: user?.name,
+  //     email: user?.email,
+  //     villa: user?.villa,
+  //     city: user?.city,
+  //     country: user?.country,
+  //   };
+  //   setUserDetails(obj);
+  // }, [user]);
 
   return (
     <Layout
@@ -74,10 +74,22 @@ const SettingPersonalInfoScreen: React.FC<{ navigation: NavigationType }> = ({
             Basic Details
           </Text>
           <Div mb={32}>
-            <Option title="Name" value={userDetials.name} editable />
+            <Option
+              title="Name"
+              value={user?.name}
+              editable
+              onEdit={() => {
+                navigation.navigate("EditInfoScreen", {
+                  heading: "What should we call you?",
+                  placeholder: "Name",
+                  fieldKey: "name",
+                  value: `${user?.name || ""}`,
+                });
+              }}
+            />
             <Option
               title="Email address"
-              value={userDetials.email}
+              value={user?.email}
               varified={user?.isEmailVerified}
               editable
               onEdit={() => {
@@ -98,7 +110,13 @@ const SettingPersonalInfoScreen: React.FC<{ navigation: NavigationType }> = ({
             <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold}>
               Address
             </Text>
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("AccountSetupAddressScreen", {
+                  updating: "true",
+                });
+              }}
+            >
               <Text fontSize={16} lineHeight={24} color="primary">
                 Edit
               </Text>
@@ -106,13 +124,10 @@ const SettingPersonalInfoScreen: React.FC<{ navigation: NavigationType }> = ({
           </Div>
 
           <Div>
-            <Option title="Flat/Villa No" value="08" />
-            <Option
-              title="Street address"
-              value="Computer St, Khalid Bin Al Wale..."
-            />
-            <Option title="City" value="Dubai" />
-            <Option title="Postal code" value="116566" />
+            <Option title="Flat/Villa No" value={user?.villa} />
+            <Option title="Street address" value={user?.address} />
+            <Option title="City" value={user?.country} />
+            <Option title="Postal code" value={user?.postalCode} />
           </Div>
         </Div>
       </ScrollDiv>

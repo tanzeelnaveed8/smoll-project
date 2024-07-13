@@ -9,7 +9,7 @@ import { NavigationType } from "@/store/types";
 import { getAxiosErrMsg } from "@/utils/helpers";
 import { useRoute } from "@react-navigation/native";
 import { AxiosError } from "axios";
-import React, { createRef, useState } from "react";
+import React, { createRef, useEffect, useState } from "react";
 import { Div, ScrollDiv, Text } from "react-native-magnus";
 import { useToast } from "react-native-toast-notifications";
 
@@ -18,13 +18,11 @@ interface Props {
 }
 
 const AccountSetupAddressScreen: React.FC<Props> = (props) => {
-  // const route = useRoute();
-  // const isUpdating = (route.params as { updating: string })?.updating;
-
-  // console.log("isUpdating address", isUpdating);
+  const route = useRoute();
+  const isUpdating = (route.params as { updating: string })?.updating;
 
   const toast = useToast();
-  const { updateUser } = useUserStore();
+  const { updateUser, user } = useUserStore();
 
   const [loading, setLoading] = useState(false);
 
@@ -32,7 +30,7 @@ const AccountSetupAddressScreen: React.FC<Props> = (props) => {
     villa: "",
     street: "",
     city: "",
-    state: "",
+    // state: "",
     country: "",
     postalCode: "",
   });
@@ -54,11 +52,16 @@ const AccountSetupAddressScreen: React.FC<Props> = (props) => {
         country: address.country,
         timeZone: "Asia/Kolkata", // TODO: Need to update this.
         villa: address.villa,
+        postalCode: address.postalCode,
       });
 
-      props.navigation.navigate("HomeScreen", {
-        showSetupModal: "true",
-      });
+      if (isUpdating) {
+        props.navigation.navigate("SettingPersonalInfoScreen");
+      } else {
+        props.navigation.navigate("HomeScreen", {
+          showSetupModal: "true",
+        });
+      }
     } catch (err) {
       const errMsg = getAxiosErrMsg(err as AxiosError);
 
@@ -70,14 +73,37 @@ const AccountSetupAddressScreen: React.FC<Props> = (props) => {
     }
   };
 
+  useEffect(() => {
+    if (isUpdating && user) {
+      const userCopy = { ...user } as {
+        villa: string;
+        address: string;
+        city: string;
+        country: string;
+        postalCode: string;
+      };
+      setAddress({
+        villa: userCopy?.villa,
+        street: userCopy?.address,
+        city: userCopy?.city,
+        country: userCopy?.country,
+        postalCode: userCopy?.postalCode,
+      });
+    }
+  }, [user]);
+
   return (
     <Layout
       showBack
-      onBackPress={() =>
-        props.navigation.navigate("HomeScreen", {
-          showSetupModal: "true",
-        })
-      }
+      onBackPress={() => {
+        if (isUpdating) {
+          props.navigation.navigate("SettingPersonalInfoScreen");
+        } else {
+          props.navigation.navigate("HomeScreen", {
+            showSetupModal: "true",
+          });
+        }
+      }}
     >
       <ScrollDiv style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
         <Div flex={1} justifyContent="space-between">

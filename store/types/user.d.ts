@@ -8,6 +8,7 @@ export type UpdateUserPayloadDto = Partial<{
   city: string;
   country: string;
   timeZone: string;
+  postalCode: string;
 }>;
 
 export interface User {

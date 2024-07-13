@@ -21,7 +21,6 @@ export const useUserStore = create<UserState>((set, get) => ({
 
   async updateUser(payload) {
     const res = await api.patch(`/members/me`, payload);
-
     set(() => ({
       user: res.data,
     }));

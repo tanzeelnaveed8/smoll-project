@@ -36,6 +36,7 @@ interface rest {
   value?: string;
   focus?: boolean;
   numberOfLines?: number;
+  h?: number | string;
 }
 
 const InputField: React.FC<rest & InputProps> = ({
@@ -44,14 +45,21 @@ const InputField: React.FC<rest & InputProps> = ({
   borderRadius,
   multiline,
   numberOfLines,
+  h,
   ...rest
 }) => {
-  const [valueExist, setValueExist] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const { floatingPlaceholder, onChangeText, value } = rest;
+  const [valueExist, setValueExist] = useState(value ? true : false);
   const inputRef = useRef<any>(null);
 
-  const topPosition = useRef(new Animated.Value(18)).current; // Initial top position
+  const topPosition = useRef(new Animated.Value(value ? 4 : 18)).current; // Initial top position
+
+  useEffect(() => {
+    if (value) {
+      setValueExist(true);
+    }
+  }, [value]);
 
   const handleFocus = () => {
     setIsFocused(true);
@@ -65,7 +73,6 @@ const InputField: React.FC<rest & InputProps> = ({
   const handleBlur = () => {
     setIsFocused(false);
     Keyboard.dismiss();
-
     if (valueExist) return;
     Animated.timing(topPosition, {
       toValue: 16, // Reset top position when not focused
@@ -121,7 +128,7 @@ const InputField: React.FC<rest & InputProps> = ({
         bg={rest.disabled ? colorDisableBg : rest.bg ? rest.bg : "transparent"}
         color={rest.disabled ? colorDisableText : colorTextPrimary}
         fontSize={"xl"}
-        h={multiline ? "auto" : 56}
+        h={h ? h : multiline ? "auto" : 56}
         loaderColor={colorTextPrimary}
         // px={typeof rest.paddingX === "number" ? rest.paddingX : 12}
         // pr={rest.icon ? 30 : 12}

@@ -22,6 +22,7 @@ import PetProfileSpayedScreen from "./PetProfileSpayedScreen";
 import PetProfileBasicDetailScreens from "./PetProfileBasicDetailScreens";
 import { useRoute } from "@react-navigation/native";
 import { NavigationType } from "@/store/types";
+import { useUserStore } from "@/store/modules/user";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -29,10 +30,13 @@ interface Props {
   navigation: NavigationType;
 }
 
+const totalSteps = 8;
+
 const PetProfileScreen: React.FC<Props> = (props) => {
   const route = useRoute();
   const toast = useToast();
-  const { addPet } = usePetStore();
+  const { addPet, healthHistoryMap } = usePetStore();
+  const [newPetId, setNewPetId] = useState("");
 
   const [currentStep, setCurrentStep] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -49,11 +53,13 @@ const PetProfileScreen: React.FC<Props> = (props) => {
     chipNumber: 0,
   });
 
-  console.log("pet", pet);
+  // console.log("petState:", pet);
 
-  const progress = useMemo(() => (currentStep + 1) / 8, [currentStep]);
+  const progress = useMemo(() => (currentStep + 1) / totalSteps, [currentStep]);
 
   const isActionDisabled = useMemo(() => {
+    const healthHistoryLength = healthHistoryMap.get(newPetId)?.length;
+
     switch (currentStep) {
       case 0:
         return !pet.name.length;
@@ -65,17 +71,21 @@ const PetProfileScreen: React.FC<Props> = (props) => {
         return !pet.weight;
       case 7:
         return !pet.photos.length;
+      case 8:
+        return !healthHistoryLength;
     }
 
     return false;
-  }, [currentStep, pet]);
+  }, [currentStep, pet, healthHistoryMap]);
 
   const handleNext = async () => {
-    if (currentStep === 6) {
+    if (currentStep === 7) {
       try {
         setLoading(true);
 
-        await addPet(pet);
+        const response = await addPet(pet);
+        console.log("response----", response);
+        setNewPetId(`${response.id}`);
 
         toast.show("Pet profile created successfully");
       } finally {
@@ -83,7 +93,11 @@ const PetProfileScreen: React.FC<Props> = (props) => {
       }
     }
 
-    setCurrentStep((step) => step + 1);
+    if (currentStep === 8) {
+      props.navigation.navigate("PetCongratulationsScreen");
+    } else {
+      setCurrentStep((step) => step + 1);
+    }
   };
 
   const handleBack = () => {
@@ -148,7 +162,7 @@ const PetProfileScreen: React.FC<Props> = (props) => {
             setPet={setPet}
           />
         )}
-        {currentStep === 8 && <AddMedicalHistoryScreen />}
+        {currentStep === 8 && <AddMedicalHistoryScreen petId={newPetId} />}
       </Div>
 
       <Div>

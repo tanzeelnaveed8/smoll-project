@@ -66,6 +66,8 @@ const HomeScreen: React.FC<Props> = (props) => {
   const [showAccountSetupModal, setShowAccountSetupModal] = useState(false);
   const [showCongratsModal, setShowCongratsModal] = useState(false);
 
+  console.log("showAccountSetupModal", showAccountSetupModal);
+
   useEffect(() => {
     const showSetupModal =
       (route.params as Record<string, string>)?.showSetupModal === "true";

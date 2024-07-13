@@ -49,7 +49,7 @@ const PetProfileBasicDetailScreens: React.FC<Props> = (props) => {
         placeholder="Any pre-existing conditions (Optional)"
         marginBottom={20}
         multiline
-        numberOfLines={10}
+        numberOfLines={6}
         inputStyle={{
           borderRadius: 12,
         }}

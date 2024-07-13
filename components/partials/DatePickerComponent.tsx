@@ -7,11 +7,13 @@ import { TouchableOpacity } from "react-native";
 interface DatePickerComponentProps {
   value: string;
   onChange: (dob: any) => void;
+  py?: number;
 }
 
 const DatePickerComponent: React.FC<DatePickerComponentProps> = ({
   value,
   onChange,
+  py,
 }) => {
   const [date, setDate] = useState(new Date(value));
   const [open, setOpen] = useState(false);
@@ -35,7 +37,7 @@ const DatePickerComponent: React.FC<DatePickerComponentProps> = ({
     <Div>
       <TouchableOpacity onPress={() => setOpen(true)}>
         <Button
-          py={16}
+          py={py ? py : 16}
           px={12}
           fontSize={18}
           rounded={12}

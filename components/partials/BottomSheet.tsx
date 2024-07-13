@@ -9,6 +9,7 @@ interface Props extends ModalProps {
   barMb?: number;
   title?: string;
   height?: string | number;
+  px?: number;
 }
 
 const BottomSheet: React.FC<Props> = (props) => {
@@ -19,6 +20,7 @@ const BottomSheet: React.FC<Props> = (props) => {
     onCloseIconClick,
     barMb = 28,
     height,
+    px,
     ...restProps
   } = props;
 
@@ -87,7 +89,7 @@ const BottomSheet: React.FC<Props> = (props) => {
         <></>
       )}
 
-      <Div mt={16} px={20} pb={20}>
+      <Div mt={16} px={typeof px === "number" ? px : 20} pb={20}>
         {children}
       </Div>
     </Modal>

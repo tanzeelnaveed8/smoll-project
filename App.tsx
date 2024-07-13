@@ -21,7 +21,7 @@ import HomeScreen from "./screens/HomeScreen";
 import { SocketProvider } from "./socket/provider";
 import { CometChatWrapper } from "./utils/chat";
 // import PetProfileScreen from "./screens/petProfile/PetProfileScreen";
-// import PetProfileScreen from "./screens/petProfile/PetProfileScreen";
+import PetProfileScreen from "./screens/petProfile/PetProfileScreen";
 import CasesListScreen from "./screens/Cases/CasesListScreen";
 import CasesRequestScreen from "./screens/Cases/CasesRequestScreen";
 import PartnerVetScreen from "./screens/Cases/PartnerVetScreen";
@@ -34,6 +34,8 @@ import WaitingRoomScreen from "./screens/VideoConsultation/WaitingRoomScreen";
 import VideoConsultationFeedbackScreen from "./screens/VideoConsultation/VideoConsultationFeedbackScreen";
 import SettingsMainScreen from "./screens/settings/SettingsMainScreen";
 import SettingPersonalInfoScreen from "./screens/settings/SettingPersonalInfoScreen";
+import EditInfoScreen from "./screens/settings/EditInfoScreen";
+import PetCongratulationsScreen from "./screens/petProfileForm/PetCongratulationsScreen";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -127,10 +129,15 @@ const App = () => {
                   component={HomeScreen}
                   options={{ headerShown: false }}
                 />
-                {/* <Stack.Screen
+                <Stack.Screen
                   name="PetProfileScreen"
                   component={PetProfileScreen}
-                /> */}
+                />
+                <Stack.Screen
+                  name="PetCongratulationsScreen"
+                  component={PetCongratulationsScreen}
+                />
+
                 <Stack.Screen
                   name="CounsellingRequestScreen"
                   component={CounsellingRequestScreen}
@@ -191,7 +198,10 @@ const App = () => {
                   name="SettingPersonalInfoScreen"
                   component={SettingPersonalInfoScreen}
                 />
-
+                <Stack.Screen
+                  name="EditInfoScreen"
+                  component={EditInfoScreen}
+                />
                 {/* <Stack.Screen name="Membership" component={MembershipScreen} />
           
 
