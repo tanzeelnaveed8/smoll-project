@@ -185,7 +185,6 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
         <InputField
           placeholder="e.g. My cat is vomiting and color is white......"
           mb={24}
-          h={300}
           value={description}
           onChangeText={setDescription}
         />

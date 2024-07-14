@@ -27,8 +27,8 @@ import ExpertsChatScreen from "./screens/Experts/ExpertsChatScreen";
 import ExpertsInboxScreen from "./screens/Experts/ExpertsInboxScreen";
 import ExpertsListDetailScreen from "./screens/Experts/ExpertsListDetailScreen";
 import ExpertsListScreen from "./screens/Experts/ExpertsListScreen";
-import PetCongratulationsScreen from "./screens/petProfileForm/PetCongratulationsScreen";
-import PetProfileScreen from "./screens/petProfileForm/PetProfileScreen";
+import PetProfileCongratulationsScreen from "./screens/PetProfile/PetProfileCongratulationsScreen";
+import PetProfileScreen from "./screens/PetProfile/PetProfileScreen";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -127,8 +127,8 @@ const App = () => {
                   component={PetProfileScreen}
                 />
                 <Stack.Screen
-                  name="PetCongratulationsScreen"
-                  component={PetCongratulationsScreen}
+                  name="PetProfileCongratulationsScreen"
+                  component={PetProfileCongratulationsScreen}
                 />
 
                 <Stack.Screen

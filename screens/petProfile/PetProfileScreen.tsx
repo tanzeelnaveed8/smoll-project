@@ -9,7 +9,6 @@ import React, { useMemo, useState } from "react";
 import { Dimensions, StyleSheet } from "react-native";
 import { Div } from "react-native-magnus";
 import * as Progress from "react-native-progress";
-import AddMedicalHistoryScreen from "../petProfileForm/AddMedicalHistoryScreen";
 import PetImageUploadScreen from "./PetProfileImageScreen";
 import PetProfileBreedScreen from "./PetProfileBreedScreen";
 import PetProfileDOBScreen from "./PetProfileDOBScreen";
@@ -22,7 +21,7 @@ import PetProfileSpayedScreen from "./PetProfileSpayedScreen";
 import PetProfileBasicDetailScreens from "./PetProfileBasicDetailScreens";
 import { useRoute } from "@react-navigation/native";
 import { NavigationType } from "@/store/types";
-import { useUserStore } from "@/store/modules/user";
+import PetProfileMedicalHistoryScreen from "./PetProfileMedicalHistoryScreen";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -82,7 +81,6 @@ const PetProfileScreen: React.FC<Props> = (props) => {
         setLoading(true);
 
         const response = await addPet(pet);
-        console.log("response----", response);
         setNewPetId(`${response.id}`);
 
         toast.show("Pet profile created successfully");
@@ -92,7 +90,11 @@ const PetProfileScreen: React.FC<Props> = (props) => {
     }
 
     if (currentStep === 8) {
-      props.navigation.navigate("PetCongratulationsScreen");
+      const comingFrom = (route.params as Record<string, string>)?.from;
+
+      props.navigation.navigate("PetProfileCongratulationsScreen", {
+        navigateTo: comingFrom === "modal" ? "HomeScreen" : comingFrom,
+      });
     } else {
       setCurrentStep((step) => step + 1);
     }
@@ -160,7 +162,9 @@ const PetProfileScreen: React.FC<Props> = (props) => {
             setPet={setPet}
           />
         )}
-        {currentStep === 8 && <AddMedicalHistoryScreen petId={newPetId} />}
+        {currentStep === 8 && (
+          <PetProfileMedicalHistoryScreen petId={newPetId} />
+        )}
       </Div>
 
       <Div>

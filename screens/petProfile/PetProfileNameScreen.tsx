@@ -9,6 +9,8 @@ interface Props {
 }
 
 const PetProfileNameScreen: React.FC<Props> = (props) => {
+  console.log("props", props);
+
   return (
     <Div>
       <Text fontSize={"4xl"} mb={20}>
