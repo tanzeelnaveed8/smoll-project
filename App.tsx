@@ -27,6 +27,7 @@ import ExpertsChatScreen from "./screens/Experts/ExpertsChatScreen";
 import ExpertsInboxScreen from "./screens/Experts/ExpertsInboxScreen";
 import ConsultationCaseBriefScreen from "./screens/Consultation/ConsultationCaseBriefScreen";
 import ConsultationWaitingScreen from "./screens/Consultation/ConsultationWaitingScreen";
+import ConsultationVideoScreen from "./screens/Consultation/ConsultationVideoScreen";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -170,6 +171,11 @@ const App = () => {
                 <Stack.Screen
                   name="ConsultationWaitingScreen"
                   component={ConsultationWaitingScreen}
+                />
+
+                <Stack.Screen
+                  name="ConsultationVideoScreen"
+                  component={ConsultationVideoScreen}
                 />
 
                 {/* <Stack.Screen name="Membership" component={MembershipScreen} />

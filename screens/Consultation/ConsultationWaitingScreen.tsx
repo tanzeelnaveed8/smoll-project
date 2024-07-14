@@ -4,6 +4,8 @@ import {
   fontHauoraMedium,
   fontHauoraSemiBold,
 } from "@/constant/constant";
+import { SocketEventEnum } from "@/socket/events";
+import { useSocket } from "@/socket/provider";
 import { useExpertStore } from "@/store/modules/expert";
 import { NavigationType } from "@/store/types";
 import { FindOneConsultationResDto } from "@/store/types/expert";
@@ -16,6 +18,8 @@ const ConsultationWaitingScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
   const route = useRoute();
+  const socket = useSocket();
+
   const { findOneConsultation } = useExpertStore();
 
   const consultationId = (route.params as Record<string, string>)
@@ -26,6 +30,18 @@ const ConsultationWaitingScreen: React.FC<{ navigation: NavigationType }> = ({
 
   useEffect(() => {
     findConsultation();
+
+    if (socket) {
+      socket.on(SocketEventEnum.VET_CALL_INITIATE, async (data) => {
+        if (data.consultationId === consultationId) {
+          const { vetId } = data;
+
+          navigation.navigate("ConsultationVideoScreen", {
+            vetId: vetId,
+          });
+        }
+      });
+    }
   }, []);
 
   // const initialTime = 154;

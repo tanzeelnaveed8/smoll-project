@@ -4,10 +4,9 @@ import InputField from "@/components/partials/InputField";
 import StarRating from "@/components/partials/StarRating";
 import { fontHauoraSemiBold } from "@/constant/constant";
 import React from "react";
-import { TextInput } from "react-native";
 import { Div, Text } from "react-native-magnus";
 
-const VideoConsultationFeedbackScreen = () => {
+const ConsultationFeedbackScreen = () => {
   return (
     <Layout showCloseIcon backBtnText="" title="Feedback">
       <Div pt={40} flex={1}>
@@ -33,4 +32,4 @@ const VideoConsultationFeedbackScreen = () => {
   );
 };
 
-export default VideoConsultationFeedbackScreen;
+export default ConsultationFeedbackScreen;
