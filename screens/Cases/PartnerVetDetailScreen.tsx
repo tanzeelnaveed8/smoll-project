@@ -7,7 +7,7 @@ import Header from "@/components/partials/Header";
 import PartnerVetStarRating from "@/screens/Cases/PartnerVetStarRating";
 import Verified from "@/components/partials/Verified";
 import { fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
-import { useCasesStore } from "@/store/modules/cases";
+import { useCasesStore } from "@/store/modules/case";
 import { NavigationType } from "@/store/types";
 import { useEffect, useState } from "react";
 import {

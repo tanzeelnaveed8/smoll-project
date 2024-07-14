@@ -1,8 +1,13 @@
 import React from "react";
-import { StyleProp, StyleSheet, ViewStyle } from "react-native";
-import { Div, Text } from "react-native-magnus";
+import {
+  ActivityIndicator,
+  StyleProp,
+  StyleSheet,
+  ViewStyle,
+} from "react-native";
+import { Div, Text, WINDOW_HEIGHT } from "react-native-magnus";
 import BackButton from "../partials/BackButton";
-import { fontHauoraSemiBold } from "@/constant/constant";
+import { colorPrimary, fontHauoraSemiBold } from "@/constant/constant";
 
 interface Props {
   children: React.ReactNode;
@@ -12,6 +17,7 @@ interface Props {
   backBtnText?: string;
   title?: string;
   showCloseIcon?: boolean;
+  loading?: boolean;
 }
 
 const Layout: React.FC<Props> = ({
@@ -22,6 +28,7 @@ const Layout: React.FC<Props> = ({
   backBtnText = "Back",
   title,
   showCloseIcon,
+  loading,
 }) => {
   const externalStyles: {} = style ? style : {};
   return (
@@ -56,11 +63,16 @@ const Layout: React.FC<Props> = ({
           >
             {title}
           </Text>
-          {/* </Div> */}
-          {/* <Div flex={1} /> */}
         </Div>
       </Div>
-      {children}
+
+      {loading ? (
+        <Div flex={1} justifyContent="center" minH={WINDOW_HEIGHT / 1.4}>
+          <ActivityIndicator size="large" color={colorPrimary} />
+        </Div>
+      ) : (
+        children
+      )}
     </Div>
   );
 };

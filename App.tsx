@@ -20,22 +20,15 @@ import CounsellingRequestScreen from "./screens/Counselling/CounsellingRequestSc
 import HomeScreen from "./screens/HomeScreen";
 import { SocketProvider } from "./socket/provider";
 import { CometChatWrapper } from "./utils/chat";
-// import PetProfileScreen from "./screens/petProfile/PetProfileScreen";
-import PetProfileScreen from "./screens/petProfile/PetProfileScreen";
-import CasesListScreen from "./screens/Cases/CasesListScreen";
-import CasesRequestScreen from "./screens/Cases/CasesRequestScreen";
-import PartnerVetScreen from "./screens/Cases/PartnerVetScreen";
-import SlotBookingScreen from "./screens/doctorsScreens/SlotBookingScreen";
-import PartnerVetDetailScreen from "./screens/Cases/PartnerVetDetailScreen";
-import PartnerVetConfirmationScreen from "./screens/Cases/PartnerVetConfirmationScreen";
-import PartnerVetSuccessfullScreen from "./screens/Cases/PartnerVetSuccessfullScreen";
-import CaseBriefScreen from "./screens/VideoConsultation/CaseBriefScreen";
-import WaitingRoomScreen from "./screens/VideoConsultation/WaitingRoomScreen";
-import VideoConsultationFeedbackScreen from "./screens/VideoConsultation/VideoConsultationFeedbackScreen";
-import SettingsMainScreen from "./screens/settings/SettingsMainScreen";
-import SettingPersonalInfoScreen from "./screens/settings/SettingPersonalInfoScreen";
-import EditInfoScreen from "./screens/settings/EditInfoScreen";
+import ConsultationCaseBriefScreen from "./screens/Consultation/ConsultationCaseBriefScreen";
+import ConsultationVideoScreen from "./screens/Consultation/ConsultationVideoScreen";
+import ConsultationWaitingScreen from "./screens/Consultation/ConsultationWaitingScreen";
+import ExpertsChatScreen from "./screens/Experts/ExpertsChatScreen";
+import ExpertsInboxScreen from "./screens/Experts/ExpertsInboxScreen";
+import ExpertsListDetailScreen from "./screens/Experts/ExpertsListDetailScreen";
+import ExpertsListScreen from "./screens/Experts/ExpertsListScreen";
 import PetCongratulationsScreen from "./screens/petProfileForm/PetCongratulationsScreen";
+import PetProfileScreen from "./screens/petProfileForm/PetProfileScreen";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -150,58 +143,42 @@ const App = () => {
                   name="CounsellingChatScreen"
                   component={CounsellingChatScreen}
                 />
+
                 <Stack.Screen
-                  // name="PartnerClinic"
-                  name="CasesListScreen"
-                  component={CasesListScreen}
+                  name="ExpertsListScreen"
+                  component={ExpertsListScreen}
                 />
+
                 <Stack.Screen
-                  name="CasesRequestScreen"
-                  component={CasesRequestScreen}
+                  name="ExpertsListDetailScreen"
+                  component={ExpertsListDetailScreen}
                 />
+
                 <Stack.Screen
-                  name="PartnerVetScreen"
-                  component={PartnerVetScreen}
+                  name="ExpertsInboxScreen"
+                  component={ExpertsInboxScreen}
                 />
+
                 <Stack.Screen
-                  name="SlotBookingScreen"
-                  component={SlotBookingScreen}
+                  name="ExpertsChatScreen"
+                  component={ExpertsChatScreen}
                 />
+
                 <Stack.Screen
-                  name="PartnerVetDetailScreen"
-                  component={PartnerVetDetailScreen}
+                  name="ConsultationCaseBriefScreen"
+                  component={ConsultationCaseBriefScreen}
                 />
+
                 <Stack.Screen
-                  name="PartnerVetConfirmationScreen"
-                  component={PartnerVetConfirmationScreen}
+                  name="ConsultationWaitingScreen"
+                  component={ConsultationWaitingScreen}
                 />
+
                 <Stack.Screen
-                  name="PartnerVetSuccessfullScreen"
-                  component={PartnerVetSuccessfullScreen}
+                  name="ConsultationVideoScreen"
+                  component={ConsultationVideoScreen}
                 />
-                {/* VideoConsultationScreens */}
-                <Stack.Screen
-                  name="CaseBriefScreen"
-                  component={CaseBriefScreen}
-                />
-                <Stack.Screen
-                  name="WaitingRoomScreen"
-                  component={WaitingRoomScreen}
-                />
-                <Stack.Screen
-                  name="VideoConsultationFeedbackScreen"
-                  component={VideoConsultationFeedbackScreen}
-                />
-                {/*  */}
-                <Stack.Screen name="Account" component={SettingsMainScreen} />
-                <Stack.Screen
-                  name="SettingPersonalInfoScreen"
-                  component={SettingPersonalInfoScreen}
-                />
-                <Stack.Screen
-                  name="EditInfoScreen"
-                  component={EditInfoScreen}
-                />
+
                 {/* <Stack.Screen name="Membership" component={MembershipScreen} />
           
 

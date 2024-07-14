@@ -19,17 +19,15 @@ import {
 } from "react-native";
 import { Button, Div, Icon, Image, Text } from "react-native-magnus";
 
+import TabNaivationBar from "@/components/app/TabNaivationBar";
+import AccountSetupModal from "@/components/app/account/AccountSetupModal";
+import OnboardingCongratsModal from "@/components/app/onboarding/OnboardingCongratsModal";
+import AccountSetupProgress from "@/components/partials/AccountSetupProgress";
+import { useCounsellorStore } from "@/store/modules/counsellor";
 import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
 import { useRoute } from "@react-navigation/native";
 import React, { useEffect, useMemo, useState } from "react";
-import AccountSetupModal from "@/components/app/account/AccountSetupModal";
-import OnboardingCongratsModal from "@/components/app/onboarding/OnboardingCongratsModal";
-import TouchableWrapper from "@/components/partials/TouchableWrapper";
-import AccountSetupProgress from "@/components/partials/AccountSetupProgress";
-import { useCounsellorStore } from "@/store/modules/counsellor";
-import { Session } from "@/store/types/counsellor";
-import TabNaivationBar from "@/components/app/TabNaivationBar";
 
 interface Props {
   navigation: NavigationType;
@@ -125,12 +123,10 @@ const HomeScreen: React.FC<Props> = (props) => {
       } else {
         props.navigation.navigate("CounsellingInboxScreen");
       }
+    } else if (item.value === "vet") {
+      props.navigation.navigate("ExpertsInboxScreen");
     }
   };
-
-  useEffect(() => {
-    console.log("ss", sessions);
-  }, [sessions]);
 
   return (
     <>
@@ -194,50 +190,51 @@ const HomeScreen: React.FC<Props> = (props) => {
           </Div>
         )}
 
-        <Div
-          bg="#F3F9FC"
-          px={16}
-          py={18}
-          style={{ borderRadius: 12 }}
-          borderWidth={1}
-          borderColor="#D0D7DC"
-          mb={24}
+        <TouchableOpacity
+          onPress={() => {
+            props.navigation.navigate("ExpertsListScreen");
+          }}
         >
-          <Div w={212} mb={16}>
-            <Text fontSize={"2xl"}>Expert Advice for</Text>
-            <Text fontSize={"2xl"} color="primary" mb={4}>
-              Happier, Healthier Pets
-            </Text>
-            <Text>Receive a consultation for your pet</Text>
-          </Div>
-
-          <TouchableWrapper
-            style={{ paddingVertical: 2, flexDirection: "row", gap: 12 }}
+          <Div
+            bg="#F3F9FC"
+            px={16}
+            py={18}
+            style={{ borderRadius: 12 }}
+            borderWidth={1}
+            borderColor="#D0D7DC"
+            mb={24}
           >
-            {/* <Button bg="transparent" p={0} py={2} style={{ gap: 12 }}> */}
-            <Text fontFamily={fontHauoraSemiBold} fontSize={"lg"}>
-              Get Started
-            </Text>
-            <Icon
-              alignSelf="center"
-              name="chevron-right"
-              fontFamily="Feather"
-              fontSize={24}
-              mt={2}
-              color="#222"
-            />
-            {/* </Button> */}
-          </TouchableWrapper>
+            <Div w={212} mb={16}>
+              <Text fontSize={"2xl"}>Expert Advice for</Text>
+              <Text fontSize={"2xl"} color="primary" mb={4}>
+                Happier, Healthier Pets
+              </Text>
+              <Text>Receive a consultation for your pet</Text>
+            </Div>
 
-          <Image
-            source={require("../assets/images/home-page-highfy.png")}
-            w={200}
-            h={170}
-            position="absolute"
-            right={0}
-            bottom={0}
-          />
-        </Div>
+            <Div style={{ paddingVertical: 2, flexDirection: "row", gap: 6 }}>
+              <Text fontFamily={fontHauoraSemiBold} fontSize={"lg"}>
+                Get Started
+              </Text>
+              <Icon
+                alignSelf="center"
+                name="chevron-right"
+                fontFamily="Feather"
+                fontSize={24}
+                color="#222"
+              />
+            </Div>
+
+            <Image
+              source={require("../assets/images/home-page-highfy.png")}
+              w={200}
+              h={170}
+              position="absolute"
+              right={0}
+              bottom={0}
+            />
+          </Div>
+        </TouchableOpacity>
 
         <Div>
           <Div flexDir="row" style={{ gap: 8 }} alignItems="center" mb={16}>
@@ -308,5 +305,3 @@ const HomeScreen: React.FC<Props> = (props) => {
 };
 
 export default HomeScreen;
-
-const styles = StyleSheet.create({});

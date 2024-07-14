@@ -1,5 +1,5 @@
 import { fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
-import { Badge, Div, Text } from "react-native-magnus";
+import { Badge, Div, Image, Text } from "react-native-magnus";
 import Verified from "./Verified";
 
 type PropTypes = {
@@ -8,36 +8,52 @@ type PropTypes = {
   experience: number;
   verified?: boolean;
   slotScreen?: boolean;
+  isOnline?: boolean;
+  image?: string;
 };
 
-const DoctorCard = (props: PropTypes) => {
+const DoctorCard: React.FC<PropTypes> = (props) => {
   const {
     name,
     speciality,
     experience,
     verified = false,
     slotScreen = false,
+    isOnline = false,
+    image,
   } = props;
 
   return (
     <Div flexDir={"row"} justifyContent="space-between">
       <Div flexDir="row" alignItems={slotScreen ? "center" : "flex-start"}>
-        <Badge
-          right={slotScreen ? 24 : 34}
-          top={8}
-          h={8}
-          w={8}
-          borderWidth={2}
-          borderColor="#fff"
-        >
-          <Div
+        {isOnline ? (
+          <Badge
+            right={slotScreen ? 24 : 34}
+            top={8}
+            h={8}
+            w={8}
+            borderWidth={2}
+            borderColor="#fff"
+          >
+            <Image
+              source={{ uri: image }}
+              w={100}
+              h={100}
+              rounded={100}
+              bg="#eeeeee"
+              mr={slotScreen ? 12 : 24}
+            />
+          </Badge>
+        ) : (
+          <Image
+            source={{ uri: image }}
             w={100}
             h={100}
             rounded={100}
             bg="#eeeeee"
             mr={slotScreen ? 12 : 24}
-          ></Div>
-        </Badge>
+          />
+        )}
         <Div w="full" flexDir="row" justifyContent="space-between">
           <Div style={{ gap: 4 }}>
             <Text

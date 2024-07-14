@@ -24,6 +24,12 @@ export type PetDetail = {
   photos: UploadedFile[];
 };
 
+export interface Pet {
+  id: string;
+  name: string;
+  photos: UploadedFile[];
+}
+
 export type HealthHistory = {
   id?: string;
   name: string;
@@ -37,20 +43,20 @@ export type HealthHistory = {
   }[];
 };
 
-export interface Pet extends Pick<PetDetail, ["id", "name", "photos"]> {}
 export interface PetPayloadDto extends PetDetail {}
-
 export interface PetBreeds {
   cats: string[];
   dogs: string[];
 }
 
 export interface PetState {
+  pets: Nullable<Pet[]>;
   petsDetailMap: Map<string, Nullable<PetDetail>>;
   healthHistoryMap: Map<string, HealthHistory[]>;
   petBreeds: Nullable<PetBreeds>;
 
   fetchPetBreeds: () => Promise<void>;
+  fetchPets: () => Promise<void>;
   addPet: (pet: PetPayloadDto) => Promise<PetDetail>;
   updatePet: (id: string, payload: UpdatePetPayloadDto) => Promise<PetDetail>;
 
