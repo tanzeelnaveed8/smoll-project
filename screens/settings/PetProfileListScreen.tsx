@@ -9,7 +9,14 @@ import {
   IconSquareRoundedPlus,
 } from "@tabler/icons-react-native";
 import { FlatList, TouchableOpacity } from "react-native";
-import { Button, Div, Image, Skeleton, Text } from "react-native-magnus";
+import {
+  Button,
+  Div,
+  Image,
+  ScrollDiv,
+  Skeleton,
+  Text,
+} from "react-native-magnus";
 
 const PetProfileListScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
@@ -41,64 +48,72 @@ const PetProfileListScreen: React.FC<{ navigation: NavigationType }> = ({
         navigation.goBack();
       }}
     >
-      <Div flex={1} pt={20}>
-        <Text fontSize={"6xl"} mb={20}>
-          Add your lovely pets
-        </Text>
-
-        <Div mb={32}>
-          {pets &&
-            pets.map((item, i) => {
-              let image;
-              for (let i = 0; i < item.photos.length; i++) {
-                if (item.photos[i]?.url) {
-                  image = item.photos[i]?.url;
-                }
-                console.log("i", i);
-              }
-              return (
-                <ProfileCard
-                  image={image}
-                  key={i}
-                  name={item.name}
-                  onPress={() => {
-                    navigation.navigate("PetProfileDetailsScreen", {
-                      petId: item.id,
-                    });
-                  }}
-                />
-              );
-            })}
-        </Div>
-
-        {loading && (
-          <>
-            <Skeleton.Box mb={"sm"} h={65} />
-            <Skeleton.Box mb={"sm"} h={65} />
-          </>
-        )}
-
-        <Button
-          fontSize={"lg"}
-          fontFamily={fontHauoraSemiBold}
-          color="primary"
-          flexDir="row"
-          alignItems="flex-start"
-          style={{ gap: 4 }}
-          p={0}
-          bg="transparent"
-        >
-          <IconSquareRoundedPlus
-            width={24}
-            height={24}
-            color={"#427594"}
-            style={{ marginTop: 2 }}
-          />
-          <Text color="primary" fontSize={"lg"} fontFamily={fontHauoraSemiBold}>
-            Add Pets
+      <ScrollDiv style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+        <Div flex={1} pt={20}>
+          <Text fontSize={"6xl"} mb={20}>
+            Add your lovely pets
           </Text>
-        </Button>
-      </Div>
+
+          <Div mb={32}>
+            {pets &&
+              pets.map((item, i) => {
+                let image;
+                for (let i = 0; i < item.photos.length; i++) {
+                  if (item.photos[i]?.url) {
+                    image = item.photos[i]?.url;
+                  }
+                }
+                return (
+                  <ProfileCard
+                    image={image}
+                    key={i}
+                    name={item.name}
+                    onPress={() => {
+                      navigation.navigate("PetProfileDetailsScreen", {
+                        petId: item.id,
+                      });
+                    }}
+                  />
+                );
+              })}
+          </Div>
+
+          {loading && (
+            <>
+              <Skeleton.Box mb={"sm"} h={65} />
+              <Skeleton.Box mb={"sm"} h={65} />
+            </>
+          )}
+
+          <Button
+            fontSize={"lg"}
+            fontFamily={fontHauoraSemiBold}
+            color="primary"
+            flexDir="row"
+            alignItems="flex-start"
+            style={{ gap: 4 }}
+            p={0}
+            bg="transparent"
+            onPress={() => {
+              navigation.navigate("PetProfileScreen");
+            }}
+          >
+            <IconSquareRoundedPlus
+              width={24}
+              height={24}
+              color={"#427594"}
+              style={{ marginTop: 2 }}
+            />
+            <Text
+              color="primary"
+              fontSize={"lg"}
+              fontFamily={fontHauoraSemiBold}
+            >
+              Add Pets
+            </Text>
+          </Button>
+        </Div>
+      </ScrollDiv>
     </Layout>
   );
 };

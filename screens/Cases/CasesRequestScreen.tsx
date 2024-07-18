@@ -4,7 +4,8 @@ import {
   fontHauoraMedium,
   fontHauoraSemiBold,
 } from "@/constant/constant";
-import { useCasesStore } from "@/store/modules/case";
+// import { useCaseStore } from "@/store/modules/case";
+// import { useCasesStore } from "@/store/modules/case";
 import { NavigationType } from "@/store/types";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, TouchableOpacity } from "react-native";
@@ -29,7 +30,7 @@ const CasesRequestScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const { caseRequests, fetchCaseRequests } = useCasesStore();
+  // const { caseRequests, fetchCaseRequests } = useCaseStore();
 
   useEffect(() => {
     handleFetchRequests();
@@ -39,9 +40,9 @@ const CasesRequestScreen: React.FC<{ navigation: NavigationType }> = ({
     try {
       setIsLoading(true);
 
-      if (caseRequests.length === 0) {
-        // await fetchCaseRequests();
-      }
+      // if (!caseRequests || caseRequests?.length === 0) {
+      //   await fetchCaseRequests();
+      // }
     } finally {
       setTimeout(() => {
         setIsLoading(false);

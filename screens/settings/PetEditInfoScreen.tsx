@@ -39,7 +39,6 @@ const PetEditInfoScreen: React.FC<{ navigation: NavigationType }> = ({
   }, [petId]);
 
   const handleUpdateDetails = async () => {
-    console.log("updated form", form);
     if (!form) return;
 
     try {
@@ -73,15 +72,6 @@ const PetEditInfoScreen: React.FC<{ navigation: NavigationType }> = ({
             {fileName === "dob" && (
               <PetProfileDOBScreen pet={form} setPet={setForm} />
             )}
-
-            {fileName === "weight" &&
-              //   <PetProfileDOBScreen
-              //     pet={{ dob: "" }}
-              //     setPet={(e) => {
-              //       console.log("petData", e);
-              //     }}
-              //   />
-              ""}
 
             {fileName === "species" && (
               <PetProfileSpeciesScreen pet={form} setPet={setForm} />

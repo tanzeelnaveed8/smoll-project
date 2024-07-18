@@ -6,7 +6,7 @@ import {
   fontHauoraBold,
   fontHauoraSemiBold,
 } from "@/constant/constant";
-import { useCasesStore } from "@/store/modules/case";
+import { useCaseStore } from "@/store/modules/case";
 import { NavigationType } from "@/store/types";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, StyleSheet } from "react-native";
@@ -28,7 +28,7 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
 }) => {
   const [activeTab, setActiveTab] = useState("Open");
   const [isLoading, setIsLoading] = useState(false);
-  const { casesList, fetchCases } = useCasesStore();
+  const { casesList, fetchCases } = useCaseStore();
 
   useEffect(() => {
     handleFetchCases();

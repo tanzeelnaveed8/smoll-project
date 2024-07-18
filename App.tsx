@@ -162,46 +162,78 @@ const App = () => {
                   name="CounsellingChatScreen"
                   component={CounsellingChatScreen}
                 />
-
                 <Stack.Screen
                   name="ExpertsListScreen"
                   component={ExpertsListScreen}
                 />
-
                 <Stack.Screen
                   name="ExpertsListDetailScreen"
                   component={ExpertsListDetailScreen}
                 />
-
                 <Stack.Screen
                   name="ExpertsInboxScreen"
                   component={ExpertsInboxScreen}
                 />
-
                 <Stack.Screen
                   name="ExpertsChatScreen"
                   component={ExpertsChatScreen}
                 />
-
                 <Stack.Screen
                   name="ConsultationCaseBriefScreen"
                   component={ConsultationCaseBriefScreen}
                 />
-
                 <Stack.Screen
                   name="ConsultationWaitingScreen"
                   component={ConsultationWaitingScreen}
                 />
-
                 <Stack.Screen
                   name="ConsultationVideoScreen"
                   component={ConsultationVideoScreen}
+                />
+                {/*  */}
+
+                <Stack.Screen
+                  // name="PartnerClinic"
+                  name="CasesListScreen"
+                  component={CasesListScreen}
+                />
+                <Stack.Screen
+                  name="CasesRequestScreen"
+                  component={CasesRequestScreen}
+                />
+                <Stack.Screen
+                  name="PartnerVetScreen"
+                  component={PartnerVetScreen}
+                />
+                <Stack.Screen
+                  name="SlotBookingScreen"
+                  component={SlotBookingScreen}
+                />
+                <Stack.Screen
+                  name="PartnerVetDetailScreen"
+                  component={PartnerVetDetailScreen}
+                />
+                <Stack.Screen
+                  name="PartnerVetConfirmationScreen"
+                  component={PartnerVetConfirmationScreen}
+                />
+                <Stack.Screen
+                  name="PartnerVetSuccessfullScreen"
+                  component={PartnerVetSuccessfullScreen}
+                />
+
+                <Stack.Screen
+                  name="SettingPersonalInfoScreen"
+                  component={SettingPersonalInfoScreen}
+                />
+                <Stack.Screen
+                  name="EditInfoScreen"
+                  component={EditInfoScreen}
                 />
                 <Stack.Screen
                   name="PetEditInfoScreen"
                   component={PetEditInfoScreen}
                 />
-
                 <Stack.Screen
                   name="PetProfileListScreen"
                   component={PetProfileListScreen}
@@ -209,6 +241,10 @@ const App = () => {
                 <Stack.Screen
                   name="PetProfileDetailsScreen"
                   component={PetProfileDetailsScreen}
+                />
+                <Stack.Screen
+                  name="SettingsMainScreen"
+                  component={SettingsMainScreen}
                 />
                 {/* <Stack.Screen name="Membership" component={MembershipScreen} />
           

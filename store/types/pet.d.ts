@@ -56,7 +56,7 @@ export interface PetState {
   fetchPets: () => Promise<void>;
   fetchPetDetails: (id: string) => Promise<PetDetail>;
   addPet: (pet: PetPayloadDto) => Promise<PetDetail>;
-  updatePet: (id: string, payload: PetDetail) => Promise<PetDetail>;
+  updatePet: (id: string, payload: Partial<PetDetail>) => Promise<PetDetail>;
 
   addHealthHistory: (
     petId: string,

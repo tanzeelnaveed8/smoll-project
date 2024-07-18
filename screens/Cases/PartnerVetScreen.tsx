@@ -6,7 +6,7 @@ import Container from "@/components/partials/Container";
 import Layout from "@/components/app/Layout";
 import { ActivityIndicator, Dimensions, FlatList } from "react-native";
 import { useEffect, useState } from "react";
-import { useCasesStore } from "@/store/modules/case";
+import { useCaseStore } from "@/store/modules/case";
 import { NavigationType } from "@/store/types";
 
 const doctorList = [
@@ -46,7 +46,7 @@ const PartnerVetScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const { vetDoctorList, fetchVetDoctors } = useCasesStore();
+  const { vetDoctorList, fetchVetDoctors } = useCaseStore();
 
   useEffect(() => {
     handleFetchRequests();
