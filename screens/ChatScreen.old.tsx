@@ -1,5 +1,6 @@
 import Layout from "@/components/app/Layout";
 import { colorPrimary, colorTextPrimary } from "@/constant/constant";
+import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
 import { CometChat } from "@cometchat/chat-sdk-react-native";
 import {
@@ -24,6 +25,8 @@ const ChatScreen: React.FC<{ navigation: NavigationType }> = ({
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   // const [inputMessage, setInputMessage] = useState("");
   const inputMessageRef = useRef<null | TextInput>(null);
+  const { user } = useUserStore();
+  console.log("user==_", user);
 
   useEffect(() => {
     let uikitSettings: UIKitSettings = {
@@ -37,7 +40,7 @@ const ChatScreen: React.FC<{ navigation: NavigationType }> = ({
       .then(() => {
         console.log("CometChatUiKit successfully initialized");
 
-        CometChatUIKit.login({ uid: "bxkpjfuvtd" })
+        CometChatUIKit.login({ uid: user?.id })
           .then((user) => {
             console.log("User logged in successfully", user.getName());
             setIsLoggedIn(true);

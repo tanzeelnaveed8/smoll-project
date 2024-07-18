@@ -17,6 +17,7 @@ import {
 import Container from "@/components/partials/Container";
 import Layout from "@/components/app/Layout";
 import { NavigationType } from "@/store/types";
+import TabNaivationBar from "@/components/app/TabNaivationBar";
 
 const options: GroupType[] = [
   {
@@ -39,7 +40,7 @@ const options: GroupType[] = [
         id: 3,
         title: "Pets Profile",
         Icon: IconPaw,
-        link: "",
+        link: "PetProfileListScreen",
       },
       {
         id: 4,
@@ -97,74 +98,81 @@ const SettingsMainScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
   return (
-    <Layout>
-      <ScrollDiv style={styles.container} showsVerticalScrollIndicator={false}>
-        <Div>
-          <Text
-            fontWeight="400"
-            fontSize={"5xl"}
-            fontFamily={fontHauora}
-            lineHeight={36}
-            mb={24}
-          >
-            Settings
-          </Text>
-          {options.map((group) => (
-            <React.Fragment key={group.id}>
+    <>
+      <Layout style={{ paddingBottom: 0 }}>
+        <ScrollDiv
+          style={styles.container}
+          showsVerticalScrollIndicator={false}
+        >
+          <Div mb={20}>
+            <Text
+              fontWeight="400"
+              fontSize={"5xl"}
+              fontFamily={fontHauora}
+              lineHeight={36}
+              mb={24}
+            >
+              Settings
+            </Text>
+            {options.map((group) => (
+              <React.Fragment key={group.id}>
+                <Text
+                  fontWeight="400"
+                  fontSize={"xl"}
+                  fontFamily={fontHauora}
+                  lineHeight={24}
+                  mb={8}
+                >
+                  {group.groupName}
+                </Text>
+                <Div mb={24}>
+                  {group.options.map((option) => (
+                    <SettingButton
+                      key={option.id}
+                      title={option.title}
+                      iconName={option.iconName}
+                      iconFamily={option.iconFamily}
+                      iconFontSize={option?.iconFontSize}
+                      description={option?.description}
+                      toggleBtn={option?.toggleBtn}
+                      Icon={option.Icon}
+                      onPress={() => {
+                        option.link && navigation.navigate(option.link);
+                      }}
+                    />
+                  ))}
+                </Div>
+              </React.Fragment>
+            ))}
+
+            <Div mt="auto" mb={20}>
               <Text
                 fontWeight="400"
-                fontSize={"xl"}
+                fontSize={18}
                 fontFamily={fontHauora}
                 lineHeight={24}
                 mb={8}
+                color="#0189F9"
               >
-                {group.groupName}
+                Logout
               </Text>
-              <Div mb={24}>
-                {group.options.map((option) => (
-                  <SettingButton
-                    key={option.id}
-                    title={option.title}
-                    iconName={option.iconName}
-                    iconFamily={option.iconFamily}
-                    iconFontSize={option?.iconFontSize}
-                    description={option?.description}
-                    toggleBtn={option?.toggleBtn}
-                    Icon={option.Icon}
-                    onPress={() => {
-                      option.link && navigation.navigate(option.link);
-                    }}
-                  />
-                ))}
-              </Div>
-            </React.Fragment>
-          ))}
-
-          <Div mt="auto" mb={20}>
-            <Text
-              fontWeight="400"
-              fontSize={18}
-              fontFamily={fontHauora}
-              lineHeight={24}
-              mb={8}
-              color="#0189F9"
-            >
-              Logout
-            </Text>
-            <Text
-              fontWeight="400"
-              fontSize={18}
-              fontFamily={fontHauora}
-              lineHeight={24}
-              mb={6}
-              color="#7B7B7B"
-            >
-              App v 12.81
-            </Text>
+              <Text
+                fontWeight="400"
+                fontSize={18}
+                fontFamily={fontHauora}
+                lineHeight={24}
+                mb={6}
+                color="#7B7B7B"
+              >
+                App v 12.81
+              </Text>
+            </Div>
           </Div>
-        </Div>
-      </ScrollDiv>
-    </Layout>
+        </ScrollDiv>
+      </Layout>
+
+      {/* <TabNaivationBar navigation={navigation} /> */}
+    </>
   );
 };
 

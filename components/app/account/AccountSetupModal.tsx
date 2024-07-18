@@ -47,6 +47,8 @@ const stepsBtn: {
 const AccountSetupModal: React.FC<Props> = (props) => {
   const { user } = useUserStore();
 
+  console.log("user", user);
+
   const [completedSteps, setCompletedSteps] = useState({
     basic: false,
     email: false,
@@ -73,14 +75,12 @@ const AccountSetupModal: React.FC<Props> = (props) => {
       }));
     }
 
-    if (user?.petCount && user?.petCount > 0) {
+    if (user?.petCount) {
       setCompletedSteps((s) => ({
         ...s,
         pet: true,
       }));
     }
-
-    // if(user.pet)
   }, [user]);
 
   const handleStepPress = (value: "basic" | "email" | "pet") => {

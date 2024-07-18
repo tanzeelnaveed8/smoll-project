@@ -1,4 +1,5 @@
-import { Nullable, UploadedFile } from "../types";
+import { Nullable } from "../types";
+import { UploadedFile } from "./file";
 
 export enum PetGenderEnum {
   MALE = "male",
@@ -22,6 +23,7 @@ export type PetDetail = {
   dob: string;
   chipNumber: number;
   photos: UploadedFile[];
+  healthHistory?: HealthHistory[];
 };
 
 export interface Pet {
@@ -35,12 +37,7 @@ export type HealthHistory = {
   name: string;
   description: string;
   date: string;
-  documents: {
-    filename: string;
-    filesize: number;
-    mimetype: string;
-    url: string;
-  }[];
+  documents: UploadedFile[];
 };
 
 export interface PetPayloadDto extends PetDetail {}
@@ -57,8 +54,9 @@ export interface PetState {
 
   fetchPetBreeds: () => Promise<void>;
   fetchPets: () => Promise<void>;
+  fetchPetDetails: (id: string) => Promise<PetDetail>;
   addPet: (pet: PetPayloadDto) => Promise<PetDetail>;
-  updatePet: (id: string, payload: UpdatePetPayloadDto) => Promise<PetDetail>;
+  updatePet: (id: string, payload: PetDetail) => Promise<PetDetail>;
 
   addHealthHistory: (
     petId: string,

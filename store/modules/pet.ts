@@ -39,6 +39,18 @@ export const usePetStore = create<PetState>((set, get) => ({
     return response.data;
   },
 
+  fetchPetDetails: async (id) => {
+    const response = await api.get(`/member/pets/${id}`);
+
+    const petMap = get().petsDetailMap.set(response.data.id, response.data);
+
+    set(() => ({
+      petsDetailMap: petMap,
+    }));
+
+    return response.data;
+  },
+
   updatePet: async (id, payload) => {
     const response = await api.patch(`/member/pets/${id}`, {
       ...payload,

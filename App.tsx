@@ -20,6 +20,26 @@ import CounsellingRequestScreen from "./screens/Counselling/CounsellingRequestSc
 import HomeScreen from "./screens/HomeScreen";
 import { SocketProvider } from "./socket/provider";
 import { CometChatWrapper } from "./utils/chat";
+// import PetProfileScreen from "./screens/petProfile/PetProfileScreen";
+// import PetProfileScreen from "./screens/PetProfile/PetProfileScreen";
+import CasesListScreen from "./screens/Cases/CasesListScreen";
+import CasesRequestScreen from "./screens/Cases/CasesRequestScreen";
+import PartnerVetScreen from "./screens/Cases/PartnerVetScreen";
+import SlotBookingScreen from "./screens/doctorsScreens/SlotBookingScreen";
+import PartnerVetDetailScreen from "./screens/Cases/PartnerVetDetailScreen";
+import PartnerVetConfirmationScreen from "./screens/Cases/PartnerVetConfirmationScreen";
+import PartnerVetSuccessfullScreen from "./screens/Cases/PartnerVetSuccessfullScreen";
+// import CaseBriefScreen from "./screens/VideoConsultation/CaseBriefScreen";
+// import WaitingRoomScreen from "./screens/VideoConsultation/WaitingRoomScreen";
+// import VideoConsultationFeedbackScreen from "./screens/VideoConsultation/VideoConsultationFeedbackScreen";
+// import PetCongratulationsScreen from "./screens/petProfileForm/PetCongratulationsScreen";
+
+import SettingsMainScreen from "./screens/settings/SettingsMainScreen";
+import SettingPersonalInfoScreen from "./screens/settings/SettingPersonalInfoScreen";
+import EditInfoScreen from "./screens/settings/EditInfoScreen";
+import PetProfileListScreen from "./screens/settings/PetProfileListScreen";
+import PetProfileDetailsScreen from "./screens/settings/PetProfileDetailsScreen";
+import PetEditInfoScreen from "./screens/settings/PetEditInfoScreen";
 import ConsultationCaseBriefScreen from "./screens/Consultation/ConsultationCaseBriefScreen";
 import ConsultationVideoScreen from "./screens/Consultation/ConsultationVideoScreen";
 import ConsultationWaitingScreen from "./screens/Consultation/ConsultationWaitingScreen";
@@ -147,7 +167,6 @@ const App = () => {
                   name="PetProfileCongratulationsScreen"
                   component={PetProfileCongratulationsScreen}
                 />
-
                 <Stack.Screen
                   name="CounsellingRequestScreen"
                   component={CounsellingRequestScreen}
@@ -195,6 +214,10 @@ const App = () => {
                   name="ConsultationVideoScreen"
                   component={ConsultationVideoScreen}
                 />
+                <Stack.Screen
+                  name="PetEditInfoScreen"
+                  component={PetEditInfoScreen}
+                />
 
                 <Stack.Screen
                   name="ConsultationFeedbackScreen"
@@ -206,10 +229,19 @@ const App = () => {
                   component={CasesListScreen}
                 />
 
+                <Stack.Screen
+                  name="PetProfileListScreen"
+                  component={PetProfileListScreen}
+                />
+
+                <Stack.Screen
+                  name="PetProfileDetailsScreen"
+                  component={PetProfileDetailsScreen}
+                />
                 {/* <Stack.Screen name="Membership" component={MembershipScreen} />
           
 
-              <Stack.Screen name="ChatScreen" component={ChatScreen} /> */}
+              // <Stack.Screen name="ChatScreen" component={ChatScreen} /> */}
                 {/* <Stack.Screen
               name="UserProfileForm"
               component={
