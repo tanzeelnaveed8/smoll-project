@@ -28,7 +28,11 @@ interface Props {
   onClose?: () => void;
   onOpen?: () => void;
   renderNoOptions?: () => React.ReactNode;
-  renderLabel?: (option: OptionDto, index: number) => ReactElement;
+  renderLabel?: (
+    option: OptionDto,
+    onClick: (arg: Option) => void,
+    index: number
+  ) => ReactElement;
   mainInputStyle?: StyleProp<TextStyle>;
 }
 
@@ -49,6 +53,14 @@ const SelectInput: React.FC<Props> = (props) => {
       setShowMenu(props.showModal);
     }
   }, [props.showModal]);
+
+  const onSelect = (item: Option) => {
+    setSelectedValue(item);
+
+    if (props.onSelect) props.onSelect(item);
+
+    setShowMenu(false);
+  };
 
   return (
     <>
@@ -96,20 +108,14 @@ const SelectInput: React.FC<Props> = (props) => {
           keyExtractor={(item) => item.label + item.value}
           renderItem={({ item, index }) =>
             renderLabel ? (
-              renderLabel(item as OptionDto, index)
+              renderLabel(item as OptionDto, onSelect, index)
             ) : (
               <RadioButton
                 key={item.value}
                 styles={{
                   borderColor: "transparent",
                 }}
-                onTap={() => {
-                  setSelectedValue(item);
-
-                  if (props.onSelect) props.onSelect(item);
-
-                  setShowMenu(false);
-                }}
+                onTap={() => onSelect(item)}
                 label={item.label}
                 value={item.value}
                 selectedValue={selectedValue?.value ?? ""}
