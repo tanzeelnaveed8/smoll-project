@@ -1,21 +1,21 @@
 import BackButton from "@/components/partials/BackButton";
 import BottomSheet from "@/components/partials/BottomSheet";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
-import { TOAST_CONFIGS, fontHauora } from "@/constant/constant";
+import { fontHauora } from "@/constant/constant";
 import { useAuthStore } from "@/store/modules/auth";
 import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
 import { getAxiosErrMsg } from "@/utils/helpers";
 import { AxiosError } from "axios";
 
+import InputField from "@/components/partials/InputField";
 import React, { useRef, useState } from "react";
 import { View } from "react-native-animatable";
-import { Button, Div, Input, Text } from "react-native-magnus";
+import { Button, Div, Text } from "react-native-magnus";
 import Toast from "react-native-toast-notifications";
 import ToastContainer from "react-native-toast-notifications/lib/typescript/toast-container";
 import OnboardingUserModal from "./OnboardingUserModal";
-import InputField from "@/components/partials/InputField";
-import { CometChatWrapper } from "@/utils/chat";
+import { Keyboard } from "react-native";
 
 interface Props {
   navigation: NavigationType;
@@ -39,6 +39,8 @@ const OnboardingOtpModal: React.FC<Props> = (props) => {
 
   const handleConfirm = async (_otp?: string) => {
     try {
+      Keyboard.dismiss();
+
       setIsLoading(true);
 
       await verifyOtp({ phone: props.phone, otp: _otp ?? otp });

@@ -1,26 +1,21 @@
 import { fontHauoraSemiBold } from "@/constant/constant";
-import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
 import { useRoute } from "@react-navigation/native";
 import {
-  IconBuildingHospital,
+  IconBriefcase,
+  IconHome,
   IconMessage,
-  IconWindow,
 } from "@tabler/icons-react-native";
 import React from "react";
-import { FlatList, TouchableOpacity } from "react-native";
-import { Button, Div, Text } from "react-native-magnus";
+import { TouchableOpacity } from "react-native";
+import { Div, Text } from "react-native-magnus";
 
 const tabList = [
   {
     name: "Home",
     link: "HomeScreen",
     icon: (active?: boolean) => (
-      <IconWindow
-        width={28}
-        height={28}
-        color={active ? "#427594" : "#494949"}
-      />
+      <IconHome width={28} height={28} color={active ? "#427594" : "#494949"} />
     ),
   },
   {
@@ -36,10 +31,10 @@ const tabList = [
     ),
   },
   {
-    name: "Partner",
+    name: "Cases",
     link: "CasesListScreen",
     icon: (active?: boolean) => (
-      <IconBuildingHospital
+      <IconBriefcase
         width={28}
         height={28}
         color={active ? "#427594" : "#494949"}

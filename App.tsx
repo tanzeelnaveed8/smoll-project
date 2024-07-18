@@ -20,27 +20,10 @@ import CounsellingRequestScreen from "./screens/Counselling/CounsellingRequestSc
 import HomeScreen from "./screens/HomeScreen";
 import { SocketProvider } from "./socket/provider";
 import { CometChatWrapper } from "./utils/chat";
-// import PetProfileScreen from "./screens/petProfile/PetProfileScreen";
-// import PetProfileScreen from "./screens/PetProfile/PetProfileScreen";
-import CasesListScreen from "./screens/Cases/CasesListScreen";
-import CasesRequestScreen from "./screens/Cases/CasesRequestScreen";
-import PartnerVetScreen from "./screens/Cases/PartnerVetScreen";
-import SlotBookingScreen from "./screens/doctorsScreens/SlotBookingScreen";
-import PartnerVetDetailScreen from "./screens/Cases/PartnerVetDetailScreen";
-import PartnerVetConfirmationScreen from "./screens/Cases/PartnerVetConfirmationScreen";
-import PartnerVetSuccessfullScreen from "./screens/Cases/PartnerVetSuccessfullScreen";
-// import CaseBriefScreen from "./screens/VideoConsultation/CaseBriefScreen";
-// import WaitingRoomScreen from "./screens/VideoConsultation/WaitingRoomScreen";
-// import VideoConsultationFeedbackScreen from "./screens/VideoConsultation/VideoConsultationFeedbackScreen";
-// import PetCongratulationsScreen from "./screens/petProfileForm/PetCongratulationsScreen";
 
-import SettingsMainScreen from "./screens/settings/SettingsMainScreen";
-import SettingPersonalInfoScreen from "./screens/settings/SettingPersonalInfoScreen";
-import EditInfoScreen from "./screens/settings/EditInfoScreen";
-import PetProfileListScreen from "./screens/settings/PetProfileListScreen";
-import PetProfileDetailsScreen from "./screens/settings/PetProfileDetailsScreen";
-import PetEditInfoScreen from "./screens/settings/PetEditInfoScreen";
+import CasesListScreen from "./screens/Cases/CasesListScreen";
 import ConsultationCaseBriefScreen from "./screens/Consultation/ConsultationCaseBriefScreen";
+import ConsultationFeedbackScreen from "./screens/Consultation/ConsultationFeedbackScreen";
 import ConsultationVideoScreen from "./screens/Consultation/ConsultationVideoScreen";
 import ConsultationWaitingScreen from "./screens/Consultation/ConsultationWaitingScreen";
 import ExpertsChatScreen from "./screens/Experts/ExpertsChatScreen";
@@ -48,11 +31,16 @@ import ExpertsInboxScreen from "./screens/Experts/ExpertsInboxScreen";
 import ExpertsListDetailScreen from "./screens/Experts/ExpertsListDetailScreen";
 import ExpertsListScreen from "./screens/Experts/ExpertsListScreen";
 import PetProfileCongratulationsScreen from "./screens/PetProfile/PetProfileCongratulationsScreen";
-import PetProfileScreen from "./screens/PetProfile/PetProfileScreen";
 import PetProfileMedicalHistoryScreen from "./screens/PetProfile/PetProfileMedicalHistoryScreen";
+import PetProfileScreen from "./screens/PetProfile/PetProfileScreen";
+import PetEditInfoScreen from "./screens/settings/PetEditInfoScreen";
+import PetProfileDetailsScreen from "./screens/settings/PetProfileDetailsScreen";
+import PetProfileListScreen from "./screens/settings/PetProfileListScreen";
 import { useUserStore } from "./store/modules/user";
-import ConsultationFeedbackScreen from "./screens/Consultation/ConsultationFeedbackScreen";
-import CasesListScreen from "./screens/Cases/CasesListScreen";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+
+dayjs.extend(relativeTime);
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -91,8 +79,6 @@ const theme = {
   },
 };
 
-const windowHeight = Dimensions.get("window").height;
-
 const Stack = createNativeStackNavigator();
 
 const App = () => {
@@ -116,7 +102,6 @@ const App = () => {
 
   return (
     <SafeAreaView style={styles.safeAreaViewContainer}>
-      {/* <ScrollDiv contentContainerStyle={{ flexGrow: 1 }}> */}
       <ThemeProvider theme={theme}>
         <NavigationContainer>
           <ToastProvider
@@ -128,7 +113,7 @@ const App = () => {
           >
             <SocketProvider>
               <Stack.Navigator
-                initialRouteName="CasesListScreen"
+                initialRouteName="OnboardingScreen"
                 screenOptions={{
                   headerShown: false,
                 }}
