@@ -24,6 +24,8 @@ const PetProfileImageScreen: React.FC<Props> = (props) => {
     props.setPet({ ...props.pet, photos: updatedPhotos });
   };
 
+  console.log(props.pet.photos);
+
   return (
     <Div>
       <Text fontSize={32} lineHeight={40} color="#222222" mb={16}>
@@ -33,6 +35,7 @@ const PetProfileImageScreen: React.FC<Props> = (props) => {
         {Array.from({ length: 3 }).map((_, index) => (
           <ImageUpload
             key={index}
+            uri={props.pet.photos[index]?.uri}
             isPrimary={index === 0}
             onChange={(files) => handleImageChange(files, index)}
           />

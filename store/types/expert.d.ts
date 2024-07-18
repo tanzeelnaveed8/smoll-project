@@ -32,6 +32,13 @@ interface ExpertAvailability {
   intervals: { from: string; to: string }[];
 }
 
+interface RateExpertPayloadDto {
+  id: string;
+  caseId: string;
+  rating: number;
+  comment?: string;
+}
+
 // Response
 export interface FindOneConsultationResDto {
   id: string;
@@ -57,4 +64,5 @@ interface ExpertState {
     id: string;
     caseId: string;
   }) => Promise<void>;
+  rateExpert: (payload: RateExpertPayloadDto) => Promise<void>;
 }

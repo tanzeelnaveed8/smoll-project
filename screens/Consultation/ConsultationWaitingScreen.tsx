@@ -34,10 +34,11 @@ const ConsultationWaitingScreen: React.FC<{ navigation: NavigationType }> = ({
     if (socket) {
       socket.on(SocketEventEnum.VET_CALL_INITIATE, async (data) => {
         if (data.consultationId === consultationId) {
-          const { vetId } = data;
+          const { vetId, caseId } = data;
 
           navigation.navigate("ConsultationVideoScreen", {
-            vetId: vetId,
+            expertId: vetId,
+            caseId: caseId,
           });
         }
       });
@@ -61,7 +62,6 @@ const ConsultationWaitingScreen: React.FC<{ navigation: NavigationType }> = ({
       setLoading(true);
 
       const consultation = await findOneConsultation(consultationId);
-      console.log("c", consultation);
 
       setConsultation(consultation);
     } finally {

@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import api from "@/utils/api";
-import { ExpertState } from "../types/expert";
+import { ExpertState, RateExpertPayloadDto } from "../types/expert";
 
 export const useExpertStore = create<ExpertState>((set, get) => ({
   expertDetailMap: new Map(),
@@ -46,6 +46,24 @@ export const useExpertStore = create<ExpertState>((set, get) => ({
     const res = await api.patch(`/member/vets/consultations/${id}`, {
       caseId,
     });
+
+    return res.data;
+  },
+  rateExpert: async (payload: RateExpertPayloadDto) => {
+    const { id, caseId, rating, comment } = payload;
+
+    const res = await api.patch(
+      `/member/vets/${id}`,
+      {
+        rating,
+        comment,
+      },
+      {
+        params: {
+          caseId,
+        },
+      }
+    );
 
     return res.data;
   },

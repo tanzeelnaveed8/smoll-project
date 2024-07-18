@@ -30,6 +30,7 @@ type VetDoctorListDto = {
 
 interface CreateCasePayloadDto {
   petId: string;
+  vetId: string;
   description: string;
   assets: UploadedFile[];
 }
@@ -42,13 +43,25 @@ interface Case {
   status: CaseStatusEnum;
 }
 
+interface CaseListResponseDto {
+  id: string;
+  pet: {
+    name: string;
+    photos?: UploadedFile[];
+  };
+  vet: string;
+  status: CaseStatusEnum;
+  requestCount?: number;
+  createdAt: string;
+}
+
 export interface CasesState {
-  casesList: CaseDataDto[];
+  cases: Nullable<CaseListResponseDto[]>;
+
   caseRequests: CaseRequestsDto[];
   vetDoctorList: VetDoctorListDto[];
 
   createCase: (payload: CreateCasePayloadDto) => Promise<{ id: string }>;
   fetchCases: () => Promise<void>;
-  fetchCaseRequests: () => Promise<void>;
   fetchVetDoctors: () => Promise<void>;
 }

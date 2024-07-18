@@ -47,7 +47,7 @@ const tabList = [
   },
 ];
 
-const TabNaivationBar: React.FC<{ navigation: NavigationType }> = ({
+const TabNavigationBar: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
   const route = useRoute();
@@ -93,4 +93,4 @@ const TabNaivationBar: React.FC<{ navigation: NavigationType }> = ({
   );
 };
 
-export default TabNaivationBar;
+export default TabNavigationBar;

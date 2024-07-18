@@ -73,6 +73,13 @@ const AccountSetupModal: React.FC<Props> = (props) => {
       }));
     }
 
+    if (user?.petCount && user?.petCount > 0) {
+      setCompletedSteps((s) => ({
+        ...s,
+        pet: true,
+      }));
+    }
+
     // if(user.pet)
   }, [user]);
 

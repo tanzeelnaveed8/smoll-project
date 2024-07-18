@@ -1,47 +1,80 @@
-import Layout from "@/components/app/Layout";
 import { NavigationType } from "@/store/types";
+import { CometChatCalls } from "@cometchat/calls-sdk-react-native";
 import { CometChat } from "@cometchat/chat-sdk-react-native";
-import { CometChatIncomingCall } from "@cometchat/chat-uikit-react-native";
+import { CometChatOngoingCall } from "@cometchat/chat-uikit-react-native";
 import { useRoute } from "@react-navigation/native";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import { Div } from "react-native-magnus";
 
 const ConsultationVideoScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
   const route = useRoute();
-  const vetId = (route.params as Record<string, string>)?.vetId;
+  const expertId = (route.params as Record<string, string>)?.expertId;
+  const caseId = (route.params as Record<string, string>)?.caseId;
 
-  const incomingCall = useRef<CometChat.Call | null>(null);
-  const [callReceived, setCallReceived] = useState(false);
+  const [incomingCall, setIncomingCall] = useState<CometChat.Call | null>(null);
   const listnerID = "EXPERT_VIDEO_CALL";
 
   useEffect(() => {
-    CometChat.addCallListener(
-      listnerID,
-      new CometChat.CallListener({
-        onIncomingCallReceived: (call: CometChat.Call) => {
-          call.getSender().getUid;
+    const callListener = new CometChat.CallListener({
+      onIncomingCallReceived: (call: CometChat.Call) => {
+        const uid = call.getSender().getUid();
 
-          if (vetId) incomingCall.current = call;
-          setCallReceived(true);
-        },
-      })
-    );
+        if (expertId.toLowerCase() !== uid.toLowerCase()) return;
+
+        setIncomingCall(call);
+
+        CometChat.acceptCall(call.getSessionId()).then(
+          (acceptedCall) => {
+            setIncomingCall(acceptedCall);
+          },
+          (error) => {
+            console.log("Call acceptance failed with error:", error);
+          }
+        );
+      },
+    });
+
+    CometChat.addCallListener(listnerID, callListener);
+
+    CometChatCalls.addCallEventListener("CALL_LISTENER_3", {
+      onCallEndButtonPressed: () => {
+        endHandler();
+      },
+      onUserLeft: () => {
+        endHandler();
+      },
+    });
 
     return () => {
       CometChat.removeCallListener(listnerID);
     };
   }, []);
 
+  const endHandler = () => {
+    CometChat.endCall(incomingCall?.getSessionId() || "");
+    navigation.navigate("ConsultationFeedbackScreen", {
+      expertId: expertId,
+      caseId: caseId,
+    });
+  };
+
+  const callSettingsBuilder =
+    new CometChatCalls.CallSettingsBuilder().setIsAudioOnlyCall(false);
+
   return (
-    <Layout loading={!callReceived}>
-      <CometChatIncomingCall
-        call={incomingCall.current!}
-        onDecline={(call) => {
-          setCallReceived(false);
-        }}
-      />
-    </Layout>
+    <>
+      <Div>
+        {incomingCall ? (
+          <CometChatOngoingCall
+            onError={(err) => console.log("err", err)}
+            sessionID={incomingCall.getSessionId()}
+            callSettingsBuilder={callSettingsBuilder}
+          />
+        ) : null}
+      </Div>
+    </>
   );
 };
 

@@ -76,8 +76,6 @@ const ChatComposer: React.FC<Props> = (props) => {
       quality: 1,
     });
 
-    console.log("res", result);
-
     if (!result.canceled) {
       setImage(result);
       handleOnSend();

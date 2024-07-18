@@ -2,13 +2,18 @@ import Layout from "@/components/app/Layout";
 import AvailabilityAndDateSelector from "@/components/partials/AvailabilityAndDateSelector";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import DoctorCard from "@/components/partials/DoctorCard";
-import { fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
+import {
+  colorPrimary,
+  fontHauoraMedium,
+  fontHauoraSemiBold,
+} from "@/constant/constant";
 import { useExpertStore } from "@/store/modules/expert";
 import { NavigationType } from "@/store/types";
 import { ExpertAvailability } from "@/store/types/expert";
 import { useRoute } from "@react-navigation/native";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
+import { RefreshControl } from "react-native";
 import { Button, Div, ScrollDiv, Skeleton, Text } from "react-native-magnus";
 
 const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
@@ -28,6 +33,7 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
   const [selectedTime, setSelectedTime] = useState("");
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [availabilityLoading, setAvailabilityLoading] = useState(false);
   const [isRequesting, setIsRequesting] = useState(false);
 
@@ -37,14 +43,19 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
 
   const expertDetail = expertDetailMap.get(expertId);
 
-  const handleFetchExpertDetails = async () => {
+  const handleFetchExpertDetails = async (isRefresh?: boolean) => {
     try {
-      setIsLoading(true);
+      if (isRefresh) {
+        setIsRefreshing(true);
+      } else {
+        setIsLoading(true);
+      }
 
       await fetchExpertDetail(expertId);
       handleDateSelect(dayjs().format("YYYY-MM-DD"));
     } finally {
       setIsLoading(false);
+      setIsRefreshing(false);
     }
   };
 
@@ -68,10 +79,9 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
       setIsRequesting(true);
       const { id } = await requestConsultation(expertId);
 
-      console.log("id", id);
-
       navigation.navigate("ConsultationCaseBriefScreen", {
         consultationId: id,
+        expertId: expertId,
       });
     } finally {
       setIsRequesting(false);
@@ -82,13 +92,23 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
     <Layout
       showBack
       backBtnText=""
-      title="Dr. Emily Carter"
+      title={expertDetail?.name ?? ""}
       onBackPress={() => {
         navigation.goBack();
       }}
       loading={isLoading}
     >
-      <ScrollDiv flex={1} showsVerticalScrollIndicator={false}>
+      <ScrollDiv
+        flex={1}
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            tintColor={colorPrimary}
+            onRefresh={() => handleFetchExpertDetails(true)}
+          />
+        }
+      >
         {/* <Header title="Book a Slot" /> */}
 
         <Div mb={24}>
@@ -97,6 +117,7 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
             speciality={expertDetail?.designation ?? ""}
             experience={expertDetail?.yearsOfExperience ?? 0}
             isOnline={expertDetail?.isOnline ?? false}
+            image={expertDetail?.profileImg?.url ?? ""}
             verified={true}
           />
         </Div>
@@ -164,10 +185,10 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
 
               {availabilityLoading && (
                 <Div flex={1}>
-                  <Skeleton.Box mt="sm" w={100} h={25} mb={4} />
+                  <Skeleton.Box mt="sm" w={100} h={25} mb={4} rounded={4} />
                   <Div flexDir="row" flexWrap="wrap" style={{ gap: 8 }}>
                     {Array.from({ length: 4 }).map(() => (
-                      <Skeleton.Box mt="sm" h={40} w={80} />
+                      <Skeleton.Box mt="sm" h={40} w={80} rounded={4} />
                     ))}
                   </Div>
                 </Div>
@@ -236,17 +257,15 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
               )}
             </Div>
           </Div>
-          <Div mt={80}>
-            <ButtonPrimary
-              onPress={() => {
-                navigation.navigate("PartnerVetConfirmationScreen");
-              }}
-            >
-              Proceed
-            </ButtonPrimary>
-          </Div>
         </Div>
       </ScrollDiv>
+      <ButtonPrimary
+        onPress={() => {
+          navigation.navigate("PartnerVetConfirmationScreen");
+        }}
+      >
+        Proceed
+      </ButtonPrimary>
     </Layout>
   );
 };

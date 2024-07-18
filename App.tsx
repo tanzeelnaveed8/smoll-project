@@ -29,6 +29,10 @@ import ExpertsListDetailScreen from "./screens/Experts/ExpertsListDetailScreen";
 import ExpertsListScreen from "./screens/Experts/ExpertsListScreen";
 import PetProfileCongratulationsScreen from "./screens/PetProfile/PetProfileCongratulationsScreen";
 import PetProfileScreen from "./screens/PetProfile/PetProfileScreen";
+import PetProfileMedicalHistoryScreen from "./screens/PetProfile/PetProfileMedicalHistoryScreen";
+import { useUserStore } from "./store/modules/user";
+import ConsultationFeedbackScreen from "./screens/Consultation/ConsultationFeedbackScreen";
+import CasesListScreen from "./screens/Cases/CasesListScreen";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -70,13 +74,21 @@ const theme = {
 const windowHeight = Dimensions.get("window").height;
 
 const Stack = createNativeStackNavigator();
+
 const App = () => {
+  const { user } = useUserStore();
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
   useEffect(() => {
     loadFonts().then(() => setFontsLoaded(true));
     CometChatWrapper.init();
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      CometChatWrapper.initUIKit(user.id);
+    }
+  }, [user]);
 
   if (!fontsLoaded) {
     return <Text>Loading...</Text>; // Or any other loading component
@@ -96,7 +108,7 @@ const App = () => {
           >
             <SocketProvider>
               <Stack.Navigator
-                initialRouteName="OnboardingScreen"
+                initialRouteName="CasesListScreen"
                 screenOptions={{
                   headerShown: false,
                 }}
@@ -126,6 +138,11 @@ const App = () => {
                   name="PetProfileScreen"
                   component={PetProfileScreen}
                 />
+                <Stack.Screen
+                  name="PetProfileMedicalHistoryScreen"
+                  component={PetProfileMedicalHistoryScreen}
+                />
+
                 <Stack.Screen
                   name="PetProfileCongratulationsScreen"
                   component={PetProfileCongratulationsScreen}
@@ -177,6 +194,16 @@ const App = () => {
                 <Stack.Screen
                   name="ConsultationVideoScreen"
                   component={ConsultationVideoScreen}
+                />
+
+                <Stack.Screen
+                  name="ConsultationFeedbackScreen"
+                  component={ConsultationFeedbackScreen}
+                />
+
+                <Stack.Screen
+                  name="CasesListScreen"
+                  component={CasesListScreen}
                 />
 
                 {/* <Stack.Screen name="Membership" component={MembershipScreen} />

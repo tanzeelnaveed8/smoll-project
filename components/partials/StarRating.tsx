@@ -11,7 +11,7 @@ const StarRating: React.FC<{ onChange: (e: number) => void }> = ({
   const [rating, setRating] = useState(0);
 
   return (
-    <Div flexDir="row" style={{ gap: 4 }} mt={3}>
+    <Div flexDir="row" style={{ gap: 16 }} mt={3}>
       {arr.map((item) => (
         <TouchableOpacity
           key={item}

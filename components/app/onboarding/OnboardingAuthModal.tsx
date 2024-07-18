@@ -61,7 +61,7 @@ const OnboardingAuthModal: React.FC<Props> = (props) => {
     <BottomSheet
       isVisible={props.isVisible}
       h="93%"
-      onSwipeCancel={props.onBack}
+      // onSwipeCancel={props.onBack}
     >
       <Div justifyContent="space-between" pb={24} h="100%">
         <Div>

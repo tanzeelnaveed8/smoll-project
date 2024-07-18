@@ -1,104 +1,87 @@
 import Layout from "@/components/app/Layout";
-// import BlankButton from "@/components/partials/BlankButton";
-import {
-  colorPrimary,
-  fontHauoraBold,
-  fontHauoraSemiBold,
-} from "@/constant/constant";
-import { useCasesStore } from "@/store/modules/case";
+import { colorPrimary, fontHauoraSemiBold } from "@/constant/constant";
+import { useCaseStore } from "@/store/modules/case";
 import { NavigationType } from "@/store/types";
+import { CaseStatusEnum } from "@/store/types/case.d";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, StyleSheet } from "react-native";
+import {
+  FlatList,
+  RefreshControl,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import { Button, Div, Image, Text } from "react-native-magnus";
-
-const list = [
-  {
-    name: "Lucy",
-    forwardBy: "Dr Abbas Sheikh",
-    caseId: "38401",
-    nuOfRequest: 2,
-  },
-];
-
-const btns = ["Open", "Archive"];
 
 const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
-  const [activeTab, setActiveTab] = useState("Open");
   const [isLoading, setIsLoading] = useState(false);
-  const { casesList, fetchCases } = useCasesStore();
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const { cases, fetchCases } = useCaseStore();
 
   useEffect(() => {
     handleFetchCases();
   }, []);
 
-  const handleFetchCases = async () => {
+  const handleFetchCases = async (isRefresh?: boolean) => {
     try {
-      setIsLoading(true);
-
-      if (casesList.length === 0) {
-        // await fetchCases();
+      if (isRefresh) {
+        setIsRefreshing(true);
+      } else {
+        setIsLoading(true);
       }
+
+      await fetchCases();
     } finally {
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 1000);
+      setIsLoading(false);
+      setIsRefreshing(false);
     }
   };
 
-  console.log("isLoading", isLoading);
+  const caseStatus = (status: CaseStatusEnum) => {
+    switch (status) {
+      case CaseStatusEnum.OPEN_ESCALATED:
+        return "Emergency";
+      case CaseStatusEnum.CLOSED:
+        return "Closed";
+      case CaseStatusEnum.OPEN:
+        return "Open";
+    }
+  };
 
   return (
     <Layout
       showBack
-      backBtnText=""
       onBackPress={() => {
-        navigation.goBack();
+        navigation.navigate("HomeScreen");
       }}
+      loading={isLoading}
     >
       <Div flex={1}>
         <Text fontSize={"6xl"} mb={24}>
-          Partner Cases
+          Cases
         </Text>
 
-        <Div flexDir="row" style={styles.tabContainer}>
-          {btns.map((item) => (
-            <Button
-              color="#222222"
-              fontFamily={fontHauoraSemiBold}
-              fontSize={"lg"}
-              p={0}
-              m={0}
-              onPress={() => {
-                setActiveTab(item);
-              }}
-              key={item}
-              bg="transparent"
-              style={{
-                ...styles.btn,
-                ...(activeTab === item ? styles.activeBtn : {}),
-              }}
-            >
-              {item}
-            </Button>
-          ))}
-        </Div>
-
-        {/* <Text fontSize={"xl"} mb={20} fontFamily={fontHauoraBold}>
-          In-Clinic Request
-        </Text> */}
-
         <Div>
-          <Text fontSize={"md"} mb={8} fontFamily={fontHauoraSemiBold}>
-            Today
-          </Text>
-
           {!isLoading && (
             <FlatList
-              data={list}
+              ListEmptyComponent={() => {
+                return <Text>You have not created any case yet. :(</Text>;
+              }}
+              data={cases}
+              style={{ height: "100%" }}
+              refreshControl={
+                <RefreshControl
+                  refreshing={isRefreshing}
+                  tintColor={colorPrimary}
+                  onRefresh={() => handleFetchCases(true)}
+                />
+              }
               renderItem={({ item, index }) => (
-                <Div mb={index + 1 === list.length ? 0 : 12}>
+                <Div mb={index + 1 === cases?.length ? 0 : 12}>
+                  <Text fontSize={"md"} mb={8} fontFamily={fontHauoraSemiBold}>
+                    Today
+                  </Text>
                   <Button
                     bg="transparent"
                     p={0}
@@ -111,7 +94,7 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
                     }}
                   >
                     <Image
-                      source={require("../../assets/images/dog.png")}
+                      source={{ uri: item.pet.photos?.[0].url }}
                       w={56}
                       h={56}
                       mr={7}
@@ -124,16 +107,18 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
                         flex={1}
                       >
                         <Text fontFamily={fontHauoraSemiBold} fontSize={"xl"}>
-                          {item.name}
+                          {item.pet.name}
                         </Text>
 
-                        <Text
-                          fontFamily={fontHauoraSemiBold}
-                          fontSize={"lg"}
-                          color="#2F6E20"
-                        >
-                          {item.nuOfRequest} Request
-                        </Text>
+                        {item.status === CaseStatusEnum.OPEN_ESCALATED && (
+                          <Text
+                            fontFamily={fontHauoraSemiBold}
+                            fontSize={"lg"}
+                            color="#2F6E20"
+                          >
+                            {item.requestCount} Request
+                          </Text>
+                        )}
                       </Div>
 
                       <Div>
@@ -142,7 +127,7 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
                           fontFamily={fontHauoraSemiBold}
                           fontSize={"md"}
                         >
-                          Forward by: {item.forwardBy}
+                          Expert: {item.vet}
                         </Text>
 
                         <Text
@@ -150,7 +135,7 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
                           fontFamily={fontHauoraSemiBold}
                           fontSize={"md"}
                         >
-                          Case Id: {item.caseId}
+                          Case Status: {caseStatus(item.status)}
                         </Text>
                       </Div>
                     </Div>
@@ -164,35 +149,33 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
                     flexDir="row"
                     justifyContent="space-between"
                   >
-                    <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold}>
-                      View Case Brief
-                    </Text>
+                    <TouchableOpacity>
+                      <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold}>
+                        View Case Brief
+                      </Text>
+                    </TouchableOpacity>
 
-                    <Button
-                      fontSize={"lg"}
-                      bg="transparent"
-                      p={0}
-                      fontFamily={fontHauoraSemiBold}
-                      color="primary"
-                      onPress={() => {
-                        navigation.navigate("CasesRequestScreen");
-                      }}
-                    >
-                      View Request
-                    </Button>
+                    {item.status === CaseStatusEnum.OPEN_ESCALATED && (
+                      <Button
+                        fontSize={"lg"}
+                        bg="transparent"
+                        p={0}
+                        fontFamily={fontHauoraSemiBold}
+                        color="primary"
+                        onPress={() => {
+                          navigation.navigate("CasesRequestScreen");
+                        }}
+                      >
+                        View Request
+                      </Button>
+                    )}
                   </Div>
                 </Div>
               )}
-              keyExtractor={(item) => item.caseId}
+              keyExtractor={(item) => item.id}
             />
           )}
         </Div>
-
-        {isLoading && (
-          <Div flex={1} justifyContent="center" maxH={"60%"}>
-            <ActivityIndicator size="large" color={colorPrimary} />
-          </Div>
-        )}
       </Div>
     </Layout>
   );

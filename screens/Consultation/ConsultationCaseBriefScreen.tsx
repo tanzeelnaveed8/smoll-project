@@ -3,8 +3,7 @@ import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import { fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
 import React, { useEffect, useMemo, useState } from "react";
 import { TouchableOpacity } from "react-native";
-import { Div, Text, Textarea } from "react-native-magnus";
-import * as ImagePicker from "expo-image-picker";
+import { Div, Text } from "react-native-magnus";
 import { NavigationType } from "@/store/types";
 import InputField from "@/components/partials/InputField";
 import { useFileStore } from "@/store/modules/file";
@@ -12,9 +11,9 @@ import { UploadedFile } from "@/store/types/file";
 import SelectInput from "@/components/partials/SelectInput";
 import { useCaseStore } from "@/store/modules/case";
 import { usePetStore } from "@/store/modules/pet";
-import type { Pet } from "@/store/types/pet";
 import { useExpertStore } from "@/store/modules/expert";
 import { useRoute } from "@react-navigation/native";
+import ImageUpload from "@/components/partials/ImageUpload";
 
 const NoPetOptions = ({
   navigation,
@@ -57,6 +56,11 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
 
   const route = useRoute();
 
+  // NOTE: Will be there if coming from pet profile creation
+  const petId = (route.params as Record<string, string>)?.petId;
+  const petName = (route.params as Record<string, string>)?.petName;
+  const expertId = (route.params as Record<string, string>)?.expertId;
+
   const [documents, setDocuments] = useState<UploadedFile[]>([]);
   const [description, setDescription] = useState("");
 
@@ -75,6 +79,15 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
   useEffect(() => {
     fetchAllPets();
   }, []);
+
+  useEffect(() => {
+    setPet();
+  }, [petId, petName]);
+
+  const setPet = async () => {
+    await fetchAllPets();
+    setSelectedPet({ label: petName, value: petId });
+  };
 
   const petOptions = useMemo<{ label: string; value: string }[]>(
     () =>
@@ -99,28 +112,8 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
     }
   };
 
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      const response = await fetch(result.assets[0].uri);
-      const blob = await response.blob();
-
-      const file = {
-        fieldname: "file",
-        originalname: result.assets[0].fileName!,
-        encoding: "7bit",
-        mimetype: result.assets[0].mimeType,
-        buffer: await blob.arrayBuffer(),
-        size: blob.size,
-      } as unknown as File;
-
-      const uploadedFile = await uploadFile([file]);
-      setDocuments([...documents, uploadedFile[0]]);
-    }
+  const handleImage = async (file: UploadedFile[]) => {
+    setDocuments([...documents, ...file]);
   };
 
   const handleCreateCase = async () => {
@@ -131,6 +124,7 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
         description,
         assets: documents,
         petId: selectedPet?.value || "",
+        vetId: expertId,
       });
 
       await updateConsultation({
@@ -210,20 +204,14 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
           (JPG/JPEG/PNG/PDF) Max size 8 MB
         </Text>
 
-        <Div w={140} h={160} mb={40}>
-          <TouchableOpacity style={{ flex: 1 }} onPress={pickImage}>
-            <Div
-              bg="#F4F6F8"
-              justifyContent="center"
-              alignItems="center"
-              flex={1}
-            >
-              <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold}>
-                Upload
-              </Text>
-            </Div>
-          </TouchableOpacity>
-        </Div>
+        <ImageUpload
+          plusIcon={false}
+          w={139}
+          h={150}
+          onChange={(file) => {
+            handleImage(file);
+          }}
+        />
       </Div>
       <ButtonPrimary
         disabled={isActionDisable}

@@ -18,6 +18,7 @@ const PetProfileCongratulationsScreen = ({
   const petName = (route.params as Record<string, string>)?.petName;
   const petBg = (route.params as Record<string, string>)?.petBg;
   const navigateTo = (route.params as Record<string, string>)?.navigateTo;
+  const petId = (route.params as Record<string, string>)?.petId;
 
   return (
     <Layout>
@@ -72,7 +73,14 @@ const PetProfileCongratulationsScreen = ({
           </Div>
 
           <Div mt="auto">
-            <ButtonPrimary onPress={() => navigation.navigate(navigateTo)}>
+            <ButtonPrimary
+              onPress={() =>
+                navigation.navigate(navigateTo, {
+                  petId: petId,
+                  petName: petName,
+                })
+              }
+            >
               Let's Go
             </ButtonPrimary>
           </Div>

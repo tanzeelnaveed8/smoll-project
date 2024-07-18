@@ -39,10 +39,6 @@ const AvailabilityAndDateSelector: React.FC<Props> = ({
     }
   };
 
-  useEffect(() => {
-    console.log(selectedDate);
-  }, [selectedDate]);
-
   // const isDateEnabled = useCallback(
   //   (date: string) => {
   //     const enabledDays = allAvailability.map((a) => a.dayOfWeek);
