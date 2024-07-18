@@ -127,7 +127,7 @@ const App = () => {
           >
             <SocketProvider>
               <Stack.Navigator
-                initialRouteName="CasesListScreen"
+                initialRouteName="OnboardingScreen"
                 screenOptions={{
                   headerShown: false,
                 }}
@@ -253,11 +253,6 @@ const App = () => {
                 <Stack.Screen
                   name="ConsultationFeedbackScreen"
                   component={ConsultationFeedbackScreen}
-                />
-
-                <Stack.Screen
-                  name="CasesListScreen"
-                  component={CasesListScreen}
                 />
 
                 <Stack.Screen
