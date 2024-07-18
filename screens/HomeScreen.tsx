@@ -19,7 +19,6 @@ import {
 } from "react-native";
 import { Button, Div, Icon, Image, Text } from "react-native-magnus";
 
-import TabNaivationBar from "@/components/app/TabNaivationBar";
 import AccountSetupModal from "@/components/app/account/AccountSetupModal";
 import OnboardingCongratsModal from "@/components/app/onboarding/OnboardingCongratsModal";
 import AccountSetupProgress from "@/components/partials/AccountSetupProgress";
@@ -28,6 +27,7 @@ import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
 import { useRoute } from "@react-navigation/native";
 import React, { useEffect, useMemo, useState } from "react";
+import TabNavigationBar from "@/components/app/TabNavigationBar";
 
 interface Props {
   navigation: NavigationType;
@@ -64,8 +64,6 @@ const HomeScreen: React.FC<Props> = (props) => {
   const [showAccountSetupModal, setShowAccountSetupModal] = useState(false);
   const [showCongratsModal, setShowCongratsModal] = useState(false);
 
-  console.log("showAccountSetupModal", showAccountSetupModal);
-
   useEffect(() => {
     const showSetupModal =
       (route.params as Record<string, string>)?.showSetupModal === "true";
@@ -84,9 +82,11 @@ const HomeScreen: React.FC<Props> = (props) => {
     }
   }, [route.params]);
 
+  console.log("user", user);
+
   const completedStep = useMemo(() => {
     const basicInfoExist = Boolean(user?.address?.length);
-    const emailInfoExist = user?.isEmailVerified;
+    const emailInfoExist = user?.email && user?.isEmailVerified;
     const petInfoExist = (user?.petCount ?? 0) > 0;
 
     const completedStep = [basicInfoExist, emailInfoExist, petInfoExist].filter(
@@ -183,7 +183,7 @@ const HomeScreen: React.FC<Props> = (props) => {
               }}
             >
               <AccountSetupProgress
-                progress={(completedStep + 0.35) / 3}
+                progress={completedStep / 3}
                 completedStepCount={completedStep}
               />
             </TouchableOpacity>
@@ -299,7 +299,7 @@ const HomeScreen: React.FC<Props> = (props) => {
         />
       </Layout>
 
-      <TabNaivationBar navigation={props.navigation} />
+      <TabNavigationBar navigation={props.navigation} />
     </>
   );
 };

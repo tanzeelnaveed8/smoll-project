@@ -43,10 +43,6 @@ const SelectInput: React.FC<Props> = (props) => {
     }
   }, [props.showModal]);
 
-  useEffect(() => {
-    console.log("selecte", selectedValue);
-  }, [selectedValue]);
-
   return (
     <>
       <TouchableOpacity

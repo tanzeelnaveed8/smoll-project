@@ -1,9 +1,22 @@
 import { CometChat } from "@cometchat/chat-sdk-react-native";
+import { CometChatUIKit } from "@cometchat/chat-uikit-react-native";
+import { PermissionsAndroid, Platform } from "react-native";
 import { IMessage } from "react-native-gifted-chat";
 
 const appId = "259470d3b9e30637";
 const region = "in";
 const authKey = "7f548f7be265876668136a6c1cb6b7b59f42bbee";
+
+const getPermissions = () => {
+  if (Platform.OS == "android") {
+    PermissionsAndroid.requestMultiple([
+      PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+      PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+      PermissionsAndroid.PERMISSIONS.CAMERA,
+      PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+    ]);
+  }
+};
 
 export class CometChatWrapper {
   static init() {
@@ -14,6 +27,19 @@ export class CometChatWrapper {
       .build();
 
     CometChat.init(appId, appSetting);
+  }
+
+  static initUIKit(userId: string) {
+    getPermissions();
+
+    CometChatUIKit.init({
+      appId: appId,
+      authKey: authKey,
+      region: region,
+      subscriptionType: "ALL_USERS",
+    }).then(() => {
+      CometChatUIKit.login({ uid: userId });
+    });
   }
 
   static getUser(userId: string) {

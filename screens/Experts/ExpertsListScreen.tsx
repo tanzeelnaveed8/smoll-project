@@ -65,7 +65,7 @@ const ExpertsListScreen: React.FC<{ navigation: NavigationType }> = ({
             verified
             isOnline={item.isOnline}
             image={item.profileImg?.url}
-            nextAvailable="06:45 PM today"
+            nextAvailable="-"
             onCheckAvailability={() => {
               navigation.navigate("ExpertsListDetailScreen", {
                 id: item.id,

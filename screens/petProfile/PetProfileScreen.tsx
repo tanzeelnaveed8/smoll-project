@@ -29,13 +29,12 @@ interface Props {
   navigation: NavigationType;
 }
 
-const totalSteps = 8;
+const totalSteps = 7;
 
 const PetProfileScreen: React.FC<Props> = (props) => {
   const route = useRoute();
   const toast = useToast();
   const { addPet, healthHistoryMap } = usePetStore();
-  const [newPetId, setNewPetId] = useState("");
 
   const [currentStep, setCurrentStep] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -52,11 +51,12 @@ const PetProfileScreen: React.FC<Props> = (props) => {
     chipNumber: 0,
   });
 
-  const progress = useMemo(() => (currentStep + 1) / totalSteps, [currentStep]);
+  const progress = useMemo(
+    () => (currentStep + 1) / totalSteps - 0.2,
+    [currentStep]
+  );
 
   const isActionDisabled = useMemo(() => {
-    const healthHistoryLength = healthHistoryMap.get(newPetId)?.length;
-
     switch (currentStep) {
       case 0:
         return !pet.name.length;
@@ -68,33 +68,31 @@ const PetProfileScreen: React.FC<Props> = (props) => {
         return !pet.weight;
       case 7:
         return !pet.photos.length;
-      case 8:
-        return !healthHistoryLength;
     }
 
     return false;
   }, [currentStep, pet, healthHistoryMap]);
 
   const handleNext = async () => {
+    const comingFrom = (route.params as Record<string, string>)?.from;
+
     if (currentStep === 7) {
       try {
         setLoading(true);
 
-        const response = await addPet(pet);
-        setNewPetId(`${response.id}`);
+        const { id } = await addPet(pet);
+
+        props.navigation.navigate("PetProfileMedicalHistoryScreen", {
+          navigateTo: comingFrom === "modal" ? "HomeScreen" : comingFrom,
+          petId: id ?? "",
+          petName: pet.name,
+          petBg: pet.photos[0].url,
+        });
 
         toast.show("Pet profile created successfully");
       } finally {
         setLoading(false);
       }
-    }
-
-    if (currentStep === 8) {
-      const comingFrom = (route.params as Record<string, string>)?.from;
-
-      props.navigation.navigate("PetProfileCongratulationsScreen", {
-        navigateTo: comingFrom === "modal" ? "HomeScreen" : comingFrom,
-      });
     } else {
       setCurrentStep((step) => step + 1);
     }
@@ -119,7 +117,11 @@ const PetProfileScreen: React.FC<Props> = (props) => {
   };
 
   return (
-    <Layout showBack onBackPress={handleBack} style={styles.container}>
+    <Layout
+      showBack={currentStep !== 8}
+      onBackPress={handleBack}
+      style={styles.container}
+    >
       <Div style={{ flex: 1 }}>
         {/* progress bar */}
         <Progress.Bar
@@ -162,9 +164,6 @@ const PetProfileScreen: React.FC<Props> = (props) => {
             setPet={setPet}
           />
         )}
-        {currentStep === 8 && (
-          <PetProfileMedicalHistoryScreen petId={newPetId} />
-        )}
       </Div>
 
       <Div>
@@ -174,7 +173,7 @@ const PetProfileScreen: React.FC<Props> = (props) => {
           disabled={isActionDisabled || loading}
           loading={loading}
         >
-          {currentStep === 8 ? "Confirm" : "Next"}
+          Next
         </ButtonPrimary>
       </Div>
     </Layout>
