@@ -6,7 +6,7 @@ import {
   fontHauoraBold,
   fontHauoraSemiBold,
 } from "@/constant/constant";
-import { useCasesStore } from "@/store/modules/cases";
+import { useCasesStore } from "@/store/modules/case";
 import { NavigationType } from "@/store/types";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, StyleSheet } from "react-native";

@@ -1,15 +1,16 @@
 import { fontHauoraMedium } from "@/constant/constant";
-import { Div, Text, Button } from "react-native-magnus";
-import {
-  IconSquareRoundedPlus,
-  IconChevronRight,
-} from "@tabler/icons-react-native";
-import PetDetailsModal from "./PetDetailsModal";
-import React, { useState } from "react";
-import { TouchableOpacity } from "react-native";
 import { usePetStore } from "@/store/modules/pet";
+import {
+  IconChevronRight,
+  IconSquareRoundedPlus,
+} from "@tabler/icons-react-native";
+import React, { useState } from "react";
+import { Button, Div, Text } from "react-native-magnus";
+import PetDetailsModal from "../petProfileForm/PetDetailsModal";
 
-const AddMedicalHistoryScreen: React.FC<{ petId: string }> = ({ petId }) => {
+const PetProfileMedicalHistoryScreen: React.FC<{ petId: string }> = ({
+  petId,
+}) => {
   const { healthHistoryMap } = usePetStore();
   const [open, setOpen] = useState(false);
   const [healthHistoryId, setHealthHistoryId] = useState("");
@@ -94,4 +95,4 @@ const AddMedicalHistoryScreen: React.FC<{ petId: string }> = ({ petId }) => {
   );
 };
 
-export default AddMedicalHistoryScreen;
+export default PetProfileMedicalHistoryScreen;

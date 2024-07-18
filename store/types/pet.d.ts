@@ -11,19 +11,6 @@ export enum PetSpeciesEnum {
   CAT = "cat",
 }
 
-export type HealthHistory = {
-  id?: string;
-  name: string;
-  description: string;
-  date: string;
-  documents: {
-    filename: string;
-    filesize: number;
-    mimetype: string;
-    url: string;
-  }[];
-};
-
 export type PetDetail = {
   id?: string;
   name: string;
@@ -39,35 +26,34 @@ export type PetDetail = {
   healthHistory?: HealthHistory[];
 };
 
-export type PetListItemType = {
+export interface Pet {
   id: string;
   name: string;
-  photos: [
-    {
-      filename: string;
-      filesize: number;
-      mimetype: string;
-      url: string;
-    }
-  ];
+  photos: UploadedFile[];
+}
+
+export type HealthHistory = {
+  id?: string;
+  name: string;
+  description: string;
+  date: string;
+  documents: UploadedFile[];
 };
 
-export interface Pet extends Pick<PetDetail, ["id", "name", "photos"]> {}
 export interface PetPayloadDto extends PetDetail {}
-
 export interface PetBreeds {
   cats: string[];
   dogs: string[];
 }
 
 export interface PetState {
+  pets: Nullable<Pet[]>;
   petsDetailMap: Map<string, Nullable<PetDetail>>;
   healthHistoryMap: Map<string, HealthHistory[]>;
   petBreeds: Nullable<PetBreeds>;
-  petsList: PetListItemType[];
 
   fetchPetBreeds: () => Promise<void>;
-  fetchPets: () => Promise<PetListItemType[]>;
+  fetchPets: () => Promise<void>;
   fetchPetDetails: (id: string) => Promise<PetDetail>;
   addPet: (pet: PetPayloadDto) => Promise<PetDetail>;
   updatePet: (id: string, payload: PetDetail) => Promise<PetDetail>;

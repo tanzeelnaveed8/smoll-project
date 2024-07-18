@@ -14,14 +14,14 @@ import { Button, Div, Image, Skeleton, Text } from "react-native-magnus";
 const PetProfileListScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
-  const { fetchPets, petsList } = usePetStore();
+  const { fetchPets, pets } = usePetStore();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        if (petsList.length === 0) {
+        if (!pets) {
           await fetchPets();
         }
       } finally {
@@ -47,27 +47,28 @@ const PetProfileListScreen: React.FC<{ navigation: NavigationType }> = ({
         </Text>
 
         <Div mb={32}>
-          {petsList.map((item, i) => {
-            let image;
-            for (let i = 0; i < item.photos.length; i++) {
-              if (item.photos[i]?.url) {
-                image = item.photos[i]?.url;
+          {pets &&
+            pets.map((item, i) => {
+              let image;
+              for (let i = 0; i < item.photos.length; i++) {
+                if (item.photos[i]?.url) {
+                  image = item.photos[i]?.url;
+                }
+                console.log("i", i);
               }
-              console.log("i", i);
-            }
-            return (
-              <ProfileCard
-                image={image}
-                key={i}
-                name={item.name}
-                onPress={() => {
-                  navigation.navigate("PetProfileDetailsScreen", {
-                    petId: item.id,
-                  });
-                }}
-              />
-            );
-          })}
+              return (
+                <ProfileCard
+                  image={image}
+                  key={i}
+                  name={item.name}
+                  onPress={() => {
+                    navigation.navigate("PetProfileDetailsScreen", {
+                      petId: item.id,
+                    });
+                  }}
+                />
+              );
+            })}
         </Div>
 
         {loading && (

@@ -6,7 +6,15 @@ export const usePetStore = create<PetState>((set, get) => ({
   petsDetailMap: new Map(),
   petBreeds: null,
   healthHistoryMap: new Map(),
-  petsList: [],
+  pets: null,
+
+  fetchPets: async () => {
+    const response = await api.get("/member/pets");
+
+    set(() => ({
+      pets: response.data,
+    }));
+  },
 
   fetchPetBreeds: async () => {
     const response = await api.get("/member/pets/breeds");
@@ -26,16 +34,6 @@ export const usePetStore = create<PetState>((set, get) => ({
 
     set(() => ({
       petsDetailMap: petMap,
-    }));
-
-    return response.data;
-  },
-
-  fetchPets: async () => {
-    const response = await api.get("/member/pets");
-
-    set(() => ({
-      petsList: response.data,
     }));
 
     return response.data;

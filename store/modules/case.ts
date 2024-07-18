@@ -1,12 +1,23 @@
 import { create } from "zustand";
-import { PetState } from "../types/pet";
 import api from "@/utils/api";
-import { CasesState } from "../types/cases";
+import { CasesState } from "../types/case";
 
-export const useCasesStore = create<CasesState>((set, get) => ({
+export const useCaseStore = create<CasesState>((set, get) => ({
   casesList: [],
   caseRequests: [],
   vetDoctorList: [],
+
+  createCase: async (payload) => {
+    const { petId, ...rest } = payload;
+
+    const res = await api.post("/member/cases", rest, {
+      params: {
+        petId,
+      },
+    });
+
+    return { id: res.data.id };
+  },
 
   fetchCases: async () => {
     const response = await api.get("/member/pets/breeds");

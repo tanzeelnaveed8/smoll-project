@@ -5,11 +5,20 @@ import { fontHauoraMedium } from "@/constant/constant";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import ConfettiCannon from "react-native-confetti-cannon";
 import Layout from "@/components/app/Layout";
+import { useRoute } from "@react-navigation/native";
 import { NavigationType } from "@/store/types";
 
-const PetCongratulationsScreen: React.FC<{ navigation: NavigationType }> = ({
+const PetProfileCongratulationsScreen = ({
   navigation,
+}: {
+  navigation: NavigationType;
 }) => {
+  const route = useRoute();
+
+  const petName = (route.params as Record<string, string>)?.petName;
+  const petBg = (route.params as Record<string, string>)?.petBg;
+  const navigateTo = (route.params as Record<string, string>)?.navigateTo;
+
   return (
     <Layout>
       <Div pt={20} pb={10} flex={1}>
@@ -28,7 +37,7 @@ const PetCongratulationsScreen: React.FC<{ navigation: NavigationType }> = ({
               h={200}
               rounded={64}
               bgImg={{
-                uri: "https://img.freepik.com/premium-photo/front-view-beautiful-dog-with-copy-space_994641-1631.jpg",
+                uri: petBg,
               }}
               position="relative"
             >
@@ -46,7 +55,7 @@ const PetCongratulationsScreen: React.FC<{ navigation: NavigationType }> = ({
               textAlign="center"
               mt={20}
             >
-              Congratulations! Lucy's profile has been added.
+              Congratulations! {petName}'s profile has been added.
             </Text>
             <Text
               w={314}
@@ -63,11 +72,7 @@ const PetCongratulationsScreen: React.FC<{ navigation: NavigationType }> = ({
           </Div>
 
           <Div mt="auto">
-            <ButtonPrimary
-              onPress={() => {
-                navigation.navigate("HomeScreen");
-              }}
-            >
+            <ButtonPrimary onPress={() => navigation.navigate(navigateTo)}>
               Let's Go
             </ButtonPrimary>
           </Div>
@@ -77,4 +82,4 @@ const PetCongratulationsScreen: React.FC<{ navigation: NavigationType }> = ({
   );
 };
 
-export default PetCongratulationsScreen;
+export default PetProfileCongratulationsScreen;

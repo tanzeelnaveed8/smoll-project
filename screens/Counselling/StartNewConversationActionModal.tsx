@@ -1,4 +1,3 @@
-import Layout from "@/components/app/Layout";
 import BottomSheet from "@/components/partials/BottomSheet";
 import { fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
 import { IconMessages, IconVideo } from "@tabler/icons-react-native";
