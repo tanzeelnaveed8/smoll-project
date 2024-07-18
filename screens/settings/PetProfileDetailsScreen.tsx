@@ -14,6 +14,8 @@ import AddButton from "@/components/partials/AddButton";
 import { useRoute } from "@react-navigation/native";
 import { usePetStore } from "@/store/modules/pet";
 import { PetDetail } from "@/store/types/pet";
+import { UploadedFile } from "@/store/types/file";
+import { useToast } from "react-native-toast-notifications";
 
 const btns = ["Basic Details", "Health History", "Cases"];
 
@@ -29,10 +31,12 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
   const route = useRoute();
+  const toast = useToast();
   const id = (route.params as RouteType)?.petId;
-  const { petsDetailMap, fetchPetDetails } = usePetStore();
+  const { petsDetailMap, fetchPetDetails, updatePet } = usePetStore();
   const [profileImg, setProfileImg] = useState("");
   const [loading, setLoading] = useState(false);
+  const [imageLoading, setImageLoading] = useState(false);
 
   const petDetailsData = petsDetailMap.get(id);
   const [activeTab, setActiveTab] = useState(btns[0]);
@@ -68,24 +72,76 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
     }
   }, [petDetailsData]);
 
+  const handleUpdateImage = async (file: UploadedFile[]) => {
+    if (!petDetailsData) return;
+    console.log("handleUpdateImage files", file);
+
+    const filesArr = [...file, ...petDetailsData?.photos];
+
+    try {
+      setImageLoading(true);
+
+      await updatePet(id, { photos: filesArr });
+
+      toast.show("Pet Profile Image updated successfully");
+    } finally {
+      setImageLoading(false);
+    }
+  };
+
   const petDetails = [
-    { title: "Name", value: petDetailsData?.name, fileName: "name" },
-    { title: "Date of Birth", value: petDetailsData?.dob, fileName: "dob" },
+    {
+      title: "Name",
+      value: petDetailsData?.name,
+      link: "PetEditInfoScreen",
+      fileName: "name",
+    },
+    {
+      title: "Date of Birth",
+      value: petDetailsData?.dob,
+      link: "PetEditInfoScreen",
+      fileName: "dob",
+    },
     {
       title: "Weight",
       value: `${petDetailsData?.weight} kg`,
-      fileName: "weight",
+      link: "EditInfoScreen",
+      heading: "Please enter pet's Weight",
+      placeholder: "Weight",
+      fieldKey: "weight",
+      dataValue: petDetailsData?.weight,
     },
-    { title: "Species", value: petDetailsData?.species, fileName: "species" },
-    { title: "Gender", value: petDetailsData?.gender, fileName: "gender" },
-    { title: "Breed", value: petDetailsData?.breed, fileName: "breed" },
+    {
+      title: "Species",
+      value: petDetailsData?.species,
+      link: "PetEditInfoScreen",
+      fileName: "species",
+    },
+    {
+      title: "Gender",
+      value: petDetailsData?.gender,
+      link: "PetEditInfoScreen",
+      fileName: "gender",
+    },
+    {
+      title: "Breed",
+      value: petDetailsData?.breed,
+      link: "PetEditInfoScreen",
+      fileName: "breed",
+    },
     {
       title: "Chip Number (Optional)",
       value: petDetailsData?.chipNumber,
+      link: "EditInfoScreen",
+      heading: "Please add Pet's Chip Number",
+      placeholder: "Chip Number",
+      fieldKey: "chipNumber",
+      dataValue: petDetailsData?.chipNumber,
     },
     {
       title: "Spayed/Neutered",
       value: petDetailsData?.spayedOrNeutered ? "Yes" : "No",
+      link: "PetEditInfoScreen",
       fileName: "spayed/neutered",
     },
     {
@@ -117,10 +173,17 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                 position="absolute"
                 w={"100%"}
                 h={"100%"}
+                style={{}}
               />
 
               <Div mx={"auto"}>
-                <ImageUpload h={92} w={93} editIcon uri={profileImg} />
+                <ImageUpload
+                  h={92}
+                  w={93}
+                  editIcon
+                  uri={profileImg}
+                  onChange={handleUpdateImage}
+                />
               </Div>
             </Div>
             <Text fontSize={"4xl"} fontFamily={fontHauoraMedium} ml={14}>
@@ -189,11 +252,22 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                   value={item.value}
                   editable
                   onEdit={() => {
-                    if (item.fileName)
-                      navigation.navigate("PetEditInfoScreen", {
+                    if (item.fileName) {
+                      navigation.navigate(item.link, {
                         petId: id,
                         fileName: item.fileName,
                       });
+                    }
+
+                    if (item.heading) {
+                      navigation.navigate(item.link, {
+                        heading: item.heading,
+                        placeholder: item.placeholder,
+                        fieldKey: item.fieldKey,
+                        value: `${item.dataValue || ""}`,
+                        petId: id,
+                      });
+                    }
                   }}
                 />
               )}

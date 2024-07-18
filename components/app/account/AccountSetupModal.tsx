@@ -40,7 +40,8 @@ const stepsBtn: {
   {
     name: "Pet Profile",
     value: "pet",
-    link: "PetProfileForm",
+    // link: "PetProfileForm",
+    link: "PetProfileScreen",
   },
 ];
 

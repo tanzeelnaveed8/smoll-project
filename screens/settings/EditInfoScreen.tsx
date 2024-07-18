@@ -1,8 +1,10 @@
 import Layout from "@/components/app/Layout";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import InputField from "@/components/partials/InputField";
+import { usePetStore } from "@/store/modules/pet";
 import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
+import { PetDetail } from "@/store/types/pet";
 import { UpdateUserPayloadDto } from "@/store/types/user";
 import { getAxiosErrMsg } from "@/utils/helpers";
 import { useRoute } from "@react-navigation/native";
@@ -16,13 +18,15 @@ type DataType = {
   placeholder: string;
   fieldKey: keyof UpdateUserPayloadDto;
   value: string;
+  petId?: string;
 };
 
 const EditInfoScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
   const { updateUser, user } = useUserStore();
-  const { heading, placeholder, fieldKey, value } = useRoute()
+  const { updatePet } = usePetStore();
+  const { heading, placeholder, fieldKey, value, petId } = useRoute()
     .params as DataType;
   const [form, setForm] = useState(value);
   const [loading, setLoading] = useState(false);
@@ -38,9 +42,18 @@ const EditInfoScreen: React.FC<{ navigation: NavigationType }> = ({
     try {
       setLoading(true);
 
-      const obj: Partial<Record<typeof fieldKey, string>> = {};
-      obj[fieldKey] = form;
-      await updateUser(obj);
+      if (petId) {
+        const key = fieldKey as keyof PetDetail;
+        const petObj = {} as Partial<PetDetail>; // Changed the type to Partial<PetDetail>
+        petObj[key] = +form ? +form : (form as any); // Type assertion to any to avoid type error
+
+        const data = petObj as PetDetail;
+        await updatePet(petId, data);
+      } else {
+        const obj: Partial<Record<typeof fieldKey, string>> = {};
+        obj[fieldKey] = form;
+        await updateUser(obj);
+      }
 
       navigation.goBack();
     } catch (err) {
@@ -80,7 +93,11 @@ const EditInfoScreen: React.FC<{ navigation: NavigationType }> = ({
         />
       </Div>
 
-      <ButtonPrimary loading={loading} onPress={handleConfirm}>
+      <ButtonPrimary
+        loading={loading}
+        onPress={handleConfirm}
+        bgColor="primary"
+      >
         Confirm
       </ButtonPrimary>
     </Layout>

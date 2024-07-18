@@ -42,8 +42,17 @@ import PetEditInfoScreen from "./screens/settings/PetEditInfoScreen";
 import PetProfileDetailsScreen from "./screens/settings/PetProfileDetailsScreen";
 import PetProfileListScreen from "./screens/settings/PetProfileListScreen";
 import { useUserStore } from "./store/modules/user";
+
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import CasesRequestScreen from "./screens/Cases/CasesRequestScreen";
+import PartnerVetScreen from "./screens/Cases/PartnerVetScreen";
+import SlotBookingScreen from "./screens/doctorsScreens/SlotBookingScreen";
+import PartnerVetDetailScreen from "./screens/Cases/PartnerVetDetailScreen";
+import PartnerVetConfirmationScreen from "./screens/Cases/PartnerVetConfirmationScreen";
+import PartnerVetSuccessfullScreen from "./screens/Cases/PartnerVetSuccessfullScreen";
+import SettingPersonalInfoScreen from "./screens/settings/SettingPersonalInfoScreen";
+import EditInfoScreen from "./screens/settings/EditInfoScreen";
 
 dayjs.extend(relativeTime);
 
@@ -169,54 +178,81 @@ const App = () => {
                   name="CounsellingChatScreen"
                   component={CounsellingChatScreen}
                 />
-
                 <Stack.Screen
                   name="ExpertsListScreen"
                   component={ExpertsListScreen}
                 />
-
                 <Stack.Screen
                   name="ExpertsListDetailScreen"
                   component={ExpertsListDetailScreen}
                 />
-
                 <Stack.Screen
                   name="ExpertsInboxScreen"
                   component={ExpertsInboxScreen}
                 />
-
                 <Stack.Screen
                   name="ExpertsChatScreen"
                   component={ExpertsChatScreen}
                 />
-
                 <Stack.Screen
                   name="ConsultationCaseBriefScreen"
                   component={ConsultationCaseBriefScreen}
                 />
-
                 <Stack.Screen
                   name="ConsultationWaitingScreen"
                   component={ConsultationWaitingScreen}
                 />
-
                 <Stack.Screen
                   name="ConsultationVideoScreen"
                   component={ConsultationVideoScreen}
+                />
+                {/*  */}
+
+                <Stack.Screen
+                  // name="PartnerClinic"
+                  name="CasesListScreen"
+                  component={CasesListScreen}
+                />
+                <Stack.Screen
+                  name="CasesRequestScreen"
+                  component={CasesRequestScreen}
+                />
+                <Stack.Screen
+                  name="PartnerVetScreen"
+                  component={PartnerVetScreen}
+                />
+                <Stack.Screen
+                  name="SlotBookingScreen"
+                  component={SlotBookingScreen}
+                />
+                <Stack.Screen
+                  name="PartnerVetDetailScreen"
+                  component={PartnerVetDetailScreen}
+                />
+                <Stack.Screen
+                  name="PartnerVetConfirmationScreen"
+                  component={PartnerVetConfirmationScreen}
+                />
+                <Stack.Screen
+                  name="PartnerVetSuccessfullScreen"
+                  component={PartnerVetSuccessfullScreen}
+                />
+
+                <Stack.Screen
+                  name="SettingPersonalInfoScreen"
+                  component={SettingPersonalInfoScreen}
+                />
+                <Stack.Screen
+                  name="EditInfoScreen"
+                  component={EditInfoScreen}
                 />
                 <Stack.Screen
                   name="PetEditInfoScreen"
                   component={PetEditInfoScreen}
                 />
-
                 <Stack.Screen
                   name="ConsultationFeedbackScreen"
                   component={ConsultationFeedbackScreen}
-                />
-
-                <Stack.Screen
-                  name="CasesListScreen"
-                  component={CasesListScreen}
                 />
 
                 <Stack.Screen
@@ -227,6 +263,10 @@ const App = () => {
                 <Stack.Screen
                   name="PetProfileDetailsScreen"
                   component={PetProfileDetailsScreen}
+                />
+                <Stack.Screen
+                  name="SettingsMainScreen"
+                  component={SettingsMainScreen}
                 />
                 {/* <Stack.Screen name="Membership" component={MembershipScreen} />
           

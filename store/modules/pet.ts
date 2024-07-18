@@ -56,11 +56,17 @@ export const usePetStore = create<PetState>((set, get) => ({
       ...payload,
       dob: payload.dob ? new Date(payload.dob).toISOString() : undefined,
     });
+    const data = response.data;
 
     const updatedPetMap = get().petsDetailMap.set(id, response.data);
 
+    const updatedPets = get().pets?.map((pet) =>
+      pet.id === id ? { ...pet, name: data.name, photos: data.photos } : pet
+    );
+
     set(() => ({
       petsDetailMap: updatedPetMap,
+      pets: updatedPets,
     }));
 
     return response.data;
