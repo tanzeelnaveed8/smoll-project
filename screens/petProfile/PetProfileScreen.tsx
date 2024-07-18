@@ -6,7 +6,12 @@ import {
   PetSpeciesEnum,
 } from "@/store/types/pet.d";
 import React, { useMemo, useState } from "react";
-import { Dimensions, StyleSheet } from "react-native";
+import {
+  Dimensions,
+  Keyboard,
+  StyleSheet,
+  TouchableWithoutFeedback,
+} from "react-native";
 import { Div } from "react-native-magnus";
 import * as Progress from "react-native-progress";
 import PetImageUploadScreen from "./PetProfileImageScreen";
@@ -123,47 +128,52 @@ const PetProfileScreen: React.FC<Props> = (props) => {
       style={styles.container}
     >
       <Div style={{ flex: 1 }}>
-        {/* progress bar */}
-        <Progress.Bar
-          progress={progress}
-          height={8}
-          width={windowWidth - 40}
-          borderColor="transparent"
-          style={{
-            marginBottom: 32,
-            backgroundColor: "#EFEFEF",
-            borderRadius: 100,
-          }}
-          color="#427594"
-        />
-
-        {/* screens */}
-        {currentStep === 0 && (
-          <PetProfileNameScreen pet={pet} setPet={setPet} />
-        )}
-        {currentStep === 1 && <PetProfileDOBScreen pet={pet} setPet={setPet} />}
-        {currentStep === 2 && (
-          <PetProfileGenderScreen pet={pet} setPet={setPet} />
-        )}
-        {currentStep === 3 && (
-          <PetProfileSpeciesScreen pet={pet} setPet={setPet} />
-        )}
-        {currentStep === 4 && (
-          <PetProfileBreedScreen pet={pet} setPet={setPet} />
-        )}
-        {currentStep === 5 && (
-          <PetProfileSpayedScreen pet={pet} setPet={setPet} />
-        )}
-        {currentStep === 6 && (
-          <PetProfileBasicDetailScreens pet={pet} setPet={setPet} />
-        )}
-        {currentStep === 7 && (
-          <PetImageUploadScreen
-            navigation={props.navigation}
-            pet={pet}
-            setPet={setPet}
-          />
-        )}
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+          <>
+            {/* progress bar */}
+            <Progress.Bar
+              progress={progress}
+              height={8}
+              width={windowWidth - 40}
+              borderColor="transparent"
+              style={{
+                marginBottom: 32,
+                backgroundColor: "#EFEFEF",
+                borderRadius: 100,
+              }}
+              color="#427594"
+            />
+            {/* screens */}
+            {currentStep === 0 && (
+              <PetProfileNameScreen pet={pet} setPet={setPet} />
+            )}
+            {currentStep === 1 && (
+              <PetProfileDOBScreen pet={pet} setPet={setPet} />
+            )}
+            {currentStep === 2 && (
+              <PetProfileGenderScreen pet={pet} setPet={setPet} />
+            )}
+            {currentStep === 3 && (
+              <PetProfileSpeciesScreen pet={pet} setPet={setPet} />
+            )}
+            {currentStep === 4 && (
+              <PetProfileBreedScreen pet={pet} setPet={setPet} />
+            )}
+            {currentStep === 5 && (
+              <PetProfileSpayedScreen pet={pet} setPet={setPet} />
+            )}
+            {currentStep === 6 && (
+              <PetProfileBasicDetailScreens pet={pet} setPet={setPet} />
+            )}
+            {currentStep === 7 && (
+              <PetImageUploadScreen
+                navigation={props.navigation}
+                pet={pet}
+                setPet={setPet}
+              />
+            )}
+          </>
+        </TouchableWithoutFeedback>
       </Div>
 
       <Div>

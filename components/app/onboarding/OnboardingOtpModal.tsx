@@ -15,7 +15,7 @@ import { Button, Div, Text } from "react-native-magnus";
 import Toast from "react-native-toast-notifications";
 import ToastContainer from "react-native-toast-notifications/lib/typescript/toast-container";
 import OnboardingUserModal from "./OnboardingUserModal";
-import { Keyboard } from "react-native";
+import { Keyboard, TouchableWithoutFeedback } from "react-native";
 
 interface Props {
   navigation: NavigationType;
@@ -81,72 +81,74 @@ const OnboardingOtpModal: React.FC<Props> = (props) => {
         showCloseIcon={false}
         barMb={28}
       >
-        <View>
-          <BackButton onPress={props.onBack} mb={20} />
-          <Text fontSize={"5xl"} fontFamily={fontHauora} mb={4}>
-            Enter your verification code
-          </Text>
-
-          <Text fontSize={"xl"} mb={24} color="#494949">
-            We have send a 4 digit code to the phone number{" "}
-            <Text fontSize={"xl"} color="#222222">
-              {props.label}
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+          <Div h="100%">
+            <BackButton onPress={props.onBack} mb={20} />
+            <Text fontSize={"5xl"} fontFamily={fontHauora} mb={4}>
+              Enter your verification code
             </Text>
-          </Text>
 
-          <InputField
-            placeholder="Verification Code"
-            value={otp}
-            mb={8}
-            onChangeText={handleOtpChange}
-            maxLength={4}
-            inputMode="numeric"
-            keyboardType="number-pad"
-            autoFocus
-          />
-
-          <Button
-            color="#0189F9"
-            bg="transparent"
-            px={0}
-            py={0}
-            mb={32}
-            disabled={isLoading}
-            fontSize={"md"}
-            fontFamily={fontHauora}
-            onPress={handleResend}
-          >
-            Resend Code
-          </Button>
-
-          <ButtonPrimary
-            bgColor="primary"
-            onPress={() => handleConfirm()}
-            loading={isLoading}
-            disabled={isLoading || otp.length < 4}
-          >
-            Confirm
-          </ButtonPrimary>
-
-          <Div
-            mt={24}
-            style={{ flexDirection: "row", justifyContent: "center" }}
-          >
-            <Text fontSize={16} color="#6B6B6B" fontFamily={fontHauora}>
-              Can’t find the code?{" "}
+            <Text fontSize={"xl"} mb={24} color="#494949">
+              We have send a 4 digit code to the phone number{" "}
+              <Text fontSize={"xl"} color="#222222">
+                {props.label}
+              </Text>
             </Text>
+
+            <InputField
+              placeholder="Verification Code"
+              value={otp}
+              mb={8}
+              onChangeText={handleOtpChange}
+              maxLength={4}
+              inputMode="numeric"
+              keyboardType="number-pad"
+              autoFocus
+            />
+
             <Button
+              color="#0189F9"
               bg="transparent"
-              color="#222222"
               px={0}
               py={0}
-              fontSize={16}
+              mb={32}
+              disabled={isLoading}
+              fontSize={"md"}
               fontFamily={fontHauora}
+              onPress={handleResend}
             >
-              Get help
+              Resend Code
             </Button>
+
+            <ButtonPrimary
+              bgColor="primary"
+              onPress={() => handleConfirm()}
+              loading={isLoading}
+              disabled={isLoading || otp.length < 4}
+            >
+              Confirm
+            </ButtonPrimary>
+
+            <Div
+              mt={24}
+              style={{ flexDirection: "row", justifyContent: "center" }}
+            >
+              <Text fontSize={16} color="#6B6B6B" fontFamily={fontHauora}>
+                Can’t find the code?{" "}
+              </Text>
+              <Button
+                bg="transparent"
+                color="#222222"
+                px={0}
+                py={0}
+                fontSize={16}
+                fontFamily={fontHauora}
+              >
+                Get help
+              </Button>
+            </Div>
           </Div>
-        </View>
+        </TouchableWithoutFeedback>
 
         <OnboardingUserModal
           isVisible={showNameModal}

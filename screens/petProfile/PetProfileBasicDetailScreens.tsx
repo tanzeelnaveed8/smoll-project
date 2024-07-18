@@ -1,4 +1,5 @@
 import InputField from "@/components/partials/InputField";
+import TextAreaField from "@/components/partials/TextAreaField";
 import { PetPayloadDto } from "@/store/types/pet";
 import React, { useState } from "react";
 import { Div, Text } from "react-native-magnus";
@@ -45,14 +46,9 @@ const PetProfileBasicDetailScreens: React.FC<Props> = (props) => {
         keyboardType="numeric"
       />
 
-      <InputField
+      <TextAreaField
         placeholder="Any pre-existing conditions (Optional)"
-        marginBottom={20}
-        multiline
-        numberOfLines={6}
-        inputStyle={{
-          borderRadius: 12,
-        }}
+        mb={20}
       />
     </Div>
   );

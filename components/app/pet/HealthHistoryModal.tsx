@@ -10,6 +10,7 @@ import { HealthHistory } from "@/store/types/pet";
 import { UploadedFile } from "@/store/types/file";
 import { usePetStore } from "@/store/modules/pet";
 import { useToast } from "react-native-toast-notifications";
+import TextAreaField from "@/components/partials/TextAreaField";
 
 type PropTypes = {
   open: boolean;
@@ -99,11 +100,14 @@ const HealthHistoryModal = (props: PropTypes) => {
       isVisible={open}
       onCloseIconClick={onClose}
       h="95%"
-      px={0}
+      px={20}
       showCloseIcon
     >
-      <ScrollDiv style={{}} showsVerticalScrollIndicator={false}>
-        <Div flex={1} px={20} pb={30}>
+      <ScrollDiv
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+      >
+        <Div flex={1} pb={30}>
           <Text fontSize={32} lineHeight={40} color="#222222" mb={4}>
             Details
           </Text>
@@ -137,10 +141,8 @@ const HealthHistoryModal = (props: PropTypes) => {
               }}
             />
 
-            <InputField
+            <TextAreaField
               placeholder="Description"
-              multiline
-              numberOfLines={4}
               value={form.description}
               onChangeText={(e) => {
                 handleFormChange("description", e);
@@ -186,18 +188,17 @@ const HealthHistoryModal = (props: PropTypes) => {
               }}
             />
           </Div>
-          <Div mt={60} pb={20}>
-            <ButtonPrimary
-              bgColor="primary"
-              onPress={handleSubmit}
-              loading={loading}
-              disabled={loading || isDisabled}
-            >
-              Confirm
-            </ButtonPrimary>
-          </Div>
         </Div>
       </ScrollDiv>
+
+      <ButtonPrimary
+        bgColor="primary"
+        onPress={handleSubmit}
+        loading={loading}
+        disabled={loading || isDisabled}
+      >
+        Confirm
+      </ButtonPrimary>
     </BottomSheet>
   );
 };

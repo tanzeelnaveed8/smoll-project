@@ -1,6 +1,6 @@
 import { fontHauoraSemiBold } from "@/constant/constant";
 import { NavigationType } from "@/store/types";
-import { useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import {
   IconBriefcase,
   IconHome,
@@ -43,9 +43,9 @@ const tabList = [
   },
 ];
 
-const TabNavigationBar: React.FC<{ navigation: NavigationType }> = ({
-  navigation,
-}) => {
+const TabNavigationBar: React.FC<{
+  navigation: any;
+}> = ({ navigation }) => {
   const route = useRoute();
 
   return (

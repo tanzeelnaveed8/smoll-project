@@ -1,3 +1,4 @@
+import { useExpertStore } from "@/store/modules/expert";
 import { NavigationType } from "@/store/types";
 import { CometChatCalls } from "@cometchat/calls-sdk-react-native";
 import { CometChat } from "@cometchat/chat-sdk-react-native";
@@ -10,8 +11,12 @@ const ConsultationVideoScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
   const route = useRoute();
+  const { endConsultation } = useExpertStore();
+
   const expertId = (route.params as Record<string, string>)?.expertId;
   const caseId = (route.params as Record<string, string>)?.caseId;
+  const consultationId = (route.params as Record<string, string>)
+    ?.consultationId;
 
   const [incomingCall, setIncomingCall] = useState<CometChat.Call | null>(null);
   const listnerID = "EXPERT_VIDEO_CALL";
@@ -54,10 +59,14 @@ const ConsultationVideoScreen: React.FC<{ navigation: NavigationType }> = ({
 
   const endHandler = () => {
     CometChat.endCall(incomingCall?.getSessionId() || "");
+
     navigation.navigate("ConsultationFeedbackScreen", {
       expertId: expertId,
       caseId: caseId,
     });
+
+    // if open, close the case
+    endConsultation(consultationId);
   };
 
   const callSettingsBuilder =

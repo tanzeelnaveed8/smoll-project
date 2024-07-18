@@ -20,7 +20,7 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
   const route = useRoute();
-  const expertId = (route.params as Record<string, string>)?.id ?? "DAxTFclDtF";
+  const expertId = (route.params as Record<string, string>)?.id;
 
   const {
     expertDetailMap,

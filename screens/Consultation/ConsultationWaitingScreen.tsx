@@ -39,6 +39,7 @@ const ConsultationWaitingScreen: React.FC<{ navigation: NavigationType }> = ({
           navigation.navigate("ConsultationVideoScreen", {
             expertId: vetId,
             caseId: caseId,
+            consultationId,
           });
         }
       });

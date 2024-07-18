@@ -1,4 +1,9 @@
-import { SafeAreaView, StyleSheet } from "react-native";
+import {
+  Keyboard,
+  SafeAreaView,
+  StyleSheet,
+  TouchableWithoutFeedback,
+} from "react-native";
 import { Text, ThemeProvider } from "react-native-magnus";
 
 import * as Font from "expo-font";

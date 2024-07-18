@@ -60,6 +60,7 @@ interface ExpertState {
   ) => Promise<ExpertAvailability[]>;
   findOneConsultation: (id: string) => Promise<FindOneConsultationResDto>;
   requestConsultation: (id: string) => Promise<{ id: string }>;
+  endConsultation: (id: string) => Promise<void>;
   updateConsultation: (payload: {
     id: string;
     caseId: string;

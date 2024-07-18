@@ -24,8 +24,6 @@ export const useCaseStore = create<CasesState>((set, get) => ({
 
     const cases = get().cases || [];
 
-    console.log("res", response.data);
-
     set(() => ({
       cases: loadMore ? [...cases, ...response.data] : response.data,
     }));

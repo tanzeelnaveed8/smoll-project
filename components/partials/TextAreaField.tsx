@@ -1,12 +1,13 @@
 import { colorDisableBg, colorDisableBorder } from "@/constant/constant";
 import { useState } from "react";
 import { Keyboard, ScrollView, TextInput, TextInputProps } from "react-native";
-import { useTheme } from "react-native-magnus";
+import { Div, useTheme } from "react-native-magnus";
 
 interface Props extends TextInputProps {
   disabled?: boolean;
   borderColor?: string;
   backgroundColor?: string;
+  mb?: number;
 }
 
 const TextAreaField: React.FC<Props> = (props) => {
@@ -23,7 +24,7 @@ const TextAreaField: React.FC<Props> = (props) => {
   };
 
   return (
-    <ScrollView keyboardShouldPersistTaps="handled">
+    <Div mb={props.mb}>
       <TextInput
         multiline={true}
         numberOfLines={20}
@@ -53,7 +54,7 @@ const TextAreaField: React.FC<Props> = (props) => {
         onFocus={handleFocus}
         {...props}
       />
-    </ScrollView>
+    </Div>
   );
 };
 

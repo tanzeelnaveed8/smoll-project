@@ -3,7 +3,7 @@ import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import { fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
 import React, { useEffect, useMemo, useState } from "react";
 import { TouchableOpacity } from "react-native";
-import { Div, Text } from "react-native-magnus";
+import { Div, ScrollDiv, Text } from "react-native-magnus";
 import { NavigationType } from "@/store/types";
 import InputField from "@/components/partials/InputField";
 import { useFileStore } from "@/store/modules/file";
@@ -14,6 +14,7 @@ import { usePetStore } from "@/store/modules/pet";
 import { useExpertStore } from "@/store/modules/expert";
 import { useRoute } from "@react-navigation/native";
 import ImageUpload from "@/components/partials/ImageUpload";
+import TextAreaField from "@/components/partials/TextAreaField";
 
 const NoPetOptions = ({
   navigation,
@@ -60,6 +61,8 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
   const petId = (route.params as Record<string, string>)?.petId;
   const petName = (route.params as Record<string, string>)?.petName;
   const expertId = (route.params as Record<string, string>)?.expertId;
+  const consultationId = (route.params as Record<string, string>)
+    ?.consultationId;
 
   const [documents, setDocuments] = useState<UploadedFile[]>([]);
   const [description, setDescription] = useState("");
@@ -72,9 +75,6 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
     label: string;
     value: string;
   } | null>(null);
-
-  const consultationId = (route.params as Record<string, string>)
-    ?.consultationId;
 
   useEffect(() => {
     fetchAllPets();
@@ -134,6 +134,8 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
 
       navigation.navigate("ConsultationWaitingScreen", {
         consultationId,
+        caseId,
+        expertId,
       });
     } finally {
       setActionLoading(false);
@@ -147,7 +149,7 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
       loading={loading}
       onBackPress={() => navigation.goBack()}
     >
-      <Div flex={1} pt={20}>
+      <ScrollDiv flex={1} keyboardShouldPersistTaps="handled">
         <Text fontSize={"4xl"} mb={12}>
           Tell the vet your pet's condition
         </Text>
@@ -176,11 +178,11 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
           />
         </Div>
 
-        <InputField
+        <TextAreaField
           placeholder="e.g. My cat is vomiting and color is white......"
-          mb={24}
           value={description}
           onChangeText={setDescription}
+          mb={24}
         />
 
         <Text fontFamily={fontHauoraSemiBold} fontSize="xl" mb={8}>
@@ -192,7 +194,7 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
           color="darkGreyText"
           mb={4}
         >
-          Upload supportive docunments
+          Upload supportive documents
         </Text>
 
         <Text
@@ -212,7 +214,7 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
             handleImage(file);
           }}
         />
-      </Div>
+      </ScrollDiv>
       <ButtonPrimary
         disabled={isActionDisable}
         onPress={handleCreateCase}

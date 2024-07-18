@@ -19,10 +19,11 @@ const PetProfileCongratulationsScreen = ({
   const petBg = (route.params as Record<string, string>)?.petBg;
   const navigateTo = (route.params as Record<string, string>)?.navigateTo;
   const petId = (route.params as Record<string, string>)?.petId;
+  const expertId = (route.params as Record<string, string>)?.expertId;
 
   return (
     <Layout>
-      <Div pt={20} pb={10} flex={1}>
+      <Div flex={1}>
         <Container flex={1}>
           <ConfettiCannon
             count={200}
@@ -67,19 +68,21 @@ const PetProfileCongratulationsScreen = ({
               textAlign="center"
               mt={4}
             >
-              Thank you for adding a pet. You can add more pets in the settings
-              section afterward.
+              You can add more pets in the settings section afterward.
             </Text>
           </Div>
 
           <Div mt="auto">
             <ButtonPrimary
-              onPress={() =>
+              onPress={() => {
+                console.log("testing", navigateTo);
+
                 navigation.navigate(navigateTo, {
                   petId: petId,
                   petName: petName,
-                })
-              }
+                  expertId: expertId,
+                });
+              }}
             >
               Let's Go
             </ButtonPrimary>

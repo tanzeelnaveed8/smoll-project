@@ -86,77 +86,73 @@ const InputField: React.FC<rest & InputProps> = ({
   }, [rest.focus]);
 
   return (
-    <ScrollView keyboardShouldPersistTaps="handled">
-      <Div
-        style={{
-          ...styles.container,
-          pointerEvents: rest.disabled ? "none" : "auto",
-        }}
-        mb={marginBottom ? marginBottom : 0}
-        mt={marginTop ? marginTop : 0}
-      >
-        {floatingPlaceholder && (
-          <Animated.Text
-            // fontSize={isFocused ? 16 : 18}
-            style={{
-              ...styles.floatingLabel,
-              fontSize: isFocused || valueExist ? 12 : 18,
-              top: topPosition, // Use Animated.Value for the top style
-              color: "#494949",
-              left: typeof rest.paddingX === "number" ? rest.paddingX : 12,
-              pointerEvents: "none",
-            }}
-          >
-            {rest.placeholder}
-          </Animated.Text>
-        )}
-
-        <Input
-          {...rest}
+    <Div
+      style={{
+        ...styles.container,
+        pointerEvents: rest.disabled ? "none" : "auto",
+      }}
+      mb={marginBottom ? marginBottom : 0}
+      mt={marginTop ? marginTop : 0}
+    >
+      {floatingPlaceholder && (
+        <Animated.Text
+          // fontSize={isFocused ? 16 : 18}
           style={{
-            borderRadius: borderRadius ?? 12,
-            ...externalStyles,
+            ...styles.floatingLabel,
+            fontSize: isFocused || valueExist ? 12 : 18,
+            top: topPosition, // Use Animated.Value for the top style
+            color: "#494949",
+            left: typeof rest.paddingX === "number" ? rest.paddingX : 12,
+            pointerEvents: "none",
           }}
-          ref={inputRef}
-          placeholder={floatingPlaceholder ? "" : rest.placeholder}
-          fontFamily={fontHauora}
-          placeholderTextColor={colorTextPrimary}
-          bg={
-            rest.disabled ? colorDisableBg : rest.bg ? rest.bg : "transparent"
-          }
-          color={rest.disabled ? colorDisableText : colorTextPrimary}
-          fontSize={"xl"}
-          h={rest.h ? rest.h : multiline ? "unset" : 56}
-          loaderColor={colorTextPrimary}
-          // px={typeof rest.paddingX === "number" ? rest.paddingX : 12}
-          // pr={rest.icon ? 30 : 12}
-          // pt={16}
-          // pb={floatingPlaceholder ? 8 : 16}
-          focusBorderColor="#427594"
-          borderColor={
-            rest.disabled
-              ? colorDisableBorder
-              : rest.borderColor
-              ? rest.borderColor
-              : "#222222"
-          }
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          onChangeText={(e) => {
-            if (onChangeText) {
-              onChangeText(e);
-            }
+        >
+          {rest.placeholder}
+        </Animated.Text>
+      )}
 
-            if (e.length > 0) {
-              setValueExist(true);
-            } else {
-              setValueExist(false);
-            }
-          }}
-          value={value}
-        />
-      </Div>
-    </ScrollView>
+      <Input
+        {...rest}
+        style={{
+          borderRadius: borderRadius ?? 12,
+          ...externalStyles,
+        }}
+        ref={inputRef}
+        placeholder={floatingPlaceholder ? "" : rest.placeholder}
+        fontFamily={fontHauora}
+        placeholderTextColor={colorTextPrimary}
+        bg={rest.disabled ? colorDisableBg : rest.bg ? rest.bg : "transparent"}
+        color={rest.disabled ? colorDisableText : colorTextPrimary}
+        fontSize={"xl"}
+        h={rest.h ? rest.h : multiline ? "unset" : 56}
+        loaderColor={colorTextPrimary}
+        // px={typeof rest.paddingX === "number" ? rest.paddingX : 12}
+        // pr={rest.icon ? 30 : 12}
+        // pt={16}
+        // pb={floatingPlaceholder ? 8 : 16}
+        focusBorderColor="#427594"
+        borderColor={
+          rest.disabled
+            ? colorDisableBorder
+            : rest.borderColor
+            ? rest.borderColor
+            : "#222222"
+        }
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        onChangeText={(e) => {
+          if (onChangeText) {
+            onChangeText(e);
+          }
+
+          if (e.length > 0) {
+            setValueExist(true);
+          } else {
+            setValueExist(false);
+          }
+        }}
+        value={value}
+      />
+    </Div>
   );
 };
 

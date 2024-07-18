@@ -33,13 +33,15 @@ export const useExpertStore = create<ExpertState>((set, get) => ({
   },
   findOneConsultation: async (id: string) => {
     const res = await api.get(`/member/vets/consultations/${id}`);
-    console.log("re", res.data);
     return res.data;
   },
   requestConsultation: async (id: string): Promise<{ id: string }> => {
     const res = await api.post(`/member/vets/${id}/consultations/request`);
 
     return { id: res.data.id };
+  },
+  endConsultation: async (id: string) => {
+    await api.post(`/member/vets/consultations/${id}/end`);
   },
   updateConsultation: async (payload: { id: string; caseId: string }) => {
     const { id, caseId } = payload;
@@ -52,8 +54,8 @@ export const useExpertStore = create<ExpertState>((set, get) => ({
   rateExpert: async (payload: RateExpertPayloadDto) => {
     const { id, caseId, rating, comment } = payload;
 
-    const res = await api.patch(
-      `/member/vets/${id}`,
+    const res = await api.post(
+      `/member/vets/${id}/feedbacks`,
       {
         rating,
         comment,

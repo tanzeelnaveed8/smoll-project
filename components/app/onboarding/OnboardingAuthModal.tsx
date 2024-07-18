@@ -13,6 +13,7 @@ import ToastContainer from "react-native-toast-notifications/lib/typescript/toas
 import Toast from "react-native-toast-notifications";
 import { getAxiosErrMsg } from "@/utils/helpers";
 import { AxiosError } from "axios";
+import { Keyboard, TouchableWithoutFeedback } from "react-native";
 
 interface Props {
   navigation: NavigationType;
@@ -63,68 +64,70 @@ const OnboardingAuthModal: React.FC<Props> = (props) => {
       h="93%"
       // onSwipeCancel={props.onBack}
     >
-      <Div justifyContent="space-between" pb={24} h="100%">
-        <Div>
-          <Text
-            fontWeight="600"
-            fontSize={"5xl"}
-            fontFamily={fontHauora}
-            lineHeight={36}
-            mb={20}
-          >
-            Login/Signup
-          </Text>
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <Div justifyContent="space-between" pb={24} h="100%">
+          <Div>
+            <Text
+              fontWeight="600"
+              fontSize={"5xl"}
+              fontFamily={fontHauora}
+              lineHeight={36}
+              mb={20}
+            >
+              Login/Signup
+            </Text>
 
-          <CountryDropdown
-            style={{ borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }}
-            onChange={setCountry}
-            onSelect={() => setIsFocused(true)}
-            value={country}
-            isDisabled={isLoading}
-          />
+            <CountryDropdown
+              style={{ borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }}
+              onChange={setCountry}
+              onSelect={() => setIsFocused(true)}
+              value={country}
+              isDisabled={isLoading}
+            />
 
-          <InputField
-            onChangeText={setPhone}
-            placeholder="Enter Phone number"
-            marginBottom={32}
-            borderColor="#222222"
-            keyboardType="number-pad"
-            disabled={isLoading}
-            inputStyle={{
-              borderRadius: 12,
-              borderTopLeftRadius: 0,
-              borderTopRightRadius: 0,
-              borderTopWidth: 0,
-            }}
-            value={phone}
-            focus={isFocused}
-            maxLength={10}
-          />
+            <InputField
+              onChangeText={setPhone}
+              placeholder="Enter Phone number"
+              marginBottom={32}
+              borderColor="#222222"
+              keyboardType="number-pad"
+              disabled={isLoading}
+              inputStyle={{
+                borderRadius: 12,
+                borderTopLeftRadius: 0,
+                borderTopRightRadius: 0,
+                borderTopWidth: 0,
+              }}
+              value={phone}
+              focus={isFocused}
+              maxLength={10}
+            />
 
-          <ButtonPrimary
-            bgColor="primary"
-            loading={isLoading}
-            disabled={isLoading || !country.code || phone.length < 10}
-            onPress={handleGetOtp}
-          >
-            Get OTP
-          </ButtonPrimary>
+            <ButtonPrimary
+              bgColor="primary"
+              loading={isLoading}
+              disabled={isLoading || !country.code || phone.length < 10}
+              onPress={handleGetOtp}
+            >
+              Get OTP
+            </ButtonPrimary>
+          </Div>
+
+          <Div>
+            <Text
+              fontSize={"md"}
+              fontFamily={fontHauora}
+              color="#7B7B7B"
+              textAlign="center"
+              maxW={306}
+              mx={"auto"}
+            >
+              By singing up, I agree to Smoll <Text>Terms & Conditions</Text>{" "}
+              and <Text>Privacy Policy</Text>
+            </Text>
+          </Div>
         </Div>
-
-        <Div>
-          <Text
-            fontSize={"md"}
-            fontFamily={fontHauora}
-            color="#7B7B7B"
-            textAlign="center"
-            maxW={306}
-            mx={"auto"}
-          >
-            By singing up, I agree to Smoll <Text>Terms & Conditions</Text> and{" "}
-            <Text>Privacy Policy</Text>
-          </Text>
-        </Div>
-      </Div>
+      </TouchableWithoutFeedback>
 
       <OnboardingOtpModal
         isVisible={showOtpModal}
