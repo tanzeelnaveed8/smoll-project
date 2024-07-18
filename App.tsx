@@ -36,6 +36,9 @@ import SettingsMainScreen from "./screens/settings/SettingsMainScreen";
 import SettingPersonalInfoScreen from "./screens/settings/SettingPersonalInfoScreen";
 import EditInfoScreen from "./screens/settings/EditInfoScreen";
 import PetCongratulationsScreen from "./screens/petProfileForm/PetCongratulationsScreen";
+import PetProfileListScreen from "./screens/settings/PetProfileListScreen";
+import PetProfileDetailsScreen from "./screens/settings/PetProfileDetailsScreen";
+import PetEditInfoScreen from "./screens/settings/PetEditInfoScreen";
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -137,7 +140,6 @@ const App = () => {
                   name="PetCongratulationsScreen"
                   component={PetCongratulationsScreen}
                 />
-
                 <Stack.Screen
                   name="CounsellingRequestScreen"
                   component={CounsellingRequestScreen}
@@ -202,10 +204,23 @@ const App = () => {
                   name="EditInfoScreen"
                   component={EditInfoScreen}
                 />
+                <Stack.Screen
+                  name="PetEditInfoScreen"
+                  component={PetEditInfoScreen}
+                />
+
+                <Stack.Screen
+                  name="PetProfileListScreen"
+                  component={PetProfileListScreen}
+                />
+                <Stack.Screen
+                  name="PetProfileDetailsScreen"
+                  component={PetProfileDetailsScreen}
+                />
                 {/* <Stack.Screen name="Membership" component={MembershipScreen} />
           
 
-              <Stack.Screen name="ChatScreen" component={ChatScreen} /> */}
+              // <Stack.Screen name="ChatScreen" component={ChatScreen} /> */}
                 {/* <Stack.Screen
               name="UserProfileForm"
               component={

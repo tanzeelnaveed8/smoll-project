@@ -12,6 +12,7 @@ import Layout from "@/components/app/Layout";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
+import ProfileOptionButton from "./ProfileOptionButton";
 
 const SettingPersonalInfoScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
@@ -74,7 +75,7 @@ const SettingPersonalInfoScreen: React.FC<{ navigation: NavigationType }> = ({
             Basic Details
           </Text>
           <Div mb={32}>
-            <Option
+            <ProfileOptionButton
               title="Name"
               value={user?.name}
               editable
@@ -87,7 +88,7 @@ const SettingPersonalInfoScreen: React.FC<{ navigation: NavigationType }> = ({
                 });
               }}
             />
-            <Option
+            <ProfileOptionButton
               title="Email address"
               value={user?.email}
               varified={user?.isEmailVerified}
@@ -98,7 +99,11 @@ const SettingPersonalInfoScreen: React.FC<{ navigation: NavigationType }> = ({
                 });
               }}
             />
-            <Option title="Phone number" value={user?.phone} varified />
+            <ProfileOptionButton
+              title="Phone number"
+              value={user?.phone}
+              varified
+            />
           </Div>
 
           <Div
@@ -124,10 +129,10 @@ const SettingPersonalInfoScreen: React.FC<{ navigation: NavigationType }> = ({
           </Div>
 
           <Div>
-            <Option title="Flat/Villa No" value={user?.villa} />
-            <Option title="Street address" value={user?.address} />
-            <Option title="City" value={user?.country} />
-            <Option title="Postal code" value={user?.postalCode} />
+            <ProfileOptionButton title="Flat/Villa No" value={user?.villa} />
+            <ProfileOptionButton title="Street address" value={user?.address} />
+            <ProfileOptionButton title="City" value={user?.country} />
+            <ProfileOptionButton title="Postal code" value={user?.postalCode} />
           </Div>
         </Div>
       </ScrollDiv>
@@ -141,62 +146,5 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
 });
-
-type OptionPropTypes = {
-  title: string;
-  value: string | undefined | null;
-  varified?: boolean;
-  editable?: boolean;
-  onEdit?: () => void;
-};
-const Option = (props: OptionPropTypes) => {
-  const { title, value, varified, onEdit, editable } = props;
-  return (
-    <React.Fragment>
-      <Div
-        w="full"
-        py={12}
-        flexDir="row"
-        justifyContent="space-between"
-        alignItems="center"
-        borderBottomWidth={1}
-        borderBottomColor="#E0E0E0"
-      >
-        <Div>
-          <Text
-            color="#494949"
-            fontSize="sm"
-            fontFamily={fontHauoraMedium}
-            lineHeight={16}
-          >
-            {title}
-          </Text>
-          <Text color="#222222" fontSize={18} lineHeight={24}>
-            {value}
-          </Text>
-        </Div>
-
-        {editable && (
-          <TouchableOpacity onPress={onEdit}>
-            <Text fontSize={16} lineHeight={24} color="primary">
-              {value ? "Edit" : "Add"}
-            </Text>
-          </TouchableOpacity>
-        )}
-      </Div>
-      {varified && (
-        <Text
-          fontSize="md"
-          lineHeight={20}
-          color="#2F6E20"
-          fontFamily={fontHauoraMedium}
-          mt={4}
-        >
-          Verified
-        </Text>
-      )}
-    </React.Fragment>
-  );
-};
 
 export default SettingPersonalInfoScreen;

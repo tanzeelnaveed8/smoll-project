@@ -5,8 +5,11 @@ import { fontHauoraMedium } from "@/constant/constant";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import ConfettiCannon from "react-native-confetti-cannon";
 import Layout from "@/components/app/Layout";
+import { NavigationType } from "@/store/types";
 
-const PetCongratulationsScreen = () => {
+const PetCongratulationsScreen: React.FC<{ navigation: NavigationType }> = ({
+  navigation,
+}) => {
   return (
     <Layout>
       <Div pt={20} pb={10} flex={1}>
@@ -60,7 +63,13 @@ const PetCongratulationsScreen = () => {
           </Div>
 
           <Div mt="auto">
-            <ButtonPrimary>Let's Go</ButtonPrimary>
+            <ButtonPrimary
+              onPress={() => {
+                navigation.navigate("HomeScreen");
+              }}
+            >
+              Let's Go
+            </ButtonPrimary>
           </Div>
         </Container>
       </Div>

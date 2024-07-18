@@ -1,11 +1,15 @@
 import { useEffect, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
-import { IconPlus, IconStarFilled } from "@tabler/icons-react-native";
+import {
+  IconEditCircle,
+  IconPlus,
+  IconStarFilled,
+} from "@tabler/icons-react-native";
 import { Button, Div, Text } from "react-native-magnus";
 import { colorPrimary, fontHauoraSemiBold } from "@/constant/constant";
 import { useFileStore } from "@/store/modules/file";
 import { UploadedFile } from "@/store/types/file";
-import { ActivityIndicator } from "react-native";
+import { ActivityIndicator, TouchableOpacity } from "react-native";
 
 interface Props {
   isPrimary?: boolean;
@@ -14,6 +18,7 @@ interface Props {
   plusIcon?: boolean;
   w?: number;
   h?: number;
+  editIcon?: boolean;
 }
 
 const ImageUpload: React.FC<Props> = ({
@@ -23,6 +28,7 @@ const ImageUpload: React.FC<Props> = ({
   plusIcon = true,
   w = 102,
   h = 100,
+  editIcon,
 }) => {
   const { uploadFile } = useFileStore();
 
@@ -61,52 +67,74 @@ const ImageUpload: React.FC<Props> = ({
     setImage(uri);
   }, [uri]);
 
-  return image ? (
-    <Button px={0} py={0} onPress={pickImage} disabled={loading}>
-      <Div
-        w={w}
-        h={h}
-        rounded={8}
-        bgImg={{ uri: image }}
-        position="relative"
-        alignItems="center"
-        justifyContent="center"
-      >
-        {isPrimary && (
-          <IconStarFilled
-            size={21}
-            fill="#85C3F1"
-            style={{ position: "absolute", right: 8, bottom: 8 }}
-          />
-        )}
-        {loading && <ActivityIndicator size="large" color={colorPrimary} />}
-      </Div>
-    </Button>
-  ) : (
-    <Button
-      w={w}
-      h={h}
-      bg="#F4F6F8"
-      rounded={8}
-      position="relative"
-      onPress={pickImage}
-    >
-      {plusIcon ? (
-        <IconPlus size={32} color="#222222" strokeWidth={1.5} />
+  return (
+    <Div position="relative">
+      {image ? (
+        <Button px={0} py={0} onPress={pickImage} disabled={loading}>
+          <Div
+            w={w}
+            h={h}
+            rounded={8}
+            bgImg={{ uri: image }}
+            position="relative"
+            alignItems="center"
+            justifyContent="center"
+          >
+            {isPrimary && (
+              <IconStarFilled
+                size={21}
+                fill="#85C3F1"
+                style={{ position: "absolute", right: 8, bottom: 8 }}
+              />
+            )}
+            {loading && <ActivityIndicator size="large" color={colorPrimary} />}
+          </Div>
+        </Button>
       ) : (
-        <Text fontFamily={fontHauoraSemiBold} fontSize="xl" lineHeight={24}>
-          Upload
-        </Text>
+        <Button
+          w={w}
+          h={h}
+          bg="#F4F6F8"
+          rounded={8}
+          position="relative"
+          onPress={pickImage}
+        >
+          {plusIcon ? (
+            <IconPlus size={32} color="#222222" strokeWidth={1.5} />
+          ) : (
+            <Text fontFamily={fontHauoraSemiBold} fontSize="xl" lineHeight={24}>
+              Upload
+            </Text>
+          )}
+
+          {isPrimary && (
+            <IconStarFilled
+              size={21}
+              fill="#85C3F1"
+              style={{ position: "absolute", left: 38, top: 38 }}
+            />
+          )}
+        </Button>
       )}
 
-      {isPrimary && (
-        <IconStarFilled
-          size={21}
-          fill="#85C3F1"
-          style={{ position: "absolute", left: 38, top: 38 }}
-        />
+      {editIcon && image && (
+        <Button
+          w={32}
+          h={32}
+          rounded={49}
+          bg="#E4E9EC"
+          justifyContent="center"
+          alignItems="center"
+          position="absolute"
+          bottom={-10}
+          right={-10}
+          p={0}
+          onPress={pickImage}
+        >
+          <IconEditCircle width={24} height={24} color={"#222"} />
+        </Button>
       )}
-    </Button>
+    </Div>
   );
 };
 
