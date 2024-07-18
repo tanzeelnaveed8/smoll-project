@@ -53,6 +53,7 @@ import PartnerVetConfirmationScreen from "./screens/Cases/PartnerVetConfirmation
 import PartnerVetSuccessfullScreen from "./screens/Cases/PartnerVetSuccessfullScreen";
 import SettingPersonalInfoScreen from "./screens/settings/SettingPersonalInfoScreen";
 import EditInfoScreen from "./screens/settings/EditInfoScreen";
+import SettingsMainScreen from "./screens/settings/SettingsMainScreen";
 
 dayjs.extend(relativeTime);
 
