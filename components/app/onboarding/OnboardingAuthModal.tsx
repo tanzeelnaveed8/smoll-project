@@ -3,7 +3,7 @@ import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import InputField from "@/components/partials/InputField";
 import { fontHauora } from "@/constant/constant";
 import { NavigationType } from "@/store/types";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Div, Text } from "react-native-magnus";
 import BottomSheet from "@/components/partials/BottomSheet";
 import BackButton from "@/components/partials/BackButton";
@@ -13,7 +13,13 @@ import ToastContainer from "react-native-toast-notifications/lib/typescript/toas
 import Toast from "react-native-toast-notifications";
 import { getAxiosErrMsg } from "@/utils/helpers";
 import { AxiosError } from "axios";
-import { Keyboard, TouchableWithoutFeedback } from "react-native";
+import {
+  Keyboard,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+} from "react-native";
+import SelectInput from "@/components/partials/SelectInput";
+import { getCountryCodes } from "@/utils/country-codes";
 
 interface Props {
   navigation: NavigationType;
@@ -36,6 +42,7 @@ const OnboardingAuthModal: React.FC<Props> = (props) => {
     label: "",
   });
   const [phone, setPhone] = useState("");
+  const [codes, setCodes] = useState<{ label: string; value: string }[]>([]);
 
   const handleGetOtp = async () => {
     try {
@@ -58,6 +65,17 @@ const OnboardingAuthModal: React.FC<Props> = (props) => {
     }
   };
 
+  useEffect(() => {
+    (async function () {
+      const _codes = (await getCountryCodes()).map((c) => ({
+        label: `(${c.code}) ${c.name}`,
+        value: c.code,
+        flag: c.flag,
+      }));
+      setCodes(_codes);
+    })();
+  }, []);
+
   return (
     <BottomSheet
       isVisible={props.isVisible}
@@ -77,12 +95,33 @@ const OnboardingAuthModal: React.FC<Props> = (props) => {
               Login/Signup
             </Text>
 
-            <CountryDropdown
+            {/* <CountryDropdown
               style={{ borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }}
               onChange={setCountry}
               onSelect={() => setIsFocused(true)}
               value={country}
               isDisabled={isLoading}
+            /> */}
+
+            <SelectInput
+              label="Select a country"
+              // loading={loading}
+              options={codes}
+              onSelect={(val) => {
+                // props.setPet({ ...props.pet, breed: val.value });
+              }}
+              // selectedValue={props.pet.breed}
+              renderLabel={(options, index) => (
+                <Country
+                  key={options.label}
+                  label={options.label}
+                  flag={options.flag}
+                />
+              )}
+              mainInputStyle={{
+                borderBottomRightRadius: 0,
+                borderBottomLeftRadius: 0,
+              }}
             />
 
             <InputField
@@ -148,3 +187,23 @@ const OnboardingAuthModal: React.FC<Props> = (props) => {
 };
 
 export default OnboardingAuthModal;
+const Country: React.FC<{ label: string; flag: string }> = ({
+  label,
+  flag,
+}) => {
+  return (
+    <TouchableOpacity>
+      <Div
+        borderBottomWidth={0.75}
+        borderColor="#DEDEDE"
+        py={16}
+        flexDir="row"
+        alignItems="center"
+        px={16}
+      >
+        <Div h={18} w={18} bgImg={{ uri: flag }} mr={16} />
+        <Text fontSize="lg">{label}</Text>
+      </Div>
+    </TouchableOpacity>
+  );
+};

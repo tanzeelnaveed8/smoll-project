@@ -1,8 +1,8 @@
 import { colorTextPrimary } from "@/constant/constant";
 import { IconChevronDown, IconSearch } from "@tabler/icons-react-native";
-import React, { useEffect, useState } from "react";
-import { TouchableOpacity } from "react-native";
-import { Div, ScrollDiv, Text } from "react-native-magnus";
+import React, { ReactElement, useEffect, useState } from "react";
+import { StyleProp, TextStyle, TouchableOpacity, FlatList } from "react-native";
+import { Div, Text } from "react-native-magnus";
 import BottomSheet from "./BottomSheet";
 import InputField from "./InputField";
 import RadioButton from "./RadioButton";
@@ -11,6 +11,10 @@ import { Nullable } from "@/store/types";
 interface Option {
   label: string;
   value: string;
+}
+
+interface OptionDto extends Option {
+  [key: string]: string;
 }
 
 interface Props {
@@ -24,9 +28,12 @@ interface Props {
   onClose?: () => void;
   onOpen?: () => void;
   renderNoOptions?: () => React.ReactNode;
+  renderLabel?: (option: OptionDto, index: number) => ReactElement;
+  mainInputStyle?: StyleProp<TextStyle>;
 }
 
 const SelectInput: React.FC<Props> = (props) => {
+  const { renderLabel, mainInputStyle } = props;
   const [selectedValue, setSelectedValue] = useState<Nullable<Option>>(
     props.selectedValue ?? null
   );
@@ -46,7 +53,7 @@ const SelectInput: React.FC<Props> = (props) => {
   return (
     <>
       <TouchableOpacity
-        onPress={(e) => {
+        onPress={() => {
           setShowMenu(true);
           props.onOpen?.();
         }}
@@ -59,6 +66,7 @@ const SelectInput: React.FC<Props> = (props) => {
           readOnly
           pointerEvents="none"
           value={selectedValue?.label}
+          inputStyle={mainInputStyle}
         />
       </TouchableOpacity>
 
@@ -82,8 +90,33 @@ const SelectInput: React.FC<Props> = (props) => {
           onChangeText={setSearchQuery}
         />
 
-        <ScrollDiv>
-          {filteredOptions.length === 0 ? (
+        <FlatList
+          data={filteredOptions}
+          // to make sure key should be unique
+          keyExtractor={(item) => item.label + item.value}
+          renderItem={({ item, index }) =>
+            renderLabel ? (
+              renderLabel(item as OptionDto, index)
+            ) : (
+              <RadioButton
+                key={item.value}
+                styles={{
+                  borderColor: "transparent",
+                }}
+                onTap={() => {
+                  setSelectedValue(item);
+
+                  if (props.onSelect) props.onSelect(item);
+
+                  setShowMenu(false);
+                }}
+                label={item.label}
+                value={item.value}
+                selectedValue={selectedValue?.value ?? ""}
+              />
+            )
+          }
+          ListEmptyComponent={() =>
             props.renderNoOptions ? (
               props.renderNoOptions()
             ) : (
@@ -91,29 +124,8 @@ const SelectInput: React.FC<Props> = (props) => {
                 <Text>No options found</Text>
               </Div>
             )
-          ) : (
-            <>
-              {filteredOptions.map((option) => (
-                <RadioButton
-                  key={option.value}
-                  styles={{
-                    borderColor: "transparent",
-                  }}
-                  onTap={() => {
-                    setSelectedValue(option);
-
-                    if (props.onSelect) props.onSelect(option);
-
-                    setShowMenu(false);
-                  }}
-                  label={option.label}
-                  value={option.value}
-                  selectedValue={selectedValue?.value ?? ""}
-                />
-              ))}
-            </>
-          )}
-        </ScrollDiv>
+          }
+        />
       </BottomSheet>
     </>
   );
