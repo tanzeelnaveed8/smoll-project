@@ -54,6 +54,9 @@ import PartnerVetSuccessfullScreen from "./screens/Cases/PartnerVetSuccessfullSc
 import SettingPersonalInfoScreen from "./screens/settings/SettingPersonalInfoScreen";
 import EditInfoScreen from "./screens/settings/EditInfoScreen";
 import SettingsMainScreen from "./screens/settings/SettingsMainScreen";
+import NotificationScreen from "./screens/NotificationScreen";
+import RequestCallBackScreen from "./screens/Consultation/RequestCallBackScreen";
+import CaseForwardedScreen from "./screens/Consultation/CaseForwardedScreen";
 
 dayjs.extend(relativeTime);
 
@@ -155,6 +158,10 @@ const App = () => {
                   options={{ headerShown: false }}
                 />
                 <Stack.Screen
+                  name="NotificationScreen"
+                  component={NotificationScreen}
+                />
+                <Stack.Screen
                   name="PetProfileScreen"
                   component={PetProfileScreen}
                 />
@@ -162,7 +169,6 @@ const App = () => {
                   name="PetProfileMedicalHistoryScreen"
                   component={PetProfileMedicalHistoryScreen}
                 />
-
                 <Stack.Screen
                   name="PetProfileCongratulationsScreen"
                   component={PetProfileCongratulationsScreen}
@@ -207,8 +213,16 @@ const App = () => {
                   name="ConsultationVideoScreen"
                   component={ConsultationVideoScreen}
                 />
-                {/*  */}
+                <Stack.Screen
+                  name="RequestCallBackScreen"
+                  component={RequestCallBackScreen}
+                />
+                <Stack.Screen
+                  name="CaseForwardedScreen"
+                  component={CaseForwardedScreen}
+                />
 
+                {/*  */}
                 <Stack.Screen
                   // name="PartnerClinic"
                   name="CasesListScreen"
@@ -238,7 +252,6 @@ const App = () => {
                   name="PartnerVetSuccessfullScreen"
                   component={PartnerVetSuccessfullScreen}
                 />
-
                 <Stack.Screen
                   name="SettingPersonalInfoScreen"
                   component={SettingPersonalInfoScreen}
@@ -255,12 +268,10 @@ const App = () => {
                   name="ConsultationFeedbackScreen"
                   component={ConsultationFeedbackScreen}
                 />
-
                 <Stack.Screen
                   name="PetProfileListScreen"
                   component={PetProfileListScreen}
                 />
-
                 <Stack.Screen
                   name="PetProfileDetailsScreen"
                   component={PetProfileDetailsScreen}

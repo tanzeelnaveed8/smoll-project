@@ -147,7 +147,12 @@ const HomeScreen: React.FC<Props> = (props) => {
           </Div>
 
           <Div flexDir="row" alignItems="center" style={{ gap: 8 }}>
-            <IconButton>
+            <IconButton
+              onPress={() => {
+                props.navigation.navigate("NotificationScreen");
+                // props.navigation.navigate("CaseForwardedScreen");
+              }}
+            >
               <IconBell
                 width={32}
                 height={32}
