@@ -20,7 +20,7 @@ const ExpertsChatScreen: React.FC<Props> = (props) => {
       onBackPress={() => props.navigation.goBack()}
       title={expertName}
     >
-      <Chat initialMessages={[]} recipientId={expertId} />
+      <Chat initialMessages={[]} recipientId={expertId} chatFor="experts" />
     </Layout>
   );
 };

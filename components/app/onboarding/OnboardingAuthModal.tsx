@@ -97,7 +97,6 @@ const OnboardingAuthModal: React.FC<Props> = (props) => {
 
             <SelectInput
               label="Select a country"
-              loading={isLoading}
               options={codes}
               onSelect={(val) => {
                 setCountry(val);

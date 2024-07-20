@@ -1,3 +1,4 @@
+import { useExpertStore } from "@/store/modules/expert";
 import { CometChat } from "@cometchat/chat-sdk-react-native";
 import { CometChatUIKit } from "@cometchat/chat-uikit-react-native";
 import { PermissionsAndroid, Platform } from "react-native";
@@ -122,38 +123,68 @@ export class CometChatWrapper {
     CometChat.removeMessageListener(id);
   }
 
-  private _transformMessage(message: CometChat.BaseMessage): IMessage {
-    let text = "";
-    if (message instanceof CometChat.TextMessage) {
-      text = message.getText();
+  static transformMessage(
+    recipientId: string,
+    message: CometChat.BaseMessage,
+    chatFor: "experts" | "counsellors"
+  ): IMessage {
+    const text = (message as CometChat.TextMessage).getText();
+    const userId = message.getSender().getUid();
+    // TODO: get avatar from store, because getAvatar() is returning null.
+    let avatar = undefined;
+
+    if (chatFor === "experts" && userId === recipientId.toLowerCase()) {
+      const { expertDetailMap } = useExpertStore.getState();
+      avatar = expertDetailMap.get(recipientId)?.profileImg?.url ?? undefined;
     }
+
+    const createdAt = new Date(message.getSentAt() * 1000);
 
     return {
       _id: message.getId(),
       text: text,
-      createdAt: new Date(message.getSentAt() * 1000),
+      createdAt,
       user: {
-        _id: message.getSender().getUid(),
+        _id: userId,
         name: message.getSender().getName(),
-        avatar: message.getSender().getAvatar(),
+        avatar,
       },
     };
   }
 
   static async fetchMessages(
-    userId: string,
-    conversationId: string,
-    limit: number = 30
+    recipientId: string,
+    limit: number = 30,
+    chatFor: "experts" | "counsellors",
+    lastMessageId?: number
   ): Promise<IMessage[]> {
-    const messagesRequest = new CometChat.MessagesRequestBuilder()
-      .setUID(conversationId)
-      .setLimit(limit)
-      .build();
+    const messagesRequestBuilder = new CometChat.MessagesRequestBuilder()
+      .setUID(recipientId.toLowerCase())
+      .setLimit(limit);
 
-    return messagesRequest
-      .fetchPrevious()
-      .then((messages) =>
-        messages.map((message) => this.prototype._transformMessage(message))
+    if (lastMessageId) {
+      messagesRequestBuilder.setMessageId(lastMessageId);
+    }
+
+    const messagesRequest = messagesRequestBuilder.build();
+
+    return messagesRequest.fetchPrevious().then((messages) => {
+      let transformedMessages: IMessage[] = [];
+
+      messages.forEach((message) => {
+        if (message instanceof CometChat.TextMessage) {
+          const msg = this.transformMessage(recipientId, message, chatFor);
+
+          console.log("create", msg.createdAt);
+          transformedMessages.push(msg);
+        }
+      });
+
+      transformedMessages = transformedMessages.sort(
+        (a, b) => b.createdAt - a.createdAt
       );
+
+      return transformedMessages;
+    });
   }
 }

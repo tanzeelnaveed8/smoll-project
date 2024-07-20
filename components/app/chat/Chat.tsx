@@ -1,6 +1,6 @@
-import { Bubble, GiftedChat, IMessage } from "react-native-gifted-chat";
+import { Avatar, Bubble, GiftedChat, IMessage } from "react-native-gifted-chat";
 import ChatComposer from "./ChatComposer";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ChatBubble from "./ChatBubble";
 import { Div } from "react-native-magnus";
 import { CometChatWrapper } from "@/utils/chat";
@@ -12,6 +12,7 @@ import { useUserStore } from "@/store/modules/user";
 interface Props {
   initialMessages: IMessage[];
   recipientId: string;
+  chatFor: "experts" | "counsellors";
 }
 
 const Chat: React.FC<Props> = (props) => {
@@ -19,40 +20,90 @@ const Chat: React.FC<Props> = (props) => {
   const [messages, setMessages] = useState<IMessage[]>(props.initialMessages);
   // This is only for cometchat
   const [loggedInUser, setLoggedInUser] = useState<CometChat.User | null>(null);
+
+  const [isLoadingEarlier, setIsLoadingEarlier] = useState(false);
   const [loading, setIsLoading] = useState(true);
+  const [lastMessagesEmpty, setLastMessagesEmpty] = useState(false);
+
+  const lastMessageIdRef = useRef<number>();
 
   useEffect(() => {
     fetchMessages();
   }, [props.recipientId]);
 
   useEffect(() => {
-    CometChatWrapper.addListener("counsellor-msg", (message) => {
+    CometChatWrapper.addListener("chat", (message) => {
       setMessages((previousMessages) =>
-        GiftedChat.append(previousMessages, [message])
+        GiftedChat.append(previousMessages, [
+          CometChatWrapper.transformMessage(
+            props.recipientId,
+            message,
+            props.chatFor
+          ),
+        ])
       );
     });
 
     return () => {
-      CometChatWrapper.removeListener("counsellor-msg");
+      CometChatWrapper.removeListener("chat");
     };
   }, []);
 
-  const fetchMessages = async () => {
+  const fetchMessages = async (isLoadingEarlier = false) => {
     try {
-      setIsLoading(true);
+      if (!isLoadingEarlier) {
+        setIsLoading(true);
+      } else {
+        setIsLoadingEarlier(true);
+      }
 
       const _user = await CometChatWrapper.getUser(user!.id);
-      const messages = await CometChatWrapper.fetchMessages(
-        user!.id.toLowerCase(),
-        props.recipientId.toLowerCase()
+      const fetchedMessages = await CometChatWrapper.fetchMessages(
+        props.recipientId,
+        10,
+        props.chatFor,
+        isLoadingEarlier ? lastMessageIdRef.current : undefined
       );
 
-      setMessages(messages);
+      console.log("f", fetchedMessages);
 
-      setLoggedInUser(_user);
+      if (fetchedMessages.length > 0) {
+        // Always update the lastMessageIdRef with the oldest message
+        lastMessageIdRef.current = Number(
+          fetchedMessages[fetchedMessages.length - 1]._id
+        );
+
+        setMessages((prevMessages) => {
+          if (isLoadingEarlier) {
+            // For loading earlier messages, add them before the existing messages
+            return [...prevMessages, ...fetchedMessages];
+          } else {
+            // For initial load, replace all messages
+            return fetchedMessages;
+          }
+        });
+      }
+
+      if (fetchedMessages.length === 0) {
+        setLastMessagesEmpty(true);
+      }
+
+      if (!isLoadingEarlier) {
+        setLoggedInUser(_user);
+      }
     } finally {
       setIsLoading(false);
+      setIsLoadingEarlier(false);
     }
+  };
+
+  const handleLoadEarlier = async () => {
+    if (isLoadingEarlier) return;
+
+    console.log("trigger");
+
+    setIsLoadingEarlier(true);
+    await fetchMessages(true);
   };
 
   const handleSend = (newMessages: IMessage[] = []) => {
@@ -94,14 +145,24 @@ const Chat: React.FC<Props> = (props) => {
     );
   }
 
+  const showAvatar = (msg?: IMessage) => msg?.user.avatar;
+
   return (
     <GiftedChat
       messages={messages}
       onSend={(messages) => handleSend(messages)}
+      onLoadEarlier={handleLoadEarlier}
+      isLoadingEarlier={isLoadingEarlier}
+      loadEarlier
       user={{
         _id: user!.id,
       }}
+      showAvatarForEveryMessage={false}
+      showUserAvatar={false}
       renderBubble={(props) => <ChatBubble {...props} />}
+      renderAvatar={(props) =>
+        showAvatar(props.currentMessage) ? <Avatar {...props} /> : null
+      }
       renderInputToolbar={(props) => (
         <ChatComposer {...props} loggedInUser={loggedInUser!} />
       )}
