@@ -9,6 +9,7 @@ import {
 import { useCaseStore } from "@/store/modules/case";
 import { NavigationType } from "@/store/types";
 import { CaseStatusEnum } from "@/store/types/case.d";
+import { useRoute } from "@react-navigation/native";
 import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
 import {
@@ -22,9 +23,12 @@ import { Button, Div, Image, Text } from "react-native-magnus";
 const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
+  const route = useRoute();
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const { cases, fetchCases } = useCaseStore();
+
+  const comingFrom = (route.params as Record<string, string | undefined>)?.from;
 
   useEffect(() => {
     handleFetchCases();
@@ -61,11 +65,24 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
       <Layout
         showBack
         onBackPress={() => {
-          navigation.navigate("HomeScreen");
+          if (comingFrom) {
+            navigation.navigate("HomeScreen");
+          } else {
+            navigation.goBack();
+          }
         }}
         title="Cases"
         loading={isLoading}
       >
+        <Div mb={24}>
+          <Text
+            fontSize={"xl"}
+            fontWeight="bold"
+            fontFamily={fontHauoraSemiBold}
+          >
+            All Cases
+          </Text>
+        </Div>
         <Div flex={1}>
           <FlatList
             ListEmptyComponent={() => {

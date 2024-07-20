@@ -19,7 +19,6 @@ const HumanCounsellingMessage: React.FC<{ navigation: NavigationType }> = ({
     <>
       <Layout
         showBack
-        backBtnText=""
         onBackPress={() => {
           navigation.goBack();
         }}

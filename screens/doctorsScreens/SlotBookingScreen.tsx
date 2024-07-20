@@ -22,7 +22,7 @@ const availabTime = [
 
 const SlotBookingScreen = () => {
   return (
-    <Layout showBack backBtnText="" title="Dr. Emily Carter">
+    <Layout showBack title="Dr. Emily Carter">
       <ScrollDiv flex={1} pt={20} showsVerticalScrollIndicator={false}>
         {/* <Header title="Book a Slot" /> */}
         <Div bg="#FDF4E3" py={20} mb={20}>

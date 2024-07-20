@@ -23,7 +23,6 @@ const PartnerVetConfirmationScreen: React.FC<{
   return (
     <Layout
       showBack
-      backBtnText=""
       title="Confirm Appointment"
       onBackPress={() => {
         navigation.goBack();

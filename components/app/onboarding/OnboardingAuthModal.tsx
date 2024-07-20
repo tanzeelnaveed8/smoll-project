@@ -3,7 +3,7 @@ import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import InputField from "@/components/partials/InputField";
 import { fontHauora } from "@/constant/constant";
 import { NavigationType } from "@/store/types";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Div, Text } from "react-native-magnus";
 import BottomSheet from "@/components/partials/BottomSheet";
 import BackButton from "@/components/partials/BackButton";
@@ -13,7 +13,14 @@ import ToastContainer from "react-native-toast-notifications/lib/typescript/toas
 import Toast from "react-native-toast-notifications";
 import { getAxiosErrMsg } from "@/utils/helpers";
 import { AxiosError } from "axios";
-import { Keyboard, TouchableWithoutFeedback } from "react-native";
+import {
+  Keyboard,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+} from "react-native";
+import SelectInput from "@/components/partials/SelectInput";
+import { getCountryCodes } from "@/utils/country-codes";
+import { GestureResponderEvent } from "react-native-modal";
 
 interface Props {
   navigation: NavigationType;
@@ -31,18 +38,18 @@ const OnboardingAuthModal: React.FC<Props> = (props) => {
   const [isFocused, setIsFocused] = useState(false);
 
   const [country, setCountry] = useState({
-    codeLabel: "",
-    code: "",
     label: "",
+    value: "",
   });
   const [phone, setPhone] = useState("");
+  const [codes, setCodes] = useState<{ label: string; value: string }[]>([]);
 
   const handleGetOtp = async () => {
     try {
       setIsLoading(true);
 
       await login({
-        phone: country.code + phone,
+        phone: country.value + phone,
       });
 
       setShowOtpModal(true);
@@ -57,6 +64,17 @@ const OnboardingAuthModal: React.FC<Props> = (props) => {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    (async function () {
+      const _codes = (await getCountryCodes()).map((c) => ({
+        label: `(${c.code}) ${c.name}`,
+        value: c.code,
+        flag: c.flag,
+      }));
+      setCodes(_codes);
+    })();
+  }, []);
 
   return (
     <BottomSheet
@@ -77,12 +95,26 @@ const OnboardingAuthModal: React.FC<Props> = (props) => {
               Login/Signup
             </Text>
 
-            <CountryDropdown
-              style={{ borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }}
-              onChange={setCountry}
-              onSelect={() => setIsFocused(true)}
-              value={country}
-              isDisabled={isLoading}
+            <SelectInput
+              label="Select a country"
+              options={codes}
+              onSelect={(val) => {
+                setCountry(val);
+              }}
+              selectedValue={country}
+              renderLabel={(options, onClick) => (
+                <Country
+                  onPress={() =>
+                    onClick({ value: options.value, label: options.label })
+                  }
+                  label={options.label}
+                  flag={options.flag}
+                />
+              )}
+              mainInputStyle={{
+                borderBottomRightRadius: 0,
+                borderBottomLeftRadius: 0,
+              }}
             />
 
             <InputField
@@ -106,7 +138,7 @@ const OnboardingAuthModal: React.FC<Props> = (props) => {
             <ButtonPrimary
               bgColor="primary"
               loading={isLoading}
-              disabled={isLoading || !country.code || phone.length < 10}
+              disabled={isLoading || !country.value || phone.length < 10}
               onPress={handleGetOtp}
             >
               Get OTP
@@ -134,8 +166,8 @@ const OnboardingAuthModal: React.FC<Props> = (props) => {
         onSuccess={props.onSuccess}
         onBack={() => setShowOtpModal(false)}
         navigation={props.navigation}
-        phone={country.code + phone}
-        label={country.codeLabel + " " + phone}
+        phone={country.value + phone}
+        label={country.value + " " + phone}
       />
 
       <Toast
@@ -148,3 +180,24 @@ const OnboardingAuthModal: React.FC<Props> = (props) => {
 };
 
 export default OnboardingAuthModal;
+const Country: React.FC<{
+  label: string;
+  flag: string;
+  onPress: ((event: GestureResponderEvent) => void) | undefined;
+}> = ({ label, flag, onPress }) => {
+  return (
+    <TouchableOpacity onPress={onPress}>
+      <Div
+        borderBottomWidth={0.75}
+        borderColor="#DEDEDE"
+        py={16}
+        flexDir="row"
+        alignItems="center"
+        px={16}
+      >
+        <Div h={18} w={18} bgImg={{ uri: flag }} mr={16} />
+        <Text fontSize="lg">{label}</Text>
+      </Div>
+    </TouchableOpacity>
+  );
+};

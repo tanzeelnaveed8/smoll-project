@@ -153,7 +153,6 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
   return (
     <Layout
       showBack
-      backBtnText=""
       title="Profile"
       onBackPress={() => {
         navigation.goBack();

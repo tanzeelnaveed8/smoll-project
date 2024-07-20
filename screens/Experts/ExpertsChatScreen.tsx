@@ -2,8 +2,6 @@ import Layout from "@/components/app/Layout";
 import Chat from "@/components/app/chat/Chat";
 import { NavigationType } from "@/store/types";
 import { useRoute } from "@react-navigation/native";
-import { useState } from "react";
-import { IMessage } from "react-native-gifted-chat";
 
 interface Props {
   navigation: NavigationType;
@@ -20,7 +18,7 @@ const ExpertsChatScreen: React.FC<Props> = (props) => {
       onBackPress={() => props.navigation.goBack()}
       title={expertName}
     >
-      <Chat initialMessages={[]} recipientId={expertId} />
+      <Chat initialMessages={[]} recipientId={expertId} chatFor="experts" />
     </Layout>
   );
 };

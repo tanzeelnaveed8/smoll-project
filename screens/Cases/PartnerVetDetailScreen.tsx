@@ -56,7 +56,6 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
   return (
     <Layout
       showBack
-      backBtnText=""
       title="Dr. Emily Carter"
       onBackPress={() => {
         navigation.goBack();

@@ -25,12 +25,13 @@ const Layout: React.FC<Props> = ({
   style,
   onBackPress,
   showBack,
-  backBtnText = "Back",
+  backBtnText,
   title,
   showCloseIcon,
   loading,
 }) => {
   const externalStyles: {} = style ? style : {};
+
   return (
     <Div style={{ ...styles.container, ...externalStyles }}>
       <Div row style={styles.titleContainer}>

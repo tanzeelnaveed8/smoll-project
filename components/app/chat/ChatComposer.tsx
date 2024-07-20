@@ -12,7 +12,6 @@ import {
   SendProps,
 } from "react-native-gifted-chat";
 import { Div, Input } from "react-native-magnus";
-import * as FileSystem from "expo-file-system";
 
 interface Props extends InputToolbarProps<IMessage> {
   loggedInUser: CometChat.User;
@@ -86,6 +85,7 @@ const ChatComposer: React.FC<Props> = (props) => {
     <Div flex={1}>
       <InputToolbar
         {...props}
+        containerStyle={{ borderTopWidth: 0 }}
         renderComposer={(composerProps) => {
           return (
             <Div flex={1}>
