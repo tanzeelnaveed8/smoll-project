@@ -12,7 +12,6 @@ import {
   SendProps,
 } from "react-native-gifted-chat";
 import { Div, Input } from "react-native-magnus";
-import * as FileSystem from "expo-file-system";
 
 interface Props extends InputToolbarProps<IMessage> {
   loggedInUser: CometChat.User;

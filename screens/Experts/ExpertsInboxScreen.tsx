@@ -30,6 +30,7 @@ const ExpertsInboxScreen: React.FC<Props> = (props) => {
   return (
     <Layout
       showBack
+      backBtnText=""
       title="Inbox"
       loading={loading}
       onBackPress={() => props.navigation.navigate("HomeScreen")}
@@ -39,9 +40,9 @@ const ExpertsInboxScreen: React.FC<Props> = (props) => {
           <ChatInboxItem
             key={expert.id}
             onPress={() => {
-              props.navigation.navigate("CounsellingChatScreen", {
-                counsellorId: expert.id,
-                counsellorName: expert.name,
+              props.navigation.navigate("ExpertsChatScreen", {
+                expertId: expert.id,
+                expertName: expert.name,
               });
             }}
             title={expert.name}

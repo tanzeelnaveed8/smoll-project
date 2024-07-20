@@ -31,6 +31,7 @@ const Layout: React.FC<Props> = ({
   loading,
 }) => {
   const externalStyles: {} = style ? style : {};
+
   return (
     <Div style={{ ...styles.container, ...externalStyles }}>
       <Div row style={styles.titleContainer}>
