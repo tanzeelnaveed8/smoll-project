@@ -10,7 +10,8 @@ interface PropTypes extends ButtonProps {
 }
 
 const BackButton = (props: PropTypes) => {
-  const { text = "Back", onPress, showCloseIcon, ...restProps } = props;
+  const { text, onPress, showCloseIcon, ...restProps } = props;
+
   return (
     <TouchableOpacity onPress={onPress}>
       <Button

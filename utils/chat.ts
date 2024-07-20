@@ -181,6 +181,7 @@ export class CometChatWrapper {
       });
 
       transformedMessages = transformedMessages.sort(
+        // @ts-ignore
         (a, b) => b.createdAt - a.createdAt
       );
 

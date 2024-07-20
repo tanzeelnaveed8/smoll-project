@@ -69,7 +69,6 @@ const PartnerVetScreen: React.FC<{ navigation: NavigationType }> = ({
   return (
     <Layout
       showBack
-      backBtnText=""
       title="Harmony Vet Clinic"
       onBackPress={() => {
         navigation.goBack();

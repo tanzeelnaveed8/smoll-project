@@ -91,7 +91,6 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
   return (
     <Layout
       showBack
-      backBtnText=""
       title={expertDetail?.name ?? ""}
       onBackPress={() => {
         navigation.goBack();

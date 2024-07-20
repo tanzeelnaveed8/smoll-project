@@ -37,7 +37,6 @@ const ExpertsListScreen: React.FC<{ navigation: NavigationType }> = ({
   return (
     <Layout
       showBack
-      backBtnText=""
       title="Find your Expert"
       onBackPress={() => {
         navigation.goBack();

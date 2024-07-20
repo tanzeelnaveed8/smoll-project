@@ -1,9 +1,10 @@
 import Layout from "@/components/app/Layout";
 import ChatInboxItem from "@/components/app/chat/ChatInboxItem";
+import { fontHauora } from "@/constant/constant";
 import { useExpertStore } from "@/store/modules/expert";
 import { NavigationType } from "@/store/types";
 import { useEffect, useState } from "react";
-import { Div } from "react-native-magnus";
+import { Div, Text } from "react-native-magnus";
 
 interface Props {
   navigation: NavigationType;
@@ -30,11 +31,15 @@ const ExpertsInboxScreen: React.FC<Props> = (props) => {
   return (
     <Layout
       showBack
-      backBtnText=""
       title="Inbox"
       loading={loading}
       onBackPress={() => props.navigation.navigate("HomeScreen")}
     >
+      <Div mb={24}>
+        <Text fontSize={"xl"} fontWeight="bold">
+          All Messages
+        </Text>
+      </Div>
       <Div flex={1}>
         {experts?.map((expert) => (
           <ChatInboxItem

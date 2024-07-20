@@ -56,7 +56,6 @@ const PetEditInfoScreen: React.FC<{ navigation: NavigationType }> = ({
   return (
     <Layout
       showBack
-      backBtnText=""
       title="Update Info"
       onBackPress={() => {
         navigation.goBack();

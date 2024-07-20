@@ -25,7 +25,7 @@ const Layout: React.FC<Props> = ({
   style,
   onBackPress,
   showBack,
-  backBtnText = "Back",
+  backBtnText,
   title,
   showCloseIcon,
   loading,

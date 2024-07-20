@@ -15,7 +15,6 @@ const ExpertsChatScreen: React.FC<Props> = (props) => {
   return (
     <Layout
       showBack
-      backBtnText=""
       onBackPress={() => props.navigation.goBack()}
       title={expertName}
     >

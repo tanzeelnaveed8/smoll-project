@@ -53,7 +53,6 @@ const CasesRequestScreen: React.FC<{ navigation: NavigationType }> = ({
   return (
     <Layout
       showBack
-      backBtnText=""
       onBackPress={() => {
         navigation.goBack();
       }}

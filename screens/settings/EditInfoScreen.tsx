@@ -70,7 +70,6 @@ const EditInfoScreen: React.FC<{ navigation: NavigationType }> = ({
   return (
     <Layout
       showBack
-      backBtnText=""
       title="Edit Information"
       style={{ justifyContent: "flex-start" }}
       onBackPress={() => {

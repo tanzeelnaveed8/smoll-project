@@ -19,7 +19,7 @@ const btns = [
 
 const PartnerVetSuccessfullScreen = () => {
   return (
-    <Layout showCloseIcon backBtnText="" onBackPress={() => {}}>
+    <Layout showCloseIcon onBackPress={() => {}}>
       <Div flex={1} justifyContent="space-between" pt={20}>
         <Div>
           <Image

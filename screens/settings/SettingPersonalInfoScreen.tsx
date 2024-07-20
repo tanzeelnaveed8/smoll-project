@@ -35,7 +35,6 @@ const SettingPersonalInfoScreen: React.FC<{ navigation: NavigationType }> = ({
   return (
     <Layout
       showBack
-      backBtnText=""
       title="Personal Info"
       onBackPress={() => {
         navigation.goBack();
