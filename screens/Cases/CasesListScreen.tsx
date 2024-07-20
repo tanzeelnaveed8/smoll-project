@@ -74,6 +74,15 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
         title="Cases"
         loading={isLoading}
       >
+        <Div mb={24}>
+          <Text
+            fontSize={"xl"}
+            fontWeight="bold"
+            fontFamily={fontHauoraSemiBold}
+          >
+            All Cases
+          </Text>
+        </Div>
         <Div flex={1}>
           <FlatList
             ListEmptyComponent={() => {

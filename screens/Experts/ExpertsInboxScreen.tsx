@@ -36,7 +36,7 @@ const ExpertsInboxScreen: React.FC<Props> = (props) => {
       onBackPress={() => props.navigation.navigate("HomeScreen")}
     >
       <Div mb={24}>
-        <Text fontSize={"xl"} fontWeight="bold">
+        <Text fontSize={"xl"} fontWeight="bold" fontFamily={fontHauoraSemiBold}>
           All Messages
         </Text>
       </Div>
