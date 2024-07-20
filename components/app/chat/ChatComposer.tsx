@@ -86,6 +86,7 @@ const ChatComposer: React.FC<Props> = (props) => {
     <Div flex={1}>
       <InputToolbar
         {...props}
+        containerStyle={{ borderTopWidth: 0 }}
         renderComposer={(composerProps) => {
           return (
             <Div flex={1}>

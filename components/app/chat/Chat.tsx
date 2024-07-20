@@ -163,6 +163,7 @@ const Chat: React.FC<Props> = (props) => {
       renderAvatar={(props) =>
         showAvatar(props.currentMessage) ? <Avatar {...props} /> : null
       }
+      listViewProps={{ showsVerticalScrollIndicator: false }}
       renderInputToolbar={(props) => (
         <ChatComposer {...props} loggedInUser={loggedInUser!} />
       )}
