@@ -1,6 +1,6 @@
 import Layout from "@/components/app/Layout";
 import ChatInboxItem from "@/components/app/chat/ChatInboxItem";
-import { fontHauora } from "@/constant/constant";
+import { fontHauoraSemiBold } from "@/constant/constant";
 import { useExpertStore } from "@/store/modules/expert";
 import { NavigationType } from "@/store/types";
 import { useEffect, useState } from "react";

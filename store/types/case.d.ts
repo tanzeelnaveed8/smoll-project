@@ -2,8 +2,9 @@ import { Nullable, UploadedFile } from "../types";
 
 export enum CaseStatusEnum {
   OPEN = "open",
-  OPEN_ESCALATED = "open_escalated",
+  OPEN_ESCALATED = "openEscalated",
   CLOSED = "closed",
+  SCHEDULED = "scheduled",
 }
 
 type CaseDataDto = {
@@ -33,6 +34,7 @@ interface CreateCasePayloadDto {
   vetId: string;
   description: string;
   assets: UploadedFile[];
+  status: CaseStatusEnum;
 }
 
 interface Case {
@@ -51,6 +53,7 @@ interface CaseListResponseDto {
   };
   vet: string;
   status: CaseStatusEnum;
+  scheduledAt?: string;
   requestCount?: number;
   createdAt: string;
 }
@@ -62,6 +65,7 @@ export interface CasesState {
   vetDoctorList: VetDoctorListDto[];
 
   createCase: (payload: CreateCasePayloadDto) => Promise<{ id: string }>;
+  removeCase: (id: string) => Promise<void>;
   fetchCases: () => Promise<void>;
   fetchVetDoctors: () => Promise<void>;
 }

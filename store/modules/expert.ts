@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import api from "@/utils/api";
-import { ExpertState, RateExpertPayloadDto } from "../types/expert";
+import { ExpertState } from "../types/expert";
 
 export const useExpertStore = create<ExpertState>((set, get) => ({
   expertDetailMap: new Map(),
@@ -15,14 +15,14 @@ export const useExpertStore = create<ExpertState>((set, get) => ({
 
     return response.data;
   },
-  fetchExpertDetail: async (id: string) => {
+  fetchExpertDetail: async (id) => {
     const response = await api.get(`/member/vets/${id}`);
 
     set((state) => ({
       expertDetailMap: state.expertDetailMap.set(id, response.data),
     }));
   },
-  fetchExpertAvailability: async (id: string, date?: Date) => {
+  fetchExpertAvailability: async (id, date) => {
     const response = await api.get(`/member/vets/${id}/availabilities`, {
       params: {
         date,
@@ -31,19 +31,30 @@ export const useExpertStore = create<ExpertState>((set, get) => ({
 
     return response.data;
   },
-  findOneConsultation: async (id: string) => {
+  findOneConsultation: async (id) => {
     const res = await api.get(`/member/vets/consultations/${id}`);
     return res.data;
   },
-  requestConsultation: async (id: string): Promise<{ id: string }> => {
+  requestConsultation: async (id) => {
     const res = await api.post(`/member/vets/${id}/consultations/request`);
 
     return { id: res.data.id };
   },
-  endConsultation: async (id: string) => {
+  scheduleConsultation: async (id, payload) => {
+    const { data } = await api.post(
+      `/member/vets/${id}/consultations/schedule`,
+      payload
+    );
+
+    return { id: data.id };
+  },
+  endConsultation: async (id) => {
     await api.post(`/member/vets/consultations/${id}/end`);
   },
-  updateConsultation: async (payload: { id: string; caseId: string }) => {
+  cancelConsultation: async (id) => {
+    await api.delete(`/member/vets/consultations/${id}/cancel`);
+  },
+  updateConsultation: async (payload) => {
     const { id, caseId } = payload;
     const res = await api.patch(`/member/vets/consultations/${id}`, {
       caseId,
@@ -51,7 +62,7 @@ export const useExpertStore = create<ExpertState>((set, get) => ({
 
     return res.data;
   },
-  rateExpert: async (payload: RateExpertPayloadDto) => {
+  rateExpert: async (payload) => {
     const { id, caseId, rating, comment } = payload;
 
     const res = await api.post(

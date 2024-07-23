@@ -10,17 +10,31 @@ import {
 import { useExpertStore } from "@/store/modules/expert";
 import { NavigationType } from "@/store/types";
 import { ExpertAvailability } from "@/store/types/expert";
-import { useRoute } from "@react-navigation/native";
+import { useFocusEffect, useRoute } from "@react-navigation/native";
 import dayjs from "dayjs";
-import { useEffect, useState } from "react";
-import { RefreshControl } from "react-native";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { RefreshControl, TouchableOpacity } from "react-native";
 import { Button, Div, ScrollDiv, Skeleton, Text } from "react-native-magnus";
+
+const dayOfWeekMap: { [key: string]: number } = {
+  sun: 0,
+  mon: 1,
+  tue: 2,
+  wed: 3,
+  thur: 4,
+  fri: 5,
+  sat: 6,
+};
 
 const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
   const route = useRoute();
-  const expertId = (route.params as Record<string, string>)?.id;
+  const expertId =
+    (route.params as Record<string, string>)?.id ??
+    (route.params as Record<string, string>)?.expertId;
+  // Incase of change schedule from schedule confirmation screen
+  const caseData = (route.params as Record<string, string>)?.caseData;
 
   const {
     expertDetailMap,
@@ -30,18 +44,40 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
   } = useExpertStore();
 
   const [availability, setAvailability] = useState<ExpertAvailability[]>([]);
-  const [selectedTime, setSelectedTime] = useState("");
+  const [selectedDate, setSelectedDate] = useState<string>();
+  const [selectedTime, setSelectedTime] = useState<{
+    value: { from: string; to: string };
+    label: string;
+  } | null>(null);
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isActionLoading, setIsActionLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [availabilityLoading, setAvailabilityLoading] = useState(false);
   const [isRequesting, setIsRequesting] = useState(false);
 
-  useEffect(() => {
-    handleFetchExpertDetails();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      handleFetchExpertDetails();
+    }, [expertId])
+  );
 
-  const expertDetail = expertDetailMap.get(expertId);
+  const formatTime = useCallback(
+    (
+      availability: ExpertAvailability,
+      interval: { from: string; to: string }
+    ) => {
+      const date = availability.dayOfWeek
+        ? dayjs().day(dayOfWeekMap[availability.dayOfWeek]).format("YYYY-MM-DD")
+        : dayjs(availability.date).format("YYYY-MM-DD");
+
+      const fromTime = dayjs(`${date}T${interval.from}Z`).format("HH:mm");
+      const toTime = dayjs(`${date}T${interval.to}Z`).format("HH:mm");
+
+      return `${fromTime} - ${toTime}`;
+    },
+    []
+  );
 
   const handleFetchExpertDetails = async (isRefresh?: boolean) => {
     try {
@@ -62,6 +98,7 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
   const handleDateSelect = async (date: string) => {
     try {
       setAvailabilityLoading(true);
+      setSelectedDate(date);
 
       const _availability = await fetchExpertAvailability(
         expertId,
@@ -88,10 +125,30 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
     }
   };
 
+  const handleScheduleConsultation = async () => {
+    if (!selectedDate || !selectedTime) {
+      return;
+    }
+
+    try {
+      setIsActionLoading(true);
+
+      navigation.navigate("ConsultationCaseBriefScreen", {
+        from: "ExpertsListDetailScreen",
+        expertId,
+        selectedTime: JSON.stringify(selectedTime?.value),
+        selectedDate,
+        caseData,
+      });
+    } finally {
+      setIsActionLoading(false);
+    }
+  };
+
   return (
     <Layout
       showBack
-      title={expertDetail?.name ?? ""}
+      title={expertDetailMap.get(expertId)?.name ?? ""}
       onBackPress={() => {
         navigation.goBack();
       }}
@@ -112,11 +169,11 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
 
         <Div mb={24}>
           <DoctorCard
-            name={expertDetail?.name ?? ""}
-            speciality={expertDetail?.designation ?? ""}
-            experience={expertDetail?.yearsOfExperience ?? 0}
-            isOnline={expertDetail?.isOnline ?? false}
-            image={expertDetail?.profileImg?.url ?? ""}
+            name={expertDetailMap.get(expertId)?.name ?? ""}
+            speciality={expertDetailMap.get(expertId)?.designation ?? ""}
+            experience={expertDetailMap.get(expertId)?.yearsOfExperience ?? 0}
+            isOnline={expertDetailMap.get(expertId)?.isOnline ?? false}
+            image={expertDetailMap.get(expertId)?.profileImg?.url ?? ""}
             verified={true}
           />
         </Div>
@@ -145,7 +202,7 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
           <ButtonPrimary
             bgColor="dark"
             mb={10}
-            disabled={!expertDetail?.isOnline || isRequesting}
+            disabled={!expertDetailMap.get(expertId)?.isOnline || isRequesting}
             loading={isRequesting}
             onPress={handleRequestConsultation}
           >
@@ -157,8 +214,8 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
             mb={10}
             onPress={() => {
               navigation.navigate("ExpertsChatScreen", {
-                expertId: expertDetail?.id ?? "",
-                expertName: expertDetail?.name ?? "",
+                expertId: expertDetailMap.get(expertId)?.id ?? "",
+                expertName: expertDetailMap.get(expertId)?.name ?? "",
               });
             }}
           >
@@ -214,39 +271,44 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
                       {a.dayOfWeek ?? dayjs(a.date).format("ddd, DD MMM")}
                     </Text>
                     <Div flexDir="row" flexWrap="wrap" style={{ gap: 8 }}>
-                      {a.intervals.map((intr, index) => (
-                        <Button
-                          key={`${a.id}-${intr.from}-${intr.to}-${index}`}
-                          fontFamily={fontHauoraMedium}
-                          fontSize="lg"
-                          lineHeight={20}
-                          p={10}
-                          borderWidth={1}
-                          color={
-                            selectedTime ===
-                            `${a.id}-${intr.from}-${intr.to}-${index}`
-                              ? "#fff"
-                              : "#494949"
-                          }
-                          borderColor="#E0E0E0"
-                          rounded={4}
-                          bg={
-                            selectedTime ===
-                            `${a.id}-${intr.from}-${intr.to}-${index}`
-                              ? "primary"
-                              : "transparent"
-                          }
-                          onPress={() => {
-                            setSelectedTime(
-                              `${a.id}-${intr.from}-${intr.to}-${index}`
-                            );
-                          }}
-                        >
-                          <Text>
-                            {intr.from} - {intr.to}
-                          </Text>
-                        </Button>
-                      ))}
+                      {a.intervals.map((intr, index) => {
+                        const time = formatTime(a, intr);
+
+                        return (
+                          <Button
+                            key={`${index}:${a.dayOfWeek ?? a.date}:${time}`}
+                            fontFamily={fontHauoraMedium}
+                            fontSize="lg"
+                            lineHeight={20}
+                            p={10}
+                            borderWidth={1}
+                            color={
+                              selectedTime?.label ===
+                              `${index}:${a.dayOfWeek ?? a.date}:${time}`
+                                ? "#fff"
+                                : "#494949"
+                            }
+                            borderColor="#E0E0E0"
+                            rounded={8}
+                            bg={
+                              selectedTime?.label ===
+                              `${index}:${a.dayOfWeek ?? a.date}:${time}`
+                                ? "primary"
+                                : "transparent"
+                            }
+                            onPress={() => {
+                              setSelectedTime({
+                                value: { from: intr.from, to: intr.to },
+                                label: `${index}:${
+                                  a.dayOfWeek ?? a.date
+                                }:${time}`,
+                              });
+                            }}
+                          >
+                            {time}
+                          </Button>
+                        );
+                      })}
                     </Div>
                   </Div>
                 ))}
@@ -259,9 +321,10 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
         </Div>
       </ScrollDiv>
       <ButtonPrimary
-        onPress={() => {
-          navigation.navigate("PartnerVetConfirmationScreen");
-        }}
+        // navigation.navigate("PartnerVetConfirmationScreen");
+        onPress={handleScheduleConsultation}
+        disabled={isActionLoading || !selectedTime}
+        loading={isActionLoading}
       >
         Proceed
       </ButtonPrimary>

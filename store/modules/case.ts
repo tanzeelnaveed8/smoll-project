@@ -19,10 +19,15 @@ export const useCaseStore = create<CasesState>((set, get) => ({
 
     return { id: res.data.id };
   },
+  removeCase: async (id: string) => {
+    await api.delete(`/member/cases/${id}`);
+  },
   fetchCases: async (loadMore?: boolean) => {
     const response = await api.get("/member/cases");
 
     const cases = get().cases || [];
+
+    console.log("case", response.data);
 
     set(() => ({
       cases: loadMore ? [...cases, ...response.data] : response.data,

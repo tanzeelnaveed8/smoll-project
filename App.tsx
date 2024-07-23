@@ -1,14 +1,8 @@
-import {
-  Keyboard,
-  SafeAreaView,
-  StyleSheet,
-  TouchableWithoutFeedback,
-} from "react-native";
+import { SafeAreaView, StyleSheet } from "react-native";
 import { Text, ThemeProvider } from "react-native-magnus";
 
 import * as Font from "expo-font";
 import { useEffect, useState } from "react";
-import { Dimensions } from "react-native";
 import { fontHauora } from "./constant/constant";
 
 import { NavigationContainer } from "@react-navigation/native";
@@ -27,6 +21,11 @@ import { SocketProvider } from "./socket/provider";
 import { CometChatWrapper } from "./utils/chat";
 
 import CasesListScreen from "./screens/Cases/CasesListScreen";
+import CasesRequestScreen from "./screens/Cases/CasesRequestScreen";
+import PartnerVetConfirmationScreen from "./screens/Cases/PartnerVetConfirmationScreen";
+import PartnerVetDetailScreen from "./screens/Cases/PartnerVetDetailScreen";
+import PartnerVetScreen from "./screens/Cases/PartnerVetScreen";
+import PartnerVetSuccessfullScreen from "./screens/Cases/PartnerVetSuccessfullScreen";
 import ConsultationCaseBriefScreen from "./screens/Consultation/ConsultationCaseBriefScreen";
 import ConsultationFeedbackScreen from "./screens/Consultation/ConsultationFeedbackScreen";
 import ConsultationVideoScreen from "./screens/Consultation/ConsultationVideoScreen";
@@ -38,24 +37,26 @@ import ExpertsListScreen from "./screens/Experts/ExpertsListScreen";
 import PetProfileCongratulationsScreen from "./screens/PetProfile/PetProfileCongratulationsScreen";
 import PetProfileMedicalHistoryScreen from "./screens/PetProfile/PetProfileMedicalHistoryScreen";
 import PetProfileScreen from "./screens/PetProfile/PetProfileScreen";
+import SlotBookingScreen from "./screens/doctorsScreens/SlotBookingScreen";
+import EditInfoScreen from "./screens/settings/EditInfoScreen";
 import PetEditInfoScreen from "./screens/settings/PetEditInfoScreen";
 import PetProfileDetailsScreen from "./screens/settings/PetProfileDetailsScreen";
 import PetProfileListScreen from "./screens/settings/PetProfileListScreen";
+import SettingPersonalInfoScreen from "./screens/settings/SettingPersonalInfoScreen";
+import SettingsMainScreen from "./screens/settings/SettingsMainScreen";
 import { useUserStore } from "./store/modules/user";
 
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import CasesRequestScreen from "./screens/Cases/CasesRequestScreen";
-import PartnerVetScreen from "./screens/Cases/PartnerVetScreen";
-import SlotBookingScreen from "./screens/doctorsScreens/SlotBookingScreen";
-import PartnerVetDetailScreen from "./screens/Cases/PartnerVetDetailScreen";
-import PartnerVetConfirmationScreen from "./screens/Cases/PartnerVetConfirmationScreen";
-import PartnerVetSuccessfullScreen from "./screens/Cases/PartnerVetSuccessfullScreen";
-import SettingPersonalInfoScreen from "./screens/settings/SettingPersonalInfoScreen";
-import EditInfoScreen from "./screens/settings/EditInfoScreen";
-import SettingsMainScreen from "./screens/settings/SettingsMainScreen";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
+import ExpertsScheduleConfirmationScreen from "./screens/Experts/ExpertsScheduleConfirmationScreen";
+import FlashMessage from "react-native-flash-message";
+import ExpertsScheduleSuccessScreen from "./screens/Experts/ExpertsScheduleSuccessScreen";
 
 dayjs.extend(relativeTime);
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -162,7 +163,6 @@ const App = () => {
                   name="PetProfileMedicalHistoryScreen"
                   component={PetProfileMedicalHistoryScreen}
                 />
-
                 <Stack.Screen
                   name="PetProfileCongratulationsScreen"
                   component={PetProfileCongratulationsScreen}
@@ -207,8 +207,16 @@ const App = () => {
                   name="ConsultationVideoScreen"
                   component={ConsultationVideoScreen}
                 />
-                {/*  */}
+                <Stack.Screen
+                  name="ExpertsScheduleConfirmationScreen"
+                  component={ExpertsScheduleConfirmationScreen}
+                />
+                <Stack.Screen
+                  name="ExpertsScheduleSuccessScreen"
+                  component={ExpertsScheduleSuccessScreen}
+                />
 
+                {/*  */}
                 <Stack.Screen
                   // name="PartnerClinic"
                   name="CasesListScreen"
@@ -238,7 +246,6 @@ const App = () => {
                   name="PartnerVetSuccessfullScreen"
                   component={PartnerVetSuccessfullScreen}
                 />
-
                 <Stack.Screen
                   name="SettingPersonalInfoScreen"
                   component={SettingPersonalInfoScreen}
@@ -255,12 +262,10 @@ const App = () => {
                   name="ConsultationFeedbackScreen"
                   component={ConsultationFeedbackScreen}
                 />
-
                 <Stack.Screen
                   name="PetProfileListScreen"
                   component={PetProfileListScreen}
                 />
-
                 <Stack.Screen
                   name="PetProfileDetailsScreen"
                   component={PetProfileDetailsScreen}
@@ -284,6 +289,7 @@ const App = () => {
             /> */}
               </Stack.Navigator>
             </SocketProvider>
+            <FlashMessage position="top" />
           </ToastProvider>
         </NavigationContainer>
       </ThemeProvider>

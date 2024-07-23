@@ -1,5 +1,6 @@
 import axios from "axios";
 import { Platform } from "react-native";
+import { showMessage, hideMessage } from "react-native-flash-message";
 
 const api = axios.create({
   baseURL:
@@ -12,7 +13,19 @@ const api = axios.create({
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    console.log("error", error);
+    const message = error.response?.data?.message;
+    let msgStr = message;
+
+    if (Array.isArray(message)) {
+      msgStr = message[0];
+    }
+
+    if (msgStr) {
+      showMessage({
+        message: msgStr,
+        type: "danger",
+      });
+    }
 
     throw error;
   }

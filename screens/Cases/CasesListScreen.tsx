@@ -57,6 +57,8 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
         return "Closed";
       case CaseStatusEnum.OPEN:
         return "Open";
+      case CaseStatusEnum.SCHEDULED:
+        return "Scheduled";
     }
   };
 
@@ -99,7 +101,14 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
             }
             renderItem={({ item, index }) => (
               <Div mb={index + 1 === cases?.length ? 0 : 12}>
-                <Text fontSize={"md"} mb={8} fontFamily={fontHauoraSemiBold}>
+                <Text
+                  fontSize={"md"}
+                  mb={8}
+                  fontFamily={fontHauoraSemiBold}
+                  style={{
+                    textTransform: "capitalize",
+                  }}
+                >
                   {dayjs(item.createdAt).fromNow()}
                 </Text>
                 <Button
@@ -138,6 +147,16 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
                           color="#2F6E20"
                         >
                           {item.requestCount} Request
+                        </Text>
+                      )}
+
+                      {item.scheduledAt && (
+                        <Text
+                          fontFamily={fontHauoraSemiBold}
+                          fontSize={"lg"}
+                          color="#2F6E20"
+                        >
+                          {dayjs(item.scheduledAt).format("HH:mm, DD MMM YYYY")}
                         </Text>
                       )}
                     </Div>
