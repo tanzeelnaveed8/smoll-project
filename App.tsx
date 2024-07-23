@@ -57,6 +57,7 @@ import SettingsMainScreen from "./screens/settings/SettingsMainScreen";
 import NotificationScreen from "./screens/NotificationScreen";
 import RequestCallBackScreen from "./screens/Consultation/RequestCallBackScreen";
 import CaseForwardedScreen from "./screens/Consultation/CaseForwardedScreen";
+import NotificationTestScreen from "./screens/NotificationTestScreen";
 
 dayjs.extend(relativeTime);
 
@@ -162,6 +163,11 @@ const App = () => {
                   component={NotificationScreen}
                 />
                 <Stack.Screen
+                  name="NotificationTestScreen"
+                  component={NotificationTestScreen}
+                />
+
+                <Stack.Screen
                   name="PetProfileScreen"
                   component={PetProfileScreen}
                 />
@@ -221,7 +227,6 @@ const App = () => {
                   name="CaseForwardedScreen"
                   component={CaseForwardedScreen}
                 />
-
                 {/*  */}
                 <Stack.Screen
                   // name="PartnerClinic"

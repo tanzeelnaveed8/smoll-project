@@ -1,5 +1,13 @@
 import { Nullable, UploadedFile } from "../types";
 
+export type NotificationListDto = {
+  id: number;
+  message: string;
+  isRead: boolean;
+  meta: {};
+  createdAt: string;
+}[];
+
 export type NotificationDto = {
   data: {
     id: number;
@@ -11,12 +19,11 @@ export type NotificationDto = {
   count: number;
   currentPage: number;
   nextPage: number;
-  totalPages: number;
-  totalCount: number;
 };
 
 export interface NotificationState {
   notifications: Nullable<NotificationDto>;
 
-  fetchNotifications: (page: number, limit: number) => Promise<void>;
+  fetchNotifications: (page: number, limit: number) => Promise<NotificationDto>;
+  readAllNotification: () => Promise<void>;
 }

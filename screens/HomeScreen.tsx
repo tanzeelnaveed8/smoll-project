@@ -149,7 +149,7 @@ const HomeScreen: React.FC<Props> = (props) => {
           <Div flexDir="row" alignItems="center" style={{ gap: 8 }}>
             <IconButton
               onPress={() => {
-                props.navigation.navigate("NotificationScreen");
+                props.navigation.navigate("NotificationTestScreen");
                 // props.navigation.navigate("CaseForwardedScreen");
               }}
             >

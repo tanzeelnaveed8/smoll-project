@@ -16,6 +16,7 @@ import Accordion from "@/components/partials/Accordion";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import Layout from "@/components/app/Layout";
 import { NavigationType } from "@/store/types";
+import ScrollWrapper from "@/components/partials/ScrollWrapper";
 
 const PartnerVetConfirmationScreen: React.FC<{
   navigation: NavigationType;
@@ -23,12 +24,13 @@ const PartnerVetConfirmationScreen: React.FC<{
   return (
     <Layout
       showBack
-      title="Confirm Appointment"
+      title="Confirm Appointmentt"
       onBackPress={() => {
         navigation.goBack();
       }}
     >
-      <ScrollDiv flex={1} showsVerticalScrollIndicator={false}>
+      {/* <ScrollDiv flex={1} showsVerticalScrollIndicator={false}> */}
+      <ScrollWrapper>
         <ReadonlyItem field="Veterinarian" value="Dr. Emily Carter" mb={16} />
         <ReadonlyItem field="Clinic" value="Harmony Vet Clinic" mb={12} />
 
@@ -162,17 +164,18 @@ const PartnerVetConfirmationScreen: React.FC<{
             </Accordion.content>
           </Accordion>
         </Div>
+      </ScrollWrapper>
 
-        <Div mt={32} pb={20}>
-          <ButtonPrimary
-            onPress={() => {
-              navigation.navigate("PartnerVetSuccessfullScreen");
-            }}
-          >
-            Pay 10 AED
-          </ButtonPrimary>
-        </Div>
-      </ScrollDiv>
+      <Div mt={20}>
+        <ButtonPrimary
+          onPress={() => {
+            navigation.navigate("PartnerVetSuccessfullScreen");
+          }}
+        >
+          Pay 10 AED
+        </ButtonPrimary>
+      </Div>
+      {/* </ScrollDiv> */}
     </Layout>
   );
 };
