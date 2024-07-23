@@ -199,7 +199,13 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
                   flexDir="row"
                   justifyContent="space-between"
                 >
-                  <TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate("CaseDetailScreen", {
+                        caseId: item.id,
+                      })
+                    }
+                  >
                     <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold}>
                       View Case Brief
                     </Text>

@@ -53,6 +53,7 @@ import utc from "dayjs/plugin/utc";
 import ExpertsScheduleConfirmationScreen from "./screens/Experts/ExpertsScheduleConfirmationScreen";
 import FlashMessage from "react-native-flash-message";
 import ExpertsScheduleSuccessScreen from "./screens/Experts/ExpertsScheduleSuccessScreen";
+import CaseDetailScreen from "./screens/Cases/CaseDetailScreen";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -214,6 +215,11 @@ const App = () => {
                 <Stack.Screen
                   name="ExpertsScheduleSuccessScreen"
                   component={ExpertsScheduleSuccessScreen}
+                />
+
+                <Stack.Screen
+                  name="CaseDetailScreen"
+                  component={CaseDetailScreen}
                 />
 
                 {/*  */}

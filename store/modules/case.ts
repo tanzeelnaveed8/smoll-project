@@ -33,7 +33,10 @@ export const useCaseStore = create<CasesState>((set, get) => ({
       cases: loadMore ? [...cases, ...response.data] : response.data,
     }));
   },
-
+  fetchCase: async (id) => {
+    const response = await api.get(`/member/cases/${id}`);
+    return response.data;
+  },
   fetchVetDoctors: async () => {
     const response = await api.get("/member/pets/breeds");
 
