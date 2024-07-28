@@ -10,6 +10,7 @@ import {
 import { useCaseStore } from "@/store/modules/case";
 import { NavigationType } from "@/store/types";
 import { CaseDetail, CaseStatusEnum } from "@/store/types/case.d";
+import { getCaseStatusColor, getCaseStatusLabel } from "@/utils/helpers";
 import { useRoute } from "@react-navigation/native";
 import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
@@ -79,13 +80,19 @@ const CaseDetailScreen: React.FC<{
           value={
             <Tag
               mt={4}
-              color={
-                caseDetail?.status === CaseStatusEnum.OPEN_ESCALATED
-                  ? colorErrorText
-                  : colorSuccessText
+              bg={
+                getCaseStatusColor(
+                  caseDetail?.status,
+                  caseDetail?.scheduleAt
+                ) ?? ""
               }
             >
-              <Text textTransform="capitalize">{caseDetail?.status}</Text>
+              <Text textTransform="capitalize" color="#fff">
+                {getCaseStatusLabel(
+                  caseDetail?.status,
+                  caseDetail?.scheduleAt
+                ) ?? ""}
+              </Text>
             </Tag>
           }
           mb={12}
@@ -96,6 +103,14 @@ const CaseDetailScreen: React.FC<{
           value={caseDetail?.description ?? ""}
           mb={16}
         />
+
+        {caseDetail?.scheduleAt && (
+          <ReadonlyItem
+            field="Scheduled At"
+            value={dayjs(caseDetail?.scheduleAt).format("HH:mm A, DD MMM YYYY")}
+            mb={12}
+          />
+        )}
 
         <ReadonlyItem
           field="Created At"

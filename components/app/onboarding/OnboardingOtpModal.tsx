@@ -16,6 +16,7 @@ import Toast from "react-native-toast-notifications";
 import ToastContainer from "react-native-toast-notifications/lib/typescript/toast-container";
 import OnboardingUserModal from "./OnboardingUserModal";
 import { Keyboard, TouchableWithoutFeedback } from "react-native";
+import { OneSignal } from "react-native-onesignal";
 
 interface Props {
   navigation: NavigationType;
@@ -28,7 +29,7 @@ interface Props {
 
 const OnboardingOtpModal: React.FC<Props> = (props) => {
   const { verifyOtp, login } = useAuthStore();
-  const { findUser } = useUserStore();
+  const { findUser, updateUser } = useUserStore();
 
   const toastRef = useRef<ToastContainer>(null);
 
@@ -45,6 +46,15 @@ const OnboardingOtpModal: React.FC<Props> = (props) => {
 
       await verifyOtp({ phone: props.phone, otp: _otp ?? otp });
       const user = await findUser();
+
+      // Update the playerId everytime the user login
+      const playerId = await OneSignal.User.pushSubscription.getIdAsync();
+
+      console.log("p", playerId);
+
+      if (playerId) {
+        await updateUser({ playerId });
+      }
 
       if (!user?.name) {
         setShowNameModal(true);

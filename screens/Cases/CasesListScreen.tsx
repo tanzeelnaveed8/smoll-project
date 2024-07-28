@@ -1,17 +1,13 @@
 import Layout from "@/components/app/Layout";
 import TabNavigationBar from "@/components/app/TabNavigationBar";
-import {
-  colorErrorText,
-  colorPrimary,
-  colorSuccessText,
-  fontHauoraSemiBold,
-} from "@/constant/constant";
+import { colorPrimary, fontHauoraSemiBold } from "@/constant/constant";
 import { useCaseStore } from "@/store/modules/case";
 import { NavigationType } from "@/store/types";
 import { CaseStatusEnum } from "@/store/types/case.d";
+import { getCaseStatusColor, getCaseStatusLabel } from "@/utils/helpers";
 import { useRoute } from "@react-navigation/native";
 import dayjs from "dayjs";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   FlatList,
   RefreshControl,
@@ -49,18 +45,15 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
     }
   };
 
-  const caseStatus = (status: CaseStatusEnum) => {
-    switch (status) {
-      case CaseStatusEnum.OPEN_ESCALATED:
-        return "Emergency";
-      case CaseStatusEnum.CLOSED:
-        return "Closed";
-      case CaseStatusEnum.OPEN:
-        return "Open";
-      case CaseStatusEnum.SCHEDULED:
-        return "Scheduled";
-    }
-  };
+  const sessionInProgress = useCallback((scheduledAt?: string) => {
+    if (!scheduledAt) return false;
+
+    return (
+      scheduledAt &&
+      dayjs(scheduledAt).isBefore(dayjs()) &&
+      dayjs(scheduledAt).isAfter(dayjs().subtract(30, "minutes"))
+    );
+  }, []);
 
   return (
     <>
@@ -99,6 +92,7 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
                 onRefresh={() => handleFetchCases(true)}
               />
             }
+            showsVerticalScrollIndicator={false}
             renderItem={({ item, index }) => (
               <Div mb={index + 1 === cases?.length ? 0 : 12}>
                 <Text
@@ -154,9 +148,14 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
                         <Text
                           fontFamily={fontHauoraSemiBold}
                           fontSize={"lg"}
-                          color="#2F6E20"
+                          color={getCaseStatusColor(
+                            item.status,
+                            item.scheduledAt
+                          )}
                         >
-                          {dayjs(item.scheduledAt).format("HH:mm, DD MMM YYYY")}
+                          {dayjs(item.scheduledAt).format(
+                            "HH:mm A, DD MMM YYYY"
+                          )}
                         </Text>
                       )}
                     </Div>
@@ -178,13 +177,12 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
                         Case Status:{" "}
                         <Text
                           fontFamily={fontHauoraSemiBold}
-                          color={
-                            item.status === CaseStatusEnum.OPEN_ESCALATED
-                              ? colorErrorText
-                              : colorSuccessText
-                          }
+                          color={getCaseStatusColor(
+                            item.status,
+                            item.scheduledAt
+                          )}
                         >
-                          {caseStatus(item.status)}
+                          {getCaseStatusLabel(item.status, item.scheduledAt)}
                         </Text>
                       </Text>
                     </Div>
@@ -210,6 +208,25 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
                       View Case Brief
                     </Text>
                   </TouchableOpacity>
+
+                  {sessionInProgress(item.scheduledAt) && (
+                    <Button
+                      fontSize={"lg"}
+                      bg="transparent"
+                      p={0}
+                      fontFamily={fontHauoraSemiBold}
+                      color="primary"
+                      onPress={() => {
+                        if (!item.consultationId) return;
+
+                        navigation.navigate("ConsultationWaitingScreen", {
+                          consultationId: item.consultationId,
+                        });
+                      }}
+                    >
+                      Join Session
+                    </Button>
+                  )}
 
                   {item.status === CaseStatusEnum.OPEN_ESCALATED && (
                     <Button

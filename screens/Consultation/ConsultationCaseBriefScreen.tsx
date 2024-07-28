@@ -61,6 +61,7 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
   const selectedTime = (route.params as Record<string, string>)?.selectedTime;
   const selectedDate = (route.params as Record<string, string>)?.selectedDate;
   const caseData = (route.params as Record<string, string>)?.caseData;
+  const scheduleAt = (route.params as Record<string, string>)?.scheduleAt;
 
   // NOTE: Will be there if coming from pet profile creation
   const petId = (route.params as Record<string, string>)?.petId;
@@ -152,6 +153,7 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
         petId: selectedPet?.value || "",
         selectedTime,
         selectedDate,
+        scheduleAt,
       });
 
       return;

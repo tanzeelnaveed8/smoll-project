@@ -2,6 +2,7 @@ import { Nullable } from "../types";
 
 export type UpdateUserPayloadDto = Partial<{
   name: string;
+  playerId: string;
   email: string;
   address: string;
   villa: string;

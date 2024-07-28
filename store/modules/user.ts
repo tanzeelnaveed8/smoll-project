@@ -1,4 +1,3 @@
-import { AxiosError } from "axios";
 import { create } from "zustand";
 import api from "@/utils/api";
 import { UserState } from "../types/user";

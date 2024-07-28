@@ -6,7 +6,6 @@ export enum CaseStatusEnum {
   OPEN = "open",
   OPEN_ESCALATED = "openEscalated",
   CLOSED = "closed",
-  SCHEDULED = "scheduled",
 }
 
 type CaseDataDto = {
@@ -55,6 +54,7 @@ export interface CaseListResponseDto {
   };
   vet: string;
   status: CaseStatusEnum;
+  consultationId?: string;
   scheduledAt?: string;
   requestCount?: number;
   createdAt: string;
@@ -69,7 +69,7 @@ export interface CaseDetail {
   status: CaseStatusEnum;
   pet: PetDetail;
   assignedVet: Expert;
-  scheduledAt?: string;
+  scheduleAt?: string;
 }
 
 export interface CasesState {

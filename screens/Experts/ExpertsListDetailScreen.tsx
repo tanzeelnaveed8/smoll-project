@@ -12,8 +12,8 @@ import { NavigationType } from "@/store/types";
 import { ExpertAvailability } from "@/store/types/expert";
 import { useFocusEffect, useRoute } from "@react-navigation/native";
 import dayjs from "dayjs";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { RefreshControl, TouchableOpacity } from "react-native";
+import { useCallback, useState } from "react";
+import { RefreshControl } from "react-native";
 import { Button, Div, ScrollDiv, Skeleton, Text } from "react-native-magnus";
 
 const dayOfWeekMap: { [key: string]: number } = {
@@ -133,11 +133,23 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
     try {
       setIsActionLoading(true);
 
+      // const scheduledAt = selectedDate
+      const _date = dayjs(selectedDate).format("YYYY-MM-DD");
+
+      const scheduleAt = dayjs(
+        _date.toString() +
+          "T" +
+          dayjs(`${_date}T${selectedTime.value.from}Z`).format("HH:mm")
+      )
+        .utc()
+        .format();
+
       navigation.navigate("ConsultationCaseBriefScreen", {
         from: "ExpertsListDetailScreen",
         expertId,
         selectedTime: JSON.stringify(selectedTime?.value),
         selectedDate,
+        scheduleAt,
         caseData,
       });
     } finally {

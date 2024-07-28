@@ -24,7 +24,7 @@ const ExpertsScheduleConfirmationScreen: React.FC<{
 }> = ({ navigation }) => {
   const route = useRoute();
 
-  const { selectedTime, selectedDate, caseData, petId, expertId } =
+  const { selectedTime, selectedDate, caseData, petId, expertId, scheduleAt } =
     route.params as Record<string, string>;
 
   const { expertDetailMap, scheduleConsultation } = useExpertStore();
@@ -78,16 +78,12 @@ const ExpertsScheduleConfirmationScreen: React.FC<{
     try {
       setActionLoading(true);
 
-      const date = `${dayjs(parsedSelectedDate).format("YYYY-MM-DD")}T${
-        parsedSelectedTime.from
-      }`;
-
       const { id } = await createCase(parsedCase);
       caseId = id;
 
       const { id: consultationId } = await scheduleConsultation(expertId, {
         caseId,
-        scheduleAt: date,
+        scheduleAt: scheduleAt,
         petId,
       });
 

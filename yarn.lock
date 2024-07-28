@@ -795,10 +795,10 @@
   resolved "https://registry.yarnpkg.com/@cometchat/chat-sdk-react-native/-/chat-sdk-react-native-4.0.9.tgz#73d74c7006d855906fbfd0978aef699951d074c8"
   integrity sha512-iRMiGApVnlosHM6z/+lQyCDp4Yp7e1HOPGmn5CfhFRAhHcreHpjmU6PYtIlV7U1VDt29BDMSpI1AvcmR+79LTQ==
 
-"@cometchat/chat-uikit-react-native@^4.3.13":
-  version "4.3.13"
-  resolved "https://registry.yarnpkg.com/@cometchat/chat-uikit-react-native/-/chat-uikit-react-native-4.3.13.tgz#084a4734638ce4e64050968b8fb276a2ef65b2c5"
-  integrity sha512-UOYpSgPhIoOPpu4IbnJE05qZUezHnLuleItdEhMGf6JONLV7cfejZmekAeKk7B46YZbgANB1Yph6vKNt2EJnsw==
+"@cometchat/chat-uikit-react-native@^4.3.16":
+  version "4.3.16"
+  resolved "https://registry.yarnpkg.com/@cometchat/chat-uikit-react-native/-/chat-uikit-react-native-4.3.16.tgz#aa8618fb00ca2c51048cdbe5e7254b0c563cb727"
+  integrity sha512-tIWH1U1szuiHZK2iERJAfxDzn90AAEfMpdsag/Wj8fGShZpnSCW8UNJVPQwyvdxuBojhscD8aWdDOBgSDfZk7g==
   dependencies:
     "@react-native-clipboard/clipboard" "^1.13.2"
 
@@ -3953,7 +3953,7 @@ internal-slot@^1.0.7:
     hasown "^2.0.0"
     side-channel "^1.0.4"
 
-invariant@^2.2.4:
+invariant@^2.2.2, invariant@^2.2.4:
   version "2.2.4"
   resolved "https://registry.yarnpkg.com/invariant/-/invariant-2.2.4.tgz#610f3c92c9359ce1db616e538008d23ff35158e6"
   integrity sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA==
@@ -5794,6 +5794,13 @@ react-native-modal@^13.0.1:
   dependencies:
     prop-types "^15.6.2"
     react-native-animatable "1.3.3"
+
+react-native-onesignal@^5.2.2:
+  version "5.2.2"
+  resolved "https://registry.yarnpkg.com/react-native-onesignal/-/react-native-onesignal-5.2.2.tgz#7959c0315329d6f608f59886e656c6284388fb9c"
+  integrity sha512-QrQOyRT8v9eXvf2jJNdbEsPG7QYgakyscr7nidKM4tW5IsiN7oEaSyCB26L9wc8sQtzW5n9Yz9VZcqh5zBO1yA==
+  dependencies:
+    invariant "^2.2.2"
 
 react-native-parsed-text@0.0.22:
   version "0.0.22"
