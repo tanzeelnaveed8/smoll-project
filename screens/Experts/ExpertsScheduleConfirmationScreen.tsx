@@ -53,12 +53,14 @@ const ExpertsScheduleConfirmationScreen: React.FC<{
     const date = dayjs(parsedSelectedDate).format("YYYY-MM-DD");
 
     const fromTime = dayjs
-      .tz(`${date}T${parsedSelectedTime.from}`, dayjs.tz.guess())
-      .format("HH:mm");
+      .tz(`${date}T${parsedSelectedTime.from}Z`)
+      .format("HH:mm A");
+
+    console.log("f", fromTime, date, parsedSelectedTime.from);
 
     const toTime = dayjs
-      .tz(`${date}T${parsedSelectedTime.to}`, dayjs.tz.guess())
-      .format("HH:mm");
+      .tz(`${date}T${parsedSelectedTime.to}Z`)
+      .format("HH:mm A");
 
     return `${fromTime} - ${toTime}`;
   }, [parsedSelectedDate, parsedSelectedTime]);

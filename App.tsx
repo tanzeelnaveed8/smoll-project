@@ -119,8 +119,6 @@ const App = () => {
     OneSignal.Notifications.requestPermission(true);
     // Method for listening for notification clicks
     OneSignal.Notifications.addEventListener("click", (event) => {
-      console.log("OneSignal: notification clicked:", event);
-
       if (
         event.notification?.additionalData?.notificationType ===
         "consultation-notification"
@@ -137,6 +135,7 @@ const App = () => {
         event.notification.display();
       }
     );
+
     return () => {
       OneSignal.Notifications.removeEventListener("click", () => {});
       OneSignal.Notifications.removeEventListener(

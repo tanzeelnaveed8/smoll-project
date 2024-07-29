@@ -40,7 +40,7 @@ export const getCaseStatusLabel = (
       return "Scheduled Expired";
     }
 
-    return "Scheduled";
+    return status === CaseStatusEnum.OPEN ? "Scheduled" : "Scheduled Closed";
   }
 
   switch (status) {

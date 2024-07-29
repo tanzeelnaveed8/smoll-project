@@ -71,8 +71,8 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
         ? dayjs().day(dayOfWeekMap[availability.dayOfWeek]).format("YYYY-MM-DD")
         : dayjs(availability.date).format("YYYY-MM-DD");
 
-      const fromTime = dayjs(`${date}T${interval.from}Z`).format("HH:mm");
-      const toTime = dayjs(`${date}T${interval.to}Z`).format("HH:mm");
+      const fromTime = dayjs(`${date}T${interval.from}Z`).format("HH:mm A");
+      const toTime = dayjs(`${date}T${interval.to}Z`).format("HH:mm A");
 
       return `${fromTime} - ${toTime}`;
     },
@@ -99,6 +99,8 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
     try {
       setAvailabilityLoading(true);
       setSelectedDate(date);
+
+      console.log("date", date);
 
       const _availability = await fetchExpertAvailability(
         expertId,

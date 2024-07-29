@@ -18,18 +18,18 @@ const tabList = [
       <IconHome width={28} height={28} color={active ? "#427594" : "#494949"} />
     ),
   },
-  {
-    name: "Chats",
-    link: "CounsellingRequestScreen",
+  // {
+  //   name: "Chats",
+  //   link: "CounsellingRequestScreen",
 
-    icon: (active?: boolean) => (
-      <IconMessage
-        width={28}
-        height={28}
-        color={active ? "#427594" : "#494949"}
-      />
-    ),
-  },
+  //   icon: (active?: boolean) => (
+  //     <IconMessage
+  //       width={28}
+  //       height={28}
+  //       color={active ? "#427594" : "#494949"}
+  //     />
+  //   ),
+  // },
   {
     name: "Cases",
     link: "CasesListScreen",
@@ -52,7 +52,7 @@ const TabNavigationBar: React.FC<{
     <Div borderTopWidth={2} borderColor="#dcdcdc14">
       <Div
         flexDir="row"
-        justifyContent="space-between"
+        justifyContent="space-around"
         bg="#fff"
         px={25}
         pb={10}

@@ -15,16 +15,23 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Button, Div, Image, Text } from "react-native-magnus";
+import { useInterval } from "usehooks-ts";
 
 const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
   const route = useRoute();
-  const [isLoading, setIsLoading] = useState(false);
-  const [isRefreshing, setIsRefreshing] = useState(false);
   const { cases, fetchCases } = useCaseStore();
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [renderKey, setRenderKey] = useState(0);
+
   const comingFrom = (route.params as Record<string, string | undefined>)?.from;
+
+  useInterval(() => {
+    setRenderKey(Math.random() * 1000);
+  }, 1000);
 
   useEffect(() => {
     handleFetchCases();
@@ -45,15 +52,20 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
     }
   };
 
-  const sessionInProgress = useCallback((scheduledAt?: string) => {
-    if (!scheduledAt) return false;
+  const sessionInProgress = useCallback(
+    (status: CaseStatusEnum, scheduledAt?: string) => {
+      if (scheduledAt) return false;
 
-    return (
-      scheduledAt &&
-      dayjs(scheduledAt).isBefore(dayjs()) &&
-      dayjs(scheduledAt).isAfter(dayjs().subtract(30, "minutes"))
-    );
-  }, []);
+      if (status !== CaseStatusEnum.OPEN) return false;
+
+      return (
+        scheduledAt &&
+        dayjs(scheduledAt).isBefore(dayjs()) &&
+        dayjs(scheduledAt).isAfter(dayjs().subtract(30, "minutes"))
+      );
+    },
+    [renderKey]
+  );
 
   return (
     <>
@@ -209,7 +221,7 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
                     </Text>
                   </TouchableOpacity>
 
-                  {sessionInProgress(item.scheduledAt) && (
+                  {sessionInProgress(item.status, item.scheduledAt) && (
                     <Button
                       fontSize={"lg"}
                       bg="transparent"

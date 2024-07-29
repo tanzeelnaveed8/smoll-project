@@ -28,11 +28,11 @@ const AvailabilityAndDateSelector: React.FC<Props> = ({
   onSelect,
   // allAvailability,
 }) => {
-  const [selectedDate, setSelectedDate] = useState(new Date().toString());
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
   const handleDateSelect = (date: string) => {
     const formattedDate = dayjs(date).format("YYYY-MM-DD");
-    setSelectedDate(formattedDate);
+    setSelectedDate(new Date(formattedDate));
 
     if (onSelect) {
       onSelect(formattedDate);
