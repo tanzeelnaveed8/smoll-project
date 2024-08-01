@@ -16,6 +16,7 @@ import { usePetStore } from "@/store/modules/pet";
 import { PetDetail } from "@/store/types/pet";
 import { UploadedFile } from "@/store/types/file";
 import { useToast } from "react-native-toast-notifications";
+import { showMessage } from "react-native-flash-message";
 
 const btns = ["Basic Details", "Health History", "Cases"];
 

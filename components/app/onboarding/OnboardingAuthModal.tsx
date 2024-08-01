@@ -36,6 +36,7 @@ const OnboardingAuthModal: React.FC<Props> = (props) => {
   const [showOtpModal, setShowOtpModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+  const [isSelectInputOpen, setIsSelectInputOpen] = useState(false);
 
   const [country, setCountry] = useState({
     label: "",
@@ -53,8 +54,6 @@ const OnboardingAuthModal: React.FC<Props> = (props) => {
       });
 
       setShowOtpModal(true);
-
-      toastRef.current?.show("OTP sent to your phone");
     } catch (err) {
       const message = getAxiosErrMsg(err as AxiosError);
       toastRef.current?.show(message, {
@@ -80,7 +79,7 @@ const OnboardingAuthModal: React.FC<Props> = (props) => {
     <BottomSheet
       isVisible={props.isVisible}
       h="93%"
-      // onSwipeCancel={props.onBack}
+      swipeDirection={isSelectInputOpen ? [] : ["down"]}
     >
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <Div justifyContent="space-between" pb={24} h="100%">
@@ -101,12 +100,19 @@ const OnboardingAuthModal: React.FC<Props> = (props) => {
               onSelect={(val) => {
                 setCountry(val);
               }}
+              onOpen={() => {
+                setIsSelectInputOpen(true);
+              }}
+              onClose={() => {
+                setIsSelectInputOpen(false);
+              }}
               selectedValue={country}
               renderLabel={(options, onClick) => (
                 <Country
-                  onPress={() =>
-                    onClick({ value: options.value, label: options.label })
-                  }
+                  onPress={() => {
+                    Keyboard.dismiss();
+                    onClick({ value: options.value, label: options.label });
+                  }}
                   label={options.label}
                   flag={options.flag}
                 />

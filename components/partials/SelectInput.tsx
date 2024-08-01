@@ -1,12 +1,19 @@
 import { colorTextPrimary } from "@/constant/constant";
 import { IconChevronDown, IconSearch } from "@tabler/icons-react-native";
 import React, { ReactElement, useEffect, useState } from "react";
-import { StyleProp, TextStyle, TouchableOpacity, FlatList } from "react-native";
+import {
+  StyleProp,
+  TextStyle,
+  TouchableOpacity,
+  Keyboard,
+  FlatList,
+} from "react-native";
 import { Div, Text } from "react-native-magnus";
 import BottomSheet from "./BottomSheet";
 import InputField from "./InputField";
 import RadioButton from "./RadioButton";
 import { Nullable } from "@/store/types";
+import { StyleSheet } from "react-native";
 
 interface Option {
   label: string;
@@ -104,8 +111,9 @@ const SelectInput: React.FC<Props> = (props) => {
 
         <FlatList
           data={filteredOptions}
-          // to make sure key should be unique
-          keyExtractor={(item) => item.label + item.value}
+          keyExtractor={(item) => item.value + item.label}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps={"always"}
           renderItem={({ item, index }) =>
             renderLabel ? (
               renderLabel(item as OptionDto, onSelect, index)
@@ -115,7 +123,10 @@ const SelectInput: React.FC<Props> = (props) => {
                 styles={{
                   borderColor: "transparent",
                 }}
-                onTap={() => onSelect(item)}
+                onTap={() => {
+                  onSelect(item);
+                  Keyboard.dismiss();
+                }}
                 label={item.label}
                 value={item.value}
                 selectedValue={selectedValue?.value ?? ""}
@@ -131,10 +142,17 @@ const SelectInput: React.FC<Props> = (props) => {
               </Div>
             )
           }
+          contentContainerStyle={styles.flatListContent}
         />
       </BottomSheet>
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  flatListContent: {
+    flexGrow: 1,
+  },
+});
 
 export default SelectInput;

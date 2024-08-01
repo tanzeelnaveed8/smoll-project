@@ -9,7 +9,7 @@ import { getAxiosErrMsg } from "@/utils/helpers";
 import { AxiosError } from "axios";
 
 import InputField from "@/components/partials/InputField";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { View } from "react-native-animatable";
 import { Button, Div, Text } from "react-native-magnus";
 import Toast from "react-native-toast-notifications";
@@ -17,6 +17,8 @@ import ToastContainer from "react-native-toast-notifications/lib/typescript/toas
 import OnboardingUserModal from "./OnboardingUserModal";
 import { Keyboard, TouchableWithoutFeedback } from "react-native";
 import { OneSignal } from "react-native-onesignal";
+import OtpVerify from "react-native-otp-verify";
+import { Platform } from "react-native";
 
 interface Props {
   navigation: NavigationType;
@@ -38,6 +40,32 @@ const OnboardingOtpModal: React.FC<Props> = (props) => {
 
   const [otp, setOtp] = useState("");
 
+  useEffect(() => {
+    if (Platform.OS === "android") {
+      OtpVerify.getHash().then((hash) => {
+        // Send this hash to your server with the phone number
+        console.log("OTP Hash:", hash);
+      });
+    }
+
+    OtpVerify.addListener((message) => {
+      try {
+        const otp = /(\d{4})/g.exec(message)?.[1];
+
+        if (otp) {
+          setOtp(otp);
+          handleConfirm(otp);
+        }
+      } catch (error) {
+        console.log("Error reading OTP:", error);
+      }
+    });
+
+    return () => {
+      OtpVerify.removeListener();
+    };
+  }, []);
+
   const handleConfirm = async (_otp?: string) => {
     try {
       Keyboard.dismiss();
@@ -50,8 +78,6 @@ const OnboardingOtpModal: React.FC<Props> = (props) => {
       // Update the playerId everytime the user login
       const playerId = await OneSignal.User.pushSubscription.getIdAsync();
 
-      console.log("p", playerId);
-
       if (playerId) {
         await updateUser({ playerId });
       }
@@ -63,6 +89,7 @@ const OnboardingOtpModal: React.FC<Props> = (props) => {
       }
     } catch (err) {
       const msg = getAxiosErrMsg(err as AxiosError);
+
       toastRef.current?.show(msg, {
         type: "danger",
       });
@@ -144,7 +171,7 @@ const OnboardingOtpModal: React.FC<Props> = (props) => {
               style={{ flexDirection: "row", justifyContent: "center" }}
             >
               <Text fontSize={16} color="#6B6B6B" fontFamily={fontHauora}>
-                Can’t find the code?{" "}
+                Can't find the code?{" "}
               </Text>
               <Button
                 bg="transparent"

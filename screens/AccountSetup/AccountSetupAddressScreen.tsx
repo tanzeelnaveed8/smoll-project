@@ -9,9 +9,10 @@ import { NavigationType } from "@/store/types";
 import { getAxiosErrMsg } from "@/utils/helpers";
 import { useRoute } from "@react-navigation/native";
 import { AxiosError } from "axios";
-import React, { createRef, useEffect, useState } from "react";
+import React, { createRef, useEffect, useRef, useState } from "react";
 import { Div, ScrollDiv, Text } from "react-native-magnus";
 import { useToast } from "react-native-toast-notifications";
+import { KeyboardAvoidingView, Platform } from "react-native";
 
 interface Props {
   navigation: NavigationType;
@@ -62,12 +63,6 @@ const AccountSetupAddressScreen: React.FC<Props> = (props) => {
           showSetupModal: "true",
         });
       }
-    } catch (err) {
-      const errMsg = getAxiosErrMsg(err as AxiosError);
-
-      toast.show(errMsg, {
-        type: "danger",
-      });
     } finally {
       setLoading(false);
     }
@@ -82,6 +77,7 @@ const AccountSetupAddressScreen: React.FC<Props> = (props) => {
         country: string;
         postalCode: string;
       };
+
       setAddress({
         villa: userCopy?.villa,
         street: userCopy?.address,
@@ -91,6 +87,22 @@ const AccountSetupAddressScreen: React.FC<Props> = (props) => {
       });
     }
   }, [user]);
+
+  const villaRef = useRef<any>(null);
+  const streetRef = useRef<any>(null);
+  const cityRef = useRef<any>(null);
+  const postalCodeRef = useRef<any>(null);
+
+  const scrollViewRef = useRef<any>(null);
+
+  const scrollToInput = (inputRef: React.RefObject<any>) => {
+    inputRef.current?.measureLayout(
+      scrollViewRef.current,
+      (_x: number, y: number) => {
+        scrollViewRef.current?.scrollTo({ y: y, animated: true });
+      }
+    );
+  };
 
   return (
     <Layout
@@ -105,11 +117,20 @@ const AccountSetupAddressScreen: React.FC<Props> = (props) => {
         }
       }}
     >
-      <ScrollDiv style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
-        <Div flex={1} justifyContent="space-between">
-          <Div>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 40 : 0}
+      >
+        <ScrollDiv
+          ref={scrollViewRef}
+          showsVerticalScrollIndicator={false}
+          flex={1}
+          keyboardShouldPersistTaps="handled"
+        >
+          <Div flex={1}>
             <Text fontSize={"6xl"} mb={4}>
-              What’s your address?
+              What's your address?
             </Text>
             <Text fontSize={"xl"} mb={20}>
               We need your address to suggest the nearest vet clinic for
@@ -118,6 +139,7 @@ const AccountSetupAddressScreen: React.FC<Props> = (props) => {
 
             <Div style={{ gap: 16 }} mb={40}>
               <InputField
+                ref={villaRef}
                 placeholder="Flat/Villa No"
                 value={address.villa}
                 onChangeText={(text) =>
@@ -126,12 +148,17 @@ const AccountSetupAddressScreen: React.FC<Props> = (props) => {
                 inputStyle={{
                   borderRadius: 12,
                 }}
-                autoFocus
                 maxLength={40}
                 returnKeyType="next"
                 disabled={loading}
+                onSubmitEditing={() => {
+                  console.log("teriadc");
+                  streetRef.current?.focus();
+                }}
+                onFocus={() => scrollToInput(villaRef)}
               />
               <InputField
+                ref={streetRef}
                 placeholder="Street address"
                 value={address.street}
                 onChangeText={(text) =>
@@ -143,9 +170,12 @@ const AccountSetupAddressScreen: React.FC<Props> = (props) => {
                 maxLength={40}
                 returnKeyType="next"
                 disabled={loading}
+                onSubmitEditing={() => cityRef.current?.focus()}
+                onFocus={() => scrollToInput(streetRef)}
               />
 
               <InputField
+                ref={cityRef}
                 placeholder="City"
                 value={address.city}
                 onChangeText={(text) =>
@@ -157,6 +187,8 @@ const AccountSetupAddressScreen: React.FC<Props> = (props) => {
                 maxLength={40}
                 returnKeyType="next"
                 disabled={loading}
+                onSubmitEditing={() => postalCodeRef.current?.focus()}
+                onFocus={() => scrollToInput(cityRef)}
               />
 
               <CountryDropdown
@@ -167,6 +199,7 @@ const AccountSetupAddressScreen: React.FC<Props> = (props) => {
               />
 
               <InputField
+                ref={postalCodeRef}
                 placeholder="Postal code"
                 value={address.postalCode}
                 onChangeText={(text) =>
@@ -179,19 +212,21 @@ const AccountSetupAddressScreen: React.FC<Props> = (props) => {
                 keyboardType="numeric"
                 returnKeyType="done"
                 disabled={loading}
+                onFocus={() => scrollToInput(postalCodeRef)}
               />
             </Div>
           </Div>
-          <ButtonPrimary
-            bgColor="primary"
-            onPress={handleConfirm}
-            disabled={disableConfirm || loading}
-            loading={loading}
-          >
-            Confirm
-          </ButtonPrimary>
-        </Div>
-      </ScrollDiv>
+        </ScrollDiv>
+      </KeyboardAvoidingView>
+
+      <ButtonPrimary
+        bgColor="primary"
+        onPress={handleConfirm}
+        disabled={disableConfirm || loading}
+        loading={loading}
+      >
+        Confirm
+      </ButtonPrimary>
     </Layout>
   );
 };

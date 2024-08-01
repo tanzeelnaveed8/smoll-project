@@ -11,6 +11,7 @@ import {
   StyleSheet,
   View,
 } from "react-native";
+import { showMessage } from "react-native-flash-message";
 import { Button, Div, Image, Text } from "react-native-magnus";
 
 const OnboardingCard: React.FC<{

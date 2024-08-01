@@ -110,80 +110,63 @@ const SettingsMainScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
   return (
-    <>
-      <Layout
-        style={{ paddingBottom: 0 }}
-        onBackPress={() => navigation.goBack()}
-      >
-        <Div mb={20}>
+    <Layout showBack onBackPress={() => navigation.goBack()} title="Settings">
+      <ScrollDiv showsVerticalScrollIndicator={false}>
+        {options.map((group) => (
+          <React.Fragment key={group.id}>
+            <Text
+              fontWeight="400"
+              fontSize={"xl"}
+              fontFamily={fontHauora}
+              lineHeight={24}
+              mb={8}
+            >
+              {group.groupName}
+            </Text>
+            <Div mb={24}>
+              {group.options.map((option) => (
+                <SettingButton
+                  key={option.id}
+                  title={option.title}
+                  // iconName={option.icon}
+                  // iconFamily={option.iconFamily}
+                  // iconFontSize={option?.iconFontSize}
+                  description={option?.description}
+                  toggleBtn={option?.toggleBtn}
+                  Icon={option.icon}
+                  onPress={() => {
+                    option.link && navigation.navigate(option.link);
+                  }}
+                />
+              ))}
+            </Div>
+          </React.Fragment>
+        ))}
+
+        <Div mt="auto" mb={20}>
           <Text
             fontWeight="400"
-            fontSize={"5xl"}
+            fontSize={18}
             fontFamily={fontHauora}
-            lineHeight={36}
-            mb={24}
+            lineHeight={24}
+            mb={8}
+            color="#0189F9"
           >
-            Settings
+            Logout
           </Text>
-
-          <ScrollDiv>
-            {options.map((group) => (
-              <React.Fragment key={group.id}>
-                <Text
-                  fontWeight="400"
-                  fontSize={"xl"}
-                  fontFamily={fontHauora}
-                  lineHeight={24}
-                  mb={8}
-                >
-                  {group.groupName}
-                </Text>
-                <Div mb={24}>
-                  {group.options.map((option) => (
-                    <SettingButton
-                      key={option.id}
-                      title={option.title}
-                      // iconName={option.icon}
-                      // iconFamily={option.iconFamily}
-                      // iconFontSize={option?.iconFontSize}
-                      description={option?.description}
-                      toggleBtn={option?.toggleBtn}
-                      Icon={option.icon}
-                      onPress={() => {
-                        option.link && navigation.navigate(option.link);
-                      }}
-                    />
-                  ))}
-                </Div>
-              </React.Fragment>
-            ))}
-
-            <Div mt="auto" mb={20}>
-              <Text
-                fontWeight="400"
-                fontSize={18}
-                fontFamily={fontHauora}
-                lineHeight={24}
-                mb={8}
-                color="#0189F9"
-              >
-                Logout
-              </Text>
-              <Text
-                fontWeight="400"
-                fontSize={18}
-                fontFamily={fontHauora}
-                lineHeight={24}
-                mb={6}
-                color="#7B7B7B"
-              >
-                App v 12.81
-              </Text>
-            </Div>
-          </ScrollDiv>
+          <Text
+            fontWeight="400"
+            fontSize={18}
+            fontFamily={fontHauora}
+            lineHeight={24}
+            mb={6}
+            color="#7B7B7B"
+          >
+            App v 12.81
+          </Text>
         </Div>
-      </Layout>
-    </>
+      </ScrollDiv>
+    </Layout>
   );
 };
 

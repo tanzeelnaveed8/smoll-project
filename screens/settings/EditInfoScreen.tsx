@@ -10,7 +10,8 @@ import { getAxiosErrMsg } from "@/utils/helpers";
 import { useRoute } from "@react-navigation/native";
 import { AxiosError } from "axios";
 import React, { useState } from "react";
-import { Div, Text } from "react-native-magnus";
+import { Keyboard, TouchableWithoutFeedback } from "react-native";
+import { Div, ScrollDiv, Text } from "react-native-magnus";
 import { useToast } from "react-native-toast-notifications";
 
 type DataType = {
@@ -56,12 +57,6 @@ const EditInfoScreen: React.FC<{ navigation: NavigationType }> = ({
       }
 
       navigation.goBack();
-    } catch (err) {
-      const errMsg = getAxiosErrMsg(err as AxiosError);
-
-      toast.show(errMsg, {
-        type: "danger",
-      });
     } finally {
       setLoading(false);
     }
@@ -76,21 +71,24 @@ const EditInfoScreen: React.FC<{ navigation: NavigationType }> = ({
         navigation.goBack();
       }}
     >
-      <Div pt={20} flex={1}>
-        <Text fontSize={"4xl"} mb={20}>
-          {heading || "No Heading Provided"}
-        </Text>
-        <InputField
-          placeholder={placeholder || ""}
-          marginBottom={16}
-          floatingPlaceholder
-          inputStyle={{ borderRadius: 12 }}
-          value={form}
-          onChangeText={(name) => {
-            setForm(name);
-          }}
-        />
-      </Div>
+      <ScrollDiv keyboardShouldPersistTaps="handled">
+        <Div pt={20} flex={1}>
+          <Text fontSize={"4xl"} mb={20}>
+            {heading || "No Heading Provided"}
+          </Text>
+          <InputField
+            placeholder={placeholder || ""}
+            marginBottom={16}
+            floatingPlaceholder
+            inputStyle={{ borderRadius: 12 }}
+            value={form}
+            onChangeText={(name) => {
+              setForm(name);
+            }}
+            returnKeyType="done"
+          />
+        </Div>
+      </ScrollDiv>
 
       <ButtonPrimary
         loading={loading}

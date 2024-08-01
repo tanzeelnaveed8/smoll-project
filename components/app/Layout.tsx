@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   ActivityIndicator,
   StyleProp,
@@ -8,6 +8,7 @@ import {
 import { Div, Text, WINDOW_HEIGHT } from "react-native-magnus";
 import BackButton from "../partials/BackButton";
 import { colorPrimary, fontHauoraSemiBold } from "@/constant/constant";
+import { useNavigation } from "@react-navigation/native";
 
 interface Props {
   children: React.ReactNode;
@@ -18,6 +19,7 @@ interface Props {
   title?: string;
   showCloseIcon?: boolean;
   loading?: boolean;
+  preventBackGesture?: boolean;
 }
 
 const Layout: React.FC<Props> = ({

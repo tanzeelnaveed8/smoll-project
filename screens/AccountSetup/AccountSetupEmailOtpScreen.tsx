@@ -9,6 +9,7 @@ import { useRoute } from "@react-navigation/native";
 import { AxiosError } from "axios";
 
 import React, { useState } from "react";
+import { Keyboard } from "react-native";
 import { View } from "react-native-animatable";
 import { Button, Div, Input, Text } from "react-native-magnus";
 import { useToast } from "react-native-toast-notifications";
@@ -36,12 +37,15 @@ const AccountSetupEmailOtpScreen: React.FC<Props> = (props) => {
     setOtp(otp);
 
     if (otp.length === 4) {
+      Keyboard.dismiss();
       handleVerify(otp);
     }
   };
 
   const handleVerify = async (_otp?: string) => {
     try {
+      setLoading(true);
+
       await verifyEmail(_otp ?? otp);
 
       if (isUpdatingEmail) {
@@ -51,12 +55,6 @@ const AccountSetupEmailOtpScreen: React.FC<Props> = (props) => {
           showSetupModal: "true",
         });
       }
-    } catch (err) {
-      const errMsg = getAxiosErrMsg(err as AxiosError);
-
-      toast.show(errMsg, {
-        type: "danger",
-      });
     } finally {
       setLoading(false);
     }

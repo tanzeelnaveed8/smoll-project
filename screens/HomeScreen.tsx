@@ -17,7 +17,7 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
-import { Button, Div, Icon, Image, Text } from "react-native-magnus";
+import { Button, Div, Icon, Image, ScrollDiv, Text } from "react-native-magnus";
 
 import AccountSetupModal from "@/components/app/account/AccountSetupModal";
 import OnboardingCongratsModal from "@/components/app/onboarding/OnboardingCongratsModal";
@@ -28,6 +28,7 @@ import { NavigationType } from "@/store/types";
 import { useRoute } from "@react-navigation/native";
 import React, { useEffect, useMemo, useState } from "react";
 import TabNavigationBar from "@/components/app/TabNavigationBar";
+import { showMessage } from "react-native-flash-message";
 
 interface Props {
   navigation: NavigationType;
@@ -135,123 +136,126 @@ const HomeScreen: React.FC<Props> = (props) => {
           justifyContent: "flex-start",
         }}
       >
-        <Div
-          mb={20}
-          flexDir="row"
-          justifyContent="space-between"
-          alignItems="center"
-        >
-          <Div flexDir="row" alignItems="center" style={{ gap: 12 }}>
-            <Image w={100} h={27} source={require("../assets/logo.png")} />
-            <Image w={56} h={56} source={require("../assets/images/dog.png")} />
-          </Div>
-
-          <Div flexDir="row" alignItems="center" style={{ gap: 8 }}>
-            <IconButton>
-              <IconBell
-                width={32}
-                height={32}
-                color={"#222222"}
-                strokeWidth={1.5}
-              />
-            </IconButton>
-            <IconButton
-              onPress={() => {
-                props.navigation.navigate("SettingsMainScreen");
-              }}
-            >
-              <IconUserCircle
-                width={32}
-                height={32}
-                color={"#222222"}
-                strokeWidth={1.5}
-              />
-            </IconButton>
-          </Div>
-        </Div>
-
-        <Div mb={16}>
-          <Text fontSize={"5xl"}>Hi, {user?.name}</Text>
-          <Text fontSize={"lg"}>How can we help you today?</Text>
-        </Div>
-
-        {completedStep < 3 && (
-          <Div mb={16}>
-            <TouchableOpacity
-              onPress={() => {
-                setShowAccountSetupModal(true);
-              }}
-            >
-              <AccountSetupProgress
-                progress={completedStep / 3}
-                completedStepCount={completedStep}
-              />
-            </TouchableOpacity>
-          </Div>
-        )}
-
-        <TouchableOpacity
-          onPress={() => {
-            props.navigation.navigate("ExpertsListScreen");
-          }}
-        >
+        <ScrollDiv>
           <Div
-            bg="#F3F9FC"
-            px={16}
-            py={18}
-            style={{ borderRadius: 12 }}
-            borderWidth={1}
-            borderColor="#D0D7DC"
-            mb={24}
+            mb={20}
+            flexDir="row"
+            justifyContent="space-between"
+            alignItems="center"
           >
-            <Div w={212} mb={16}>
-              <Text fontSize={"2xl"}>Expert Advice for</Text>
-              <Text fontSize={"2xl"} color="primary" mb={4}>
-                Happier, Healthier Pets
-              </Text>
-              <Text>Receive a consultation for your pet</Text>
-            </Div>
-
-            <Div style={{ paddingVertical: 2, flexDirection: "row", gap: 6 }}>
-              <Text fontFamily={fontHauoraSemiBold} fontSize={"lg"}>
-                Get Started
-              </Text>
-              <Icon
-                alignSelf="center"
-                name="chevron-right"
-                fontFamily="Feather"
-                fontSize={24}
-                color="#222"
+            <Div flexDir="row" alignItems="center" style={{ gap: 12 }}>
+              <Image w={100} h={27} source={require("../assets/logo.png")} />
+              <Image
+                w={56}
+                h={56}
+                source={require("../assets/images/dog.png")}
               />
             </Div>
 
-            <Image
-              source={require("../assets/images/home-page-highfy.png")}
-              w={200}
-              h={170}
-              position="absolute"
-              right={0}
-              bottom={0}
-            />
+            <Div flexDir="row" alignItems="center" style={{ gap: 8 }}>
+              <IconButton>
+                <IconBell
+                  width={32}
+                  height={32}
+                  color={"#222222"}
+                  strokeWidth={1.5}
+                />
+              </IconButton>
+              <IconButton
+                onPress={() => {
+                  props.navigation.navigate("SettingsMainScreen");
+                }}
+              >
+                <IconUserCircle
+                  width={32}
+                  height={32}
+                  color={"#222222"}
+                  strokeWidth={1.5}
+                />
+              </IconButton>
+            </Div>
           </Div>
-        </TouchableOpacity>
 
-        <Div>
-          <Div flexDir="row" style={{ gap: 8 }} alignItems="center" mb={16}>
-            <Image
-              source={require("../assets/images/home-start-icon.png")}
-              w={24}
-              h={24}
-              mt={2}
-            />
-            <Text fontFamily={fontHauoraBold} fontSize={"xl"}>
-              What do you want to do today?
-            </Text>
+          <Div mb={16}>
+            <Text fontSize={"5xl"}>Hi, {user?.name}</Text>
+            <Text fontSize={"lg"}>How can we help you today?</Text>
           </Div>
 
-          <FlatList
-            data={options}
-            renderItem={({ item, index }) => (
+          {completedStep < 3 && (
+            <Div mb={16}>
+              <TouchableOpacity
+                onPress={() => {
+                  setShowAccountSetupModal(true);
+                }}
+              >
+                <AccountSetupProgress
+                  progress={completedStep / 3}
+                  completedStepCount={completedStep}
+                />
+              </TouchableOpacity>
+            </Div>
+          )}
+
+          <TouchableOpacity
+            onPress={() => {
+              props.navigation.navigate("ExpertsListScreen");
+            }}
+          >
+            <Div
+              bg="#F3F9FC"
+              px={16}
+              py={18}
+              style={{ borderRadius: 12 }}
+              borderWidth={1}
+              borderColor="#D0D7DC"
+              mb={24}
+            >
+              <Div w={212} mb={16}>
+                <Text fontSize={"2xl"}>Expert Advice for</Text>
+                <Text fontSize={"2xl"} color="primary" mb={4}>
+                  Happier, Healthier Pets
+                </Text>
+                <Text>Receive a consultation for your pet</Text>
+              </Div>
+
+              <Div style={{ paddingVertical: 2, flexDirection: "row", gap: 6 }}>
+                <Text fontFamily={fontHauoraSemiBold} fontSize={"lg"}>
+                  Get Started
+                </Text>
+                <Icon
+                  alignSelf="center"
+                  name="chevron-right"
+                  fontFamily="Feather"
+                  fontSize={24}
+                  color="#222"
+                />
+              </Div>
+
+              <Image
+                source={require("../assets/images/home-page-highfy.png")}
+                w={200}
+                h={170}
+                position="absolute"
+                right={0}
+                bottom={0}
+              />
+            </Div>
+          </TouchableOpacity>
+
+          <Div>
+            <Div flexDir="row" style={{ gap: 8 }} alignItems="center" mb={16}>
+              <Image
+                source={require("../assets/images/home-start-icon.png")}
+                w={24}
+                h={24}
+                mt={2}
+              />
+              <Text fontFamily={fontHauoraBold} fontSize={"xl"}>
+                What do you want to do today?
+              </Text>
+            </Div>
+
+            {options.map((item, index) => (
               <Button
                 px={16}
                 py={12}
@@ -279,10 +283,9 @@ const HomeScreen: React.FC<Props> = (props) => {
                   <IconChevronRight width={24} height={24} color={"#222222"} />
                 )}
               </Button>
-            )}
-            keyExtractor={(item) => item.name}
-          />
-        </Div>
+            ))}
+          </Div>
+        </ScrollDiv>
 
         <OnboardingCongratsModal
           isVisible={showCongratsModal}
