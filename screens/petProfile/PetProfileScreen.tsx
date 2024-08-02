@@ -22,6 +22,7 @@ import PetProfileNameScreen from "./PetProfileNameScreen";
 import PetProfileSpayedScreen from "./PetProfileSpayedScreen";
 import PetProfileSpeciesScreen from "./PetProfileSpeciesScreen";
 import { showMessage } from "react-native-flash-message";
+import { useUserStore } from "@/store/modules/user";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -34,6 +35,7 @@ const totalSteps = 7;
 const PetProfileScreen: React.FC<Props> = (props) => {
   const route = useRoute();
   const toast = useToast();
+  const { UPDATE_PET_COUNT } = useUserStore();
   const { addPet, healthHistoryMap } = usePetStore();
 
   const [currentStep, setCurrentStep] = useState(0);
@@ -81,6 +83,8 @@ const PetProfileScreen: React.FC<Props> = (props) => {
         setLoading(true);
 
         const { id } = await addPet(pet);
+
+        UPDATE_PET_COUNT(1);
 
         props.navigation.navigate("PetProfileMedicalHistoryScreen", {
           navigateTo: comingFrom === "modal" ? "HomeScreen" : comingFrom,

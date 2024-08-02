@@ -11,6 +11,7 @@ import { UploadedFile } from "@/store/types/file";
 import { usePetStore } from "@/store/modules/pet";
 import { useToast } from "react-native-toast-notifications";
 import TextAreaField from "@/components/partials/TextAreaField";
+import { Keyboard, View } from "react-native";
 
 type PropTypes = {
   open: boolean;
@@ -98,16 +99,16 @@ const HealthHistoryModal = (props: PropTypes) => {
   return (
     <BottomSheet
       isVisible={open}
-      onCloseIconClick={onClose}
       h="95%"
       px={20}
-      showCloseIcon
+      style={{ position: "relative" }}
     >
-      <ScrollDiv
-        showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled"
-      >
-        <Div flex={1} pb={30}>
+      <Div h={"100%"}>
+        <ScrollDiv
+          flex={1}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+        >
           <Text fontSize={32} lineHeight={40} color="#222222" mb={4}>
             Details
           </Text>
@@ -146,6 +147,9 @@ const HealthHistoryModal = (props: PropTypes) => {
               value={form.description}
               onChangeText={(e) => {
                 handleFormChange("description", e);
+              }}
+              onSubmitEditing={() => {
+                Keyboard.dismiss();
               }}
             />
           </Div>
@@ -188,17 +192,21 @@ const HealthHistoryModal = (props: PropTypes) => {
               }}
             />
           </Div>
-        </Div>
-      </ScrollDiv>
+        </ScrollDiv>
 
-      <ButtonPrimary
-        bgColor="primary"
-        onPress={handleSubmit}
-        loading={loading}
-        disabled={loading || isDisabled}
-      >
-        Confirm
-      </ButtonPrimary>
+        <Div>
+          <ButtonPrimary
+            bgColor="primary"
+            onPress={handleSubmit}
+            loading={loading}
+            mt={30}
+            mb={30}
+            disabled={loading || isDisabled}
+          >
+            Confirm
+          </ButtonPrimary>
+        </Div>
+      </Div>
     </BottomSheet>
   );
 };

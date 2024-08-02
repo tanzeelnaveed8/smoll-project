@@ -24,70 +24,68 @@ const PetProfileCongratulationsScreen = ({
   return (
     <Layout>
       <Div flex={1}>
-        <Container flex={1}>
-          <ConfettiCannon
-            count={200}
-            origin={{ x: -10, y: 0 }}
-            fadeOut
-            autoStart
-            autoStartDelay={0}
-          />
-          <Div mt={57} alignItems="center">
-            <Div
-              mx="auto"
-              w={200}
-              h={200}
-              rounded={64}
-              bgImg={{
-                uri: petBg,
-              }}
-              position="relative"
-            >
-              <IconHeartFilled
-                size={64}
-                fill="#E31F7D"
-                style={{ position: "absolute", right: -8, top: -1 }}
-              />
-            </Div>
-            <Text
-              w="90%"
-              fontSize={32}
-              lineHeight={40}
-              color="#222222"
-              textAlign="center"
-              mt={20}
-            >
-              Congratulations! {petName}'s profile has been added.
-            </Text>
-            <Text
-              w={314}
-              fontFamily={fontHauoraMedium}
-              fontSize="lg"
-              lineHeight={24}
-              color="#494949"
-              textAlign="center"
-              mt={4}
-            >
-              You can add more pets in the settings section afterward.
-            </Text>
+        <ConfettiCannon
+          count={200}
+          origin={{ x: -10, y: 0 }}
+          fadeOut
+          autoStart
+          autoStartDelay={0}
+        />
+        <Div mt={57} alignItems="center">
+          <Div
+            mx="auto"
+            w={200}
+            h={200}
+            rounded={64}
+            bgImg={{
+              uri: petBg,
+            }}
+            position="relative"
+          >
+            <IconHeartFilled
+              size={64}
+              fill="#E31F7D"
+              style={{ position: "absolute", right: -8, top: -1 }}
+            />
           </Div>
+          <Text
+            w="90%"
+            fontSize={32}
+            lineHeight={40}
+            color="#222222"
+            textAlign="center"
+            mt={20}
+          >
+            Congratulations! {petName}'s profile has been added.
+          </Text>
+          <Text
+            w={314}
+            fontFamily={fontHauoraMedium}
+            fontSize="lg"
+            lineHeight={24}
+            color="#494949"
+            textAlign="center"
+            mt={4}
+          >
+            You can add more pets in the settings section afterward.
+          </Text>
+        </Div>
 
-          <Div mt="auto">
-            <ButtonPrimary
-              onPress={() => {
-                console.log("testing", navigateTo);
+        <Div mt="auto">
+          <ButtonPrimary
+            onPress={() => {
+              console.log("testing", navigateTo);
 
-                navigation.navigate(navigateTo, {
-                  petId: petId,
-                  petName: petName,
-                  expertId: expertId,
-                });
-              }}
-            >
-              Let's Go
-            </ButtonPrimary>
-          </Div>
-        </Container>
+              navigation.navigate(navigateTo, {
+                petId: petId,
+                petName: petName,
+                expertId: expertId,
+              });
+            }}
+          >
+            Let's Go
+          </ButtonPrimary>
+        </Div>
       </Div>
     </Layout>
   );
