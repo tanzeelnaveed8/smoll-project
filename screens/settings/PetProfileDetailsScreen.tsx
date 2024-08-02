@@ -151,6 +151,8 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
     },
   ];
 
+  console.log("petDetailsData==", petDetailsData);
+
   return (
     <Layout
       showBack
@@ -290,7 +292,19 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                 />
               )}
 
-              <AddButton text="Add Health History" />
+              <AddButton
+                text="Add Health History"
+                onPress={() => {
+                  if (!petDetailsData) return;
+
+                  navigation.navigate("PetProfileMedicalHistoryScreen", {
+                    navigateTo: "PetProfileDetailsScreen",
+                    petId: id ?? "",
+                    petName: petDetailsData.name,
+                    petBg: petDetailsData.photos[0]?.url,
+                  });
+                }}
+              />
             </Div>
           )}
         </Div>

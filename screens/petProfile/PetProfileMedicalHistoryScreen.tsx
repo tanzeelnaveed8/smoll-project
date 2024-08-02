@@ -32,9 +32,19 @@ const PetProfileMedicalHistoryScreen: React.FC<Props> = (props) => {
 
   useEffect(() => {
     // TODO: back gesture disable not working.
-    props.navigation.addListener("beforeRemove", () => {
-      return;
-    });
+    // props.navigation.addListener("beforeRemove", () => {
+    //   return;
+    // });
+
+    if (navigateTo === "PetProfileDetailsScreen") return;
+    const unsubscribe = props.navigation.addListener(
+      "beforeRemove",
+      (event: any) => {
+        event.preventDefault(); // Prevent going back
+      }
+    );
+
+    return unsubscribe;
   }, []);
 
   const handleConfirm = () => {

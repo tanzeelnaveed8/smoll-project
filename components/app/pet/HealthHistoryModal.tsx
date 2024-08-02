@@ -99,6 +99,9 @@ const HealthHistoryModal = (props: PropTypes) => {
   return (
     <BottomSheet
       isVisible={open}
+      onSwipeComplete={() => {
+        console.log("close");
+      }}
       h="95%"
       px={20}
       style={{ position: "relative" }}
@@ -187,6 +190,7 @@ const HealthHistoryModal = (props: PropTypes) => {
               plusIcon={false}
               w={139}
               h={150}
+              uri={form?.documents[0]?.url || ""}
               onChange={(file) => {
                 handleFormChange("documents", file);
               }}

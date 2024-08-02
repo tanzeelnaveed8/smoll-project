@@ -1,7 +1,7 @@
 import InputField from "@/components/partials/InputField";
 import TextAreaField from "@/components/partials/TextAreaField";
 import { PetPayloadDto } from "@/store/types/pet";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Div, Text } from "react-native-magnus";
 
 interface Props {
@@ -16,6 +16,9 @@ const PetProfileBasicDetailScreens: React.FC<Props> = (props) => {
   const [chipNumber, setChipNumber] = useState(
     props.pet.chipNumber ? props.pet.chipNumber.toString() : ""
   );
+
+  const chipNumberRef = useRef<any>(null);
+  const preExistingConditionRef = useRef<any>(null);
 
   return (
     <Div>
@@ -33,8 +36,13 @@ const PetProfileBasicDetailScreens: React.FC<Props> = (props) => {
         marginBottom={20}
         inputStyle={{ borderRadius: 12 }}
         keyboardType="numeric"
+        onSubmitEditing={() => {
+          console.log("weight submitted");
+          chipNumberRef.current.focus();
+        }}
       />
       <InputField
+        ref={chipNumberRef}
         value={chipNumber}
         onChangeText={(text) => {
           setChipNumber(text);
@@ -44,11 +52,15 @@ const PetProfileBasicDetailScreens: React.FC<Props> = (props) => {
         marginBottom={20}
         inputStyle={{ borderRadius: 12 }}
         keyboardType="numeric"
+        onSubmitEditing={() => {
+          preExistingConditionRef?.current?.focus();
+        }}
       />
 
       <TextAreaField
+        ref={preExistingConditionRef}
         placeholder="Any pre-existing conditions (Optional)"
-        mb={20}
+        mb={30}
       />
     </Div>
   );

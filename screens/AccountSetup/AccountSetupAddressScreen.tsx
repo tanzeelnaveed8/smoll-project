@@ -13,11 +13,13 @@ import { AxiosError } from "axios";
 import React, { createRef, useEffect, useRef, useState } from "react";
 import { Div, ScrollDiv, Text } from "react-native-magnus";
 import { useToast } from "react-native-toast-notifications";
-import { KeyboardAvoidingView, Platform } from "react-native";
+import { Dimensions, KeyboardAvoidingView, Platform } from "react-native";
 
 interface Props {
   navigation: NavigationType;
 }
+
+const windowHeight = Dimensions.get("window").height;
 
 const AccountSetupAddressScreen: React.FC<Props> = (props) => {
   const route = useRoute();
@@ -118,17 +120,18 @@ const AccountSetupAddressScreen: React.FC<Props> = (props) => {
         }
       }}
     >
-      <KeyboardAvoidingView
+      {/* <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
         keyboardVerticalOffset={Platform.OS === "ios" ? 40 : 0}
+      > */}
+      <ScrollDiv
+        ref={scrollViewRef}
+        showsVerticalScrollIndicator={false}
+        flex={1}
+        keyboardShouldPersistTaps="handled"
       >
-        <ScrollDiv
-          ref={scrollViewRef}
-          showsVerticalScrollIndicator={false}
-          flex={1}
-          keyboardShouldPersistTaps="handled"
-        >
+        <Div flex={1} minH={windowHeight - 150}>
           <Div flex={1}>
             <Text fontSize={"6xl"} mb={4}>
               What's your address?
@@ -227,17 +230,18 @@ const AccountSetupAddressScreen: React.FC<Props> = (props) => {
               />
             </Div>
           </Div>
-        </ScrollDiv>
-      </KeyboardAvoidingView>
+          {/* </KeyboardAvoidingView> */}
 
-      <ButtonPrimary
-        bgColor="primary"
-        onPress={handleConfirm}
-        disabled={disableConfirm || loading}
-        loading={loading}
-      >
-        Confirm
-      </ButtonPrimary>
+          <ButtonPrimary
+            bgColor="primary"
+            onPress={handleConfirm}
+            disabled={disableConfirm || loading}
+            loading={loading}
+          >
+            Confirm
+          </ButtonPrimary>
+        </Div>
+      </ScrollDiv>
     </Layout>
   );
 };

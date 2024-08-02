@@ -85,6 +85,7 @@ const InputField = forwardRef<any, InputFieldProps>(
     const handleBlur = () => {
       setIsFocused(false);
       Keyboard.dismiss();
+
       if (valueExist) return;
       Animated.timing(topPosition, {
         toValue: 16, // Reset top position when not focused
@@ -175,7 +176,7 @@ const InputField = forwardRef<any, InputFieldProps>(
               : "#222222"
           }
           onFocus={handleFocus}
-          onBlur={handleBlur}
+          // onBlur={handleBlur}
           onChangeText={(e) => {
             if (onChangeText) {
               onChangeText(e);
