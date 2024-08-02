@@ -44,7 +44,6 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
 
   useEffect(() => {
     if (!id) return;
-    console.log("running use Effect");
 
     const fetchData = async () => {
       const data = petsDetailMap.get(id);
@@ -75,7 +74,6 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
 
   const handleUpdateImage = async (file: UploadedFile[]) => {
     if (!petDetailsData) return;
-    console.log("handleUpdateImage files", file);
 
     const filesArr = [...file, ...petDetailsData?.photos];
 

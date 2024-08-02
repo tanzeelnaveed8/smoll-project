@@ -120,10 +120,6 @@ const PetProfileScreen: React.FC<Props> = (props) => {
     setCurrentStep((step) => step - 1);
   };
 
-  useEffect(() => {
-    console.log(pet);
-  }, [pet]);
-
   return (
     <Layout
       showBack={currentStep !== 8}

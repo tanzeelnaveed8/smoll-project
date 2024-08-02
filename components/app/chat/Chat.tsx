@@ -8,6 +8,7 @@ import { Avatar, GiftedChat, IMessage } from "react-native-gifted-chat";
 import { Div } from "react-native-magnus";
 import ChatBubble from "./ChatBubble";
 import ChatComposer from "./ChatComposer";
+import { useSound } from "@/functions/useSound";
 
 interface Props {
   initialMessages: IMessage[];
@@ -17,7 +18,9 @@ interface Props {
 }
 
 const Chat: React.FC<Props> = (props) => {
+  const { play } = useSound();
   const { user } = useUserStore();
+
   const [messages, setMessages] = useState<IMessage[]>(props.initialMessages);
   // This is only for cometchat
   const [loggedInUser, setLoggedInUser] = useState<CometChat.User | null>(null);
@@ -35,7 +38,15 @@ const Chat: React.FC<Props> = (props) => {
   }, [props.recipientId]);
 
   useEffect(() => {
+    let receiving = false;
+
     CometChatWrapper.addListener("chat", (message) => {
+      if (receiving) return;
+
+      play("message");
+
+      receiving = true;
+
       setMessages((previousMessages) =>
         GiftedChat.append(previousMessages, [
           CometChatWrapper.transformMessage(
@@ -45,6 +56,10 @@ const Chat: React.FC<Props> = (props) => {
           ),
         ])
       );
+
+      setTimeout(() => {
+        receiving = false;
+      }, 500);
     });
 
     const listenerId = "TYPING_LISTENER";
@@ -54,12 +69,16 @@ const Chat: React.FC<Props> = (props) => {
       new CometChat.MessageListener({
         // @ts-expect-error - no type provided
         onTypingStarted: (typingIndicator) => {
+          console.log("trigger", typingIndicator);
+
           if (typingIndicator.sender.uid === props.recipientId) {
             setIsTyping(true);
           }
         },
         // @ts-expect-error - no type provided
         onTypingEnded: (typingIndicator) => {
+          console.log("trigger 00", typingIndicator);
+
           if (typingIndicator.sender.uid === props.recipientId) {
             setIsTyping(false);
           }
@@ -165,8 +184,6 @@ const Chat: React.FC<Props> = (props) => {
       props.recipientId.toLowerCase(),
       CometChat.RECEIVER_TYPE.USER
     );
-
-    console.log(typingNotification);
 
     if (text.length > 0) {
       // Start typing

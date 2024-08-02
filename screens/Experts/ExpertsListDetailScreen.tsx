@@ -100,8 +100,6 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
       setAvailabilityLoading(true);
       setSelectedDate(date);
 
-      console.log("date", date);
-
       const _availability = await fetchExpertAvailability(
         expertId,
         new Date(date)

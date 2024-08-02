@@ -152,7 +152,6 @@ const AccountSetupAddressScreen: React.FC<Props> = (props) => {
                 returnKeyType="next"
                 disabled={loading}
                 onSubmitEditing={() => {
-                  console.log("teriadc");
                   streetRef.current?.focus();
                 }}
                 onFocus={() => scrollToInput(villaRef)}

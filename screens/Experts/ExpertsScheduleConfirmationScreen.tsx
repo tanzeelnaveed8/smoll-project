@@ -56,8 +56,6 @@ const ExpertsScheduleConfirmationScreen: React.FC<{
       .tz(`${date}T${parsedSelectedTime.from}Z`)
       .format("HH:mm A");
 
-    console.log("f", fromTime, date, parsedSelectedTime.from);
-
     const toTime = dayjs
       .tz(`${date}T${parsedSelectedTime.to}Z`)
       .format("HH:mm A");

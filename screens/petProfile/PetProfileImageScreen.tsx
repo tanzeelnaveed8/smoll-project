@@ -24,8 +24,6 @@ const PetProfileImageScreen: React.FC<Props> = (props) => {
     props.setPet({ ...props.pet, photos: updatedPhotos });
   };
 
-  console.log(props.pet.photos);
-
   return (
     <Div>
       <Text fontSize={32} lineHeight={40} color="#222222" mb={16}>

@@ -14,9 +14,7 @@ const AddMedicalHistoryInfo: React.FC<{
 }> = ({ open, onClose, heading, placeholder, formType }) => {
   const [form, setForm] = useState("");
 
-  const handleConfirm = () => {
-    console.log("form", form);
-  };
+  const handleConfirm = () => {};
 
   return (
     <>

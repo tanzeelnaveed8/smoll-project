@@ -1,18 +1,20 @@
 import React from "react";
 import { Button, Div, Image, Text } from "react-native-magnus";
 import { IconChevronRight } from "@tabler/icons-react-native";
-import { TouchableOpacity } from "react-native";
+import { ActivityIndicator, TouchableOpacity } from "react-native";
+import { colorPrimary } from "@/constant/constant";
 
 interface Props {
   onPress: () => void;
   title: string;
   subtitle: string;
   image: string;
+  loading?: boolean;
 }
 
 const ChatInboxItem: React.FC<Props> = (props) => {
   return (
-    <TouchableOpacity onPress={props.onPress}>
+    <TouchableOpacity disabled={props.loading} onPress={props.onPress}>
       <Button
         bg="transparent"
         p={0}
@@ -35,7 +37,11 @@ const ChatInboxItem: React.FC<Props> = (props) => {
           </Div>
 
           <Div ml="auto">
-            <IconChevronRight width={24} height={24} color={"#222222"} />
+            {props.loading ? (
+              <ActivityIndicator size="small" color={colorPrimary} />
+            ) : (
+              <IconChevronRight width={24} height={24} color={"#222222"} />
+            )}
           </Div>
         </Div>
       </Button>

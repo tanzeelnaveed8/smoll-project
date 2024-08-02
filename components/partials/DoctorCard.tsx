@@ -24,8 +24,6 @@ const DoctorCard: React.FC<PropTypes> = (props) => {
     image,
   } = props;
 
-  console.log("image", image);
-
   return (
     <Div flexDir={"row"} justifyContent="space-between">
       <Div flexDir="row" alignItems={slotScreen ? "center" : "flex-start"}>

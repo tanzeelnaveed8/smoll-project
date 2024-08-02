@@ -57,6 +57,7 @@ import CaseDetailScreen from "./screens/Cases/CaseDetailScreen";
 import { LogLevel, OneSignal } from "react-native-onesignal";
 import { navigationRef } from "./utils/root-navigation";
 import * as rootNavigation from "./utils/root-navigation";
+import { useExpertStore } from "./store/modules/expert";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -103,6 +104,7 @@ const Stack = createNativeStackNavigator();
 
 const App = () => {
   const { user } = useUserStore();
+  const { expertDetailMap, fetchExpertDetail } = useExpertStore();
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
   useEffect(() => {
@@ -127,12 +129,38 @@ const App = () => {
           consultationId: event.notification?.additionalData?.consultationId,
         });
       }
+
+      if (event.notification?.additionalData?.notificationType === "chat") {
+        const expertId = event.notification?.additionalData?.expertId;
+        const expertName = event.notification?.additionalData?.expertName;
+
+        if (expertId) {
+          rootNavigation.navigate("ExpertsChatScreen", {
+            expertId,
+            expertName,
+          });
+        }
+      }
     });
     // Method for listening for notifications received
     OneSignal.Notifications.addEventListener(
       "foregroundWillDisplay",
       (event) => {
-        event.notification.display();
+        if (event.notification?.additionalData?.notificationType === "chat") {
+          const currentRoute = rootNavigation.getCurrentRoute();
+          const expertId = event.notification?.additionalData?.expertId;
+          const expertName = event.notification?.additionalData?.expertName;
+
+          if (
+            currentRoute?.name !== "ExpertsChatScreen" &&
+            currentRoute?.params?.expertId !== expertId &&
+            currentRoute?.params?.expertName !== expertName
+          ) {
+            event.notification.display();
+          }
+        } else {
+          event.notification.display();
+        }
       }
     );
 

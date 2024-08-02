@@ -83,8 +83,6 @@ const HomeScreen: React.FC<Props> = (props) => {
     }
   }, [route.params]);
 
-  console.log("user", user);
-
   const completedStep = useMemo(() => {
     const basicInfoExist = Boolean(user?.address?.length);
     const emailInfoExist = user?.email && user?.isEmailVerified;
