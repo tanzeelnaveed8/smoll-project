@@ -1,17 +1,11 @@
-import {
-  Keyboard,
-  SafeAreaView,
-  StyleSheet,
-  TouchableWithoutFeedback,
-} from "react-native";
+import { AppRegistry, SafeAreaView, StyleSheet } from "react-native";
 import { Text, ThemeProvider } from "react-native-magnus";
 
 import * as Font from "expo-font";
 import { useEffect, useState } from "react";
-import { Dimensions } from "react-native";
 import { fontHauora } from "./constant/constant";
 
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AccountSetupAddressScreen from "./screens/AccountSetup/AccountSetupAddressScreen";
 import AccountSetupEmailOtpScreen from "./screens/AccountSetup/AccountSetupEmailOtpScreen";
@@ -27,6 +21,11 @@ import { SocketProvider } from "./socket/provider";
 import { CometChatWrapper } from "./utils/chat";
 
 import CasesListScreen from "./screens/Cases/CasesListScreen";
+import CasesRequestScreen from "./screens/Cases/CasesRequestScreen";
+import PartnerVetConfirmationScreen from "./screens/Cases/PartnerVetConfirmationScreen";
+import PartnerVetDetailScreen from "./screens/Cases/PartnerVetDetailScreen";
+import PartnerVetScreen from "./screens/Cases/PartnerVetScreen";
+import PartnerVetSuccessfullScreen from "./screens/Cases/PartnerVetSuccessfullScreen";
 import ConsultationCaseBriefScreen from "./screens/Consultation/ConsultationCaseBriefScreen";
 import ConsultationFeedbackScreen from "./screens/Consultation/ConsultationFeedbackScreen";
 import ConsultationVideoScreen from "./screens/Consultation/ConsultationVideoScreen";
@@ -38,28 +37,34 @@ import ExpertsListScreen from "./screens/Experts/ExpertsListScreen";
 import PetProfileCongratulationsScreen from "./screens/PetProfile/PetProfileCongratulationsScreen";
 import PetProfileMedicalHistoryScreen from "./screens/PetProfile/PetProfileMedicalHistoryScreen";
 import PetProfileScreen from "./screens/PetProfile/PetProfileScreen";
+import SlotBookingScreen from "./screens/doctorsScreens/SlotBookingScreen";
+import EditInfoScreen from "./screens/settings/EditInfoScreen";
 import PetEditInfoScreen from "./screens/settings/PetEditInfoScreen";
 import PetProfileDetailsScreen from "./screens/settings/PetProfileDetailsScreen";
 import PetProfileListScreen from "./screens/settings/PetProfileListScreen";
+import SettingPersonalInfoScreen from "./screens/settings/SettingPersonalInfoScreen";
+import SettingsMainScreen from "./screens/settings/SettingsMainScreen";
 import { useUserStore } from "./store/modules/user";
 
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import CasesRequestScreen from "./screens/Cases/CasesRequestScreen";
-import PartnerVetScreen from "./screens/Cases/PartnerVetScreen";
-import SlotBookingScreen from "./screens/doctorsScreens/SlotBookingScreen";
-import PartnerVetDetailScreen from "./screens/Cases/PartnerVetDetailScreen";
-import PartnerVetConfirmationScreen from "./screens/Cases/PartnerVetConfirmationScreen";
-import PartnerVetSuccessfullScreen from "./screens/Cases/PartnerVetSuccessfullScreen";
-import SettingPersonalInfoScreen from "./screens/settings/SettingPersonalInfoScreen";
-import EditInfoScreen from "./screens/settings/EditInfoScreen";
-import SettingsMainScreen from "./screens/settings/SettingsMainScreen";
-import NotificationScreen from "./screens/NotificationScreen";
-import RequestCallBackScreen from "./screens/Consultation/RequestCallBackScreen";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
+import ExpertsScheduleConfirmationScreen from "./screens/Experts/ExpertsScheduleConfirmationScreen";
+import FlashMessage from "react-native-flash-message";
+import ExpertsScheduleSuccessScreen from "./screens/Experts/ExpertsScheduleSuccessScreen";
+import CaseDetailScreen from "./screens/Cases/CaseDetailScreen";
+import { LogLevel, OneSignal } from "react-native-onesignal";
+import { navigationRef } from "./utils/root-navigation";
+import * as rootNavigation from "./utils/root-navigation";
 import CaseForwardedScreen from "./screens/Consultation/CaseForwardedScreen";
+import RequestCallBackScreen from "./screens/Consultation/RequestCallBackScreen";
 import NotificationTestScreen from "./screens/NotificationTestScreen";
+import NotificationScreen from "./screens/NotificationScreen";
 
 dayjs.extend(relativeTime);
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 async function loadFonts() {
   await Font.loadAsync({
@@ -106,7 +111,55 @@ const App = () => {
 
   useEffect(() => {
     loadFonts().then(() => setFontsLoaded(true));
+
     CometChatWrapper.init();
+
+    // Remove this method to stop OneSignal Debugging
+    OneSignal.Debug.setLogLevel(LogLevel.Verbose);
+    // OneSignal Initialization
+    OneSignal.initialize("d6759ef5-566c-48b8-97cf-5ce0f3c4bb21");
+    // requestPermission will show the native iOS or Android notification permission prompt.
+    // We recommend removing the following code and instead using an In-App Message to prompt for notification permission
+    OneSignal.Notifications.requestPermission(true);
+    // Method for listening for notification clicks
+
+    // OneSignal.Notifications.addEventListener("click", (event) => {
+    //   if (
+    //     event.notification?.additionalData?.notificationType ===
+    //     "consultation-notification"
+    //   ) {
+    //     rootNavigation.navigate("ConsultationWaitingScreen", {
+    //       consultationId: event.notification?.additionalData?.consultationId,
+    //     });
+    //   }
+    // });
+
+    OneSignal.Notifications.addEventListener("click", (event) => {
+      const additionalData = event.notification?.additionalData as {
+        notificationType?: string;
+        consultationId?: string;
+      };
+      if (additionalData?.notificationType === "consultation-notification") {
+        rootNavigation.navigate("ConsultationWaitingScreen", {
+          consultationId: additionalData.consultationId,
+        });
+      }
+    });
+    // Method for listening for notifications received
+    OneSignal.Notifications.addEventListener(
+      "foregroundWillDisplay",
+      (event) => {
+        event.notification.display();
+      }
+    );
+
+    return () => {
+      OneSignal.Notifications.removeEventListener("click", () => {});
+      OneSignal.Notifications.removeEventListener(
+        "foregroundWillDisplay",
+        () => {}
+      );
+    };
   }, []);
 
   useEffect(() => {
@@ -122,7 +175,7 @@ const App = () => {
   return (
     <SafeAreaView style={styles.safeAreaViewContainer}>
       <ThemeProvider theme={theme}>
-        <NavigationContainer>
+        <NavigationContainer ref={navigationRef}>
           <ToastProvider
             placement="bottom"
             textStyle={{
@@ -227,6 +280,20 @@ const App = () => {
                   name="CaseForwardedScreen"
                   component={CaseForwardedScreen}
                 />
+                <Stack.Screen
+                  name="ExpertsScheduleConfirmationScreen"
+                  component={ExpertsScheduleConfirmationScreen}
+                />
+                <Stack.Screen
+                  name="ExpertsScheduleSuccessScreen"
+                  component={ExpertsScheduleSuccessScreen}
+                />
+
+                <Stack.Screen
+                  name="CaseDetailScreen"
+                  component={CaseDetailScreen}
+                />
+
                 {/*  */}
                 <Stack.Screen
                   // name="PartnerClinic"
@@ -300,6 +367,7 @@ const App = () => {
             /> */}
               </Stack.Navigator>
             </SocketProvider>
+            <FlashMessage position="top" />
           </ToastProvider>
         </NavigationContainer>
       </ThemeProvider>

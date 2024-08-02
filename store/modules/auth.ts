@@ -5,18 +5,22 @@ import api from "@/utils/api";
 
 export const useAuthStore = create<AuthState>((set) => ({
   async login(payload) {
-    let exist = false;
+    let exist = true;
 
     try {
-      await api.post("/member/auth/register", payload);
+      await api.post("/member/auth/login", payload);
     } catch (err) {
       const error = err as AxiosError;
-      if (error.response?.status === 409) {
-        exist = true;
+      console.log(api.defaults.baseURL, error.code, error.status);
+      if (error.response?.status === 404) {
+        exist = false;
       }
     }
 
-    if (exist) {
+    console.log("e", exist);
+
+    if (!exist) {
+      await api.post("/member/auth/register", payload);
       await api.post("/member/auth/login", payload);
     }
   },

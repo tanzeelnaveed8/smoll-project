@@ -22,22 +22,19 @@ const PetProfileGenderScreen: React.FC<Props> = (props) => {
         Is {props.pet.name} a Male or a Female?
       </Text>
 
-      <FlatList
-        data={data}
-        renderItem={({ item, index }) => (
-          <RadioButton
-            onTap={() => {
-              setSelectedOption(item);
-              props.setPet({ ...props.pet, gender: item });
-            }}
-            value={item}
-            label={item}
-            selectedValue={selectedOption}
-            styles={{ marginBottom: index + 1 === data.length ? 0 : 16 }}
-          />
-        )}
-        keyExtractor={(item) => item}
-      />
+      {data.map((item, index) => (
+        <RadioButton
+          key={item}
+          onTap={() => {
+            setSelectedOption(item);
+            props.setPet({ ...props.pet, gender: item });
+          }}
+          value={item}
+          label={item}
+          selectedValue={selectedOption}
+          styles={{ marginBottom: index + 1 === data.length ? 0 : 16 }}
+        />
+      ))}
     </Div>
   );
 };

@@ -13,7 +13,7 @@ const data = [PetSpeciesEnum.CAT, PetSpeciesEnum.DOG];
 
 const PetProfileSpeciesScreen: React.FC<Props> = (props) => {
   const [selectedOption, setSelectedOption] = useState(
-    props.pet.species || PetSpeciesEnum.CAT
+    props.pet.species || PetSpeciesEnum.DOG
   );
 
   return (
@@ -22,22 +22,19 @@ const PetProfileSpeciesScreen: React.FC<Props> = (props) => {
         Is {props.pet.name} a Cat or a Dog?
       </Text>
 
-      <FlatList
-        data={data}
-        renderItem={({ item, index }) => (
-          <RadioButton
-            onTap={() => {
-              setSelectedOption(item);
-              props.setPet({ ...props.pet, species: item });
-            }}
-            value={item}
-            label={item}
-            selectedValue={selectedOption}
-            styles={{ marginBottom: index + 1 === data.length ? 0 : 16 }}
-          />
-        )}
-        keyExtractor={(item) => item}
-      />
+      {data.map((item, index) => (
+        <RadioButton
+          key={item}
+          onTap={() => {
+            setSelectedOption(item);
+            props.setPet({ ...props.pet, species: item });
+          }}
+          value={item}
+          label={item}
+          selectedValue={selectedOption}
+          styles={{ marginBottom: index + 1 === data.length ? 0 : 16 }}
+        />
+      ))}
     </Div>
   );
 };

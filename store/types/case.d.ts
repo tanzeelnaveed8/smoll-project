@@ -1,8 +1,10 @@
 import { Nullable, UploadedFile } from "../types";
+import { Expert } from "./expert";
+import { Pet, PetDetail } from "./pet";
 
 export enum CaseStatusEnum {
   OPEN = "open",
-  OPEN_ESCALATED = "open_escalated",
+  OPEN_ESCALATED = "openEscalated",
   CLOSED = "closed",
 }
 
@@ -33,9 +35,10 @@ interface CreateCasePayloadDto {
   vetId: string;
   description: string;
   assets: UploadedFile[];
+  status: CaseStatusEnum;
 }
 
-interface Case {
+export interface Case {
   id: string;
   description: string;
   createdAt: string;
@@ -43,7 +46,7 @@ interface Case {
   status: CaseStatusEnum;
 }
 
-interface CaseListResponseDto {
+export interface CaseListResponseDto {
   id: string;
   pet: {
     name: string;
@@ -51,8 +54,22 @@ interface CaseListResponseDto {
   };
   vet: string;
   status: CaseStatusEnum;
+  consultationId?: string;
+  scheduledAt?: string;
   requestCount?: number;
   createdAt: string;
+}
+
+export interface CaseDetail {
+  id: string;
+  description: string;
+  createdAt: string;
+  assets: UploadedFile[];
+  vetNote: Nullable<string>;
+  status: CaseStatusEnum;
+  pet: PetDetail;
+  assignedVet: Expert;
+  scheduleAt?: string;
 }
 
 export interface CasesState {
@@ -62,6 +79,8 @@ export interface CasesState {
   vetDoctorList: VetDoctorListDto[];
 
   createCase: (payload: CreateCasePayloadDto) => Promise<{ id: string }>;
+  removeCase: (id: string) => Promise<void>;
   fetchCases: () => Promise<void>;
+  fetchCase: (id: string) => Promise<CaseDetail>;
   fetchVetDoctors: () => Promise<void>;
 }

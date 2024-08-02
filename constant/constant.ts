@@ -13,7 +13,7 @@ export const colorDisableBg = "#fff";
 export const colorDisableBorder = "#BDBDBD";
 export const colorDisableText = "#00000059";
 export const colorSuccessText = "#2F6E20";
-export const colorErrorText = "#FF0000";
+export const colorErrorText = "#E02A2A";
 
 export const TOAST_CONFIGS: ToastOptions = {
   type: "danger",

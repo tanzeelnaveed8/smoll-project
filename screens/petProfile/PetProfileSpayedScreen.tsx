@@ -22,22 +22,19 @@ const PetProfileSpayedScreen: React.FC<Props> = (props) => {
         Is {props.pet.name} Spayed/Neutered
       </Text>
 
-      <FlatList
-        data={data}
-        renderItem={({ item, index }) => (
-          <RadioButton
-            onTap={() => {
-              setSelectedOption(item);
-              props.setPet({ ...props.pet, spayedOrNeutered: item === "Yes" });
-            }}
-            value={item}
-            label={item}
-            selectedValue={selectedOption}
-            styles={{ marginBottom: index + 1 === data.length ? 0 : 16 }}
-          />
-        )}
-        keyExtractor={(item) => item}
-      />
+      {data.map((item, index) => (
+        <RadioButton
+          key={item}
+          onTap={() => {
+            setSelectedOption(item);
+            props.setPet({ ...props.pet, spayedOrNeutered: item === "Yes" });
+          }}
+          value={item}
+          label={item}
+          selectedValue={selectedOption}
+          styles={{ marginBottom: index + 1 === data.length ? 0 : 16 }}
+        />
+      ))}
     </Div>
   );
 };

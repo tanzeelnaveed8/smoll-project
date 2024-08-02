@@ -18,19 +18,6 @@ const SettingPersonalInfoScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
   const { user } = useUserStore();
-  console.log("user", user);
-
-  // const [userDetials, setUserDetails] = useState({ ...user });
-  // useEffect(() => {
-  //   const obj = {
-  //     name: user?.name,
-  //     email: user?.email,
-  //     villa: user?.villa,
-  //     city: user?.city,
-  //     country: user?.country,
-  //   };
-  //   setUserDetails(obj);
-  // }, [user]);
 
   return (
     <Layout

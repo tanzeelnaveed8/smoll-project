@@ -1,5 +1,6 @@
 {
   "expo": {
+    "main": "node_modules/expo/AppEntry.js",
     "name": "smoll-app",
     "slug": "smoll-app",
     "version": "1.0.0",
@@ -14,7 +15,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.smollapp"
+      "bundleIdentifier": "com.outlyze.sf"
     },
     "android": {
       "adaptiveIcon": {

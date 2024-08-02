@@ -2,6 +2,7 @@ import { Nullable } from "../types";
 
 export type UpdateUserPayloadDto = Partial<{
   name: string;
+  playerId: string;
   email: string;
   address: string;
   villa: string;
@@ -30,6 +31,9 @@ export interface User {
 
 export interface UserState {
   user: Nullable<User>;
+
+  UPDATE_PET_COUNT: (increment: number) => void;
+
   findUser: () => Promise<User>;
   updateUser: (payload: UpdateUserPayloadDto) => Promise<User>;
   sendVerificationEmail: () => Promise<void>;

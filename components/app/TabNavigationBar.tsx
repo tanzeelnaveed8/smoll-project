@@ -52,7 +52,7 @@ const TabNavigationBar: React.FC<{
     <Div borderTopWidth={2} borderColor="#dcdcdc14">
       <Div
         flexDir="row"
-        justifyContent="space-between"
+        justifyContent="space-around"
         bg="#fff"
         px={25}
         pb={10}

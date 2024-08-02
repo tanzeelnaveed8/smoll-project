@@ -5,8 +5,6 @@ import React, { useEffect, useMemo, useState } from "react";
 import { TouchableOpacity } from "react-native";
 import { Div, ScrollDiv, Text } from "react-native-magnus";
 import { NavigationType } from "@/store/types";
-import InputField from "@/components/partials/InputField";
-import { useFileStore } from "@/store/modules/file";
 import { UploadedFile } from "@/store/types/file";
 import SelectInput from "@/components/partials/SelectInput";
 import { useCaseStore } from "@/store/modules/case";
@@ -15,6 +13,7 @@ import { useExpertStore } from "@/store/modules/expert";
 import { useRoute } from "@react-navigation/native";
 import ImageUpload from "@/components/partials/ImageUpload";
 import TextAreaField from "@/components/partials/TextAreaField";
+import { CaseStatusEnum, CreateCasePayloadDto } from "@/store/types/case.d";
 
 const NoPetOptions = ({
   navigation,
@@ -50,12 +49,19 @@ const NoPetOptions = ({
 const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
-  const { uploadFile } = useFileStore();
   const { createCase } = useCaseStore();
   const { updateConsultation } = useExpertStore();
   const { pets, fetchPets } = usePetStore();
 
   const route = useRoute();
+
+  const comingFrom = (route.params as Record<string, string>)?.from;
+
+  // NOTE: When coming from ExpertsListDetailScreen schedule action
+  const selectedTime = (route.params as Record<string, string>)?.selectedTime;
+  const selectedDate = (route.params as Record<string, string>)?.selectedDate;
+  const caseData = (route.params as Record<string, string>)?.caseData;
+  const scheduleAt = (route.params as Record<string, string>)?.scheduleAt;
 
   // NOTE: Will be there if coming from pet profile creation
   const petId = (route.params as Record<string, string>)?.petId;
@@ -83,6 +89,17 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
   useEffect(() => {
     setPet();
   }, [petId, petName]);
+
+  useEffect(() => {
+    if (!caseData) return;
+
+    const parsedCase = JSON.parse(caseData) as CreateCasePayloadDto;
+    const pet = pets?.find((pet) => pet.id === parsedCase.petId);
+
+    setDescription(parsedCase.description);
+    setDocuments(parsedCase.assets);
+    setSelectedPet({ label: pet?.name ?? "", value: pet?.id ?? "" });
+  }, [caseData]);
 
   const setPet = async () => {
     await fetchAllPets();
@@ -117,6 +134,31 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
   };
 
   const handleCreateCase = async () => {
+    const status =
+      comingFrom === "ExpertsListDetailScreen"
+        ? CaseStatusEnum.SCHEDULED
+        : CaseStatusEnum.OPEN;
+
+    // Don't create case in scheduled
+    if (status === CaseStatusEnum.SCHEDULED) {
+      navigation.navigate("ExpertsScheduleConfirmationScreen", {
+        expertId,
+        caseData: JSON.stringify({
+          description,
+          assets: documents,
+          petId: selectedPet?.value || "",
+          vetId: expertId,
+          status,
+        }),
+        petId: selectedPet?.value || "",
+        selectedTime,
+        selectedDate,
+        scheduleAt,
+      });
+
+      return;
+    }
+
     try {
       setActionLoading(true);
 
@@ -125,6 +167,7 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
         assets: documents,
         petId: selectedPet?.value || "",
         vetId: expertId,
+        status,
       });
 
       await updateConsultation({
@@ -220,7 +263,7 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
         onPress={handleCreateCase}
         loading={actionLoading}
       >
-        Connect
+        {comingFrom === "ExpertsListDetailScreen" ? "Confirm" : "Connect"}
       </ButtonPrimary>
     </Layout>
   );

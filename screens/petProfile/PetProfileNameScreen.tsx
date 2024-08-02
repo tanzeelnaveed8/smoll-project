@@ -20,6 +20,7 @@ const PetProfileNameScreen: React.FC<Props> = (props) => {
         floatingPlaceholder
         inputStyle={{ borderRadius: 12 }}
         value={props.pet.name}
+        returnKeyType="done"
         onChangeText={(name) => props.setPet({ ...props.pet, name })}
       />
     </Div>

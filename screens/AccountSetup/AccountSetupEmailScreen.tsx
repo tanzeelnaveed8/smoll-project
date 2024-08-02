@@ -9,7 +9,7 @@ import { IconCircleCheck } from "@tabler/icons-react-native";
 
 import React, { useMemo, useState } from "react";
 import { View } from "react-native-animatable";
-import { Div, Text } from "react-native-magnus";
+import { Div, ScrollDiv, Text } from "react-native-magnus";
 
 interface Props {
   navigation: NavigationType;
@@ -60,7 +60,7 @@ const AccountSetupEmailScreen: React.FC<Props> = (props) => {
         }
       }}
     >
-      <View style={{ justifyContent: "space-between", flex: 1 }}>
+      <ScrollDiv flex={1} keyboardShouldPersistTaps="handled">
         <Div>
           <Text fontSize={"6xl"} fontFamily={fontHauora} mb={4}>
             What’s your email?
@@ -79,19 +79,19 @@ const AccountSetupEmailScreen: React.FC<Props> = (props) => {
             keyboardType="email-address"
             onChangeText={(text) => setEmail(text)}
             disabled={loading}
+            returnKeyType="done"
             autoCapitalize="none"
           />
         </Div>
-
-        <ButtonPrimary
-          bgColor="primary"
-          onPress={handleNext}
-          disabled={!isValidEmail || loading}
-          loading={loading}
-        >
-          Next
-        </ButtonPrimary>
-      </View>
+      </ScrollDiv>
+      <ButtonPrimary
+        bgColor="primary"
+        onPress={handleNext}
+        disabled={!isValidEmail || loading}
+        loading={loading}
+      >
+        Next
+      </ButtonPrimary>
     </Layout>
   );
 };

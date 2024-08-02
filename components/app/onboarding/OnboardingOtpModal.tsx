@@ -9,13 +9,16 @@ import { getAxiosErrMsg } from "@/utils/helpers";
 import { AxiosError } from "axios";
 
 import InputField from "@/components/partials/InputField";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { View } from "react-native-animatable";
 import { Button, Div, Text } from "react-native-magnus";
 import Toast from "react-native-toast-notifications";
 import ToastContainer from "react-native-toast-notifications/lib/typescript/toast-container";
 import OnboardingUserModal from "./OnboardingUserModal";
 import { Keyboard, TouchableWithoutFeedback } from "react-native";
+import { OneSignal } from "react-native-onesignal";
+import OtpVerify from "react-native-otp-verify";
+import { Platform } from "react-native";
 
 interface Props {
   navigation: NavigationType;
@@ -28,7 +31,7 @@ interface Props {
 
 const OnboardingOtpModal: React.FC<Props> = (props) => {
   const { verifyOtp, login } = useAuthStore();
-  const { findUser } = useUserStore();
+  const { findUser, updateUser } = useUserStore();
 
   const toastRef = useRef<ToastContainer>(null);
 
@@ -36,6 +39,32 @@ const OnboardingOtpModal: React.FC<Props> = (props) => {
   const [showNameModal, setShowNameModal] = useState(false);
 
   const [otp, setOtp] = useState("");
+
+  useEffect(() => {
+    if (Platform.OS === "android") {
+      OtpVerify.getHash().then((hash) => {
+        // Send this hash to your server with the phone number
+        console.log("OTP Hash:", hash);
+      });
+    }
+
+    OtpVerify.addListener((message) => {
+      try {
+        const otp = /(\d{4})/g.exec(message)?.[1];
+
+        if (otp) {
+          setOtp(otp);
+          handleConfirm(otp);
+        }
+      } catch (error) {
+        console.log("Error reading OTP:", error);
+      }
+    });
+
+    return () => {
+      OtpVerify.removeListener();
+    };
+  }, []);
 
   const handleConfirm = async (_otp?: string) => {
     try {
@@ -46,6 +75,13 @@ const OnboardingOtpModal: React.FC<Props> = (props) => {
       await verifyOtp({ phone: props.phone, otp: _otp ?? otp });
       const user = await findUser();
 
+      // Update the playerId everytime the user login
+      const playerId = await OneSignal.User.pushSubscription.getIdAsync();
+
+      if (playerId) {
+        await updateUser({ playerId });
+      }
+
       if (!user?.name) {
         setShowNameModal(true);
       } else {
@@ -53,6 +89,7 @@ const OnboardingOtpModal: React.FC<Props> = (props) => {
       }
     } catch (err) {
       const msg = getAxiosErrMsg(err as AxiosError);
+
       toastRef.current?.show(msg, {
         type: "danger",
       });
@@ -134,7 +171,7 @@ const OnboardingOtpModal: React.FC<Props> = (props) => {
               style={{ flexDirection: "row", justifyContent: "center" }}
             >
               <Text fontSize={16} color="#6B6B6B" fontFamily={fontHauora}>
-                Can’t find the code?{" "}
+                Can't find the code?{" "}
               </Text>
               <Button
                 bg="transparent"

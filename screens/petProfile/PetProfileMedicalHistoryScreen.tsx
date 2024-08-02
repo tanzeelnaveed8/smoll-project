@@ -9,7 +9,7 @@ import {
   IconChevronRight,
   IconSquareRoundedPlus,
 } from "@tabler/icons-react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Div, Text } from "react-native-magnus";
 
 interface Props {
@@ -30,6 +30,13 @@ const PetProfileMedicalHistoryScreen: React.FC<Props> = (props) => {
 
   const healthHistory = healthHistoryMap.get(petId);
 
+  useEffect(() => {
+    // TODO: back gesture disable not working.
+    props.navigation.addListener("beforeRemove", () => {
+      return;
+    });
+  }, []);
+
   const handleConfirm = () => {
     props.navigation.navigate("PetProfileCongratulationsScreen", {
       navigateTo: navigateTo,
@@ -40,7 +47,7 @@ const PetProfileMedicalHistoryScreen: React.FC<Props> = (props) => {
   };
 
   return (
-    <Layout>
+    <Layout preventBackGesture={true}>
       <Div flex={1}>
         <Text fontSize={32} lineHeight={40} color="#222222" mb={4}>
           Add medical history
@@ -52,8 +59,7 @@ const PetProfileMedicalHistoryScreen: React.FC<Props> = (props) => {
           color="#494949"
           maxW={350}
         >
-          We need your address to suggest the nearest vet clinic for in-clinic
-          visits
+          We need your pet's medical history to understand their health better.
         </Text>
 
         {healthHistory?.map((item, i) => (

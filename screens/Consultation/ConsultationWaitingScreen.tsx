@@ -83,7 +83,11 @@ const ConsultationWaitingScreen: React.FC<{ navigation: NavigationType }> = ({
           w={84}
           h={84}
           rounded={84}
-          source={require("../../assets/images/video-img.png")}
+          source={{
+            uri:
+              consultation?.vet.profileImg?.url ??
+              "https://via.placeholder.com/87",
+          }}
           mb={12}
         />
         <Text fontSize={"xl"} fontFamily={fontHauoraMedium}>
@@ -134,7 +138,7 @@ const ConsultationWaitingScreen: React.FC<{ navigation: NavigationType }> = ({
           paddingVertical: 2,
         }}
         onPress={() => {
-          navigation.navigate("VideoConsultationFeedbackScreen");
+          navigation.goBack();
         }}
       >
         <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold} color="primary">

@@ -57,9 +57,7 @@ const ConsultationVideoScreen: React.FC<{ navigation: NavigationType }> = ({
     };
   }, []);
 
-  const endHandler = () => {
-    CometChat.endCall(incomingCall?.getSessionId() || "");
-
+  const endHandler = async () => {
     navigation.navigate("ConsultationFeedbackScreen", {
       expertId: expertId,
       caseId: caseId,
@@ -69,8 +67,9 @@ const ConsultationVideoScreen: React.FC<{ navigation: NavigationType }> = ({
     endConsultation(consultationId);
   };
 
-  const callSettingsBuilder =
-    new CometChatCalls.CallSettingsBuilder().setIsAudioOnlyCall(false);
+  const callSettingsBuilder = new CometChatCalls.CallSettingsBuilder()
+    .setIsAudioOnlyCall(false)
+    .showEndCallButton(false);
 
   return (
     <>

@@ -5,6 +5,7 @@ import api from "@/utils/api";
 export const useFileStore = create<FileState>((set, get) => ({
   uploadFile: async (files) => {
     const formData = new FormData();
+
     files.forEach((file) => {
       formData.append("files", file);
     });
