@@ -26,8 +26,8 @@ const PetProfileCongratulationsScreen = ({
       <Div flex={1}>
         <Container flex={1}>
           <ConfettiCannon
-            count={200}
-            origin={{ x: -10, y: 0 }}
+            count={35}
+            origin={{ x: -50, y: 0 }}
             fadeOut
             autoStart
             autoStartDelay={0}

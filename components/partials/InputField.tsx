@@ -14,7 +14,14 @@ import {
   StyleSheet,
   TextStyle,
 } from "react-native";
-import { Button, Div, Icon, Input, InputProps } from "react-native-magnus";
+import {
+  Button,
+  Div,
+  Icon,
+  Image,
+  Input,
+  InputProps,
+} from "react-native-magnus";
 import { iconFontFamilyType } from "react-native-magnus/lib/typescript/src/ui/icon/icon.type";
 import { Keyboard } from "react-native";
 
@@ -35,6 +42,7 @@ interface rest {
   onChangeText?: (text: string) => void;
   value?: string;
   focus?: boolean;
+  countryFlag?: string;
 }
 
 const InputField: React.FC<rest & InputProps> = ({
@@ -42,6 +50,7 @@ const InputField: React.FC<rest & InputProps> = ({
   marginTop,
   borderRadius,
   multiline,
+  countryFlag,
   ...rest
 }) => {
   const [isFocused, setIsFocused] = useState(false);
@@ -110,6 +119,17 @@ const InputField: React.FC<rest & InputProps> = ({
         </Animated.Text>
       )}
 
+      {countryFlag && (
+        <Image
+          w={30}
+          h={22}
+          src={countryFlag}
+          position="absolute"
+          top={18}
+          left={10}
+        />
+      )}
+
       <Input
         {...rest}
         style={{
@@ -125,6 +145,7 @@ const InputField: React.FC<rest & InputProps> = ({
         fontSize={"xl"}
         h={rest.h ? rest.h : multiline ? "unset" : 56}
         loaderColor={colorTextPrimary}
+        pl={countryFlag ? 45 : 12}
         // px={typeof rest.paddingX === "number" ? rest.paddingX : 12}
         // pr={rest.icon ? 30 : 12}
         // pt={16}

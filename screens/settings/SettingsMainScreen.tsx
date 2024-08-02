@@ -50,7 +50,7 @@ const options: GroupType[] = [
         id: 2,
         title: "Address",
         icon: IconMap,
-        link: "",
+        link: "AccountSetupAddressScreen",
       },
       {
         id: 3,

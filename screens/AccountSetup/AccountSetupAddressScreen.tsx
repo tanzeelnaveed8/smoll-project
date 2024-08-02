@@ -3,6 +3,7 @@ import Layout from "@/components/app/Layout";
 import BackButton from "@/components/partials/BackButton";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import InputField from "@/components/partials/InputField";
+import SelectCountryDropdown from "@/components/partials/SelectCountryDropdown";
 import SelectInput from "@/components/partials/SelectInput";
 import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
@@ -159,11 +160,21 @@ const AccountSetupAddressScreen: React.FC<Props> = (props) => {
                 disabled={loading}
               />
 
-              <CountryDropdown
-                onChange={(value) =>
-                  setAddress((s) => ({ ...s, country: value.label }))
-                }
+              {/* <CountryDropdown
+                onChange={(value) => {
+                  console.log("testing==", value);
+                  setAddress((s) => ({ ...s, country: value.label }));
+                }}
                 isDisabled={loading}
+              /> */}
+
+              <SelectCountryDropdown
+                showCountryFlag={true}
+                hideCountryCode
+                onChange={(e: string) => {
+                  console.log("testing==", e);
+                  setAddress((s) => ({ ...s, country: e }));
+                }}
               />
 
               <InputField

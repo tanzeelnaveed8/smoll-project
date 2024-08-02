@@ -193,7 +193,7 @@ const NotificationScreen: React.FC<{ navigation: NavigationType }> = ({
               Recent
             </Text>
 
-            <NotificationTestScreen />
+            <NotificationTestScreen navigation={navigation} />
           </Div>
         </ScrollDiv>
       )}
