@@ -48,8 +48,6 @@ const stepsBtn: {
 const AccountSetupModal: React.FC<Props> = (props) => {
   const { user } = useUserStore();
 
-  console.log("user", user);
-
   const [completedSteps, setCompletedSteps] = useState({
     basic: false,
     email: false,

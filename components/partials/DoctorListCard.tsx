@@ -42,7 +42,7 @@ const DoctorListCard: React.FC<PropTypes> = (props) => {
       {/* card footer */}
       <Div flexDir="row" mt={17} justifyContent="space-between">
         <Div>
-          <Text
+          {/* <Text
             fontSize="md"
             fontFamily={fontHauoraMedium}
             color="#494949"
@@ -57,7 +57,7 @@ const DoctorListCard: React.FC<PropTypes> = (props) => {
             lineHeight={20}
           >
             {nextAvailable}
-          </Text>
+          </Text> */}
         </Div>
 
         <Button
