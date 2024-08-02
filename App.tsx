@@ -1,11 +1,11 @@
-import { AppRegistry, SafeAreaView, StyleSheet } from "react-native";
+import { SafeAreaView, StyleSheet } from "react-native";
 import { Text, ThemeProvider } from "react-native-magnus";
 
 import * as Font from "expo-font";
 import { useEffect, useState } from "react";
 import { fontHauora } from "./constant/constant";
 
-import { NavigationContainer, useNavigation } from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AccountSetupAddressScreen from "./screens/AccountSetup/AccountSetupAddressScreen";
 import AccountSetupEmailOtpScreen from "./screens/AccountSetup/AccountSetupEmailOtpScreen";
@@ -50,14 +50,18 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
-import ExpertsScheduleConfirmationScreen from "./screens/Experts/ExpertsScheduleConfirmationScreen";
 import FlashMessage from "react-native-flash-message";
-import ExpertsScheduleSuccessScreen from "./screens/Experts/ExpertsScheduleSuccessScreen";
-import CaseDetailScreen from "./screens/Cases/CaseDetailScreen";
 import { LogLevel, OneSignal } from "react-native-onesignal";
-import { navigationRef } from "./utils/root-navigation";
-import * as rootNavigation from "./utils/root-navigation";
+import CaseDetailScreen from "./screens/Cases/CaseDetailScreen";
+import CaseForwardedScreen from "./screens/Consultation/CaseForwardedScreen";
+import RequestCallBackScreen from "./screens/Consultation/RequestCallBackScreen";
+import ExpertsScheduleConfirmationScreen from "./screens/Experts/ExpertsScheduleConfirmationScreen";
+import ExpertsScheduleSuccessScreen from "./screens/Experts/ExpertsScheduleSuccessScreen";
+import NotificationScreen from "./screens/NotificationScreen";
+import NotificationTestScreen from "./screens/NotificationTestScreen";
 import { useExpertStore } from "./store/modules/expert";
+import * as rootNavigation from "./utils/root-navigation";
+import { navigationRef } from "./utils/root-navigation";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -120,13 +124,26 @@ const App = () => {
     // We recommend removing the following code and instead using an In-App Message to prompt for notification permission
     OneSignal.Notifications.requestPermission(true);
     // Method for listening for notification clicks
+
+    // OneSignal.Notifications.addEventListener("click", (event) => {
+    //   if (
+    //     event.notification?.additionalData?.notificationType ===
+    //     "consultation-notification"
+    //   ) {
+    //     rootNavigation.navigate("ConsultationWaitingScreen", {
+    //       consultationId: event.notification?.additionalData?.consultationId,
+    //     });
+    //   }
+    // });
+
     OneSignal.Notifications.addEventListener("click", (event) => {
-      if (
-        event.notification?.additionalData?.notificationType ===
-        "consultation-notification"
-      ) {
+      const additionalData = event.notification?.additionalData as {
+        notificationType?: string;
+        consultationId?: string;
+      };
+      if (additionalData?.notificationType === "consultation-notification") {
         rootNavigation.navigate("ConsultationWaitingScreen", {
-          consultationId: event.notification?.additionalData?.consultationId,
+          consultationId: additionalData.consultationId,
         });
       }
 
@@ -223,6 +240,15 @@ const App = () => {
                   options={{ headerShown: false }}
                 />
                 <Stack.Screen
+                  name="NotificationScreen"
+                  component={NotificationScreen}
+                />
+                <Stack.Screen
+                  name="NotificationTestScreen"
+                  component={NotificationTestScreen}
+                />
+
+                <Stack.Screen
                   name="PetProfileScreen"
                   component={PetProfileScreen}
                 />
@@ -273,6 +299,14 @@ const App = () => {
                 <Stack.Screen
                   name="ConsultationVideoScreen"
                   component={ConsultationVideoScreen}
+                />
+                <Stack.Screen
+                  name="RequestCallBackScreen"
+                  component={RequestCallBackScreen}
+                />
+                <Stack.Screen
+                  name="CaseForwardedScreen"
+                  component={CaseForwardedScreen}
                 />
                 <Stack.Screen
                   name="ExpertsScheduleConfirmationScreen"

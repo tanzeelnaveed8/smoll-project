@@ -94,7 +94,9 @@ const PetProfileListScreen: React.FC<{ navigation: NavigationType }> = ({
             p={0}
             bg="transparent"
             onPress={() => {
-              navigation.navigate("PetProfileScreen");
+              navigation.navigate("PetProfileScreen", {
+                navigateTo: "PetProfileListScreen",
+              });
             }}
           >
             <IconSquareRoundedPlus

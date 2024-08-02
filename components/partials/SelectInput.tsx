@@ -18,6 +18,7 @@ import { StyleSheet } from "react-native";
 interface Option {
   label: string;
   value: string;
+  flag: string;
 }
 
 interface OptionDto extends Option {
@@ -30,6 +31,7 @@ interface Props {
   label?: string;
   marginBottom?: number;
   loading?: boolean;
+  showCountryFlag?: boolean;
   selectedValue?: Nullable<Option>;
   onSelect?: (selected: Option) => void;
   onClose?: () => void;
@@ -85,6 +87,7 @@ const SelectInput: React.FC<Props> = (props) => {
           readOnly
           pointerEvents="none"
           value={selectedValue?.label}
+          countryFlag={props.showCountryFlag ? selectedValue?.flag : ""}
           inputStyle={mainInputStyle}
         />
       </TouchableOpacity>

@@ -25,7 +25,7 @@ const SlotBookingScreen = () => {
     <Layout showBack title="Dr. Emily Carter">
       <ScrollDiv flex={1} pt={20} showsVerticalScrollIndicator={false}>
         {/* <Header title="Book a Slot" /> */}
-        <Div bg="#FDF4E3" py={20} mb={20}>
+        <Div py={20} mb={20}>
           <Container>
             <DoctorCard
               name="Dr. Emily Carter"

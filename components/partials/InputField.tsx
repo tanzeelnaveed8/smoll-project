@@ -20,7 +20,14 @@ import {
   StyleSheet,
   TextStyle,
 } from "react-native";
-import { Button, Div, Icon, Input, InputProps } from "react-native-magnus";
+import {
+  Button,
+  Div,
+  Icon,
+  Image,
+  Input,
+  InputProps,
+} from "react-native-magnus";
 import { iconFontFamilyType } from "react-native-magnus/lib/typescript/src/ui/icon/icon.type";
 import { Keyboard } from "react-native";
 
@@ -41,6 +48,7 @@ interface rest {
   onChangeText?: (text: string) => void;
   value?: string;
   focus?: boolean;
+  countryFlag?: string;
 }
 
 interface InputFieldProps extends Omit<rest, keyof InputProps>, InputProps {
@@ -48,7 +56,10 @@ interface InputFieldProps extends Omit<rest, keyof InputProps>, InputProps {
 }
 
 const InputField = forwardRef<any, InputFieldProps>(
-  ({ marginBottom, marginTop, borderRadius, multiline, ...rest }, ref) => {
+  (
+    { marginBottom, marginTop, borderRadius, multiline, countryFlag, ...rest },
+    ref
+  ) => {
     const [isFocused, setIsFocused] = useState(false);
     const { floatingPlaceholder, onChangeText, value } = rest;
     const [valueExist, setValueExist] = useState(value ? true : false);
@@ -74,6 +85,7 @@ const InputField = forwardRef<any, InputFieldProps>(
     const handleBlur = () => {
       setIsFocused(false);
       Keyboard.dismiss();
+
       if (valueExist) return;
       Animated.timing(topPosition, {
         toValue: 16, // Reset top position when not focused
@@ -121,6 +133,17 @@ const InputField = forwardRef<any, InputFieldProps>(
           </Animated.Text>
         )}
 
+        {countryFlag && (
+          <Image
+            w={30}
+            h={22}
+            src={countryFlag}
+            position="absolute"
+            top={18}
+            left={10}
+          />
+        )}
+
         <Input
           {...rest}
           style={{
@@ -139,6 +162,7 @@ const InputField = forwardRef<any, InputFieldProps>(
           fontSize={"xl"}
           h={rest.h ? rest.h : multiline ? "unset" : 56}
           loaderColor={colorTextPrimary}
+          pl={countryFlag ? 45 : 12}
           // px={typeof rest.paddingX === "number" ? rest.paddingX : 12}
           // pr={rest.icon ? 30 : 12}
           // pt={16}
@@ -152,7 +176,7 @@ const InputField = forwardRef<any, InputFieldProps>(
               : "#222222"
           }
           onFocus={handleFocus}
-          onBlur={handleBlur}
+          // onBlur={handleBlur}
           onChangeText={(e) => {
             if (onChangeText) {
               onChangeText(e);

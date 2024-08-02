@@ -18,18 +18,18 @@ const tabList = [
       <IconHome width={28} height={28} color={active ? "#427594" : "#494949"} />
     ),
   },
-  // {
-  //   name: "Chats",
-  //   link: "CounsellingRequestScreen",
-
-  //   icon: (active?: boolean) => (
-  //     <IconMessage
-  //       width={28}
-  //       height={28}
-  //       color={active ? "#427594" : "#494949"}
-  //     />
-  //   ),
-  // },
+  {
+    name: "Chats",
+    link: "CounsellingRequestScreen",
+    // link: "CounsellingChatScreen",
+    icon: (active?: boolean) => (
+      <IconMessage
+        width={28}
+        height={28}
+        color={active ? "#427594" : "#494949"}
+      />
+    ),
+  },
   {
     name: "Cases",
     link: "CasesListScreen",
