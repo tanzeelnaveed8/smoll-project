@@ -1,7 +1,7 @@
 import BackButton from "@/components/partials/BackButton";
 import BottomSheet from "@/components/partials/BottomSheet";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
-import { fontHauora } from "@/constant/constant";
+import { colorPrimary, fontHauora } from "@/constant/constant";
 import { useAuthStore } from "@/store/modules/auth";
 import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
@@ -15,7 +15,11 @@ import { Button, Div, Text } from "react-native-magnus";
 import Toast from "react-native-toast-notifications";
 import ToastContainer from "react-native-toast-notifications/lib/typescript/toast-container";
 import OnboardingUserModal from "./OnboardingUserModal";
-import { Keyboard, TouchableWithoutFeedback } from "react-native";
+import {
+  ActivityIndicator,
+  Keyboard,
+  TouchableWithoutFeedback,
+} from "react-native";
 import { OneSignal } from "react-native-onesignal";
 import OtpVerify from "react-native-otp-verify";
 import { Platform } from "react-native";
@@ -39,6 +43,8 @@ const OnboardingOtpModal: React.FC<Props> = (props) => {
   const [showNameModal, setShowNameModal] = useState(false);
   const [isAutoFocus, setIsAutoFocus] = useState(false);
 
+  const [resendOtpLoading, setResendOtpLoading] = useState(false);
+  const [resendOtpWating, setResendOtpWating] = useState(0);
   const [otp, setOtp] = useState("");
 
   useEffect(() => {
@@ -111,8 +117,32 @@ const OnboardingOtpModal: React.FC<Props> = (props) => {
     }
   };
 
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (resendOtpWating > 0) {
+      timer = setInterval(() => {
+        setResendOtpWating((prev) => prev - 1);
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [resendOtpWating]);
+
   const handleResend = async () => {
-    await login({ phone: props.phone });
+    try {
+      setResendOtpLoading(true);
+      await login({ phone: props.phone });
+
+      setResendOtpWating(30);
+
+      toastRef.current?.show(
+        "The code has been successfully sent to your number.",
+        {
+          type: "dark",
+        }
+      );
+    } finally {
+      setResendOtpLoading(false);
+    }
   };
 
   return (
@@ -148,19 +178,32 @@ const OnboardingOtpModal: React.FC<Props> = (props) => {
               autoFocus={isAutoFocus}
             />
 
-            <Button
-              color="#0189F9"
-              bg="transparent"
-              px={0}
-              py={0}
-              mb={32}
-              disabled={isLoading}
-              fontSize={"md"}
-              fontFamily={fontHauora}
-              onPress={handleResend}
-            >
-              Resend Code
-            </Button>
+            {resendOtpWating === 0 && (
+              <Button
+                bg="transparent"
+                px={0}
+                py={0}
+                mb={32}
+                disabled={isLoading || resendOtpLoading}
+                fontSize={"md"}
+                fontFamily={fontHauora}
+                onPress={handleResend}
+                position="relative"
+              >
+                <Text color={resendOtpLoading ? "#ddd" : "#0189F9"}>
+                  Resend Code
+                </Text>
+                {resendOtpLoading && (
+                  <Div position="absolute" top={4}>
+                    <ActivityIndicator size={16} color={colorPrimary} />
+                  </Div>
+                )}
+              </Button>
+            )}
+
+            {resendOtpWating > 0 && (
+              <Text mb={32}>Resend Code in {resendOtpWating} seconds</Text>
+            )}
 
             <ButtonPrimary
               bgColor="primary"
