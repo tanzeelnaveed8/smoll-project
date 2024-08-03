@@ -131,7 +131,7 @@ const AccountSetupAddressScreen: React.FC<Props> = (props) => {
         flex={1}
         keyboardShouldPersistTaps="handled"
       >
-        <Div flex={1} minH={windowHeight - 150}>
+        <Div flex={1}>
           <Div flex={1}>
             <Text fontSize={"6xl"} mb={4}>
               What's your address?
@@ -231,17 +231,17 @@ const AccountSetupAddressScreen: React.FC<Props> = (props) => {
             </Div>
           </Div>
           {/* </KeyboardAvoidingView> */}
-
-          <ButtonPrimary
-            bgColor="primary"
-            onPress={handleConfirm}
-            disabled={disableConfirm || loading}
-            loading={loading}
-          >
-            Confirm
-          </ButtonPrimary>
         </Div>
       </ScrollDiv>
+
+      <ButtonPrimary
+        bgColor="primary"
+        onPress={handleConfirm}
+        disabled={disableConfirm || loading}
+        loading={loading}
+      >
+        Confirm
+      </ButtonPrimary>
     </Layout>
   );
 };

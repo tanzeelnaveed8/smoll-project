@@ -82,9 +82,14 @@ const InputField = forwardRef<any, InputFieldProps>(
       }).start();
     };
 
-    const handleBlur = () => {
+    const handleBlur = (e: any) => {
+      // console.log(
+      //   "handleBlur",
+      //   e.target?._internalFiberInstanceHandleDEV?.elementType
+      // );
+
       setIsFocused(false);
-      Keyboard.dismiss();
+      // Keyboard.dismiss();
 
       if (valueExist) return;
       Animated.timing(topPosition, {
@@ -176,7 +181,7 @@ const InputField = forwardRef<any, InputFieldProps>(
               : "#222222"
           }
           onFocus={handleFocus}
-          // onBlur={handleBlur}
+          onBlur={handleBlur}
           onChangeText={(e) => {
             if (onChangeText) {
               onChangeText(e);

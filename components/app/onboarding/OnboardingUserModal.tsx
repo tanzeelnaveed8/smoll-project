@@ -3,7 +3,7 @@ import BottomSheet from "@/components/partials/BottomSheet";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import InputField from "@/components/partials/InputField";
 import { useUserStore } from "@/store/modules/user";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Div, Text } from "react-native-magnus";
 
 interface Props {
@@ -16,8 +16,9 @@ const OnboardingUserModal: React.FC<Props> = (props) => {
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-
   const [loading, setLoading] = useState(false);
+
+  const lastNameRef = useRef<any>(null);
 
   const handleConfirm = async () => {
     try {
@@ -54,9 +55,13 @@ const OnboardingUserModal: React.FC<Props> = (props) => {
           value={firstName}
           disabled={loading}
           maxLength={12}
+          onSubmitEditing={() => {
+            lastNameRef.current.focus();
+          }}
         />
 
         <InputField
+          ref={lastNameRef}
           placeholder="Last Name (Optional)"
           floatingPlaceholder
           inputStyle={{ borderRadius: 12 }}
