@@ -158,6 +158,7 @@ export class CometChatWrapper {
     chatFor: "experts" | "counsellors",
     lastMessageId?: number
   ): Promise<IMessage[]> {
+    console.log("fetchingMessages++");
     const messagesRequestBuilder = new CometChat.MessagesRequestBuilder()
       .setUID(recipientId.toLowerCase())
       .setLimit(limit);
@@ -170,6 +171,7 @@ export class CometChatWrapper {
 
     return messagesRequest.fetchPrevious().then((messages) => {
       let transformedMessages: IMessage[] = [];
+      console.log("messages ==", messages);
 
       messages.forEach((message) => {
         if (message instanceof CometChat.TextMessage) {

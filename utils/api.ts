@@ -5,10 +5,7 @@ import { showMessage, hideMessage } from "react-native-flash-message";
 console.log(process.env.EXPO_PUBLIC_API_URL);
 
 const api = axios.create({
-  baseURL:
-    Platform.OS === "android"
-      ? "http://10.0.2.2:3000"
-      : process.env.EXPO_PUBLIC_API_URL,
+  baseURL: process.env.EXPO_PUBLIC_API_URL,
   withCredentials: true,
 });
 

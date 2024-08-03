@@ -1,15 +1,19 @@
 import Layout from "@/components/app/Layout";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import InputField from "@/components/partials/InputField";
-import { fontHauora, fontHauoraSemiBold } from "@/constant/constant";
+import {
+  colorPrimary,
+  fontHauora,
+  fontHauoraSemiBold,
+} from "@/constant/constant";
 import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
 import { getAxiosErrMsg } from "@/utils/helpers";
 import { useRoute } from "@react-navigation/native";
 import { AxiosError } from "axios";
 
-import React, { useState } from "react";
-import { Keyboard } from "react-native";
+import React, { useEffect, useState } from "react";
+import { ActivityIndicator, Keyboard } from "react-native";
 import { View } from "react-native-animatable";
 import { Button, Div, Input, Text } from "react-native-magnus";
 import { useToast } from "react-native-toast-notifications";
@@ -28,9 +32,33 @@ const AccountSetupEmailOtpScreen: React.FC<Props> = (props) => {
 
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
+  const [resendOtpLoading, setResendOtpLoading] = useState(false);
+  const [resendOtpWating, setResendOtpWating] = useState(0);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (resendOtpWating > 0) {
+      timer = setInterval(() => {
+        setResendOtpWating((prev) => prev - 1);
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [resendOtpWating]);
 
   const handleResend = async () => {
-    await sendVerificationEmail();
+    try {
+      setResendOtpLoading(true);
+      await sendVerificationEmail();
+
+      setResendOtpWating(30);
+
+      toast.show("The code has been successfully sent to your e-mail.", {
+        type: "dark",
+        placement: "top",
+      });
+    } finally {
+      setResendOtpLoading(false);
+    }
   };
 
   const handleOtpChange = (otp: string) => {
@@ -86,16 +114,35 @@ const AccountSetupEmailOtpScreen: React.FC<Props> = (props) => {
             autoFocus={true}
           />
 
-          <Button
-            bg="transparent"
-            mt={8}
-            p={0}
-            color="primary"
-            fontFamily={fontHauoraSemiBold}
-            onPress={handleResend}
-          >
-            Resend Code
-          </Button>
+          {resendOtpWating === 0 && (
+            <Button
+              bg="transparent"
+              mt={8}
+              p={0}
+              color="primary"
+              fontFamily={fontHauoraSemiBold}
+              onPress={handleResend}
+              disabled={loading || resendOtpLoading}
+              position="relative"
+            >
+              <Text
+                fontFamily={fontHauoraSemiBold}
+                fontSize={"lg"}
+                color={resendOtpLoading ? "#ddd" : "primary"}
+              >
+                Resend Code
+              </Text>
+              {resendOtpLoading && (
+                <Div position="absolute" top={4}>
+                  <ActivityIndicator size={16} color={colorPrimary} />
+                </Div>
+              )}
+            </Button>
+          )}
+
+          {resendOtpWating > 0 && (
+            <Text mt={8}>Resend Code in {resendOtpWating} seconds</Text>
+          )}
         </Div>
 
         <ButtonPrimary

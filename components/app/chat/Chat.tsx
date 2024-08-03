@@ -65,7 +65,7 @@ const Chat: React.FC<Props> = (props) => {
         isLoadingEarlier ? lastMessageIdRef.current : undefined
       );
 
-      console.log("f", fetchedMessages);
+      // console.log("f", fetchedMessages);
 
       if (fetchedMessages.length > 0) {
         // Always update the lastMessageIdRef with the oldest message

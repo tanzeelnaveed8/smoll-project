@@ -2,6 +2,7 @@ import { AxiosError } from "axios";
 import { create } from "zustand";
 import { AuthState } from "../types/auth";
 import api from "@/utils/api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const useAuthStore = create<AuthState>((set) => ({
   async login(payload) {
@@ -17,7 +18,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       }
     }
 
-    console.log("e", exist);
+    console.log("exist", exist);
 
     if (!exist) {
       await api.post("/member/auth/register", payload);
@@ -25,6 +26,10 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
   },
   async verifyOtp(payload) {
-    await api.post("/member/auth/verify-otp", payload);
+    const res = await api.post("/member/auth/verify-otp", payload);
+    const token = res.data.accessToken;
+    console.log("verifyOtp", res.data.accessToken);
+
+    await AsyncStorage.setItem("accessToken", token);
   },
 }));
