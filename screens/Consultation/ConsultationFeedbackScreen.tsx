@@ -44,7 +44,7 @@ const ConsultationFeedbackScreen: React.FC<Props> = ({ navigation }) => {
   };
 
   return (
-    <Layout title="Feedback">
+    <Layout title="Feedback" navigation={navigation} preventBackGesture={true}>
       <Div pt={40} flex={1}>
         <Text fontSize={"4xl"} mb={20}>
           How was your experience?

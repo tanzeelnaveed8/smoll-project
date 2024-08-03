@@ -163,14 +163,19 @@ const App = () => {
     OneSignal.Notifications.addEventListener(
       "foregroundWillDisplay",
       (event) => {
+        // @ts-ignore
         if (event.notification?.additionalData?.notificationType === "chat") {
           const currentRoute = rootNavigation.getCurrentRoute();
+          // @ts-ignore
           const expertId = event.notification?.additionalData?.expertId;
+          // @ts-ignore
           const expertName = event.notification?.additionalData?.expertName;
 
           if (
             currentRoute?.name !== "ExpertsChatScreen" &&
+            // @ts-ignore
             currentRoute?.params?.expertId !== expertId &&
+            // @ts-ignore
             currentRoute?.params?.expertName !== expertName
           ) {
             event.notification.display();

@@ -31,20 +31,7 @@ const PetProfileMedicalHistoryScreen: React.FC<Props> = (props) => {
   const healthHistory = healthHistoryMap.get(petId);
 
   useEffect(() => {
-    // TODO: back gesture disable not working.
-    // props.navigation.addListener("beforeRemove", () => {
-    //   return;
-    // });
-
     if (navigateTo === "PetProfileDetailsScreen") return;
-    const unsubscribe = props.navigation.addListener(
-      "beforeRemove",
-      (event: any) => {
-        event.preventDefault(); // Prevent going back
-      }
-    );
-
-    return unsubscribe;
   }, []);
 
   const handleConfirm = () => {
@@ -57,7 +44,7 @@ const PetProfileMedicalHistoryScreen: React.FC<Props> = (props) => {
   };
 
   return (
-    <Layout preventBackGesture={true}>
+    <Layout preventBackGesture={true} navigation={props.navigation}>
       <Div flex={1}>
         <Text fontSize={32} lineHeight={40} color="#222222" mb={4}>
           Add medical history

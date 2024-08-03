@@ -37,6 +37,7 @@ const OnboardingOtpModal: React.FC<Props> = (props) => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [showNameModal, setShowNameModal] = useState(false);
+  const [isAutoFocus, setIsAutoFocus] = useState(false);
 
   const [otp, setOtp] = useState("");
 
@@ -60,6 +61,10 @@ const OnboardingOtpModal: React.FC<Props> = (props) => {
         console.log("Error reading OTP:", error);
       }
     });
+
+    setTimeout(() => {
+      setIsAutoFocus(true);
+    }, 800);
 
     return () => {
       OtpVerify.removeListener();
@@ -140,7 +145,7 @@ const OnboardingOtpModal: React.FC<Props> = (props) => {
               maxLength={4}
               inputMode="numeric"
               keyboardType="number-pad"
-              autoFocus
+              autoFocus={isAutoFocus}
             />
 
             <Button

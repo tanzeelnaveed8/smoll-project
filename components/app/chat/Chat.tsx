@@ -69,17 +69,13 @@ const Chat: React.FC<Props> = (props) => {
       new CometChat.MessageListener({
         // @ts-expect-error - no type provided
         onTypingStarted: (typingIndicator) => {
-          console.log("trigger", typingIndicator);
-
-          if (typingIndicator.sender.uid === props.recipientId) {
+          if (typingIndicator.sender.uid === props.recipientId.toLowerCase()) {
             setIsTyping(true);
           }
         },
         // @ts-expect-error - no type provided
         onTypingEnded: (typingIndicator) => {
-          console.log("trigger 00", typingIndicator);
-
-          if (typingIndicator.sender.uid === props.recipientId) {
+          if (typingIndicator.sender.uid === props.recipientId.toLowerCase()) {
             setIsTyping(false);
           }
         },

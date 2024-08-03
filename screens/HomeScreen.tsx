@@ -255,6 +255,7 @@ const HomeScreen: React.FC<Props> = (props) => {
 
             {options.map((item, index) => (
               <Button
+                key={item.value}
                 px={16}
                 py={12}
                 borderWidth={1}

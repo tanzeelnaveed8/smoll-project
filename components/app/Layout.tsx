@@ -8,7 +8,7 @@ import {
 import { Div, Text, WINDOW_HEIGHT } from "react-native-magnus";
 import BackButton from "../partials/BackButton";
 import { colorPrimary, fontHauoraSemiBold } from "@/constant/constant";
-import { useNavigation } from "@react-navigation/native";
+import { NavigationType } from "@/store/types";
 
 interface Props {
   children: React.ReactNode;
@@ -19,7 +19,11 @@ interface Props {
   title?: string;
   showCloseIcon?: boolean;
   loading?: boolean;
+  /**
+   * @requires navigation
+   */
   preventBackGesture?: boolean;
+  navigation?: NavigationType;
 }
 
 const Layout: React.FC<Props> = ({
@@ -31,8 +35,23 @@ const Layout: React.FC<Props> = ({
   title,
   showCloseIcon,
   loading,
+  preventBackGesture,
+  navigation,
 }) => {
   const externalStyles: {} = style ? style : {};
+
+  useEffect(() => {
+    if (preventBackGesture && navigation) {
+      const unsubscribe = navigation.addListener(
+        "beforeRemove",
+        (event: any) => {
+          event.preventDefault(); // Prevent going back
+        }
+      );
+
+      return unsubscribe;
+    }
+  }, []);
 
   return (
     <Div style={{ ...styles.container, ...externalStyles }}>
