@@ -23,6 +23,7 @@ const PetProfileMedicalHistoryScreen: React.FC<Props> = (props) => {
   const petName = (route.params as Record<string, string>)?.petName;
   const petBg = (route.params as Record<string, string>)?.petBg;
   const navigateTo = (route.params as Record<string, string>)?.navigateTo;
+  const showBackBtn = (route.params as Record<string, string>)?.showBackBtn;
 
   const { healthHistoryMap } = usePetStore();
   const [open, setOpen] = useState(false);
@@ -44,7 +45,12 @@ const PetProfileMedicalHistoryScreen: React.FC<Props> = (props) => {
   };
 
   return (
-    <Layout preventBackGesture={true} navigation={props.navigation}>
+    <Layout
+      showBack={Boolean(showBackBtn?.length > 0)}
+      onBackPress={() => props.navigation.goBack()}
+      preventBackGesture={true}
+      navigation={props.navigation}
+    >
       <Div flex={1}>
         <Text fontSize={32} lineHeight={40} color="#222222" mb={4}>
           Add medical history

@@ -115,10 +115,19 @@ const SettingPersonalInfoScreen: React.FC<{ navigation: NavigationType }> = ({
           </Div>
 
           <Div>
-            <ProfileOptionButton title="Flat/Villa No" value={user?.villa} />
-            <ProfileOptionButton title="Street address" value={user?.address} />
-            <ProfileOptionButton title="City" value={user?.country} />
-            <ProfileOptionButton title="Postal code" value={user?.postalCode} />
+            <ProfileOptionButton
+              title="Flat/Villa No"
+              value={user?.villa ?? "-"}
+            />
+            <ProfileOptionButton
+              title="Street address"
+              value={user?.address ?? "-"}
+            />
+            <ProfileOptionButton title="City" value={user?.country ?? "-"} />
+            <ProfileOptionButton
+              title="Postal code"
+              value={user?.postalCode ?? "-"}
+            />
           </Div>
         </Div>
       </ScrollDiv>

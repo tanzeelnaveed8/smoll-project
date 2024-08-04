@@ -18,7 +18,7 @@ import { UploadedFile } from "@/store/types/file";
 import { useToast } from "react-native-toast-notifications";
 import { showMessage } from "react-native-flash-message";
 
-const btns = ["Basic Details", "Health History", "Cases"];
+const btns = ["Basic Details", "Health History"];
 
 const healthHistoryDat = [
   { name: "DA2PP Vaccination" },
@@ -246,6 +246,7 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
           {activeTab === btns[0] && (
             <FlatList
               data={petDetails}
+              showsVerticalScrollIndicator={false}
               renderItem={({ item }) => (
                 <ProfileOptionButton
                   title={item.title}
@@ -300,6 +301,7 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                     petId: id ?? "",
                     petName: petDetailsData.name,
                     petBg: petDetailsData.photos[0]?.url,
+                    showBackBtn: "true",
                   });
                 }}
               />
