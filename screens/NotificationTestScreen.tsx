@@ -5,10 +5,8 @@ import {
   fontHauoraMedium,
   fontHauoraSemiBold,
 } from "@/constant/constant";
-import { dummyNotificationList } from "@/constant/notificationDummyData";
 import { useNotificationStore } from "@/store/modules/notification";
 import { NavigationType } from "@/store/types";
-import { NotificationListDto } from "@/store/types/notification";
 import { IconAlertCircle } from "@tabler/icons-react-native";
 import React, { useEffect, useState } from "react";
 import {
