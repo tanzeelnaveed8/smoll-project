@@ -1,5 +1,6 @@
 import IconButton from "@/components/partials/IconButton";
 import { colorTextPrimary } from "@/constant/constant";
+import { useFileStore } from "@/store/modules/file";
 import { CometChatWrapper } from "@/utils/chat";
 import { CometChat } from "@cometchat/chat-sdk-react-native";
 import { IconPaperclip, IconSend } from "@tabler/icons-react-native";
@@ -18,6 +19,8 @@ interface Props extends InputToolbarProps<IMessage> {
 }
 
 const ChatComposer: React.FC<Props> = (props) => {
+  const { uploadFile } = useFileStore();
+
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [text, setText] = useState("");
   const [image, setImage] = useState<ImagePicker.ImagePickerResult | null>(
@@ -32,11 +35,19 @@ const ChatComposer: React.FC<Props> = (props) => {
       let file = null;
 
       if (image?.assets) {
+        const fileObj = {
+          uri: image.assets[0].uri,
+          name: image.assets[0].fileName,
+          type: image.assets[0].mimeType,
+        } as unknown as File;
+
+        const uploadedFile = await uploadFile([fileObj]);
+
         const fileUri = image.assets[0].uri;
         file = {
           name: fileUri.split("/").pop() ?? "",
           type: image.assets[0].type ?? "image",
-          uri: fileUri,
+          uri: uploadedFile[0].url,
           size: image.assets[0].fileSize ?? 0,
         };
       }
@@ -50,8 +61,10 @@ const ChatComposer: React.FC<Props> = (props) => {
         user: {
           _id: 1,
         },
-        image: image?.assets ? image.assets[0].uri : undefined,
+        image: file ? file.uri : undefined,
       };
+
+      console.log("newmEssage request", newMessage);
 
       sendProps.onSend([newMessage], true);
       setText("");
