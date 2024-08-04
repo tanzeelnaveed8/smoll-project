@@ -1,7 +1,7 @@
 import Layout from "@/components/app/Layout";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import { fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { TouchableOpacity } from "react-native";
 import { Div, ScrollDiv, Text } from "react-native-magnus";
 import { NavigationType } from "@/store/types";
@@ -81,6 +81,8 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
     label: string;
     value: string;
   } | null>(null);
+
+  const textAreaRef = useRef<any>(null);
 
   useEffect(() => {
     fetchAllPets();
@@ -216,13 +218,18 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
             onClose={() => setShowModal(false)}
             label="Select Pet"
             options={petOptions}
-            onSelect={(value) => setSelectedPet(value)}
+            onSelect={(value) => {
+              textAreaRef?.current?.focus();
+              setSelectedPet(value);
+            }}
             selectedValue={selectedPet}
             renderNoOptions={() => NoPetOptions({ navigation, setShowModal })}
+            disableKeyboardDismissOnSelect
           />
         </Div>
 
         <TextAreaField
+          ref={textAreaRef}
           placeholder="e.g. My cat is vomiting and color is white......"
           value={description}
           onChangeText={setDescription}
