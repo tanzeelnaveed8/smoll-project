@@ -34,10 +34,13 @@ const NotificationTestScreen: React.FC<{ navigation: NavigationType }> = ({
   const [isLoading, setIsLoading] = useState(true);
   const [markAllLoading, setMarkAllLoading] = useState(false);
 
-  console.log("notificationsdata = ", notifications);
+  // console.log("notificationsdata = ", notifications);
 
   useEffect(() => {
-    if (notifications && notifications?.data.length > 0) return;
+    if (notifications && notifications?.data.length > 0) {
+      setIsLoading(false);
+      return;
+    }
 
     const fetchData = async () => {
       try {
@@ -83,6 +86,24 @@ const NotificationTestScreen: React.FC<{ navigation: NavigationType }> = ({
     } finally {
       setMarkAllLoading(false);
     }
+  };
+
+  const timeAgo = (dateString: string) => {
+    const now = new Date();
+    const createdAt = new Date(dateString);
+    const seconds = Math.floor((now.getTime() - createdAt.getTime()) / 1000);
+
+    let interval = Math.floor(seconds / 31536000);
+    if (interval > 1) return `${interval} years ago`;
+    interval = Math.floor(seconds / 2592000);
+    if (interval > 1) return `${interval} months ago`;
+    interval = Math.floor(seconds / 86400);
+    if (interval > 1) return `${interval} days ago`;
+    interval = Math.floor(seconds / 3600);
+    if (interval > 1) return `${interval} hours ago`;
+    interval = Math.floor(seconds / 60);
+    if (interval > 0) return `${interval} min ago`;
+    return `0 min ago`; // Updated to return "0 min ago"
   };
 
   return (
@@ -156,7 +177,6 @@ const NotificationTestScreen: React.FC<{ navigation: NavigationType }> = ({
                   </Div>
 
                   <Div>
-                    <Text>{index + 1}</Text>
                     <Text
                       fontSize={"lg"}
                       fontFamily={fontHauoraMedium}
@@ -172,7 +192,8 @@ const NotificationTestScreen: React.FC<{ navigation: NavigationType }> = ({
                       fontFamily={fontHauoraMedium}
                       color="#7B7B7B"
                     >
-                      01 hours ago
+                      {timeAgo(item.createdAt)}
+                      {/* 01 hours ago */}
                     </Text>
                   </Div>
                 </Div>

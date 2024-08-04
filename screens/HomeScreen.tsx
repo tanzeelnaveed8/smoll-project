@@ -29,6 +29,7 @@ import { useRoute } from "@react-navigation/native";
 import React, { useEffect, useMemo, useState } from "react";
 import TabNavigationBar from "@/components/app/TabNavigationBar";
 import { showMessage } from "react-native-flash-message";
+import { useNotificationStore } from "@/store/modules/notification";
 
 interface Props {
   navigation: NavigationType;
@@ -46,6 +47,7 @@ const HomeScreen: React.FC<Props> = (props) => {
   const route = useRoute();
   const { user } = useUserStore();
   const { sessions, fetchSessions } = useCounsellorStore();
+  const { fetchNotifications, notifications } = useNotificationStore();
 
   const [options, setOptions] = useState<OptionTab[]>([
     {
@@ -66,6 +68,10 @@ const HomeScreen: React.FC<Props> = (props) => {
   const [showCongratsModal, setShowCongratsModal] = useState(false);
 
   useEffect(() => {
+    fetchNotifications(1, 20);
+  }, []);
+
+  useEffect(() => {
     const showSetupModal =
       (route.params as Record<string, string>)?.showSetupModal === "true";
 
@@ -82,8 +88,6 @@ const HomeScreen: React.FC<Props> = (props) => {
       setShowAccountSetupModal(true);
     }
   }, [route.params]);
-
-  console.log("user", user);
 
   const completedStep = useMemo(() => {
     const basicInfoExist = Boolean(user?.address?.length);
@@ -153,14 +157,27 @@ const HomeScreen: React.FC<Props> = (props) => {
             </Div>
 
             <Div flexDir="row" alignItems="center" style={{ gap: 8 }}>
-              <IconButton>
-                <IconBell
-                  width={32}
-                  height={32}
-                  color={"#222222"}
-                  strokeWidth={1.5}
-                />
-              </IconButton>
+              <Div position="relative">
+                {notifications && notifications.count > 0 && (
+                  <Text style={styles.notificationCount}>
+                    {notifications?.count}
+                  </Text>
+                )}
+
+                <IconButton
+                  style={{ overflow: "visible" }}
+                  onPress={() => {
+                    props.navigation.navigate("NotificationTestScreen");
+                  }}
+                >
+                  <IconBell
+                    width={32}
+                    height={32}
+                    color={"#222222"}
+                    strokeWidth={1.5}
+                  />
+                </IconButton>
+              </Div>
               <IconButton
                 onPress={() => {
                   props.navigation.navigate("SettingsMainScreen");
@@ -308,3 +325,23 @@ const HomeScreen: React.FC<Props> = (props) => {
 };
 
 export default HomeScreen;
+
+const styles = StyleSheet.create({
+  notificationCount: {
+    position: "absolute",
+    top: -4,
+    right: -1,
+    backgroundColor: "#F44336",
+    borderRadius: 12,
+    justifyContent: "center",
+    alignContent: "center",
+    alignItems: "center",
+    color: "#FFFFFF",
+    zIndex: 10,
+    textAlign: "center",
+    width: 20,
+    height: 20,
+    fontSize: 12,
+    fontWeight: "bold",
+  },
+});

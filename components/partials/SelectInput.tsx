@@ -43,6 +43,7 @@ interface Props {
     index: number
   ) => ReactElement;
   mainInputStyle?: StyleProp<TextStyle>;
+  disableKeyboardDismissOnSelect?: boolean;
 }
 
 const SelectInput: React.FC<Props> = (props) => {
@@ -128,6 +129,7 @@ const SelectInput: React.FC<Props> = (props) => {
                 }}
                 onTap={() => {
                   onSelect(item);
+                  if (props.disableKeyboardDismissOnSelect) return;
                   Keyboard.dismiss();
                 }}
                 label={item.label}

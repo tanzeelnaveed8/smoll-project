@@ -141,7 +141,9 @@ const AccountSetupEmailOtpScreen: React.FC<Props> = (props) => {
           )}
 
           {resendOtpWating > 0 && (
-            <Text mt={8}>Resend Code in {resendOtpWating} seconds</Text>
+            <Text mt={8} color="#666">
+              Resend Code in {resendOtpWating} seconds
+            </Text>
           )}
         </Div>
 

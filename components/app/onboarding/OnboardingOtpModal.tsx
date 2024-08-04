@@ -196,7 +196,9 @@ const OnboardingOtpModal: React.FC<Props> = (props) => {
             )}
 
             {resendOtpWating > 0 && (
-              <Text mb={32}>Resend Code in {resendOtpWating} seconds</Text>
+              <Text mb={32} color="#666">
+                Resend Code in {resendOtpWating} seconds
+              </Text>
             )}
 
             <ButtonPrimary

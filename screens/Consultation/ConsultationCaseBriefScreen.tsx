@@ -223,6 +223,7 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
             }}
             selectedValue={selectedPet}
             renderNoOptions={() => NoPetOptions({ navigation, setShowModal })}
+            disableKeyboardDismissOnSelect
           />
         </Div>
 
