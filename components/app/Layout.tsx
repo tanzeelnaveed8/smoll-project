@@ -40,19 +40,6 @@ const Layout: React.FC<Props> = ({
 }) => {
   const externalStyles: {} = style ? style : {};
 
-  useEffect(() => {
-    if (preventBackGesture && navigation) {
-      const unsubscribe = navigation.addListener(
-        "beforeRemove",
-        (event: any) => {
-          event.preventDefault(); // Prevent going back
-        }
-      );
-
-      return unsubscribe;
-    }
-  }, []);
-
   return (
     <Div style={{ ...styles.container, ...externalStyles }}>
       <Div row style={styles.titleContainer}>

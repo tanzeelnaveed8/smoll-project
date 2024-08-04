@@ -304,6 +304,9 @@ const App = () => {
                 <Stack.Screen
                   name="ConsultationVideoScreen"
                   component={ConsultationVideoScreen}
+                  options={{
+                    gestureEnabled: false,
+                  }}
                 />
                 <Stack.Screen
                   name="RequestCallBackScreen"
@@ -372,6 +375,9 @@ const App = () => {
                 <Stack.Screen
                   name="ConsultationFeedbackScreen"
                   component={ConsultationFeedbackScreen}
+                  options={{
+                    gestureEnabled: false,
+                  }}
                 />
                 <Stack.Screen
                   name="PetProfileListScreen"
