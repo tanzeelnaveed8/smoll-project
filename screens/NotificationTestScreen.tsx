@@ -5,10 +5,8 @@ import {
   fontHauoraMedium,
   fontHauoraSemiBold,
 } from "@/constant/constant";
-import { dummyNotificationList } from "@/constant/notificationDummyData";
 import { useNotificationStore } from "@/store/modules/notification";
 import { NavigationType } from "@/store/types";
-import { NotificationListDto } from "@/store/types/notification";
 import { IconAlertCircle } from "@tabler/icons-react-native";
 import React, { useEffect, useState } from "react";
 import {
@@ -150,6 +148,7 @@ const NotificationTestScreen: React.FC<{ navigation: NavigationType }> = ({
           <FlatList
             style={{ height: windowHeight - 150 }}
             data={notifications.data}
+            showsVerticalScrollIndicator={false}
             renderItem={({ item, index }) => {
               return (
                 <Div

@@ -74,9 +74,7 @@ const PetProfileCongratulationsScreen = ({
         <Div mt="auto">
           <ButtonPrimary
             onPress={() => {
-              console.log("testing", navigateTo);
-
-              navigation.navigate(navigateTo, {
+              navigation.navigate(navigateTo ? navigateTo : "HomeScreen", {
                 petId: petId,
                 petName: petName,
                 expertId: expertId,

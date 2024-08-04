@@ -13,7 +13,7 @@ const AddButton: React.FC<{ text: string; onPress?: () => void }> = ({
       fontFamily={fontHauoraSemiBold}
       color="primary"
       flexDir="row"
-      alignItems="flex-start"
+      alignItems="center"
       style={{ gap: 4 }}
       p={0}
       bg="transparent"

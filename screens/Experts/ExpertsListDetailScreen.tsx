@@ -71,8 +71,8 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
         ? dayjs().day(dayOfWeekMap[availability.dayOfWeek]).format("YYYY-MM-DD")
         : dayjs(availability.date).format("YYYY-MM-DD");
 
-      const fromTime = dayjs(`${date}T${interval.from}Z`).format("HH:mm A");
-      const toTime = dayjs(`${date}T${interval.to}Z`).format("HH:mm A");
+      const fromTime = dayjs(`${date}T${interval.from}Z`).format("hh:mm A");
+      const toTime = dayjs(`${date}T${interval.to}Z`).format("hh:mm A");
 
       return `${fromTime} - ${toTime}`;
     },
@@ -99,8 +99,6 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
     try {
       setAvailabilityLoading(true);
       setSelectedDate(date);
-
-      console.log("date", date);
 
       const _availability = await fetchExpertAvailability(
         expertId,
@@ -284,46 +282,55 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
                     >
                       {a.dayOfWeek ?? dayjs(a.date).format("ddd, DD MMM")}
                     </Text>
-                    <Div flexDir="row" flexWrap="wrap" style={{ gap: 8 }}>
-                      {a.intervals.map((intr, index) => {
-                        const time = formatTime(a, intr);
 
-                        return (
-                          <Button
-                            key={`${index}:${a.dayOfWeek ?? a.date}:${time}`}
-                            fontFamily={fontHauoraMedium}
-                            fontSize="lg"
-                            lineHeight={20}
-                            p={10}
-                            borderWidth={1}
-                            color={
-                              selectedTime?.label ===
-                              `${index}:${a.dayOfWeek ?? a.date}:${time}`
-                                ? "#fff"
-                                : "#494949"
-                            }
-                            borderColor="#E0E0E0"
-                            rounded={8}
-                            bg={
-                              selectedTime?.label ===
-                              `${index}:${a.dayOfWeek ?? a.date}:${time}`
-                                ? "primary"
-                                : "transparent"
-                            }
-                            onPress={() => {
-                              setSelectedTime({
-                                value: { from: intr.from, to: intr.to },
-                                label: `${index}:${
-                                  a.dayOfWeek ?? a.date
-                                }:${time}`,
-                              });
-                            }}
-                          >
-                            {time}
-                          </Button>
-                        );
-                      })}
-                    </Div>
+                    {a.intervals.length > 0 && (
+                      <Div flexDir="row" flexWrap="wrap" style={{ gap: 8 }}>
+                        {a.intervals.map((intr, index) => {
+                          const time = formatTime(a, intr);
+
+                          return (
+                            <Button
+                              key={`${index}:${a.dayOfWeek ?? a.date}:${time}`}
+                              fontFamily={fontHauoraMedium}
+                              fontSize="lg"
+                              lineHeight={20}
+                              p={10}
+                              borderWidth={1}
+                              color={
+                                selectedTime?.label ===
+                                `${index}:${a.dayOfWeek ?? a.date}:${time}`
+                                  ? "#fff"
+                                  : "#494949"
+                              }
+                              borderColor="#E0E0E0"
+                              rounded={8}
+                              bg={
+                                selectedTime?.label ===
+                                `${index}:${a.dayOfWeek ?? a.date}:${time}`
+                                  ? "primary"
+                                  : "transparent"
+                              }
+                              onPress={() => {
+                                setSelectedTime({
+                                  value: { from: intr.from, to: intr.to },
+                                  label: `${index}:${
+                                    a.dayOfWeek ?? a.date
+                                  }:${time}`,
+                                });
+                              }}
+                            >
+                              {time}
+                            </Button>
+                          );
+                        })}
+                      </Div>
+                    )}
+
+                    {a.intervals.length === 0 && (
+                      <Div flexDir="row" flexWrap="wrap" style={{ gap: 8 }}>
+                        <Text>-</Text>
+                      </Div>
+                    )}
                   </Div>
                 ))}
 

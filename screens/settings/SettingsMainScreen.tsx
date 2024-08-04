@@ -46,12 +46,12 @@ const options: GroupType[] = [
         icon: IconUserCircle,
         link: "SettingPersonalInfoScreen",
       },
-      {
-        id: 2,
-        title: "Address",
-        icon: IconMap,
-        link: "AccountSetupAddressScreen",
-      },
+      // {
+      //   id: 2,
+      //   title: "Address",
+      //   icon: IconMap,
+      //   link: "AccountSetupAddressScreen",
+      // },
       {
         id: 3,
         title: "Pets Profile",

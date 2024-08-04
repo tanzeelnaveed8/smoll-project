@@ -136,13 +136,10 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
   };
 
   const handleCreateCase = async () => {
-    const status =
-      comingFrom === "ExpertsListDetailScreen"
-        ? CaseStatusEnum.SCHEDULED
-        : CaseStatusEnum.OPEN;
+    const isScheduled = scheduleAt ? true : false;
 
     // Don't create case in scheduled
-    if (status === CaseStatusEnum.SCHEDULED) {
+    if (isScheduled) {
       navigation.navigate("ExpertsScheduleConfirmationScreen", {
         expertId,
         caseData: JSON.stringify({
@@ -150,7 +147,7 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
           assets: documents,
           petId: selectedPet?.value || "",
           vetId: expertId,
-          status,
+          status: CaseStatusEnum.OPEN,
         }),
         petId: selectedPet?.value || "",
         selectedTime,
@@ -169,7 +166,7 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
         assets: documents,
         petId: selectedPet?.value || "",
         vetId: expertId,
-        status,
+        status: CaseStatusEnum.OPEN,
       });
 
       await updateConsultation({
@@ -194,7 +191,11 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
       loading={loading}
       onBackPress={() => navigation.goBack()}
     >
-      <ScrollDiv flex={1} keyboardShouldPersistTaps="handled">
+      <ScrollDiv
+        flex={1}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
         <Text fontSize={"4xl"} mb={12}>
           Tell the vet your pet's condition
         </Text>
@@ -264,6 +265,8 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
             handleImage(file);
           }}
         />
+
+        <Div h={40}></Div>
       </ScrollDiv>
       <ButtonPrimary
         disabled={isActionDisable}

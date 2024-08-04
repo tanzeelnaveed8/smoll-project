@@ -73,6 +73,7 @@ export class CometChatWrapper {
       messageText,
       CometChat.RECEIVER_TYPE.USER
     );
+
     return CometChat.sendMessage(textMessage);
   }
 
@@ -160,7 +161,8 @@ export class CometChatWrapper {
 
     if (chatFor === "experts" && userId === recipientId.toLowerCase()) {
       const { expertDetailMap } = useExpertStore.getState();
-      avatar = expertDetailMap.get(recipientId)?.profileImg?.url ?? undefined;
+
+      avatar = expertDetailMap.get(recipientId)?.profileImg?.url;
     }
 
     const createdAt = new Date(message.getSentAt() * 1000);

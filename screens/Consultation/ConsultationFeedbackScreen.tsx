@@ -7,7 +7,7 @@ import { useExpertStore } from "@/store/modules/expert";
 import { NavigationType } from "@/store/types";
 import { useRoute } from "@react-navigation/native";
 import React, { useState } from "react";
-import { Div, Text } from "react-native-magnus";
+import { Div, ScrollDiv, Text } from "react-native-magnus";
 
 interface Props {
   navigation: NavigationType;
@@ -44,28 +44,30 @@ const ConsultationFeedbackScreen: React.FC<Props> = ({ navigation }) => {
   };
 
   return (
-    <Layout title="Feedback">
-      <Div pt={40} flex={1}>
-        <Text fontSize={"4xl"} mb={20}>
-          How was your experience?
-        </Text>
+    <Layout title="Feedback" navigation={navigation} preventBackGesture={true}>
+      <ScrollDiv keyboardShouldPersistTaps="handled">
+        <Div pt={40} flex={1}>
+          <Text fontSize={"4xl"} mb={20}>
+            How was your experience?
+          </Text>
 
-        <StarRating
-          onChange={(e) => {
-            setFeedback(e);
-          }}
-        />
+          <StarRating
+            onChange={(e) => {
+              setFeedback(e);
+            }}
+          />
 
-        <Text mt={40} mb={12} fontSize={"xl"} fontFamily={fontHauoraSemiBold}>
-          Please share your experience
-        </Text>
+          <Text mt={40} mb={12} fontSize={"xl"} fontFamily={fontHauoraSemiBold}>
+            Please share your experience
+          </Text>
 
-        <TextAreaField
-          disabled={actionLoading}
-          onChangeText={(e) => setComment(e)}
-          value={comment}
-        />
-      </Div>
+          <TextAreaField
+            disabled={actionLoading}
+            onChangeText={(e) => setComment(e)}
+            value={comment}
+          />
+        </Div>
+      </ScrollDiv>
 
       <ButtonPrimary
         onPress={handleSubmit}

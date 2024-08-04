@@ -18,7 +18,7 @@ import { UploadedFile } from "@/store/types/file";
 import { useToast } from "react-native-toast-notifications";
 import { showMessage } from "react-native-flash-message";
 
-const btns = ["Basic Details", "Health History", "Cases"];
+const btns = ["Basic Details", "Health History"];
 
 const healthHistoryDat = [
   { name: "DA2PP Vaccination" },
@@ -44,7 +44,6 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
 
   useEffect(() => {
     if (!id) return;
-    console.log("running use Effect");
 
     const fetchData = async () => {
       const data = petsDetailMap.get(id);
@@ -75,7 +74,6 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
 
   const handleUpdateImage = async (file: UploadedFile[]) => {
     if (!petDetailsData) return;
-    console.log("handleUpdateImage files", file);
 
     const filesArr = [...file, ...petDetailsData?.photos];
 
@@ -248,6 +246,7 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
           {activeTab === btns[0] && (
             <FlatList
               data={petDetails}
+              showsVerticalScrollIndicator={false}
               renderItem={({ item }) => (
                 <ProfileOptionButton
                   title={item.title}
@@ -302,6 +301,7 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                     petId: id ?? "",
                     petName: petDetailsData.name,
                     petBg: petDetailsData.photos[0]?.url,
+                    showBackBtn: "true",
                   });
                 }}
               />

@@ -11,9 +11,11 @@ interface Props {
 }
 
 const ExpertsInboxScreen: React.FC<Props> = (props) => {
-  const { experts, fetchExperts } = useExpertStore();
+  const { experts, expertDetailMap, fetchExperts, fetchExpertDetail } =
+    useExpertStore();
 
   const [loading, setLoading] = useState(false);
+  const [actionLoading, setActionLoading] = useState(false);
 
   useEffect(() => {
     fetchAllExperts();
@@ -25,6 +27,24 @@ const ExpertsInboxScreen: React.FC<Props> = (props) => {
       await fetchExperts();
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleInboxItemPress = async (expertId: string, expertName: string) => {
+    try {
+      const expertDetail = expertDetailMap.get(expertId);
+
+      if (!expertDetail) {
+        setActionLoading(true);
+        await fetchExpertDetail(expertId);
+      }
+
+      props.navigation.navigate("ExpertsChatScreen", {
+        expertId: expertId,
+        expertName: expertName,
+      });
+    } finally {
+      setActionLoading(false);
     }
   };
 
@@ -44,14 +64,10 @@ const ExpertsInboxScreen: React.FC<Props> = (props) => {
         {experts?.map((expert) => (
           <ChatInboxItem
             key={expert.id}
-            onPress={() => {
-              props.navigation.navigate("ExpertsChatScreen", {
-                expertId: expert.id,
-                expertName: expert.name,
-              });
-            }}
+            onPress={() => handleInboxItemPress(expert.id, expert.name)}
             title={expert.name}
             subtitle={expert.designation}
+            loading={actionLoading}
             image={expert.profileImg?.url ?? "https://via.placeholder.com/150"}
           />
         ))}

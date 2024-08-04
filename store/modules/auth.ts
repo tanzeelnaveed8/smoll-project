@@ -18,8 +18,6 @@ export const useAuthStore = create<AuthState>((set) => ({
       }
     }
 
-    console.log("exist", exist);
-
     if (!exist) {
       await api.post("/member/auth/register", payload);
       await api.post("/member/auth/login", payload);

@@ -43,7 +43,6 @@ const CaseDetailScreen: React.FC<{
 
       const caseDetail = await fetchCase(caseId);
 
-      console.log("case", caseDetail);
       setCaseDetail(caseDetail);
     } finally {
       setIsLoading(false);

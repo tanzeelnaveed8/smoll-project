@@ -46,6 +46,7 @@ const PetProfileListScreen: React.FC<{ navigation: NavigationType }> = ({
       onBackPress={() => {
         navigation.goBack();
       }}
+      loading={loading}
     >
       <ScrollDiv style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
         <Div flex={1} pt={20}>
@@ -53,7 +54,7 @@ const PetProfileListScreen: React.FC<{ navigation: NavigationType }> = ({
             Add your lovely pets
           </Text>
 
-          <Div mb={32}>
+          <Div mb={18}>
             {pets &&
               pets.map((item, i) => {
                 let image;
@@ -77,19 +78,12 @@ const PetProfileListScreen: React.FC<{ navigation: NavigationType }> = ({
               })}
           </Div>
 
-          {loading && (
-            <>
-              <Skeleton.Box mb={"sm"} h={65} />
-              <Skeleton.Box mb={"sm"} h={65} />
-            </>
-          )}
-
           <Button
             fontSize={"lg"}
             fontFamily={fontHauoraSemiBold}
             color="primary"
             flexDir="row"
-            alignItems="flex-start"
+            alignItems="center"
             style={{ gap: 4 }}
             p={0}
             bg="transparent"

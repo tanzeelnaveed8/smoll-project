@@ -92,8 +92,6 @@ const ChatComposer: React.FC<Props> = (props) => {
 
   return (
     <>
-      {/* <Div flex={1}></Div> */}
-
       <InputToolbar
         {...props}
         containerStyle={{ borderTopWidth: 0 }}
@@ -131,7 +129,7 @@ const ChatComposer: React.FC<Props> = (props) => {
               alignItems="center"
               justifyContent="center"
               bg="#EFEFEF"
-              h={"100%"}
+              h={56}
               style={{
                 borderTopRightRadius: 8,
                 borderBottomRightRadius: 8,

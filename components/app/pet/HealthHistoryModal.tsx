@@ -99,12 +99,12 @@ const HealthHistoryModal = (props: PropTypes) => {
   return (
     <BottomSheet
       isVisible={open}
-      onSwipeComplete={() => {
-        console.log("close");
-      }}
-      h="95%"
+      h="93%"
       px={20}
       style={{ position: "relative" }}
+      onCloseIconClick={() => {
+        props.onClose();
+      }}
     >
       <Div h={"100%"}>
         <ScrollDiv

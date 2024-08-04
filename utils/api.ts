@@ -1,17 +1,19 @@
 import axios from "axios";
 import { Platform } from "react-native";
-import { showMessage, hideMessage } from "react-native-flash-message";
-
-console.log(process.env.EXPO_PUBLIC_API_URL);
+import { showMessage } from "react-native-flash-message";
 
 const api = axios.create({
   baseURL: process.env.EXPO_PUBLIC_API_URL,
   withCredentials: true,
+  headers: {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+  },
 });
 
 api.interceptors.request.use(
   (config) => {
-    console.log(config.data, config.baseURL, config.url);
+    // console.log(config.data, config.baseURL, config.url);
     return config;
   },
   (error) => {
@@ -22,7 +24,7 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    console.log("err", error);
+    console.log("err", error, error.response);
 
     const message = error.response?.data?.message;
     let msgStr = message;

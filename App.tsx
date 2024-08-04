@@ -1,11 +1,11 @@
-import { AppRegistry, SafeAreaView, StyleSheet } from "react-native";
+import { SafeAreaView, StyleSheet } from "react-native";
 import { Text, ThemeProvider } from "react-native-magnus";
 
 import * as Font from "expo-font";
 import { useEffect, useState } from "react";
 import { fontHauora } from "./constant/constant";
 
-import { NavigationContainer, useNavigation } from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AccountSetupAddressScreen from "./screens/AccountSetup/AccountSetupAddressScreen";
 import AccountSetupEmailOtpScreen from "./screens/AccountSetup/AccountSetupEmailOtpScreen";
@@ -50,17 +50,18 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
-import ExpertsScheduleConfirmationScreen from "./screens/Experts/ExpertsScheduleConfirmationScreen";
 import FlashMessage from "react-native-flash-message";
-import ExpertsScheduleSuccessScreen from "./screens/Experts/ExpertsScheduleSuccessScreen";
-import CaseDetailScreen from "./screens/Cases/CaseDetailScreen";
 import { LogLevel, OneSignal } from "react-native-onesignal";
-import { navigationRef } from "./utils/root-navigation";
-import * as rootNavigation from "./utils/root-navigation";
+import CaseDetailScreen from "./screens/Cases/CaseDetailScreen";
 import CaseForwardedScreen from "./screens/Consultation/CaseForwardedScreen";
 import RequestCallBackScreen from "./screens/Consultation/RequestCallBackScreen";
-import NotificationTestScreen from "./screens/NotificationTestScreen";
+import ExpertsScheduleConfirmationScreen from "./screens/Experts/ExpertsScheduleConfirmationScreen";
+import ExpertsScheduleSuccessScreen from "./screens/Experts/ExpertsScheduleSuccessScreen";
 import NotificationScreen from "./screens/NotificationScreen";
+import NotificationTestScreen from "./screens/NotificationTestScreen";
+import { useExpertStore } from "./store/modules/expert";
+import * as rootNavigation from "./utils/root-navigation";
+import { navigationRef } from "./utils/root-navigation";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -107,6 +108,7 @@ const Stack = createNativeStackNavigator();
 
 const App = () => {
   const { user } = useUserStore();
+  const { expertDetailMap, fetchExpertDetail } = useExpertStore();
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
   useEffect(() => {
@@ -144,12 +146,43 @@ const App = () => {
           consultationId: additionalData.consultationId,
         });
       }
+
+      if (event.notification?.additionalData?.notificationType === "chat") {
+        const expertId = event.notification?.additionalData?.expertId;
+        const expertName = event.notification?.additionalData?.expertName;
+
+        if (expertId) {
+          rootNavigation.navigate("ExpertsChatScreen", {
+            expertId,
+            expertName,
+          });
+        }
+      }
     });
     // Method for listening for notifications received
     OneSignal.Notifications.addEventListener(
       "foregroundWillDisplay",
       (event) => {
-        event.notification.display();
+        // @ts-ignore
+        if (event.notification?.additionalData?.notificationType === "chat") {
+          const currentRoute = rootNavigation.getCurrentRoute();
+          // @ts-ignore
+          const expertId = event.notification?.additionalData?.expertId;
+          // @ts-ignore
+          const expertName = event.notification?.additionalData?.expertName;
+
+          if (
+            currentRoute?.name !== "ExpertsChatScreen" &&
+            // @ts-ignore
+            currentRoute?.params?.expertId !== expertId &&
+            // @ts-ignore
+            currentRoute?.params?.expertName !== expertName
+          ) {
+            event.notification.display();
+          }
+        } else {
+          event.notification.display();
+        }
       }
     );
 
@@ -271,6 +304,9 @@ const App = () => {
                 <Stack.Screen
                   name="ConsultationVideoScreen"
                   component={ConsultationVideoScreen}
+                  options={{
+                    gestureEnabled: false,
+                  }}
                 />
                 <Stack.Screen
                   name="RequestCallBackScreen"
@@ -339,6 +375,9 @@ const App = () => {
                 <Stack.Screen
                   name="ConsultationFeedbackScreen"
                   component={ConsultationFeedbackScreen}
+                  options={{
+                    gestureEnabled: false,
+                  }}
                 />
                 <Stack.Screen
                   name="PetProfileListScreen"

@@ -48,6 +48,7 @@ const OnboardingAuthModal: React.FC<Props> = (props) => {
   const handleGetOtp = async () => {
     try {
       setIsLoading(true);
+      Keyboard.dismiss();
 
       await login({
         phone: country.value + phone,

@@ -62,13 +62,12 @@ const ConsultationVideoScreen: React.FC<{ navigation: NavigationType }> = ({
       expertId: expertId,
       caseId: caseId,
     });
-
-    // if open, close the case
-    endConsultation(consultationId);
   };
 
   const callSettingsBuilder = new CometChatCalls.CallSettingsBuilder()
+    .startWithVideoMuted(true)
     .setIsAudioOnlyCall(false)
+    .setMode(CometChatCalls.CALL_MODE.DEFAULT)
     .showEndCallButton(false);
 
   return (
