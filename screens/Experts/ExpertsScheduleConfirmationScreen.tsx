@@ -52,13 +52,11 @@ const ExpertsScheduleConfirmationScreen: React.FC<{
   const scheduledTime = useMemo(() => {
     const date = dayjs(parsedSelectedDate).format("YYYY-MM-DD");
 
-    const fromTime = dayjs
-      .tz(`${date}T${parsedSelectedTime.from}Z`)
-      .format("HH:mm A");
+    const fromTime = dayjs(`${date}T${parsedSelectedTime.from}Z`).format(
+      "hh:mm A"
+    );
 
-    const toTime = dayjs
-      .tz(`${date}T${parsedSelectedTime.to}Z`)
-      .format("HH:mm A");
+    const toTime = dayjs(`${date}T${parsedSelectedTime.to}Z`).format("hh:mm A");
 
     return `${fromTime} - ${toTime}`;
   }, [parsedSelectedDate, parsedSelectedTime]);

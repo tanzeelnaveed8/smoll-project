@@ -136,7 +136,7 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
   };
 
   const handleCreateCase = async () => {
-    const isScheduled = comingFrom && comingFrom !== "ExpertsListDetailScreen";
+    const isScheduled = scheduleAt ? true : false;
 
     // Don't create case in scheduled
     if (isScheduled) {

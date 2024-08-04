@@ -112,22 +112,29 @@ const HomeScreen: React.FC<Props> = (props) => {
 
   const handleOptionTabPress = async (item: OptionTab) => {
     if (item.value === "counselling") {
-      let _sessions = sessions;
+      showMessage({
+        message: "🚀 Coming Soon! 🎉",
+        description: "Get ready for some pawsome counselling! 🐾",
+        type: "info",
+      });
 
-      if (!sessions) {
-        try {
-          setLoading("counselling", true);
-          _sessions = await fetchSessions();
-        } finally {
-          setLoading("counselling", false);
-        }
-      }
+      // TODO: Need to fix it properly
+      // let _sessions = sessions;
 
-      if (!_sessions?.length) {
-        props.navigation.navigate("CounsellingRequestScreen");
-      } else {
-        props.navigation.navigate("CounsellingInboxScreen");
-      }
+      // if (!sessions) {
+      //   try {
+      //     setLoading("counselling", true);
+      //     _sessions = await fetchSessions();
+      //   } finally {
+      //     setLoading("counselling", false);
+      //   }
+      // }
+
+      // if (!_sessions?.length) {
+      //   props.navigation.navigate("CounsellingRequestScreen");
+      // } else {
+      //   props.navigation.navigate("CounsellingInboxScreen");
+      // }
     } else if (item.value === "vet") {
       props.navigation.navigate("ExpertsInboxScreen");
     }

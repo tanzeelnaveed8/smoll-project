@@ -150,6 +150,7 @@ const NotificationTestScreen: React.FC<{ navigation: NavigationType }> = ({
           <FlatList
             style={{ height: windowHeight - 150 }}
             data={notifications.data}
+            showsVerticalScrollIndicator={false}
             renderItem={({ item, index }) => {
               return (
                 <Div
