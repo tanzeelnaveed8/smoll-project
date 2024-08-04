@@ -24,20 +24,24 @@ const ChatComposer: React.FC<Props> = (props) => {
     null
   );
 
-  const handleOnSend = async () => {
+  const handleOnSend = async (img?: { img: typeof image }) => {
     const sendProps = props as SendProps<IMessage>;
+    console.log("testinggg", img);
+    const image = img?.img;
     if (sendProps.onSend && (text.trim().length > 0 || image)) {
       let file = null;
 
-      // if (image?.assets) {
-      //   const fileUri = image.assets[0].uri;
-      //   file = {
-      //     name: fileUri.split("/").pop() ?? "",
-      //     type: image.assets[0].type ?? "image",
-      //     uri: fileUri,
-      //     size: image.assets[0].fileSize ?? 0,
-      //   };
-      // }
+      if (image?.assets) {
+        const fileUri = image.assets[0].uri;
+        file = {
+          name: fileUri.split("/").pop() ?? "",
+          type: image.assets[0].type ?? "image",
+          uri: fileUri,
+          size: image.assets[0].fileSize ?? 0,
+        };
+      }
+
+      console.log("file", file);
 
       const newMessage: IMessage = {
         _id: Math.random().toString(36).substring(7),
@@ -75,10 +79,15 @@ const ChatComposer: React.FC<Props> = (props) => {
       quality: 1,
     });
 
-    if (!result.canceled) {
-      setImage(result);
-      handleOnSend();
-    }
+    console.log("pickImage result", result);
+
+    // setImage(result);
+    handleOnSend({ img: result });
+
+    // if (!result.canceled) {
+    //   setImage(result);
+    //   handleOnSend();
+    // }
   };
 
   return (

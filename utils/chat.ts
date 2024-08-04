@@ -77,17 +77,38 @@ export class CometChatWrapper {
     return CometChat.sendMessage(textMessage);
   }
 
-  static sendMediaMessage(receiverId: string, file: any, messageType: string) {
+  static sendMediaMessage(
+    receiverId: string,
+    imageUrl: any,
+    messageType: string
+  ) {
+    let file = {
+      name: "mario",
+      extension: "png",
+      mimeType: "image/png",
+      url: imageUrl,
+    };
+
     const mediaMessage = new CometChat.MediaMessage(
       receiverId,
-      file,
+      "",
       messageType,
       CometChat.RECEIVER_TYPE.USER
     );
 
-    return CometChat.sendMediaMessage(mediaMessage).catch((err) => {
-      console.log("err", err);
-    });
+    let attachment = new CometChat.Attachment(file);
+
+    mediaMessage.setAttachment(attachment);
+
+    console.log("mediaMessage", mediaMessage);
+
+    return CometChat.sendMediaMessage(mediaMessage)
+      .then((res) => {
+        console.log("message sent successfully", res);
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
   }
 
   static sendTypingIndicator(receiverId: string) {
@@ -115,6 +136,10 @@ export class CometChatWrapper {
       new CometChat.MessageListener({
         onTextMessageReceived: (textMessage) => {
           callback(textMessage);
+        },
+
+        onMediaMessageReceived: (mediaMessage) => {
+          callback(mediaMessage);
         },
       })
     );
@@ -154,6 +179,26 @@ export class CometChatWrapper {
     };
   }
 
+  static transformMediaMessage(
+    recipientId: string,
+    message: CometChat.MediaMessage,
+    chatFor: "experts" | "counsellors"
+  ): IMessage {
+    const userId = message.getSender().getUid();
+    const createdAt = new Date(message.getSentAt() * 1000);
+
+    return {
+      _id: message.getId(),
+      image: message.getAttachment()?.url || "", // or any other relevant property
+      createdAt,
+      user: {
+        _id: userId,
+        name: message.getSender().getName(),
+        avatar: undefined, // Handle avatar as needed
+      },
+    };
+  }
+
   static async fetchMessages(
     recipientId: string,
     limit: number = 30,
@@ -179,8 +224,16 @@ export class CometChatWrapper {
         if (message instanceof CometChat.TextMessage) {
           const msg = this.transformMessage(recipientId, message, chatFor);
 
-          console.log("create", msg.createdAt);
           transformedMessages.push(msg);
+        } else if (message instanceof CometChat.MediaMessage) {
+          // Transform media messages similarly
+          const mediaMsg = this.transformMediaMessage(
+            recipientId,
+            message,
+            chatFor
+          );
+
+          transformedMessages.push(mediaMsg);
         }
       });
 
