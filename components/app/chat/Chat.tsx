@@ -65,7 +65,7 @@ const Chat: React.FC<Props> = (props) => {
         isLoadingEarlier ? lastMessageIdRef.current : undefined
       );
 
-      // console.log("f", fetchedMessages);
+      console.log("fetchedMessages", fetchedMessages);
 
       if (fetchedMessages.length > 0) {
         // Always update the lastMessageIdRef with the oldest message
@@ -107,6 +107,7 @@ const Chat: React.FC<Props> = (props) => {
   };
 
   const handleSend = (newMessages: IMessage[] = []) => {
+    console.log("handleSend");
     setMessages((previousMessages) =>
       GiftedChat.append(previousMessages, newMessages)
     );
