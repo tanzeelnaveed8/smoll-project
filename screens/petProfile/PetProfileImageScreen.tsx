@@ -17,12 +17,23 @@ const PetProfileImageScreen: React.FC<Props> = (props) => {
 
   const handleImageChange = (files: UploadedFile[], index: number) => {
     const updatedPhotos = [...props.pet.photos];
+    console.log("updatedPhotos", updatedPhotos, "index", index);
+    console.log("updatedPhotos[index]", updatedPhotos[index]);
     updatedPhotos[index] = files[0];
 
     setImages(updatedPhotos);
 
     props.setPet({ ...props.pet, photos: updatedPhotos });
   };
+
+  const handleUnselectFile = (index: number) => {
+    const updatedPhotos = [...props.pet.photos];
+    updatedPhotos[index] = undefined; // Set the photo at the specified index to undefined
+    setImages(updatedPhotos);
+    props.setPet({ ...props.pet, photos: updatedPhotos });
+  };
+
+  console.log("images", images);
 
   return (
     <Div>
@@ -35,6 +46,7 @@ const PetProfileImageScreen: React.FC<Props> = (props) => {
             key={index}
             uri={props.pet.photos[index]?.uri}
             isPrimary={index === 0}
+            onUnSelect={(e) => handleUnselectFile(index)}
             onChange={(files) => handleImageChange(files, index)}
           />
         ))}

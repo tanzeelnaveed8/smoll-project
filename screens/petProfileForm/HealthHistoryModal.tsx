@@ -73,6 +73,12 @@ const PetDetailsModal = (props: PropTypes) => {
     setForm(formCopy);
   };
 
+  const handleUnSelectDocument = () => {
+    const formCopy = { ...form };
+    formCopy.documents = [];
+    setForm(formCopy);
+  };
+
   const handleSubmit = async () => {
     try {
       setLoading(true);
@@ -177,6 +183,7 @@ const PetDetailsModal = (props: PropTypes) => {
               plusIcon={false}
               w={139}
               h={150}
+              onUnSelect={handleUnSelectDocument}
               onChange={(file) => {
                 handleFormChange("documents", file);
               }}

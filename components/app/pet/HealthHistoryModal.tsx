@@ -90,6 +90,12 @@ const HealthHistoryModal = (props: PropTypes) => {
     }
   };
 
+  const handleUnSelectDocument = () => {
+    const formCopy = { ...form };
+    formCopy.documents = [];
+    setForm(formCopy);
+  };
+
   const isDisabled = useMemo(() => {
     return (
       !form.name || !form.date || !form.description || !form.documents.length
@@ -190,6 +196,7 @@ const HealthHistoryModal = (props: PropTypes) => {
               plusIcon={false}
               w={139}
               h={150}
+              onUnSelect={handleUnSelectDocument}
               uri={form?.documents[0]?.url || ""}
               onChange={(file) => {
                 handleFormChange("documents", file);

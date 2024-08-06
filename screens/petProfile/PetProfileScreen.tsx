@@ -167,6 +167,14 @@ const PetProfileScreen: React.FC<Props> = (props) => {
             setPet={setPet}
           />
         )}
+
+        {/* {currentStep === 0 && (
+          <PetImageUploadScreen
+            navigation={props.navigation}
+            pet={pet}
+            setPet={setPet}
+          />
+        )} */}
       </ScrollDiv>
 
       <Div>

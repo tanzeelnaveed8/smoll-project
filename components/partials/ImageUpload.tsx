@@ -4,12 +4,13 @@ import {
   IconEditCircle,
   IconPlus,
   IconStarFilled,
+  IconX,
 } from "@tabler/icons-react-native";
 import { Button, Div, Text } from "react-native-magnus";
 import { colorPrimary, fontHauoraSemiBold } from "@/constant/constant";
 import { useFileStore } from "@/store/modules/file";
 import { UploadedFile } from "@/store/types/file";
-import { ActivityIndicator, TouchableOpacity } from "react-native";
+import { ActivityIndicator, StyleSheet, TouchableOpacity } from "react-native";
 
 interface Props {
   isPrimary?: boolean;
@@ -19,6 +20,8 @@ interface Props {
   w?: number;
   h?: number;
   editIcon?: boolean;
+  onUnSelect?: (e: string) => void;
+  hideUnselectBtn?: boolean;
 }
 
 const ImageUpload: React.FC<Props> = ({
@@ -29,11 +32,14 @@ const ImageUpload: React.FC<Props> = ({
   w = 102,
   h = 100,
   editIcon,
+  onUnSelect,
+  hideUnselectBtn,
 }) => {
   const { uploadFile } = useFileStore();
 
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState<null | string>(null);
+  const [uploadedFileUrl, setUploadedFileUrl] = useState<null | string>(null);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -57,6 +63,7 @@ const ImageUpload: React.FC<Props> = ({
     setLoading(true);
     const uploadedFile = await uploadFile([file]);
     setLoading(false);
+    setUploadedFileUrl(uploadedFile[0].url);
     if (onChange) {
       onChange(uploadedFile);
     }
@@ -66,6 +73,14 @@ const ImageUpload: React.FC<Props> = ({
     if (!uri) return;
     setImage(uri);
   }, [uri]);
+
+  const handleUnSelect = () => {
+    if (onUnSelect && uploadedFileUrl) {
+      onUnSelect(uploadedFileUrl);
+      setUploadedFileUrl(null);
+      setImage(null);
+    }
+  };
 
   return (
     <Div position="relative">
@@ -80,6 +95,19 @@ const ImageUpload: React.FC<Props> = ({
             alignItems="center"
             justifyContent="center"
           >
+            {!hideUnselectBtn && (
+              <Button
+                position="absolute"
+                zIndex={50}
+                top={2}
+                right={2}
+                p={2}
+                onPress={handleUnSelect}
+                bg="#00000061"
+              >
+                <IconX width={24} height={24} color={"#fff"} />
+              </Button>
+            )}
             {isPrimary && (
               <IconStarFilled
                 size={21}
