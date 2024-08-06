@@ -29,7 +29,6 @@ const ChatComposer: React.FC<Props> = (props) => {
 
   const handleOnSend = async (img?: { img: typeof image }) => {
     const sendProps = props as SendProps<IMessage>;
-    console.log("testinggg", img);
     const image = img?.img;
     if (sendProps.onSend && (text.trim().length > 0 || image)) {
       let file = null;
@@ -63,8 +62,6 @@ const ChatComposer: React.FC<Props> = (props) => {
         },
         image: file ? file.uri : undefined,
       };
-
-      console.log("newmEssage request", newMessage);
 
       sendProps.onSend([newMessage], true);
       setText("");

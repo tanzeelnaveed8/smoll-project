@@ -18,9 +18,13 @@ import { CaseStatusEnum, CreateCasePayloadDto } from "@/store/types/case.d";
 const NoPetOptions = ({
   navigation,
   setShowModal,
+  expertId,
+  consultationId,
 }: {
   navigation: NavigationType;
   setShowModal: (showModal: boolean) => void;
+  expertId: string;
+  consultationId: string;
 }) => {
   return (
     <Div pl={14} pt={14}>
@@ -34,6 +38,8 @@ const NoPetOptions = ({
           setTimeout(() => {
             navigation.navigate("PetProfileScreen", {
               from: "ConsultationCaseBriefScreen",
+              expertId,
+              consultationId,
             });
           });
         }}
@@ -219,11 +225,18 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
             label="Select Pet"
             options={petOptions}
             onSelect={(value) => {
-              textAreaRef?.current?.focus();
+              // textAreaRef?.current?.focus();
               setSelectedPet(value);
             }}
             selectedValue={selectedPet}
-            renderNoOptions={() => NoPetOptions({ navigation, setShowModal })}
+            renderNoOptions={() =>
+              NoPetOptions({
+                navigation,
+                setShowModal,
+                expertId,
+                consultationId,
+              })
+            }
             disableKeyboardDismissOnSelect
           />
         </Div>

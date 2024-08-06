@@ -15,6 +15,7 @@ import { getAxiosErrMsg } from "@/utils/helpers";
 import { AxiosError } from "axios";
 import {
   Keyboard,
+  Platform,
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from "react-native";
@@ -44,6 +45,23 @@ const OnboardingAuthModal: React.FC<Props> = (props) => {
   });
   const [phone, setPhone] = useState("");
   const [codes, setCodes] = useState<{ label: string; value: string }[]>([]);
+
+  const handlePhoneChange = (value: string) => {
+    // Remove any non-digit characters
+    let cleanedValue = value.replace(/\D/g, "");
+
+    // Remove country code if present and valid
+    if (country.value && country.value.length > 1) {
+      const codeWithoutPlus = country.value.slice(1); // Remove the '+' from the country code
+      const codeRegex = new RegExp(`^${codeWithoutPlus}`);
+      cleanedValue = cleanedValue.replace(codeRegex, "");
+    }
+
+    // Limit to 10 digits
+    cleanedValue = cleanedValue.slice(0, 10);
+
+    setPhone(cleanedValue);
+  };
 
   const handleGetOtp = async () => {
     try {
@@ -100,6 +118,8 @@ const OnboardingAuthModal: React.FC<Props> = (props) => {
               options={codes}
               onSelect={(val) => {
                 setCountry(val);
+                // Clear phone when country changes
+                setPhone("");
               }}
               onOpen={() => {
                 setIsSelectInputOpen(true);
@@ -125,12 +145,14 @@ const OnboardingAuthModal: React.FC<Props> = (props) => {
             />
 
             <InputField
-              onChangeText={setPhone}
-              placeholder="Enter Phone number"
+              onChangeText={handlePhoneChange}
+              placeholder={
+                country.value ? "Enter Phone number" : "Select a country first"
+              }
               marginBottom={32}
               borderColor="#222222"
-              keyboardType="number-pad"
-              disabled={isLoading}
+              keyboardType="phone-pad"
+              disabled={isLoading || !country.value}
               inputStyle={{
                 borderRadius: 12,
                 borderTopLeftRadius: 0,
@@ -139,7 +161,10 @@ const OnboardingAuthModal: React.FC<Props> = (props) => {
               }}
               value={phone}
               focus={isFocused}
-              maxLength={10}
+              maxLength={15}
+              textContentType={
+                Platform.OS === "ios" ? "telephoneNumber" : undefined
+              }
             />
 
             <ButtonPrimary

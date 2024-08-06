@@ -323,6 +323,9 @@ const App = () => {
                 <Stack.Screen
                   name="ExpertsScheduleSuccessScreen"
                   component={ExpertsScheduleSuccessScreen}
+                  options={{
+                    gestureEnabled: false,
+                  }}
                 />
 
                 <Stack.Screen

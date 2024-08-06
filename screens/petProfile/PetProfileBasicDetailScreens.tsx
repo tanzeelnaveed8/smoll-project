@@ -2,6 +2,7 @@ import InputField from "@/components/partials/InputField";
 import TextAreaField from "@/components/partials/TextAreaField";
 import { PetPayloadDto } from "@/store/types/pet";
 import React, { useRef, useState } from "react";
+import { Keyboard } from "react-native";
 import { Div, Text } from "react-native-magnus";
 
 interface Props {
@@ -16,15 +17,27 @@ const PetProfileBasicDetailScreens: React.FC<Props> = (props) => {
   const [chipNumber, setChipNumber] = useState(
     props.pet.chipNumber ? props.pet.chipNumber.toString() : ""
   );
-
-  const chipNumberRef = useRef<any>(null);
-  const preExistingConditionRef = useRef<any>(null);
+  const [age, setAge] = useState(
+    props.pet.age > 0 ? props.pet.age.toString() : ""
+  );
 
   return (
     <Div>
       <Text fontSize={"4xl"} mb={20}>
         Almost done! We need basic pet details.
       </Text>
+
+      <InputField
+        value={age}
+        onChangeText={(text) => {
+          setAge(text);
+          props.setPet({ ...props.pet, age: parseInt(text) });
+        }}
+        placeholder="Age (Years)"
+        marginBottom={20}
+        inputStyle={{ borderRadius: 12 }}
+        keyboardType="number-pad"
+      />
 
       <InputField
         value={weight}
@@ -36,13 +49,9 @@ const PetProfileBasicDetailScreens: React.FC<Props> = (props) => {
         marginBottom={20}
         inputStyle={{ borderRadius: 12 }}
         keyboardType="numeric"
-        onSubmitEditing={() => {
-          console.log("weight submitted");
-          chipNumberRef.current.focus();
-        }}
       />
+
       <InputField
-        ref={chipNumberRef}
         value={chipNumber}
         onChangeText={(text) => {
           setChipNumber(text);
@@ -52,13 +61,9 @@ const PetProfileBasicDetailScreens: React.FC<Props> = (props) => {
         marginBottom={20}
         inputStyle={{ borderRadius: 12 }}
         keyboardType="numeric"
-        onSubmitEditing={() => {
-          preExistingConditionRef?.current?.focus();
-        }}
       />
 
       <TextAreaField
-        ref={preExistingConditionRef}
         placeholder="Any pre-existing conditions (Optional)"
         mb={30}
       />

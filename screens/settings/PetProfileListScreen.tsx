@@ -25,19 +25,17 @@ const PetProfileListScreen: React.FC<{ navigation: NavigationType }> = ({
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        if (!pets) {
-          await fetchPets();
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchData();
   }, []);
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      await fetchPets();
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Layout
