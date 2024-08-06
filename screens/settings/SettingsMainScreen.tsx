@@ -1,7 +1,7 @@
 import React, { ReactElement } from "react";
-import { StyleSheet } from "react-native";
-import { Div, Text, ScrollDiv } from "react-native-magnus";
-import { fontHauora } from "@/constant/constant";
+import { StyleSheet, TouchableOpacity } from "react-native";
+import { Div, Text, ScrollDiv, Button } from "react-native-magnus";
+import { fontHauora, fontHauoraSemiBold } from "@/constant/constant";
 import SettingButton from "@/components/partials/SettingButton";
 import {
   IconUserCircle,
@@ -18,6 +18,7 @@ import {
 import Container from "@/components/partials/Container";
 import Layout from "@/components/app/Layout";
 import { NavigationType } from "@/store/types";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface OptionType {
   id: number;
@@ -109,6 +110,11 @@ const options: GroupType[] = [
 const SettingsMainScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
+  const handleLogout = async () => {
+    await AsyncStorage.setItem("accessToken", "");
+    navigation.navigate("OnboardingScreen");
+  };
+
   return (
     <Layout showBack onBackPress={() => navigation.goBack()} title="Settings">
       <ScrollDiv showsVerticalScrollIndicator={false}>
@@ -144,16 +150,29 @@ const SettingsMainScreen: React.FC<{ navigation: NavigationType }> = ({
         ))}
 
         <Div mt="auto" mb={20}>
-          <Text
-            fontWeight="400"
-            fontSize={18}
-            fontFamily={fontHauora}
-            lineHeight={24}
+          <TouchableOpacity onPress={handleLogout} style={{ marginBottom: 10 }}>
+            <Text
+              fontWeight="400"
+              fontSize={18}
+              fontFamily={fontHauora}
+              lineHeight={24}
+              color="#0189F9"
+            >
+              Logout
+            </Text>
+          </TouchableOpacity>
+
+          {/* <Button
+            color="#427594"
+            fontSize={"xl"}
+            fontFamily={fontHauoraSemiBold}
+            bg="transparent"
+            p={0}
             mb={8}
-            color="#0189F9"
           >
             Logout
-          </Text>
+          </Button> */}
+
           <Text
             fontWeight="400"
             fontSize={18}

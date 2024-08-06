@@ -2,6 +2,7 @@ import Layout from "@/components/app/Layout";
 import OnboardingAuthModal from "@/components/app/onboarding/OnboardingAuthModal";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import { fontHauora } from "@/constant/constant";
+import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useRef, useState } from "react";
@@ -21,16 +22,6 @@ const OnboardingCard: React.FC<{
   text: string;
 }> = ({ img, heading, text }) => {
   // const [cookies, setCookie] = useCookies(['accessToken']);
-
-  useEffect(() => {
-    const getStoredToken = async () => {
-      const storedToken = await AsyncStorage.getItem("accessToken");
-      if (storedToken) {
-      }
-    };
-
-    getStoredToken();
-  }, []);
 
   return (
     <View style={{ maxWidth: "100%", width: "100%" }}>

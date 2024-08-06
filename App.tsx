@@ -62,6 +62,7 @@ import NotificationTestScreen from "./screens/NotificationTestScreen";
 import { useExpertStore } from "./store/modules/expert";
 import * as rootNavigation from "./utils/root-navigation";
 import { navigationRef } from "./utils/root-navigation";
+import SplashScreen from "./screens/SplashScreen";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -218,11 +219,12 @@ const App = () => {
           >
             <SocketProvider>
               <Stack.Navigator
-                initialRouteName="OnboardingScreen"
+                initialRouteName="SplashScreen"
                 screenOptions={{
                   headerShown: false,
                 }}
               >
+                <Stack.Screen name="SplashScreen" component={SplashScreen} />
                 <Stack.Screen
                   name="OnboardingScreen"
                   component={OnboardingScreen}
