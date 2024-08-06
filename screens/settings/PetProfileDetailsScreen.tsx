@@ -182,6 +182,7 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                   w={93}
                   editIcon
                   uri={profileImg}
+                  hideUnselectBtn
                   onChange={handleUpdateImage}
                 />
               </Div>

@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { Platform } from "react-native";
 import { showMessage } from "react-native-flash-message";
@@ -12,8 +13,14 @@ const api = axios.create({
 });
 
 api.interceptors.request.use(
-  (config) => {
+  async (config) => {
     // console.log(config.data, config.baseURL, config.url);
+
+    const storedToken = await AsyncStorage.getItem("accessToken"); // Retrieve the token
+    if (storedToken) {
+      config.headers.Authorization = `Bearer ${storedToken}`; // Set the Authorization header
+    }
+
     return config;
   },
   (error) => {

@@ -141,6 +141,13 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
     setDocuments([...documents, ...file]);
   };
 
+  console.log("Documents==", documents);
+
+  const handleUnSelectImage = (url: string) => {
+    const newDocuments = documents.filter((doc) => doc.url !== url);
+    setDocuments(newDocuments);
+  };
+
   const handleCreateCase = async () => {
     const isScheduled = scheduleAt ? true : false;
 
@@ -274,6 +281,7 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
           plusIcon={false}
           w={139}
           h={150}
+          onUnSelect={handleUnSelectImage}
           onChange={(file) => {
             handleImage(file);
           }}
