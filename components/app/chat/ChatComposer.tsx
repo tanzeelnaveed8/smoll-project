@@ -34,6 +34,18 @@ const ChatComposer: React.FC<Props> = (props) => {
       let file = null;
 
       if (image?.assets) {
+        const tempMessage: IMessage = {
+          _id: Math.random().toString(36).substring(7),
+          text: text,
+          createdAt: new Date(),
+          user: {
+            _id: 1,
+          },
+          image: image?.assets[0].uri, // Show the image immediately
+        };
+
+        sendProps.onSend([tempMessage], true); // Send the temporary message
+
         const fileObj = {
           uri: image.assets[0].uri,
           name: image.assets[0].fileName,
@@ -63,7 +75,6 @@ const ChatComposer: React.FC<Props> = (props) => {
         image: file ? file.uri : undefined,
       };
 
-      sendProps.onSend([newMessage], true);
       setText("");
       setImage(null);
     }

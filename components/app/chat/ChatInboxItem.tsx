@@ -20,7 +20,7 @@ const ChatInboxItem: React.FC<Props> = (props) => {
         p={0}
         flexDir={"row"}
         alignItems="center"
-        pb={20}
+        py={15}
         style={{ gap: 24 }}
         pointerEvents="none"
       >
