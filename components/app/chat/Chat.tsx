@@ -145,7 +145,8 @@ const Chat: React.FC<Props> = (props) => {
   };
 
   const handleSend = (newMessages: IMessage[] = []) => {
-    console.log("handleSend");
+    console.log("handleSend newMEssages", newMessages);
+
     setMessages((previousMessages) =>
       GiftedChat.append(previousMessages, newMessages)
     );

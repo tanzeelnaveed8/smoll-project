@@ -57,7 +57,7 @@ const ExpertsInboxScreen: React.FC<Props> = (props) => {
     >
       <Div mb={24}>
         <Text fontSize={"xl"} fontWeight="bold" fontFamily={fontHauoraSemiBold}>
-          All Messages
+          All Experts
         </Text>
       </Div>
       <Div flex={1}>
