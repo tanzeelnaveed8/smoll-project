@@ -8,6 +8,7 @@ export const useUserStore = create<UserState>((set, get) => ({
   /** Mutations */
   UPDATE_PET_COUNT: (increment: number = 1) => {
     const user = get().user;
+
     if (user) {
       set({
         user: {
@@ -19,8 +20,8 @@ export const useUserStore = create<UserState>((set, get) => ({
   },
 
   /** Actions */
-  async findUser() {
-    const res = await api.get("/members/me");
+  async findUser(skipErr) {
+    const res = await api.get("/members/me" + (skipErr ? "?skiperr" : ""));
 
     set(() => ({
       user: res.data,

@@ -31,8 +31,7 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    console.log("err", error, error.response);
-
+    // Check if the request path is "/members/me?skiperrr"
     const message = error.response?.data?.message;
     let msgStr = message;
 
@@ -40,11 +39,13 @@ api.interceptors.response.use(
       msgStr = message[0];
     }
 
-    if (msgStr) {
-      showMessage({
-        message: msgStr,
-        type: "danger",
-      });
+    if (!error.config.url.includes("skiperr")) {
+      if (msgStr) {
+        showMessage({
+          message: msgStr,
+          type: "danger",
+        });
+      }
     }
 
     throw error;
