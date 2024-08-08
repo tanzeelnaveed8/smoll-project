@@ -63,6 +63,7 @@ import { useExpertStore } from "./store/modules/expert";
 import * as rootNavigation from "./utils/root-navigation";
 import { navigationRef } from "./utils/root-navigation";
 import SplashScreen from "./screens/SplashScreen";
+import ClinicProposalScreen from "./screens/bookingForm/ClinicProposalScreen";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -254,7 +255,6 @@ const App = () => {
                   name="NotificationTestScreen"
                   component={NotificationTestScreen}
                 />
-
                 <Stack.Screen
                   name="PetProfileScreen"
                   component={PetProfileScreen}
@@ -326,18 +326,21 @@ const App = () => {
                   name="ExpertsScheduleSuccessScreen"
                   component={ExpertsScheduleSuccessScreen}
                 />
-
                 <Stack.Screen
                   name="CaseDetailScreen"
                   component={CaseDetailScreen}
                 />
-
                 {/*  */}
                 <Stack.Screen
                   // name="PartnerClinic"
                   name="CasesListScreen"
                   component={CasesListScreen}
                 />
+                <Stack.Screen
+                  name="ClinicProposalScreen"
+                  component={ClinicProposalScreen}
+                />
+
                 <Stack.Screen
                   name="CasesRequestScreen"
                   component={CasesRequestScreen}
