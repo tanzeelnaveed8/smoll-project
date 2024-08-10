@@ -218,7 +218,6 @@ export class CometChatWrapper {
 
     return messagesRequest.fetchPrevious().then((messages) => {
       let transformedMessages: IMessage[] = [];
-      console.log("messages ==", messages);
 
       messages.forEach((message) => {
         if (message instanceof CometChat.TextMessage) {

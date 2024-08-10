@@ -1,11 +1,12 @@
 import IconButton from "@/components/partials/IconButton";
-import { colorTextPrimary } from "@/constant/constant";
+import { colorPrimary, colorTextPrimary } from "@/constant/constant";
 import { useFileStore } from "@/store/modules/file";
 import { CometChatWrapper } from "@/utils/chat";
 import { CometChat } from "@cometchat/chat-sdk-react-native";
 import { IconPaperclip, IconSend } from "@tabler/icons-react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useRef, useState } from "react";
+import { ActivityIndicator } from "react-native";
 import {
   IMessage,
   InputToolbar,
@@ -26,6 +27,7 @@ const ChatComposer: React.FC<Props> = (props) => {
   const [image, setImage] = useState<ImagePicker.ImagePickerResult | null>(
     null
   );
+  const [isSending, setIsSending] = useState(false);
 
   const handleOnSend = async (img?: { img: typeof image }) => {
     const sendProps = props as SendProps<IMessage>;
@@ -34,24 +36,13 @@ const ChatComposer: React.FC<Props> = (props) => {
       let file = null;
 
       if (image?.assets) {
-        const tempMessage: IMessage = {
-          _id: Math.random().toString(36).substring(7),
-          text: text,
-          createdAt: new Date(),
-          user: {
-            _id: 1,
-          },
-          image: image?.assets[0].uri, // Show the image immediately
-        };
-
-        sendProps.onSend([tempMessage], true); // Send the temporary message
-
         const fileObj = {
           uri: image.assets[0].uri,
           name: image.assets[0].fileName,
           type: image.assets[0].mimeType,
         } as unknown as File;
 
+        setIsSending(true);
         const uploadedFile = await uploadFile([fileObj]);
 
         const fileUri = image.assets[0].uri;
@@ -61,6 +52,7 @@ const ChatComposer: React.FC<Props> = (props) => {
           uri: uploadedFile[0].url,
           size: image.assets[0].fileSize ?? 0,
         };
+        setIsSending(false);
       }
 
       console.log("file", file);
@@ -74,6 +66,8 @@ const ChatComposer: React.FC<Props> = (props) => {
         },
         image: file ? file.uri : undefined,
       };
+
+      sendProps.onSend([newMessage], true);
 
       setText("");
       setImage(null);
@@ -174,16 +168,21 @@ const ChatComposer: React.FC<Props> = (props) => {
                   h={40}
                   w={40}
                   rounded={100}
+                  disabled={isSending}
                   disableUnderlayColor={true}
                   onPress={handleOnSend}
                 >
-                  <IconSend
-                    style={{
-                      transform: [{ rotate: "45deg" }],
-                      left: -1.5,
-                    }}
-                    color="#fff"
-                  />
+                  {isSending ? (
+                    <ActivityIndicator size="small" color={"#fff"} />
+                  ) : (
+                    <IconSend
+                      style={{
+                        transform: [{ rotate: "45deg" }],
+                        left: -1.5,
+                      }}
+                      color="#fff"
+                    />
+                  )}
                 </IconButton>
               </Div>
             </Div>
