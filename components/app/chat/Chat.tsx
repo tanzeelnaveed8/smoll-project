@@ -43,6 +43,9 @@ const Chat: React.FC<Props> = (props) => {
     CometChatWrapper.addListener("chat", (message) => {
       if (receiving) return;
 
+      if (message.getSender().getUid() !== props.recipientId.toLowerCase())
+        return;
+
       play("message");
 
       receiving = true;
