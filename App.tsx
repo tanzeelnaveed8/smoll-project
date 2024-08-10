@@ -64,6 +64,8 @@ import * as rootNavigation from "./utils/root-navigation";
 import { navigationRef } from "./utils/root-navigation";
 import SplashScreen from "./screens/SplashScreen";
 import ClinicProposalScreen from "./screens/bookingForm/ClinicProposalScreen";
+import AppointmentsScreen from "./screens/Appointments/AppointmentsScreen";
+import AppointmentDetailsScreen from "./screens/Appointments/AppointmentDetailsScreen";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -340,7 +342,6 @@ const App = () => {
                   name="ClinicProposalScreen"
                   component={ClinicProposalScreen}
                 />
-
                 <Stack.Screen
                   name="CasesRequestScreen"
                   component={CasesRequestScreen}
@@ -396,6 +397,16 @@ const App = () => {
                   name="SettingsMainScreen"
                   component={SettingsMainScreen}
                 />
+                {/* Appointments Screens */}
+                <Stack.Screen
+                  name="AppointmentsScreen"
+                  component={AppointmentsScreen}
+                />
+                <Stack.Screen
+                  name="AppointmentDetailsScreen"
+                  component={AppointmentDetailsScreen}
+                />
+
                 {/* <Stack.Screen name="Membership" component={MembershipScreen} />
           
 
