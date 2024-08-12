@@ -48,6 +48,8 @@ api.interceptors.response.use(
       }
     }
 
+    console.log(error);
+
     throw error;
   }
 );

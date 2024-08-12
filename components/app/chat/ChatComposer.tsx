@@ -14,6 +14,7 @@ import {
   SendProps,
 } from "react-native-gifted-chat";
 import { Div, Input } from "react-native-magnus";
+import { showMessage } from "react-native-flash-message";
 
 interface Props extends InputToolbarProps<IMessage> {
   loggedInUser: CometChat.User;
@@ -36,22 +37,47 @@ const ChatComposer: React.FC<Props> = (props) => {
       let file = null;
 
       if (image?.assets) {
+        const fileUri = image.assets[0].uri;
+        const fileSize = image.assets[0].fileSize ?? 0;
+        const fileType = image.assets[0].type ?? "image";
+
+        // Check file size
+        const isImage = fileType.startsWith("image");
+        const isVideo = fileType.startsWith("video");
+        const maxSize = isImage
+          ? 10 * 1024 * 1024
+          : isVideo
+          ? 100 * 1024 * 1024
+          : 0;
+
+        if (fileSize > maxSize) {
+          showMessage({
+            message: "File size exceeded",
+            description: `${
+              isImage ? "Image" : "Video"
+            } file size should be less than ${maxSize / (1024 * 1024)}MB`,
+            type: "danger",
+          });
+          return;
+        }
+
         const fileObj = {
-          uri: image.assets[0].uri,
-          name: image.assets[0].fileName,
-          type: image.assets[0].mimeType,
+          uri: fileUri,
+          name: fileUri.split("/").pop() ?? "",
+          type: fileType,
         } as unknown as File;
 
         setIsSending(true);
+
         const uploadedFile = await uploadFile([fileObj]);
 
-        const fileUri = image.assets[0].uri;
         file = {
           name: fileUri.split("/").pop() ?? "",
-          type: image.assets[0].type ?? "image",
+          type: fileType,
           uri: uploadedFile[0].url,
-          size: image.assets[0].fileSize ?? 0,
+          size: fileSize,
         };
+
         setIsSending(false);
       }
 
