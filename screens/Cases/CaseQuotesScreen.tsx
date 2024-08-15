@@ -4,49 +4,67 @@ import {
   fontHauoraMedium,
   fontHauoraSemiBold,
 } from "@/constant/constant";
+import { useCaseStore } from "@/store/modules/case";
 // import { useCaseStore } from "@/store/modules/case";
 // import { useCasesStore } from "@/store/modules/case";
 import { NavigationType } from "@/store/types";
-import React, { useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, TouchableOpacity } from "react-native";
+import { CaseQuotesDto } from "@/store/types/case";
+import { useRoute } from "@react-navigation/native";
+import React, { useEffect, useMemo, useState } from "react";
+import {
+  ActivityIndicator,
+  FlatList,
+  RefreshControl,
+  TouchableOpacity,
+} from "react-native";
 import { Div, Text } from "react-native-magnus";
 
-const requestList = [
-  {
-    title: "Harmony Vet Clinic",
-    id: "94AED",
-    rating: 4,
-    address: "Arjan - Dubailand, Dubai",
-  },
-  {
-    title: "Modern Vet Downtown",
-    id: "120AED",
-    rating: 3,
-    address: "Downtown,Dubai",
-  },
-];
-
-const CasesRequestScreen: React.FC<{ navigation: NavigationType }> = ({
+const CaseQuotesScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
+  const route = useRoute();
+  const caseId = (route.params as Record<string, string>)?.id;
+
+  const { fetchCaseQuotes, casesQuotes } = useCaseStore();
+
   const [isLoading, setIsLoading] = useState(false);
-  // const { caseRequests, fetchCaseRequests } = useCaseStore();
+  const [isRefreshing, setRefresh] = useState(false);
+
+  const caseQuotes = useMemo(
+    () => casesQuotes.get(caseId),
+    [caseId, casesQuotes]
+  );
 
   useEffect(() => {
     handleFetchRequests();
   }, []);
 
-  const handleFetchRequests = async () => {
-    try {
-      setIsLoading(true);
+  const getMinQuote = (caseQuotes: CaseQuotesDto) => {
+    const q = caseQuotes.services.reduce((total, curr) => {
+      return total + curr.price;
+    }, 0);
 
-      // if (!caseRequests || caseRequests?.length === 0) {
-      //   await fetchCaseRequests();
-      // }
+    return q;
+  };
+
+  const handleFetchRequests = async (isRefreshing?: boolean) => {
+    const caseQuotes = casesQuotes.get(caseId);
+
+    if (caseQuotes?.length && !isRefreshing) {
+      return;
+    }
+
+    try {
+      if (isRefreshing) {
+        setRefresh(true);
+      } else {
+        setIsLoading(true);
+      }
+
+      await fetchCaseQuotes(caseId);
     } finally {
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 1000);
+      setIsLoading(false);
+      setRefresh(false);
     }
   };
 
@@ -64,7 +82,16 @@ const CasesRequestScreen: React.FC<{ navigation: NavigationType }> = ({
 
         {!isLoading && (
           <FlatList
-            data={requestList}
+            data={caseQuotes}
+            ListEmptyComponent={() => {
+              return <Text>No quotes yet. :(</Text>;
+            }}
+            refreshControl={
+              <RefreshControl
+                refreshing={isRefreshing}
+                onRefresh={handleFetchRequests}
+              />
+            }
             renderItem={({ item }) => (
               <Div pb={16} borderBottomWidth={1} borderColor="#D0D7DC" mb={12}>
                 <TouchableOpacity
@@ -73,19 +100,22 @@ const CasesRequestScreen: React.FC<{ navigation: NavigationType }> = ({
                     justifyContent: "space-between",
                   }}
                   onPress={() => {
-                    navigation.navigate("PartnerVetScreen");
+                    navigation.navigate("CaseQuoteDescriptionScreen", {
+                      id: item.partner.id,
+                      caseId,
+                    });
                   }}
                 >
-                  <Div>
+                  <Div maxW="60%">
                     <Text
                       fontSize={"xl"}
                       fontFamily={fontHauoraSemiBold}
                       mb={6}
                     >
-                      {item.title}
+                      {item.partner.name}
                     </Text>
 
-                    <Div mb={6}>
+                    {/* <Div mb={6}>
                       <Text
                         fontSize={"md"}
                         color="darkGreyText"
@@ -93,13 +123,13 @@ const CasesRequestScreen: React.FC<{ navigation: NavigationType }> = ({
                       >
                         {item.rating}/5 Rating
                       </Text>
-                    </Div>
+                    </Div> */}
                     <Text
                       fontSize={"md"}
                       color="darkGreyText"
                       fontFamily={fontHauoraSemiBold}
                     >
-                      {item.address}
+                      {item.partner.address}
                     </Text>
                   </Div>
 
@@ -109,7 +139,7 @@ const CasesRequestScreen: React.FC<{ navigation: NavigationType }> = ({
                       fontFamily={fontHauoraSemiBold}
                       color="primary"
                     >
-                      ~{item.id}
+                      ~{getMinQuote(item)}
                     </Text>
                     <Text
                       fontSize={"md"}
@@ -136,4 +166,4 @@ const CasesRequestScreen: React.FC<{ navigation: NavigationType }> = ({
   );
 };
 
-export default CasesRequestScreen;
+export default CaseQuotesScreen;

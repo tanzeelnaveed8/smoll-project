@@ -43,6 +43,8 @@ const Chat: React.FC<Props> = (props) => {
     CometChatWrapper.addListener("chat", (message) => {
       if (receiving) return;
 
+      console.log("message", message, message.getSender());
+
       if (message.getSender().getUid() !== props.recipientId.toLowerCase())
         return;
 
@@ -148,8 +150,6 @@ const Chat: React.FC<Props> = (props) => {
   };
 
   const handleSend = (newMessages: IMessage[] = []) => {
-    console.log("handleSend newMEssages", newMessages);
-
     setMessages((previousMessages) =>
       GiftedChat.append(previousMessages, newMessages)
     );

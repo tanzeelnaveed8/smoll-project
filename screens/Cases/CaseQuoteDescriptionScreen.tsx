@@ -2,28 +2,63 @@ import Layout from "@/components/app/Layout";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import StarRating from "@/components/partials/StarRating";
 import { fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
+import { useCaseStore } from "@/store/modules/case";
 import { NavigationType } from "@/store/types";
-import React, { useEffect, useState } from "react";
-import { Div, Image, Text } from "react-native-magnus";
+import { useRoute } from "@react-navigation/native";
+import React, { useEffect, useMemo, useState } from "react";
+import { FlatList } from "react-native";
+import { Div, Image, ScrollDiv, Tag, Text } from "react-native-magnus";
 
-const ClinicProposalScreen: React.FC<{ navigation: NavigationType }> = ({
+const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
+  const route = useRoute();
+  const { casesQuotes } = useCaseStore();
+
+  const id = (route.params as Record<string, string>)?.id;
+  const caseId = (route.params as Record<string, string>)?.caseId;
+
+  const caseQuote = casesQuotes.get(caseId);
+
+  const clinicQuote = useMemo(() => {
+    return caseQuote?.find((q) => q.partner.id === id);
+  }, [caseQuote]);
+
+  const cost = useMemo(() => {
+    let min = 0;
+    let max = 0;
+
+    clinicQuote?.services.forEach((s) => {
+      if (s.label === "Essential") {
+        min += s.price;
+      }
+
+      max += s.price;
+    });
+
+    if (min === 0) {
+      min = max;
+    }
+
+    return { min, max };
+  }, [clinicQuote]);
+
   return (
     <Layout
       showBack
       backBtnText=""
-      title="Clinic"
+      title={clinicQuote?.partner?.name}
       onBackPress={() => {
         navigation.goBack();
       }}
     >
-      <Div pt={16} flex={1}>
-        <ClincCard
-          clinkcName="Harmony Vet Clinic"
-          min={120}
-          max={645}
-          rating={4}
+      <ScrollDiv flex={1}>
+        <ClinicCard
+          name={clinicQuote?.partner?.name ?? ""}
+          min={cost.min}
+          max={cost.max}
+          address={clinicQuote?.partner?.address ?? ""}
+          img={clinicQuote?.partner?.clinicImg?.url ?? ""}
         />
 
         <Text
@@ -36,63 +71,63 @@ const ClinicProposalScreen: React.FC<{ navigation: NavigationType }> = ({
         </Text>
 
         <Div>
-          <ProposalDetailCard
-            servicesName="Pet Emergency care"
-            type="Essential"
-            price={120}
-            description="Immediate access to vets for urgent consultations, ensuring your pet's health and safety anytime."
-          />
-          <ProposalDetailCard
-            servicesName="Blood sampling"
-            type="Recommended"
-            price={425}
-            description="Schedule and manage blood sample collection for your pet with ease and accuracy through our app."
-          />
-          <ProposalDetailCard
-            servicesName="Trio Test"
-            type="Continget"
-            price={120}
-            description="Comprehensive health screening for your pet, including blood, urine, and stool analysis, all managed through our app."
-            isLastChild
-          />
+          {clinicQuote?.services.map((item) => (
+            <Div mb={16}>
+              <ProposalDetailCard
+                key={item.id}
+                servicesName={item.name}
+                type={item.label}
+                price={item.price}
+                description={item.description}
+              />
+            </Div>
+          ))}
         </Div>
-      </Div>
+      </ScrollDiv>
 
       <ButtonPrimary bgColor="primary">Next</ButtonPrimary>
     </Layout>
   );
 };
 
-export default ClinicProposalScreen;
+export default CaseQuoteDescriptionScreen;
 
-const ClincCard: React.FC<{
-  clinkcName: string;
-  rating: number;
+const ClinicCard: React.FC<{
+  name: string;
+  img: string;
+  address: string;
+  // rating: number;
   min: number;
   max: number;
-}> = ({ clinkcName, min, max, rating }) => {
+}> = ({ name, img, address, min, max }) => {
   return (
     <Div pb={16} borderBottomWidth={1} borderBottomColor="#D0D7DC" mb={20}>
       <Div mb={16} flexDir="row" alignItems="center">
         <Image
-          source={require("../../assets/images/doctor-img.png")}
-          w={54}
-          h={54}
+          source={
+            img ? { uri: img } : require("../../assets/images/doctor-img.png")
+          }
+          w={64}
+          h={64}
           rounded={100}
           mr={8}
         />
         <Div>
           <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold} mb={6}>
-            {clinkcName}
+            {name}
           </Text>
-          <Div flexDir="row" alignItems="center" style={{ gap: 8 }}>
-            <StarRating size={11} defaultRating={4} columnGap={6} />
+          <Div
+            flexDir="row"
+            alignItems="center"
+            style={{ gap: 8, maxWidth: 300 }}
+          >
+            {/* <StarRating size={11} defaultRating={4} columnGap={6} /> */}
             <Text
               fontSize={"lg"}
               fontFamily={fontHauoraMedium}
               color="darkGreyText"
             >
-              {rating}/5 Rating
+              {address}
             </Text>
           </Div>
         </Div>
@@ -125,7 +160,7 @@ const ClincCard: React.FC<{
               color="primary"
               lineHeight={24}
             >
-              ~{min}AED
+              {min} AED
             </Text>
           </Div>
 
@@ -144,7 +179,7 @@ const ClincCard: React.FC<{
               color="primary"
               lineHeight={24}
             >
-              ~{max}AED
+              {max} AED
             </Text>
           </Div>
         </Div>
@@ -156,10 +191,9 @@ const ClincCard: React.FC<{
 const ProposalDetailCard: React.FC<{
   servicesName: string;
   price: number;
-  type: "Essential" | "Recommended" | "Continget";
+  type: string;
   description: string;
-  isLastChild?: boolean;
-}> = ({ servicesName, type, price, description, isLastChild }) => {
+}> = ({ servicesName, type, price, description }) => {
   const [typeStyles, setTypeStyles] = useState({
     bg: "#E7F3F7",
     color: "#222",
@@ -176,30 +210,29 @@ const ProposalDetailCard: React.FC<{
   }, [type]);
 
   return (
-    <Div
-      pb={16}
-      borderBottomWidth={1}
-      borderColor={isLastChild ? "transparent" : "#D0D7DC"}
-      mb={isLastChild ? 0 : 16}
-    >
+    <Div pb={16} borderBottomWidth={1} borderColor="#D0D7DC">
       <Div flexDir="row" alignItems="center" mb={8}>
-        <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold} mr={4}>
-          {servicesName}
-        </Text>
-
-        <Text
-          fontSize={12}
-          fontFamily={fontHauoraSemiBold}
-          px={8}
-          py={2}
-          rounded={38}
-          bg={typeStyles.bg}
-          color={typeStyles.color}
-          lineHeight={20}
-          mt={2}
+        <Div
+          flexDir="row"
+          flexWrap="wrap"
+          alignItems="center"
+          style={{ gap: 4 }}
         >
-          {type}
-        </Text>
+          <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold} mr={4}>
+            {servicesName}
+          </Text>
+
+          <Tag bg={typeStyles.bg} rounded={40}>
+            <Text
+              fontSize={12}
+              fontFamily={fontHauoraSemiBold}
+              color={typeStyles.color}
+              mt={2}
+            >
+              {type}
+            </Text>
+          </Tag>
+        </Div>
 
         <Text
           fontSize={"xl"}

@@ -77,6 +77,9 @@ const PetProfileScreen: React.FC<Props> = (props) => {
 
   const handleNext = async () => {
     const comingFrom = (route.params as Record<string, string>)?.from;
+    const expertId = (route.params as Record<string, string>)?.expertId;
+    const consultationId = (route.params as Record<string, string>)
+      ?.consultationId;
 
     if (currentStep === 7) {
       try {
@@ -91,6 +94,8 @@ const PetProfileScreen: React.FC<Props> = (props) => {
           petId: id ?? "",
           petName: pet.name,
           petBg: pet.photos[0].url,
+          expertId,
+          consultationId,
         });
 
         toast.show("Pet profile created successfully");

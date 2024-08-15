@@ -1,6 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-import { Platform } from "react-native";
 import { showMessage } from "react-native-flash-message";
 
 const api = axios.create({
@@ -14,11 +13,9 @@ const api = axios.create({
 
 api.interceptors.request.use(
   async (config) => {
-    // console.log(config.data, config.baseURL, config.url);
-
-    const storedToken = await AsyncStorage.getItem("accessToken"); // Retrieve the token
+    const storedToken = await AsyncStorage.getItem("accessToken");
     if (storedToken) {
-      config.headers.Authorization = `Bearer ${storedToken}`; // Set the Authorization header
+      config.headers.Authorization = `Bearer ${storedToken}`;
     }
 
     return config;
@@ -31,8 +28,7 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    console.log("err", error, error.response);
-
+    // Check if the request path is "/members/me?skiperrr"
     const message = error.response?.data?.message;
     let msgStr = message;
 
@@ -40,12 +36,16 @@ api.interceptors.response.use(
       msgStr = message[0];
     }
 
-    if (msgStr) {
-      showMessage({
-        message: msgStr,
-        type: "danger",
-      });
+    if (!error.config.url.includes("skiperr")) {
+      if (msgStr) {
+        showMessage({
+          message: msgStr,
+          type: "danger",
+        });
+      }
     }
+
+    console.log(error);
 
     throw error;
   }

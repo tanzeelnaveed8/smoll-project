@@ -13,12 +13,12 @@
 		17C9F5402C58234F000F7B2D /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C9F53F2C58234F000F7B2D /* NotificationService.swift */; };
 		17C9F5442C58234F000F7B2D /* OneSignalNotificationServiceExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 17C9F53D2C58234F000F7B2D /* OneSignalNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
+		4B409558CFEC6F7030CC55BB /* libPods-smollapp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E68B4BC9E8EC43016145DA98 /* libPods-smollapp.a */; };
 		4E9E23782ED49544D335A63B /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 1761A61DB445CB13E6D1D1B3 /* PrivacyInfo.xcprivacy */; };
-		7186CB4C98DF2E9EBE9C883C /* libPods-smollapp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2490CC207E9D5996B16EB108 /* libPods-smollapp.a */; };
 		928BFEC53A074A1B827DFFB6 /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FB24562E8CB47688B6B46FA /* noop-file.swift */; };
-		9FA2E1CD448210F51BE2B548 /* libPods-OneSignalNotificationServiceExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B889D97A7B6F53442C42F0C7 /* libPods-OneSignalNotificationServiceExtension.a */; };
 		B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
+		FD39A498C0FA47ADC0FC715E /* libPods-OneSignalNotificationServiceExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DAD8E037F22C12D506C55C93 /* libPods-OneSignalNotificationServiceExtension.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,7 +46,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0E6E281CCD7BBC544E5C3E31 /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* smollapp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = smollapp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = smollapp/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = smollapp/AppDelegate.mm; sourceTree = "<group>"; };
@@ -58,15 +57,16 @@
 		17C9F53F2C58234F000F7B2D /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		17C9F5412C58234F000F7B2D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		17C9F5492C58238D000F7B2D /* OneSignalNotificationServiceExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OneSignalNotificationServiceExtension.entitlements; sourceTree = "<group>"; };
-		2343511801569CD90CD43894 /* Pods-smollapp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-smollapp.release.xcconfig"; path = "Target Support Files/Pods-smollapp/Pods-smollapp.release.xcconfig"; sourceTree = "<group>"; };
-		2490CC207E9D5996B16EB108 /* libPods-smollapp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-smollapp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4B6A330367127305EF1247F9 /* Pods-smollapp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-smollapp.debug.xcconfig"; path = "Target Support Files/Pods-smollapp/Pods-smollapp.debug.xcconfig"; sourceTree = "<group>"; };
+		833BDAD552CAC9504D23C28D /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; sourceTree = "<group>"; };
 		9FB24562E8CB47688B6B46FA /* noop-file.swift */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.swift; name = "noop-file.swift"; path = "smollapp/noop-file.swift"; sourceTree = "<group>"; };
+		A28AAE6BC6F8A1BDA4D84C9F /* Pods-smollapp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-smollapp.release.xcconfig"; path = "Target Support Files/Pods-smollapp/Pods-smollapp.release.xcconfig"; sourceTree = "<group>"; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = smollapp/SplashScreen.storyboard; sourceTree = "<group>"; };
-		B889D97A7B6F53442C42F0C7 /* libPods-OneSignalNotificationServiceExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OneSignalNotificationServiceExtension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
-		C12A1A08880650636E17A635 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.release.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.release.xcconfig"; sourceTree = "<group>"; };
-		E6D8BA475E480DC314C502A0 /* Pods-smollapp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-smollapp.debug.xcconfig"; path = "Target Support Files/Pods-smollapp/Pods-smollapp.debug.xcconfig"; sourceTree = "<group>"; };
+		DAD8E037F22C12D506C55C93 /* libPods-OneSignalNotificationServiceExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OneSignalNotificationServiceExtension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E68B4BC9E8EC43016145DA98 /* libPods-smollapp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-smollapp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E89AA95B07D24D7A8583AFCA /* smollapp-Bridging-Header.h */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.h; name = "smollapp-Bridging-Header.h"; path = "smollapp/smollapp-Bridging-Header.h"; sourceTree = "<group>"; };
+		EB9F952D412EE42D414E61E2 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.release.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-smollapp/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -76,7 +76,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7186CB4C98DF2E9EBE9C883C /* libPods-smollapp.a in Frameworks */,
+				4B409558CFEC6F7030CC55BB /* libPods-smollapp.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -84,7 +84,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9FA2E1CD448210F51BE2B548 /* libPods-OneSignalNotificationServiceExtension.a in Frameworks */,
+				FD39A498C0FA47ADC0FC715E /* libPods-OneSignalNotificationServiceExtension.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -122,8 +122,8 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				B889D97A7B6F53442C42F0C7 /* libPods-OneSignalNotificationServiceExtension.a */,
-				2490CC207E9D5996B16EB108 /* libPods-smollapp.a */,
+				DAD8E037F22C12D506C55C93 /* libPods-OneSignalNotificationServiceExtension.a */,
+				E68B4BC9E8EC43016145DA98 /* libPods-smollapp.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -180,10 +180,10 @@
 		D65327D7A22EEC0BE12398D9 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				0E6E281CCD7BBC544E5C3E31 /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */,
-				C12A1A08880650636E17A635 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */,
-				E6D8BA475E480DC314C502A0 /* Pods-smollapp.debug.xcconfig */,
-				2343511801569CD90CD43894 /* Pods-smollapp.release.xcconfig */,
+				833BDAD552CAC9504D23C28D /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */,
+				EB9F952D412EE42D414E61E2 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */,
+				4B6A330367127305EF1247F9 /* Pods-smollapp.debug.xcconfig */,
+				A28AAE6BC6F8A1BDA4D84C9F /* Pods-smollapp.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -203,15 +203,15 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "smollapp" */;
 			buildPhases = (
-				AAC216516EF8843F4C4D397B /* [CP] Check Pods Manifest.lock */,
+				303EBB7E6556822BFFFD9B19 /* [CP] Check Pods Manifest.lock */,
 				0F611CF23DA1466467248CF0 /* [Expo] Configure project */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				17C9F5482C58234F000F7B2D /* Embed Foundation Extensions */,
-				6FFE0144BEA9328F6849D1EA /* [CP] Embed Pods Frameworks */,
-				51231D42FC0CFD7F80F6CB91 /* [CP] Copy Pods Resources */,
+				38016DCAC14C4899C4773F74 /* [CP] Embed Pods Frameworks */,
+				28A408AE9BF08901C14ACC42 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -227,7 +227,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 17C9F5452C58234F000F7B2D /* Build configuration list for PBXNativeTarget "OneSignalNotificationServiceExtension" */;
 			buildPhases = (
-				4C33CD8C224EA92C7A7901B0 /* [CP] Check Pods Manifest.lock */,
+				62E0FC5DC388ED386AFEAAFD /* [CP] Check Pods Manifest.lock */,
 				17C9F5392C58234F000F7B2D /* Sources */,
 				17C9F53A2C58234F000F7B2D /* Frameworks */,
 				17C9F53B2C58234F000F7B2D /* Resources */,
@@ -334,29 +334,7 @@
 			shellPath = /bin/sh;
 			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-smollapp/expo-configure-project.sh\"\n";
 		};
-		4C33CD8C224EA92C7A7901B0 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-OneSignalNotificationServiceExtension-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		51231D42FC0CFD7F80F6CB91 /* [CP] Copy Pods Resources */ = {
+		28A408AE9BF08901C14ACC42 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -420,7 +398,29 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-smollapp/Pods-smollapp-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		6FFE0144BEA9328F6849D1EA /* [CP] Embed Pods Frameworks */ = {
+		303EBB7E6556822BFFFD9B19 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-smollapp-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		38016DCAC14C4899C4773F74 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -460,7 +460,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-smollapp/Pods-smollapp-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		AAC216516EF8843F4C4D397B /* [CP] Check Pods Manifest.lock */ = {
+		62E0FC5DC388ED386AFEAAFD /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -475,7 +475,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-smollapp-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-OneSignalNotificationServiceExtension-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -517,7 +517,7 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E6D8BA475E480DC314C502A0 /* Pods-smollapp.debug.xcconfig */;
+			baseConfigurationReference = 4B6A330367127305EF1247F9 /* Pods-smollapp.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -536,7 +536,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.03;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -555,7 +555,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2343511801569CD90CD43894 /* Pods-smollapp.release.xcconfig */;
+			baseConfigurationReference = A28AAE6BC6F8A1BDA4D84C9F /* Pods-smollapp.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -569,7 +569,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.03;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -587,7 +587,7 @@
 		};
 		17C9F5462C58234F000F7B2D /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0E6E281CCD7BBC544E5C3E31 /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */;
+			baseConfigurationReference = 833BDAD552CAC9504D23C28D /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -632,7 +632,7 @@
 		};
 		17C9F5472C58234F000F7B2D /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C12A1A08880650636E17A635 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */;
+			baseConfigurationReference = EB9F952D412EE42D414E61E2 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
