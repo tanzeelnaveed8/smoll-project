@@ -124,9 +124,6 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
                   flexDir="row"
                   alignItems="center"
                   mb={12}
-                  onPress={() => {
-                    navigation.navigate("CasesRequestScreen");
-                  }}
                 >
                   <Image
                     source={{ uri: item.pet.photos?.[0].url }}
@@ -146,15 +143,16 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
                         {item.pet.name}
                       </Text>
 
-                      {item.status === CaseStatusEnum.OPEN_ESCALATED && (
-                        <Text
-                          fontFamily={fontHauoraSemiBold}
-                          fontSize={"lg"}
-                          color="#2F6E20"
-                        >
-                          {item.requestCount} Request
-                        </Text>
-                      )}
+                      {item.status === CaseStatusEnum.OPEN_ESCALATED &&
+                        item.requestCount && (
+                          <Text
+                            fontFamily={fontHauoraSemiBold}
+                            fontSize={"lg"}
+                            color="#2F6E20"
+                          >
+                            {item.requestCount} Request
+                          </Text>
+                        )}
 
                       {item.scheduledAt && (
                         <Text
@@ -248,10 +246,12 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
                       fontFamily={fontHauoraSemiBold}
                       color="primary"
                       onPress={() => {
-                        navigation.navigate("CasesRequestScreen");
+                        navigation.navigate("CaseQuotesScreen", {
+                          id: item.id,
+                        });
                       }}
                     >
-                      View Request
+                      View Requests
                     </Button>
                   )}
                 </Div>

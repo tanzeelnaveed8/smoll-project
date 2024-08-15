@@ -1,5 +1,6 @@
-import { Nullable, UploadedFile } from "../types";
+import { Nullable } from "../types";
 import { Expert } from "./expert";
+import { UploadedFile } from "./file";
 import { Pet, PetDetail } from "./pet";
 
 export enum CaseStatusEnum {
@@ -72,9 +73,42 @@ export interface CaseDetail {
   scheduleAt?: string;
 }
 
+export interface Clinic {
+  id: string;
+  name: string;
+  receptionistName: string;
+  phone: string;
+  email: string;
+  clinicImg: Nullable<UploadedFile>;
+  address: Nullable<string>;
+  country: Nullable<string>;
+  city: Nullable<string>;
+  openingHours: Nullable<string>;
+  postalCode: Nullable<string>;
+  timeZone: string;
+  specialities: { id: string; name: string }[];
+  createdAt: Date;
+}
+
+export interface ClinicServiceDto {
+  id: string;
+  name: string;
+  price: number;
+  description: string;
+  currency: string;
+  label: string;
+}
+
+export interface CaseQuotesDto {
+  id: string;
+  note: string;
+  services: ClinicServiceDto[];
+  partner: Clinic;
+}
+
 export interface CasesState {
   cases: Nullable<CaseListResponseDto[]>;
-
+  casesQuotes: Map<string, CaseQuotesDto[]>;
   caseRequests: CaseRequestsDto[];
   vetDoctorList: VetDoctorListDto[];
 
@@ -82,5 +116,6 @@ export interface CasesState {
   removeCase: (id: string) => Promise<void>;
   fetchCases: () => Promise<void>;
   fetchCase: (id: string) => Promise<CaseDetail>;
+  fetchCaseQuotes: (id: string) => Promise<CaseDetail>;
   fetchVetDoctors: () => Promise<void>;
 }

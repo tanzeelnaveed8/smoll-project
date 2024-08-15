@@ -21,7 +21,6 @@ import { SocketProvider } from "./socket/provider";
 import { CometChatWrapper } from "./utils/chat";
 
 import CasesListScreen from "./screens/Cases/CasesListScreen";
-import CasesRequestScreen from "./screens/Cases/CasesRequestScreen";
 import PartnerVetConfirmationScreen from "./screens/Cases/PartnerVetConfirmationScreen";
 import PartnerVetDetailScreen from "./screens/Cases/PartnerVetDetailScreen";
 import PartnerVetScreen from "./screens/Cases/PartnerVetScreen";
@@ -63,7 +62,8 @@ import { useExpertStore } from "./store/modules/expert";
 import * as rootNavigation from "./utils/root-navigation";
 import { navigationRef } from "./utils/root-navigation";
 import SplashScreen from "./screens/SplashScreen";
-import ClinicProposalScreen from "./screens/bookingForm/ClinicProposalScreen";
+import CaseQuotesScreen from "./screens/Cases/CaseQuotesScreen";
+import CaseQuoteDescriptionScreen from "./screens/Cases/CaseQuoteDescriptionScreen";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -127,17 +127,6 @@ const App = () => {
     OneSignal.Notifications.requestPermission(true);
     // Method for listening for notification clicks
 
-    // OneSignal.Notifications.addEventListener("click", (event) => {
-    //   if (
-    //     event.notification?.additionalData?.notificationType ===
-    //     "consultation-notification"
-    //   ) {
-    //     rootNavigation.navigate("ConsultationWaitingScreen", {
-    //       consultationId: event.notification?.additionalData?.consultationId,
-    //     });
-    //   }
-    // });
-
     OneSignal.Notifications.addEventListener("click", (event) => {
       const additionalData = event.notification?.additionalData as {
         notificationType?: string;
@@ -159,6 +148,19 @@ const App = () => {
             expertName,
           });
         }
+      }
+
+      if (
+        event.notification?.additionalData?.notificationType ===
+        "quote-submitted"
+      ) {
+        const caseId = event.notification?.additionalData?.caseId;
+        const partnerId = event.notification?.additionalData?.partnerId;
+
+        rootNavigation.navigate("CaseQuoteDescriptionScreen", {
+          caseId,
+          id: partnerId,
+        });
       }
     });
     // Method for listening for notifications received
@@ -329,25 +331,27 @@ const App = () => {
                     gestureEnabled: false,
                   }}
                 />
+
+                <Stack.Screen
+                  name="CasesListScreen"
+                  component={CasesListScreen}
+                />
+
                 <Stack.Screen
                   name="CaseDetailScreen"
                   component={CaseDetailScreen}
                 />
-                {/*  */}
+
                 <Stack.Screen
-                  // name="PartnerClinic"
-                  name="CasesListScreen"
-                  component={CasesListScreen}
-                />
-                <Stack.Screen
-                  name="ClinicProposalScreen"
-                  component={ClinicProposalScreen}
+                  name="CaseQuotesScreen"
+                  component={CaseQuotesScreen}
                 />
 
                 <Stack.Screen
-                  name="CasesRequestScreen"
-                  component={CasesRequestScreen}
+                  name="CaseQuoteDescriptionScreen"
+                  component={CaseQuoteDescriptionScreen}
                 />
+
                 <Stack.Screen
                   name="PartnerVetScreen"
                   component={PartnerVetScreen}
