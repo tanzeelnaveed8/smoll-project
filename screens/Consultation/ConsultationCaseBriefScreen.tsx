@@ -141,8 +141,6 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
     setDocuments([...documents, ...file]);
   };
 
-  console.log("Documents==", documents);
-
   const handleUnSelectImage = (url: string) => {
     const newDocuments = documents.filter((doc) => doc.url !== url);
     setDocuments(newDocuments);

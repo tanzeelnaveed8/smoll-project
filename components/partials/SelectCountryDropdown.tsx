@@ -23,8 +23,6 @@ const SelectCountryDropdown: React.FC<{
     { label: string; value: string; flag: string }[]
   >([]);
 
-  console.log("country==", country);
-
   useEffect(() => {
     (async function () {
       const _codes = (await getCountryCodes()).map((c) => ({
@@ -49,7 +47,6 @@ const SelectCountryDropdown: React.FC<{
       renderLabel={(options, onClick) => (
         <Country
           onPress={() => {
-            console.log("options.flag", options.flag);
             onClick({
               value: options.value,
               label: options.label,

@@ -32,8 +32,6 @@ const NotificationTestScreen: React.FC<{ navigation: NavigationType }> = ({
   const [isLoading, setIsLoading] = useState(true);
   const [markAllLoading, setMarkAllLoading] = useState(false);
 
-  // console.log("notificationsdata = ", notifications);
-
   useEffect(() => {
     if (notifications && notifications?.data.length > 0) {
       setIsLoading(false);

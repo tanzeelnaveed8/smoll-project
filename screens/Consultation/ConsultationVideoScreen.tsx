@@ -11,7 +11,6 @@ const ConsultationVideoScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
   const route = useRoute();
-  const { endConsultation } = useExpertStore();
 
   const expertId = (route.params as Record<string, string>)?.expertId;
   const caseId = (route.params as Record<string, string>)?.caseId;
