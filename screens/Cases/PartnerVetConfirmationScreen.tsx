@@ -17,14 +17,18 @@ import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import Layout from "@/components/app/Layout";
 import { NavigationType } from "@/store/types";
 import ScrollWrapper from "@/components/partials/ScrollWrapper";
+import { useRoute } from "@react-navigation/native";
 
 const PartnerVetConfirmationScreen: React.FC<{
   navigation: NavigationType;
 }> = ({ navigation }) => {
+  const route = useRoute();
+  const servicesTotal = (route.params as Record<string, string>)?.servicesTotal;
+
   return (
     <Layout
       showBack
-      title="Confirm Appointmentt"
+      title="Confirm Appointment"
       onBackPress={() => {
         navigation.goBack();
       }}
@@ -72,10 +76,10 @@ const PartnerVetConfirmationScreen: React.FC<{
 
         <Div px={16} py={24} rounded={12} borderWidth={1} borderColor="#D0D7DC">
           <Div
-            pb={16}
-            borderBottomWidth={1}
-            borderBottomColor="#D0D7DC"
-            mb={16}
+          // pb={16}
+          // borderBottomWidth={1}
+          // borderBottomColor="#D0D7DC"
+          // mb={16}
           >
             <RowText
               name="Billing Summary"
@@ -85,27 +89,27 @@ const PartnerVetConfirmationScreen: React.FC<{
 
             <RowText
               name="Consultation charges"
-              value="94 AED"
+              value={`${servicesTotal} AED`}
               fontFamily={fontHauoraMedium}
               mb={16}
             />
             <RowText
-              name="Advance booking"
-              value="10 AED"
+              name="Platform charges"
+              value={`${(+servicesTotal * 11) / 100} AED`}
               percent="11%"
               fontFamily={fontHauoraMedium}
             />
           </Div>
 
-          <RowText
+          {/* <RowText
             name="Remaining Amt"
             value="84 AED"
             fontFamily={fontHauoraBold}
             mb={2}
-          />
-          <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
+          /> */}
+          {/* <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
             To be paid in clinic
-          </Text>
+          </Text> */}
         </Div>
 
         <Div mt={24}>
