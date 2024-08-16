@@ -40,6 +40,13 @@ export const getCaseStatusLabel = (
       return "Scheduled Expired";
     }
 
+    if (
+      currentTime.isBefore(scheduledTime) &&
+      status === CaseStatusEnum.CLOSED
+    ) {
+      return "Scheduled Cancelled";
+    }
+
     return status === CaseStatusEnum.OPEN ? "Scheduled" : "Scheduled Closed";
   }
 
@@ -64,6 +71,13 @@ export const getCaseStatusColor = (
     const scheduledTime = dayjs(scheduledAt);
 
     if (currentTime.isAfter(scheduledTime.add(35, "minute"))) {
+      return colorErrorText;
+    }
+
+    if (
+      currentTime.isBefore(scheduledTime) &&
+      status === CaseStatusEnum.CLOSED
+    ) {
       return colorErrorText;
     }
 
