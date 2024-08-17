@@ -2,18 +2,13 @@ import Layout from "@/components/app/Layout";
 import AvailabilityAndDateSelector from "@/components/partials/AvailabilityAndDateSelector";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import DoctorCard from "@/components/partials/DoctorCard";
-import {
-  colorPrimary,
-  fontHauoraMedium,
-  fontHauoraSemiBold,
-} from "@/constant/constant";
-import { useExpertStore } from "@/store/modules/expert";
+import { fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
+import { usePartnerStore } from "@/store/modules/partner";
 import { NavigationType } from "@/store/types";
 import { ExpertAvailability } from "@/store/types/expert";
-import { useFocusEffect, useRoute } from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native";
 import dayjs from "dayjs";
-import { useCallback, useState } from "react";
-import { Alert, RefreshControl } from "react-native";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Button, Div, ScrollDiv, Skeleton, Text } from "react-native-magnus";
 
 const dayOfWeekMap: { [key: string]: number } = {
@@ -30,24 +25,11 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
   const route = useRoute();
-  // const expertId =
-  //   (route.params as Record<string, string>)?.id ??
-  //   (route.params as Record<string, string>)?.expertId;
-  // // Incase of change schedule from schedule confirmation screen
-  // const caseData = (route.params as Record<string, string>)?.caseData;
+  const { partnerVetDetails, fetchPartnerVetDetails } = usePartnerStore();
 
-  const servicesTotal = (route.params as Record<string, string>)?.servicesTotal;
-  const expertId = "Y32NbRYiGX";
-  const caseData = undefined;
+  const partnerId = (route.params as Record<string, string>)?.partnerId;
+  const vetId = (route.params as Record<string, string>)?.vetId;
 
-  const {
-    expertDetailMap,
-    fetchExpertDetail,
-    fetchExpertAvailability,
-    requestConsultation,
-  } = useExpertStore();
-
-  const [availability, setAvailability] = useState<ExpertAvailability[]>([]);
   const [selectedDate, setSelectedDate] = useState<string>();
   const [selectedTime, setSelectedTime] = useState<{
     value: { from: string; to: string };
@@ -60,24 +42,52 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
   const [availabilityLoading, setAvailabilityLoading] = useState(false);
   const [isRequesting, setIsRequesting] = useState(false);
 
-  useFocusEffect(
-    useCallback(() => {
-      handleFetchExpertDetails();
-    }, [expertId])
-  );
+  const partnerDetails = useMemo(() => {
+    return partnerVetDetails.get(vetId);
+  }, [partnerVetDetails, vetId]);
+
+  useEffect(() => {
+    handleFetchVetDetails();
+  }, [partnerId, vetId]);
+
+  const handleFetchVetDetails = async () => {
+    try {
+      setIsLoading(true);
+
+      if (!partnerDetails) {
+        await fetchPartnerVetDetails(vetId, partnerId);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const availabilities = useMemo(() => {
+    return partnerDetails?.availabilities ?? [];
+  }, [partnerDetails]);
+
+  const handleFetchExpertDetails = async (isRefresh?: boolean) => {
+    try {
+      setIsLoading(true);
+
+      if (!partnerDetails) {
+        await fetchPartnerVetDetails(vetId, partnerId);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDateSelect = () => {};
 
   const formatTime = useCallback(
     (
       availability: ExpertAvailability,
       interval: { from: string; to: string }
     ) => {
-      // const date = availability.dayOfWeek
-      //   ? dayjs().day(dayOfWeekMap[availability.dayOfWeek]).format("YYYY-MM-DD")
-      //   : dayjs(availability?.date).format("YYYY-MM-DD");
-
       const date = availability.dayOfWeek
         ? dayjs().day(dayOfWeekMap[availability.dayOfWeek]).format("YYYY-MM-DD")
-        : "";
+        : dayjs(availability.date).format("YYYY-MM-DD");
 
       const fromTime = dayjs(`${date}T${interval.from}Z`).format("hh:mm A");
       const toTime = dayjs(`${date}T${interval.to}Z`).format("hh:mm A");
@@ -87,135 +97,41 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
     []
   );
 
-  const handleFetchExpertDetails = async (isRefresh?: boolean) => {
-    try {
-      if (isRefresh) {
-        setIsRefreshing(true);
-      } else {
-        setIsLoading(true);
-      }
-
-      await fetchExpertDetail(expertId);
-      handleDateSelect(dayjs().format("YYYY-MM-DD"));
-    } finally {
-      setIsLoading(false);
-      setIsRefreshing(false);
-    }
-  };
-
-  const handleDateSelect = async (date: string) => {
-    try {
-      setAvailabilityLoading(true);
-      setSelectedDate(date);
-
-      const _availability = await fetchExpertAvailability(
-        expertId,
-        new Date(date)
-      );
-
-      setAvailability(_availability);
-    } finally {
-      setAvailabilityLoading(false);
-    }
-  };
-
-  const handleRequestConsultation = async () => {
-    try {
-      setIsRequesting(true);
-      const { id } = await requestConsultation(expertId);
-
-      navigation.navigate("ConsultationCaseBriefScreen", {
-        consultationId: id,
-        expertId: expertId,
-      });
-    } finally {
-      setIsRequesting(false);
-    }
-  };
-
-  const handleScheduleConsultation = async () => {
-    if (!selectedDate || !selectedTime) {
-      return;
-    }
-
-    try {
-      setIsActionLoading(true);
-
-      // const scheduledAt = selectedDate
-      const _date = dayjs(selectedDate).format("YYYY-MM-DD");
-
-      const scheduleAt = dayjs(
-        _date.toString() +
-          "T" +
-          dayjs(`${_date}T${selectedTime.value.from}Z`).format("HH:mm")
-      )
-        .utc()
-        .format();
-
-      Alert.alert("Navigate user");
-      // navigation.navigate("ConsultationCaseBriefScreen", {
-      //   from: "CaseQuotesScreen",
-      //   expertId,
-      //   selectedTime: JSON.stringify(selectedTime?.value),
-      //   selectedDate,
-      //   scheduleAt,
-      //   caseData,
-      // });
-    } finally {
-      setIsActionLoading(false);
-    }
-  };
-
   return (
     <Layout
       showBack
-      title={expertDetailMap.get(expertId)?.name ?? ""}
+      title={partnerDetails?.name}
       onBackPress={() => {
         navigation.goBack();
       }}
       loading={isLoading}
     >
-      <ScrollDiv
-        flex={1}
-        showsVerticalScrollIndicator={false}
-        refreshControl={
-          <RefreshControl
-            refreshing={isRefreshing}
-            tintColor={colorPrimary}
-            onRefresh={() => handleFetchExpertDetails(true)}
-          />
-        }
-      >
-        {/* <Header title="Book a Slot" /> */}
-
-        <Div mb={24} mt={20}>
+      <ScrollDiv flex={1} showsVerticalScrollIndicator={false}>
+        <Div mb={24}>
           <DoctorCard
-            name={expertDetailMap.get(expertId)?.name ?? ""}
-            speciality={expertDetailMap.get(expertId)?.designation ?? ""}
-            experience={expertDetailMap.get(expertId)?.yearsOfExperience ?? 0}
-            isOnline={expertDetailMap.get(expertId)?.isOnline ?? false}
-            image={expertDetailMap.get(expertId)?.profileImg?.url ?? ""}
+            name={partnerDetails?.name ?? ""}
+            speciality={partnerDetails?.designation ?? ""}
+            experience={partnerDetails?.yearOfExperience ?? 0}
+            image={partnerDetails?.profileImg?.url ?? ""}
             verified={true}
           />
         </Div>
 
-        <Div pb={20}>
-          <Div maxW={350} mb={20}>
-            <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold} mb={4}>
-              Address - Harmony Vet Clinic
-            </Text>
-            <Text
-              color="darkGreyText"
-              mb={6}
-              fontSize={"lg"}
-              fontFamily={fontHauoraMedium}
-            >
-              Villa 12, Street 24, Jumeirah 3, Dubai, United Arab Emirates
-            </Text>
+        <Div maxW={350} mb={20}>
+          <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold} mb={4}>
+            Address - {partnerDetails?.partnerName}
+          </Text>
+          <Text
+            color="darkGreyText"
+            mb={6}
+            fontSize={"lg"}
+            fontFamily={fontHauoraMedium}
+          >
+            {partnerDetails?.partnerAddress}
+          </Text>
+        </Div>
 
-            {/* <PartnerVetStarRating rating={4} /> */}
-          </Div>
-
+        <Div pb={20} borderTopWidth={1} borderColor="#D0D7DC">
           <Div>
             <AvailabilityAndDateSelector
               // allAvailability={allAvailability}
@@ -245,8 +161,8 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
               )}
 
               {!availabilityLoading &&
-                availability.length > 0 &&
-                availability.map((a) => (
+                availabilities.length > 0 &&
+                availabilities.map((a) => (
                   <Div
                     key={a.id}
                     pb={12}
@@ -316,7 +232,7 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
                   </Div>
                 ))}
 
-              {!availabilityLoading && availability.length === 0 && (
+              {!availabilityLoading && availabilities.length === 0 && (
                 <Text>No availability</Text>
               )}
             </Div>
@@ -324,16 +240,13 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
         </Div>
       </ScrollDiv>
       <ButtonPrimary
-        onPress={() => {
-          navigation.navigate("PartnerVetConfirmationScreen", {
-            servicesTotal,
-          });
-        }}
-        // onPress={handleScheduleConsultation}
         disabled={isActionLoading || !selectedTime}
         loading={isActionLoading}
+        onPress={() => {
+          navigation.navigate("PartnerVetConfirmationScreen");
+        }}
       >
-        Book a slot
+        Proceed
       </ButtonPrimary>
     </Layout>
   );

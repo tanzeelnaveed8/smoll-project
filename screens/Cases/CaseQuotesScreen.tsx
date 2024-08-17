@@ -139,7 +139,7 @@ const CaseQuotesScreen: React.FC<{ navigation: NavigationType }> = ({
                       fontFamily={fontHauoraSemiBold}
                       color="primary"
                     >
-                      ~{getMinQuote(item)}
+                      ~{getMinQuote(item)} AED
                     </Text>
                     <Text
                       fontSize={"md"}

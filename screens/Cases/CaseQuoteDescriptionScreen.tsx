@@ -93,11 +93,12 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
 
       <ButtonPrimary
         bgColor="primary"
-        onPress={() => {
-          navigation.navigate("PartnerVetDetailScreen", {
-            servicesTotal: totalSum,
-          });
-        }}
+        onPress={() =>
+          navigation.navigate("PartnerVetScreen", {
+            partnerId: clinicQuote?.partner?.id,
+            partnerName: clinicQuote?.partner?.name,
+          })
+        }
       >
         Next
       </ButtonPrimary>
