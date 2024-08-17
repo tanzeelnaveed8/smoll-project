@@ -324,10 +324,7 @@ const App = () => {
                   name="RequestCallBackScreen"
                   component={RequestCallBackScreen}
                 />
-                <Stack.Screen
-                  name="CaseForwardedScreen"
-                  component={CaseForwardedScreen}
-                />
+
                 <Stack.Screen
                   name="ExpertsScheduleConfirmationScreen"
                   component={ExpertsScheduleConfirmationScreen}

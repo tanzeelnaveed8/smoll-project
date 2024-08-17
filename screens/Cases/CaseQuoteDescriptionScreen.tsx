@@ -85,7 +85,17 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
         </Div>
       </ScrollDiv>
 
-      <ButtonPrimary bgColor="primary">Next</ButtonPrimary>
+      <ButtonPrimary
+        bgColor="primary"
+        onPress={() =>
+          navigation.navigate("PartnerVetScreen", {
+            partnerId: clinicQuote?.partner?.id,
+            partnerName: clinicQuote?.partner?.name,
+          })
+        }
+      >
+        Next
+      </ButtonPrimary>
     </Layout>
   );
 };
