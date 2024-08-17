@@ -53,7 +53,7 @@ import FlashMessage from "react-native-flash-message";
 import { LogLevel, OneSignal } from "react-native-onesignal";
 import CaseDetailScreen from "./screens/Cases/CaseDetailScreen";
 import CaseForwardedScreen from "./screens/Consultation/CaseForwardedScreen";
-import RequestCallBackScreen from "./screens/Consultation/RequestCallBackScreen";
+import RequestCallBackScreen from "./screens/Consultation/UnavailableScreen";
 import ExpertsScheduleConfirmationScreen from "./screens/Experts/ExpertsScheduleConfirmationScreen";
 import ExpertsScheduleSuccessScreen from "./screens/Experts/ExpertsScheduleSuccessScreen";
 import NotificationScreen from "./screens/NotificationScreen";
@@ -67,6 +67,7 @@ import AppointmentsScreen from "./screens/Appointments/AppointmentsScreen";
 import AppointmentDetailsScreen from "./screens/Appointments/AppointmentDetailsScreen";
 import CaseQuotesScreen from "./screens/Cases/CaseQuotesScreen";
 import CaseQuoteDescriptionScreen from "./screens/Cases/CaseQuoteDescriptionScreen";
+import UnavailableScreen from "./screens/Consultation/UnavailableScreen";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -307,6 +308,13 @@ const App = () => {
                 <Stack.Screen
                   name="ConsultationWaitingScreen"
                   component={ConsultationWaitingScreen}
+                  options={{
+                    gestureEnabled: false,
+                  }}
+                />
+                <Stack.Screen
+                  name="UnavailableScreen"
+                  component={UnavailableScreen}
                 />
                 <Stack.Screen
                   name="ConsultationVideoScreen"

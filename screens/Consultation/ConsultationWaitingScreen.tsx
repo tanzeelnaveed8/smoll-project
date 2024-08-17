@@ -1,4 +1,5 @@
 import Layout from "@/components/app/Layout";
+import FlashCustomContent from "@/components/partials/FlashCustomContent";
 import {
   colorPrimary,
   fontHauoraMedium,
@@ -12,6 +13,7 @@ import { FindOneConsultationResDto } from "@/store/types/expert";
 import { useRoute } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, TouchableOpacity } from "react-native";
+import { hideMessage, showMessage } from "react-native-flash-message";
 import { Div, Image, Text } from "react-native-magnus";
 
 const ConsultationWaitingScreen: React.FC<{ navigation: NavigationType }> = ({
@@ -20,13 +22,14 @@ const ConsultationWaitingScreen: React.FC<{ navigation: NavigationType }> = ({
   const route = useRoute();
   const socket = useSocket();
 
-  const { findOneConsultation } = useExpertStore();
+  const { findOneConsultation, cancelConsultation } = useExpertStore();
 
   const consultationId = (route.params as Record<string, string>)
     ?.consultationId;
 
   const [loading, setLoading] = useState(true);
   const [consultation, setConsultation] = useState<FindOneConsultationResDto>();
+  const [cancelLoading, setCancelLoading] = useState(false);
 
   useEffect(() => {
     findConsultation();
@@ -40,6 +43,16 @@ const ConsultationWaitingScreen: React.FC<{ navigation: NavigationType }> = ({
             expertId: vetId,
             caseId: caseId,
             consultationId,
+          });
+        }
+      });
+
+      socket.on(SocketEventEnum.VET_CLOSE_CONSULTATION, async (data) => {
+        if (data.consultationId === consultationId) {
+          const { vetId } = data;
+
+          navigation.navigate("UnavailableScreen", {
+            expertId: vetId,
           });
         }
       });
@@ -74,6 +87,25 @@ const ConsultationWaitingScreen: React.FC<{ navigation: NavigationType }> = ({
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
+  };
+
+  const handleCancelConsultation = async () => {
+    setCancelLoading(true);
+
+    showMessage({
+      renderCustomContent: () => (
+        <FlashCustomContent loader message="Cancelling..." />
+      ),
+      message: "",
+      type: "info",
+      autoHide: false,
+    });
+
+    await cancelConsultation(consultationId);
+    navigation.navigate("ExpertsListScreen");
+
+    hideMessage();
+    setCancelLoading(false);
   };
 
   return (
@@ -137,9 +169,8 @@ const ConsultationWaitingScreen: React.FC<{ navigation: NavigationType }> = ({
           paddingHorizontal: 6,
           paddingVertical: 2,
         }}
-        onPress={() => {
-          navigation.goBack();
-        }}
+        disabled={cancelLoading}
+        onPress={handleCancelConsultation}
       >
         <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold} color="primary">
           Cancel

@@ -26,7 +26,6 @@ const ChatScreen: React.FC<{ navigation: NavigationType }> = ({
   // const [inputMessage, setInputMessage] = useState("");
   const inputMessageRef = useRef<null | TextInput>(null);
   const { user } = useUserStore();
-  console.log("user==_", user);
 
   useEffect(() => {
     let uikitSettings: UIKitSettings = {
@@ -38,15 +37,11 @@ const ChatScreen: React.FC<{ navigation: NavigationType }> = ({
 
     CometChatUIKit.init(uikitSettings)
       .then(() => {
-        console.log("CometChatUiKit successfully initialized");
-
         CometChatUIKit.login({ uid: user?.id })
           .then((user) => {
-            console.log("User logged in successfully", user.getName());
             setIsLoggedIn(true);
           })
           .catch((error) => {
-            console.log("Login failed with exception:", error);
             setIsLoggedIn(false);
           });
       })

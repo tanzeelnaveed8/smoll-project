@@ -60,8 +60,6 @@ const ImageUpload: React.FC<Props> = ({
 
     const file = { uri: localUri, name: filename, type } as unknown as File;
 
-    console.log("file: working", file);
-
     setLoading(true);
     const uploadedFile = await uploadFile([file]);
     setLoading(false);

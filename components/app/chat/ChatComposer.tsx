@@ -81,8 +81,6 @@ const ChatComposer: React.FC<Props> = (props) => {
         setIsSending(false);
       }
 
-      console.log("file", file);
-
       const newMessage: IMessage = {
         _id: Math.random().toString(36).substring(7),
         text: text,
@@ -119,8 +117,6 @@ const ChatComposer: React.FC<Props> = (props) => {
       aspect: [4, 3],
       quality: 1,
     });
-
-    console.log("pickImage result", result);
 
     // setImage(result);
     handleOnSend({ img: result });
