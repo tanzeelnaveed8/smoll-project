@@ -30,21 +30,26 @@ export const getAxiosErrMsg = (error: AxiosError<any, any>) => {
 
 export const getCaseStatusLabel = (
   status?: CaseStatusEnum,
-  scheduledAt?: string
+  scheduledAt?: string,
+  hasPartnerBooking?: boolean
 ) => {
   if (scheduledAt) {
     const currentTime = dayjs();
     const scheduledTime = dayjs(scheduledAt);
-
-    if (currentTime.isAfter(scheduledTime.add(35, "minute"))) {
-      return "Scheduled Expired";
-    }
 
     if (
       currentTime.isBefore(scheduledTime) &&
       status === CaseStatusEnum.CLOSED
     ) {
       return "Scheduled Cancelled";
+    }
+
+    if (hasPartnerBooking) {
+      return "Scheduled in Clinic";
+    }
+
+    if (currentTime.isAfter(scheduledTime.add(35, "minute"))) {
+      return "Scheduled Expired";
     }
 
     return status === CaseStatusEnum.OPEN ? "Scheduled" : "Scheduled Closed";

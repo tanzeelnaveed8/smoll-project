@@ -13,12 +13,17 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
   const route = useRoute();
-  const { casesQuotes } = useCaseStore();
+  const { casesQuotes, fetchCaseQuotes } = useCaseStore();
 
   const id = (route.params as Record<string, string>)?.id;
   const caseId = (route.params as Record<string, string>)?.caseId;
 
+  const [loading, setLoading] = useState(false);
   const caseQuote = casesQuotes.get(caseId);
+
+  useEffect(() => {
+    fetchQuotes();
+  }, [id, caseId]);
 
   const clinicQuote = useMemo(() => {
     return caseQuote?.find((q) => q.partner.id === id);
@@ -43,6 +48,16 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
     return { min, max };
   }, [clinicQuote]);
 
+  const fetchQuotes = async () => {
+    try {
+      setLoading(true);
+
+      await fetchCaseQuotes(caseId);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <Layout
       showBack
@@ -51,6 +66,7 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
       onBackPress={() => {
         navigation.goBack();
       }}
+      loading={loading}
     >
       <ScrollDiv flex={1}>
         <ClinicCard
@@ -91,6 +107,7 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
           navigation.navigate("PartnerVetScreen", {
             partnerId: clinicQuote?.partner?.id,
             partnerName: clinicQuote?.partner?.name,
+            caseId,
           })
         }
       >

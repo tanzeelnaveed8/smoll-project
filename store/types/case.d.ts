@@ -57,6 +57,7 @@ export interface CaseListResponseDto {
   status: CaseStatusEnum;
   consultationId?: string;
   scheduledAt?: string;
+  hasPartnerBooking?: boolean;
   requestCount?: number;
   createdAt: string;
 }

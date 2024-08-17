@@ -25,11 +25,17 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
   const route = useRoute();
-  const { partnerVetDetails, fetchPartnerVetDetails } = usePartnerStore();
+  const {
+    partnerVetDetails,
+    fetchPartnerVetDetails,
+    fetchPartnerVetAvailability,
+  } = usePartnerStore();
 
+  const caseId = (route.params as Record<string, string>)?.caseId;
   const partnerId = (route.params as Record<string, string>)?.partnerId;
   const vetId = (route.params as Record<string, string>)?.vetId;
 
+  const [availability, setAvailability] = useState<ExpertAvailability[]>([]);
   const [selectedDate, setSelectedDate] = useState<string>();
   const [selectedTime, setSelectedTime] = useState<{
     value: { from: string; to: string };
@@ -50,23 +56,67 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
     handleFetchVetDetails();
   }, [partnerId, vetId]);
 
-  const availabilities = useMemo(() => {
-    return partnerDetails?.availabilities ?? [];
-  }, [partnerDetails]);
+  const availabilities = useMemo<ExpertAvailability[]>(() => {
+    if (!availability) return [];
+
+    return availability.map((a) => ({
+      ...a,
+      intervals: a.intervals.flatMap((interval) => {
+        const start = dayjs(`2000-01-01T${interval.from}`);
+        const end = dayjs(`2000-01-01T${interval.to}`);
+        const slots = [];
+
+        let current = start;
+        while (current.isBefore(end)) {
+          const slotEnd = current.add(30, "minute");
+          if (slotEnd.isAfter(end)) break;
+
+          slots.push({
+            from: current.format("HH:mm"),
+            to: slotEnd.format("HH:mm"),
+          });
+
+          current = slotEnd;
+        }
+
+        return slots;
+      }),
+    }));
+  }, [partnerDetails, availability]);
+
+  const hasNoAvailability = useMemo(() => {
+    return availabilities.every((a) => a.intervals.length === 0);
+  }, [availabilities]);
 
   const handleFetchVetDetails = async () => {
     try {
       setIsLoading(true);
 
       if (!partnerDetails) {
-        await fetchPartnerVetDetails(vetId, partnerId);
+        const details = await fetchPartnerVetDetails(vetId, partnerId);
+        setAvailability(details.availabilities);
       }
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleDateSelect = () => {};
+  const handleDateSelect = async (date: string) => {
+    try {
+      setAvailabilityLoading(true);
+      setSelectedDate(date);
+
+      const _availability = await fetchPartnerVetAvailability(
+        vetId,
+        partnerId,
+        new Date(date)
+      );
+
+      setAvailability(_availability);
+    } finally {
+      setAvailabilityLoading(false);
+    }
+  };
 
   const formatTime = useCallback(
     (
@@ -85,6 +135,35 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
     []
   );
 
+  const handleProceed = async () => {
+    console.log("selectedDate", selectedDate);
+    console.log("selectedTime", selectedTime);
+
+    if (!selectedDate || !selectedTime) {
+      return;
+    }
+
+    // const scheduledAt = selectedDate
+    const _date = dayjs(selectedDate).format("YYYY-MM-DD");
+
+    const scheduleAt = dayjs(
+      _date.toString() +
+        "T" +
+        dayjs(`${_date}T${selectedTime.value.from}Z`).format("HH:mm")
+    )
+      .utc()
+      .format();
+
+    navigation.navigate("PartnerVetConfirmationScreen", {
+      from: "PartnerVetDetailScreen",
+      vetId,
+      partnerId,
+      selectedTime: JSON.stringify(selectedTime?.value),
+      selectedDate,
+      caseId,
+      scheduleAt,
+    });
+  };
   return (
     <Layout
       showBack
@@ -99,7 +178,7 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
           <DoctorCard
             name={partnerDetails?.name ?? ""}
             speciality={partnerDetails?.designation ?? ""}
-            experience={partnerDetails?.yearOfExperience ?? 0}
+            experience={partnerDetails?.yearsOfExperience ?? 0}
             image={partnerDetails?.profileImg?.url ?? ""}
             verified={true}
           />
@@ -151,76 +230,94 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
               {!availabilityLoading &&
                 availabilities.length > 0 &&
                 availabilities.map((a) => (
-                  <Div
-                    key={a.id}
-                    pb={12}
-                    mb={12}
-                    borderBottomWidth={1}
-                    borderColor="#E0E0E0"
-                  >
-                    <Text
-                      fontFamily={fontHauoraSemiBold}
-                      fontSize="xl"
-                      lineHeight={24}
-                      color="#222222"
-                      mb={12}
-                      textTransform="capitalize"
-                    >
-                      {a.dayOfWeek ?? dayjs(a.date).format("ddd, DD MMM")}
-                    </Text>
+                  <>
+                    {a.intervals.length ? (
+                      <Div
+                        key={a.dayOfWeek || a.date}
+                        pb={12}
+                        mb={12}
+                        borderBottomWidth={1}
+                        borderColor="#E0E0E0"
+                      >
+                        <Text
+                          fontFamily={fontHauoraSemiBold}
+                          fontSize="xl"
+                          lineHeight={24}
+                          color="#222222"
+                          mb={12}
+                          textTransform="capitalize"
+                        >
+                          {a.dayOfWeek ?? dayjs(a.date).format("ddd, DD MMM")}
+                        </Text>
 
-                    {a.intervals.length > 0 && (
-                      <Div flexDir="row" flexWrap="wrap" style={{ gap: 8 }}>
-                        {a.intervals.map((intr, index) => {
-                          const time = formatTime(a, intr);
+                        <Div
+                          flexDir="row"
+                          flexWrap="wrap"
+                          justifyContent="center"
+                          alignItems="center"
+                          style={{ gap: 8 }}
+                        >
+                          {a.intervals.map((intr, index) => {
+                            const time = formatTime(a, intr);
 
-                          return (
-                            <Button
-                              key={`${index}:${a.dayOfWeek ?? a.date}:${time}`}
-                              fontFamily={fontHauoraMedium}
-                              fontSize="lg"
-                              lineHeight={20}
-                              p={10}
-                              borderWidth={1}
-                              color={
-                                selectedTime?.label ===
-                                `${index}:${a.dayOfWeek ?? a.date}:${time}`
-                                  ? "#fff"
-                                  : "#494949"
-                              }
-                              borderColor="#E0E0E0"
-                              rounded={8}
-                              bg={
-                                selectedTime?.label ===
-                                `${index}:${a.dayOfWeek ?? a.date}:${time}`
-                                  ? "primary"
-                                  : "transparent"
-                              }
-                              onPress={() => {
-                                setSelectedTime({
-                                  value: { from: intr.from, to: intr.to },
-                                  label: `${index}:${
+                            return (
+                              <Div w="48%">
+                                <Button
+                                  key={`${index}:${
                                     a.dayOfWeek ?? a.date
-                                  }:${time}`,
-                                });
-                              }}
-                            >
-                              {time}
-                            </Button>
-                          );
-                        })}
+                                  }:${time}`}
+                                  fontFamily={fontHauoraMedium}
+                                  fontSize="lg"
+                                  lineHeight={20}
+                                  p={10}
+                                  borderWidth={1}
+                                  color={
+                                    selectedTime?.label ===
+                                    `${index}:${a.dayOfWeek ?? a.date}:${time}`
+                                      ? "#fff"
+                                      : "#494949"
+                                  }
+                                  borderColor="#E0E0E0"
+                                  rounded={8}
+                                  bg={
+                                    selectedTime?.label ===
+                                    `${index}:${a.dayOfWeek ?? a.date}:${time}`
+                                      ? "primary"
+                                      : "transparent"
+                                  }
+                                  onPress={() => {
+                                    setSelectedTime({
+                                      value: { from: intr.from, to: intr.to },
+                                      label: `${index}:${
+                                        a.dayOfWeek ?? a.date
+                                      }:${time}`,
+                                    });
+                                  }}
+                                  w="100%"
+                                >
+                                  <Text
+                                    color={
+                                      selectedTime?.label ===
+                                      `${index}:${
+                                        a.dayOfWeek ?? a.date
+                                      }:${time}`
+                                        ? "#fff"
+                                        : "#494949"
+                                    }
+                                  >
+                                    {time}
+                                  </Text>
+                                </Button>
+                              </Div>
+                            );
+                          })}
+                        </Div>
                       </Div>
-                    )}
-
-                    {a.intervals.length === 0 && (
-                      <Div flexDir="row" flexWrap="wrap" style={{ gap: 8 }}>
-                        <Text>-</Text>
-                      </Div>
-                    )}
-                  </Div>
+                    ) : null}
+                  </>
                 ))}
 
-              {!availabilityLoading && availabilities.length === 0 && (
+              {!availabilityLoading && hasNoAvailability && (
                 <Text>No availability</Text>
               )}
             </Div>
@@ -230,9 +327,7 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
       <ButtonPrimary
         disabled={isActionLoading || !selectedTime}
         loading={isActionLoading}
-        onPress={() => {
-          navigation.navigate("PartnerVetConfirmationScreen");
-        }}
+        onPress={handleProceed}
       >
         Proceed
       </ButtonPrimary>

@@ -5,7 +5,7 @@ export interface PartnerVet {
   id: string;
   name: string;
   designation: string;
-  yearOfExperience: number;
+  yearsOfExperience: number;
   profileImg: UploadedFile;
 }
 
@@ -20,5 +20,20 @@ export interface State {
   partnerVetDetails: Map<string, PartnerVetDetails>;
 
   fetchPartnerVets: (partnerId: string) => Promise<void>;
-  fetchPartnerVetDetails: (id: string, partnerId: string) => Promise<void>;
+  fetchPartnerVetDetails: (
+    id: string,
+    partnerId: string
+  ) => Promise<PartnerVetDetails>;
+  fetchPartnerVetAvailability: (
+    id: string,
+    partnerId: string,
+    date?: Date
+  ) => Promise<ExpertAvailability[]>;
+  bookPartnerVet: (
+    id: string,
+    partnerId: string,
+    caseId: string,
+    date: string
+  ) => Promise<{ id: string }>;
+  cancelAppointment: (bookingId: string) => Promise<void>;
 }

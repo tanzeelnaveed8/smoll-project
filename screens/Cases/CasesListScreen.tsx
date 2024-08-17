@@ -192,7 +192,11 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
                             item.scheduledAt
                           )}
                         >
-                          {getCaseStatusLabel(item.status, item.scheduledAt)}
+                          {getCaseStatusLabel(
+                            item.status,
+                            item.scheduledAt,
+                            item.hasPartnerBooking
+                          )}
                         </Text>
                       </Text>
                     </Div>
@@ -238,22 +242,23 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
                     </Button>
                   )}
 
-                  {item.status === CaseStatusEnum.OPEN_ESCALATED && (
-                    <Button
-                      fontSize={"lg"}
-                      bg="transparent"
-                      p={0}
-                      fontFamily={fontHauoraSemiBold}
-                      color="primary"
-                      onPress={() => {
-                        navigation.navigate("CaseQuotesScreen", {
-                          id: item.id,
-                        });
-                      }}
-                    >
-                      View Requests
-                    </Button>
-                  )}
+                  {item.status === CaseStatusEnum.OPEN_ESCALATED &&
+                    !item.hasPartnerBooking && (
+                      <Button
+                        fontSize={"lg"}
+                        bg="transparent"
+                        p={0}
+                        fontFamily={fontHauoraSemiBold}
+                        color="primary"
+                        onPress={() => {
+                          navigation.navigate("CaseQuotesScreen", {
+                            id: item.id,
+                          });
+                        }}
+                      >
+                        View Requests
+                      </Button>
+                    )}
                 </Div>
               </Div>
             )}

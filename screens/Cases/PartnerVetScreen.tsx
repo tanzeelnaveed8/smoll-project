@@ -1,11 +1,11 @@
 import Layout from "@/components/app/Layout";
 import DoctorListCard from "@/components/partials/DoctorListCard";
-import { fontHauoraSemiBold } from "@/constant/constant";
+import { colorPrimary, fontHauoraSemiBold } from "@/constant/constant";
 import { usePartnerStore } from "@/store/modules/partner";
 import { NavigationType } from "@/store/types";
 import { useRoute } from "@react-navigation/native";
 import { useEffect, useMemo, useState } from "react";
-import { Dimensions, FlatList } from "react-native";
+import { Dimensions, FlatList, RefreshControl } from "react-native";
 import { Div, ScrollDiv, Text } from "react-native-magnus";
 
 const PartnerVetScreen: React.FC<{ navigation: NavigationType }> = ({
@@ -14,10 +14,12 @@ const PartnerVetScreen: React.FC<{ navigation: NavigationType }> = ({
   const route = useRoute();
   const { partnerVets, fetchPartnerVets } = usePartnerStore();
 
+  const caseId = (route.params as Record<string, string>)?.caseId;
   const partnerId = (route.params as Record<string, string>)?.partnerId;
   const partnerName = (route.params as Record<string, string>)?.partnerName;
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const vets = useMemo(
     () => partnerVets.get(partnerId),
@@ -28,15 +30,20 @@ const PartnerVetScreen: React.FC<{ navigation: NavigationType }> = ({
     handleFetchRequests();
   }, [partnerId]);
 
-  const handleFetchRequests = async () => {
+  const handleFetchRequests = async (isRefreshing?: boolean) => {
     try {
-      setIsLoading(true);
+      if (isRefreshing) {
+        setIsRefreshing(true);
+      } else {
+        setIsLoading(true);
+      }
 
-      if (!vets) {
+      if (!vets || isRefreshing) {
         await fetchPartnerVets(partnerId);
       }
     } finally {
       setIsLoading(false);
+      setIsRefreshing(false);
     }
   };
 
@@ -52,6 +59,13 @@ const PartnerVetScreen: React.FC<{ navigation: NavigationType }> = ({
       <FlatList
         data={vets ?? []}
         showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            tintColor={colorPrimary}
+            onRefresh={() => handleFetchRequests(true)}
+          />
+        }
         ListHeaderComponent={
           <Text
             fontSize="xl"
@@ -67,13 +81,15 @@ const PartnerVetScreen: React.FC<{ navigation: NavigationType }> = ({
             mb={index + 1 === vets?.length ? 0 : 20}
             name={item.name}
             speciality={item.designation}
-            experience={item.yearOfExperience}
+            experience={item.yearsOfExperience ?? 0}
+            image={item.profileImg?.url}
             verified
             nextAvailable=""
             onCheckAvailability={() => {
               navigation.navigate("PartnerVetDetailScreen", {
                 vetId: item.id,
                 partnerId: partnerId,
+                caseId,
               });
             }}
           />

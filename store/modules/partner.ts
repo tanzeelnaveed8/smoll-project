@@ -16,13 +16,39 @@ export const usePartnerStore = create<PartnerState>((set, get) => ({
   fetchPartnerVetDetails: async (id, partnerId) => {
     const response = await api.get(`/member/partners/${partnerId}/vets/${id}`);
 
-    console.log("response", response.data);
-
     set({
       partnerVetDetails: new Map([
         ...get().partnerVetDetails,
         [id, response.data],
       ]),
     });
+
+    return response.data;
+  },
+  fetchPartnerVetAvailability: async (id, partnerId, date) => {
+    const response = await api.get(
+      `/member/partners/${partnerId}/vets/${id}/availabilities`,
+      {
+        params: {
+          date,
+        },
+      }
+    );
+
+    return response.data;
+  },
+  bookPartnerVet: async (id, partnerId, caseId, date) => {
+    const res = await api.post(
+      `/member/partners/${partnerId}/vets/${id}/book`,
+      {
+        scheduleAt: date,
+        caseId,
+      }
+    );
+
+    return { id: res.data.id };
+  },
+  cancelAppointment: async (bookingId) => {
+    await api.delete(`/member/partners/appointments/${bookingId}`);
   },
 }));
