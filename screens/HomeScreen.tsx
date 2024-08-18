@@ -39,7 +39,7 @@ interface Props {
 interface OptionTab {
   name: string;
   description: string;
-  value: "counselling" | "vet";
+  value: "counselling" | "vet" | "appointments";
   loading: boolean;
 }
 
@@ -51,17 +51,24 @@ const HomeScreen: React.FC<Props> = (props) => {
 
   const [options, setOptions] = useState<OptionTab[]>([
     {
-      name: "Human Counselling",
-      value: "counselling",
-      description: "Therapy aids coping, enhances functioning",
+      name: "Appointments",
+      value: "appointments",
+      description: "Ask vet about food, concerns",
       loading: false,
     },
     {
       name: "Chat with Vet",
       value: "vet",
-      description: "Ask vet about food, concerns",
+      description: "Check you Appointments",
       loading: false,
     },
+    {
+      name: "Human Counselling",
+      value: "counselling",
+      description: "Therapy aids coping, enhances functioning",
+      loading: false,
+    },
+    
   ]);
 
   const [showAccountSetupModal, setShowAccountSetupModal] = useState(false);
@@ -137,6 +144,8 @@ const HomeScreen: React.FC<Props> = (props) => {
       // }
     } else if (item.value === "vet") {
       props.navigation.navigate("ExpertsInboxScreen");
+    } else if (item.value === "appointments") {
+      props.navigation.navigate("AppointmentsScreen");
     }
   };
 
@@ -174,8 +183,8 @@ const HomeScreen: React.FC<Props> = (props) => {
                 <IconButton
                   style={{ overflow: "visible" }}
                   onPress={() => {
-                    // props.navigation.navigate("NotificationTestScreen");
-                    props.navigation.navigate("AppointmentsScreen");
+                    props.navigation.navigate("NotificationTestScreen");
+                    // props.navigation.navigate("AppointmentsScreen");
                   }}
                 >
                   <IconBell

@@ -1,5 +1,9 @@
 import Layout from "@/components/app/Layout";
-import { colorPrimary, fontHauoraBold, fontHauoraSemiBold } from "@/constant/constant";
+import {
+  colorPrimary,
+  fontHauoraBold,
+  fontHauoraSemiBold,
+} from "@/constant/constant";
 import {
   appointmentFormatedTime,
   useAppointmentStore,
@@ -7,7 +11,11 @@ import {
 import { NavigationType } from "@/store/types";
 import { IconChevronRight } from "@tabler/icons-react-native";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, TouchableOpacity } from "react-native";
+import {
+  ActivityIndicator,
+  RefreshControl,
+  TouchableOpacity,
+} from "react-native";
 import { FlatList } from "react-native-bidirectional-infinite-scroll";
 
 import { Div, Image, Text } from "react-native-magnus";
@@ -18,40 +26,57 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
   const { fetchAppointments, appointment } = useAppointmentStore();
   const [isLoading, setIsLoading] = useState(false);
   const [nextPageId, setNextPageId] = useState(1);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
   // const [page, setPage] = useState(1);
 
   useEffect(() => {
     handleFetchAppointments();
   }, []);
 
-  const handleFetchAppointments = async () => {
-    if (!nextPageId) return;
+  // const handleFetchAppointments = async () => {
+  //   // if (!nextPageId) return;
+  //   try {
+  //     setIsLoading(true);
+  //     const response = await fetchAppointments(1);
+  //     console.log("response", response);
+  //     setNextPageId(response.nextPage);
+  //     console.log("lading data response.nextPage", response.nextPage);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+
+  const handleFetchAppointments = async (isRefresh?: boolean) => {
+    console.log("fetching data");
     try {
-      setIsLoading(true);
+      if (isRefresh) {
+        setIsRefreshing(true);
+      } else {
+        setIsLoading(true);
+      }
+
       const response = await fetchAppointments(1);
-      console.log("response", response);
       setNextPageId(response.nextPage);
-      console.log("lading data response.nextPage", response.nextPage);
     } finally {
       setIsLoading(false);
+      setIsRefreshing(false);
     }
   };
 
-  // const handleLoadMore = async () => {
-  //   if (!nextPageId) return;
-  //   console.log("fetching data again");
+  const handleLoadMore = async () => {
+    if (!nextPageId) return;
+    console.log("fetching data again");
 
-  //   return new Promise<void>(async (resolve) => {
-  //     const newPage = page + 1;
-  //     try {
-  //       const fetchedData = await fetchCases(newPage); // commented-out for now
-  //       setNextPageId(fetchedData.nextPage); /// commented-out for now
-  //       setPage(newPage);
-  //     } finally {
-  //       resolve();
-  //     }
-  //   });
-  // };
+    return new Promise<void>(async (resolve) => {
+      try {
+        const fetchedData = await fetchAppointments(nextPageId); // commented-out for now
+        setNextPageId(fetchedData.nextPage); /// commented-out for now
+      } finally {
+        resolve();
+      }
+    });
+  };
 
   const onStartReached = async () => {
     return new Promise<void>((resolve) => {
@@ -98,9 +123,16 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
             <Div>
               <FlatList
                 onStartReached={onStartReached}
-                onEndReached={handleFetchAppointments} // required, should return a promise
+                onEndReached={handleLoadMore} // required, should return a promise
                 onEndReachedThreshold={20} // optional
                 activityIndicatorColor={"black"} // optional
+                refreshControl={
+                  <RefreshControl
+                    refreshing={isRefreshing}
+                    tintColor={colorPrimary}
+                    onRefresh={() => handleFetchAppointments(true)}
+                  />
+                }
                 data={appointment}
                 renderItem={({ item, index }) => (
                   <AppointmentCard
