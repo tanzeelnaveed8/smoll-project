@@ -21,7 +21,7 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import { OneSignal } from "react-native-onesignal";
-import OtpVerify from "react-native-otp-verify";
+// import OtpVerify from "react-native-otp-verify";
 import { Platform } from "react-native";
 
 interface Props {
@@ -47,35 +47,35 @@ const OnboardingOtpModal: React.FC<Props> = (props) => {
   const [resendOtpWating, setResendOtpWating] = useState(0);
   const [otp, setOtp] = useState("");
 
-  useEffect(() => {
-    if (Platform.OS === "android") {
-      OtpVerify.getHash().then((hash) => {
-        // Send this hash to your server with the phone number
-        console.log("OTP Hash:", hash);
-      });
-    }
+  // useEffect(() => {
+  //   if (Platform.OS === "android") {
+  //     OtpVerify.getHash().then((hash) => {
+  //       // Send this hash to your server with the phone number
+  //       console.log("OTP Hash:", hash);
+  //     });
+  //   }
 
-    OtpVerify.addListener((message) => {
-      try {
-        const otp = /(\d{4})/g.exec(message)?.[1];
+  //   OtpVerify.addListener((message) => {
+  //     try {
+  //       const otp = /(\d{4})/g.exec(message)?.[1];
 
-        if (otp) {
-          setOtp(otp);
-          handleConfirm(otp);
-        }
-      } catch (error) {
-        console.log("Error reading OTP:", error);
-      }
-    });
+  //       if (otp) {
+  //         setOtp(otp);
+  //         handleConfirm(otp);
+  //       }
+  //     } catch (error) {
+  //       console.log("Error reading OTP:", error);
+  //     }
+  //   });
 
-    setTimeout(() => {
-      setIsAutoFocus(true);
-    }, 800);
+  //   setTimeout(() => {
+  //     setIsAutoFocus(true);
+  //   }, 800);
 
-    return () => {
-      OtpVerify.removeListener();
-    };
-  }, []);
+  //   return () => {
+  //     OtpVerify.removeListener();
+  //   };
+  // }, []);
 
   const handleConfirm = async (_otp?: string) => {
     try {

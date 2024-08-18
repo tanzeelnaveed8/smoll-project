@@ -84,6 +84,11 @@ android {
     compileSdk rootProject.ext.compileSdkVersion
 
     namespace 'com.anonymous.smollapp'
+
+     lint {
+        baseline = file("lint-baseline.xml")
+    }
+
     defaultConfig {
         applicationId 'com.anonymous.smollapp'
         minSdkVersion rootProject.ext.minSdkVersion
@@ -139,9 +144,18 @@ android {
     }
 }
 
+repositories {
+    mavenCentral()
+    maven { url 'https://webrtc.googlesource.com/boringssl/+/refs/heads/main' }
+}
+
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
+    implementation('com.facebook.react:react-native:0.71.0')
+    // implementation('org.webrtc:google-webrtc:1.0.3') 
+
+    // implementation('org.webrtc:google-webrtc:1.0.32006')
 
     def isGifEnabled = (findProperty('expo.gif.enabled') ?: "") == "true";
     def isWebpEnabled = (findProperty('expo.webp.enabled') ?: "") == "true";

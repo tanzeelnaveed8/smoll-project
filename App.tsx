@@ -1,4 +1,4 @@
-import { SafeAreaView, StyleSheet } from "react-native";
+import { PermissionsAndroid, Platform, SafeAreaView, StyleSheet } from "react-native";
 import { Text, ThemeProvider } from "react-native-magnus";
 
 import * as Font from "expo-font";
@@ -37,6 +37,8 @@ import ExpertsListScreen from "./screens/Experts/ExpertsListScreen";
 import PetProfileCongratulationsScreen from "./screens/PetProfile/PetProfileCongratulationsScreen";
 import PetProfileMedicalHistoryScreen from "./screens/PetProfile/PetProfileMedicalHistoryScreen";
 import PetProfileScreen from "./screens/PetProfile/PetProfileScreen";
+
+
 import SlotBookingScreen from "./screens/doctorsScreens/SlotBookingScreen";
 import EditInfoScreen from "./screens/settings/EditInfoScreen";
 import PetEditInfoScreen from "./screens/settings/PetEditInfoScreen";
@@ -112,6 +114,45 @@ const App = () => {
   const { user } = useUserStore();
   const { expertDetailMap, fetchExpertDetail } = useExpertStore();
   const [fontsLoaded, setFontsLoaded] = useState(false);
+
+//   useEffect(() => {
+//     const requestBluetoothPermission = async () => {
+//         if (Platform.OS === 'android') {
+//             try {
+//                 const granted = await PermissionsAndroid.request(
+//                     PermissionsAndroid.PERMISSIONS.BLUETOOTH,
+//                     {
+//                         title: "Bluetooth Permission",
+//                         message: "This app needs access to your Bluetooth.",
+//                         buttonNeutral: "Ask Me Later",
+//                         buttonNegative: "Cancel",
+//                         buttonPositive: "OK"
+//                     }
+//                 );
+
+//                 if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+//                     console.log("Bluetooth permission granted");
+//                 } else {
+//                     console.log("Bluetooth permission denied");
+//                     Alert.alert("Permission Denied", "Bluetooth permission is required to use this feature.");
+//                 }
+//             } catch (err) {
+//                 console.warn(err);
+//             }
+//         }
+//     };
+
+//     const checkBluetoothPermission = async () => {
+//         const granted = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.BLUETOOTH);
+//         if (granted) {
+//             console.log("You can use Bluetooth features");
+//         } else {
+//             await requestBluetoothPermission();
+//         }
+//     };
+
+//     checkBluetoothPermission();
+// }, []);
 
   useEffect(() => {
     loadFonts().then(() => setFontsLoaded(true));
