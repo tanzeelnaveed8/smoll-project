@@ -8,12 +8,9 @@ import { getCaseStatusColor, getCaseStatusLabel } from "@/utils/helpers";
 import { useRoute } from "@react-navigation/native";
 import dayjs from "dayjs";
 import React, { useCallback, useEffect, useState } from "react";
-import {
-  FlatList,
-  RefreshControl,
-  StyleSheet,
-  TouchableOpacity,
-} from "react-native";
+import { RefreshControl, StyleSheet, TouchableOpacity } from "react-native";
+import { FlatList } from "react-native-bidirectional-infinite-scroll";
+
 import { Button, Div, Image, Text } from "react-native-magnus";
 import { useInterval } from "usehooks-ts";
 
@@ -26,6 +23,8 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [renderKey, setRenderKey] = useState(0);
+  const [nextPageId, setNextPageId] = useState<number | null>(1);
+  const [page, setPage] = useState(1);
 
   const comingFrom = (route.params as Record<string, string | undefined>)?.from;
 
@@ -38,6 +37,7 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
   }, []);
 
   const handleFetchCases = async (isRefresh?: boolean) => {
+    console.log("fetching data");
     try {
       if (isRefresh) {
         setIsRefreshing(true);
@@ -45,7 +45,9 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
         setIsLoading(true);
       }
 
-      await fetchCases();
+      const response = await fetchCases(1);
+      console.log("handleLoadMore response", response);
+      setNextPageId(response.nextPage);
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);
@@ -66,6 +68,22 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
     },
     [renderKey]
   );
+
+  const handleLoadMore = async () => {
+    if (!nextPageId) return;
+    console.log("fetching data again");
+
+    return new Promise<void>(async (resolve) => {
+      const newPage = page + 1;
+      try {
+        const fetchedData = await fetchCases(newPage); // commented-out for now
+        setNextPageId(fetchedData.nextPage); /// commented-out for now
+        setPage(newPage);
+      } finally {
+        resolve();
+      }
+    });
+  };
 
   return (
     <>
@@ -97,6 +115,9 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
             }}
             data={cases}
             style={{ height: "100%" }}
+            onEndReached={handleLoadMore} // required, should return a promise
+            onEndReachedThreshold={20} // optional
+            activityIndicatorColor={"black"} // optional
             refreshControl={
               <RefreshControl
                 refreshing={isRefreshing}
@@ -262,7 +283,7 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
                 </Div>
               </Div>
             )}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item, i) => `${i}`}
           />
         </Div>
       </Layout>

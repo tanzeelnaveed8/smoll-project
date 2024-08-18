@@ -49,7 +49,7 @@ const TabNavigationBar: React.FC<{
   const route = useRoute();
 
   return (
-    <Div borderTopWidth={2} borderColor="#dcdcdc14">
+    <Div borderTopWidth={2} borderColor="#dcdcdc14" pb={30}>
       <Div
         flexDir="row"
         justifyContent="space-around"
