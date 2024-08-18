@@ -174,7 +174,8 @@ const HomeScreen: React.FC<Props> = (props) => {
                 <IconButton
                   style={{ overflow: "visible" }}
                   onPress={() => {
-                    props.navigation.navigate("NotificationTestScreen");
+                    // props.navigation.navigate("NotificationTestScreen");
+                    props.navigation.navigate("AppointmentsScreen");
                   }}
                 >
                   <IconBell

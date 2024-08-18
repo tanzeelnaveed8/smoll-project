@@ -68,7 +68,7 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
       }}
       loading={loading}
     >
-      <ScrollDiv flex={1}>
+      <ScrollDiv flex={1} pt={20}>
         <ClinicCard
           name={clinicQuote?.partner?.name ?? ""}
           min={cost.min}
@@ -249,12 +249,11 @@ const ProposalDetailCard: React.FC<{
             {servicesName}
           </Text>
 
-          <Tag bg={typeStyles.bg} rounded={40}>
+          <Tag bg={typeStyles.bg} rounded={40} mb={-1}>
             <Text
               fontSize={12}
               fontFamily={fontHauoraSemiBold}
               color={typeStyles.color}
-              mt={2}
             >
               {type}
             </Text>

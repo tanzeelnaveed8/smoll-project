@@ -88,7 +88,7 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
     return availabilities.every((a) => a.intervals.length === 0);
   }, [availabilities]);
 
-  const handleFetchVetDetails = async () => {
+  const handleFetchExpertDetails = async (isRefresh?: boolean) => {
     try {
       setIsLoading(true);
 

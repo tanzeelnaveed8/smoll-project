@@ -33,6 +33,7 @@ const tabList = [
   {
     name: "Cases",
     link: "CasesListScreen",
+    // link: "PartnerVetDetailScreen",
     icon: (active?: boolean) => (
       <IconBriefcase
         width={28}
