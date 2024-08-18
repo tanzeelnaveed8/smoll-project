@@ -4,12 +4,12 @@ import { Div } from "react-native-magnus";
 import { usePetStore } from "@/store/modules/pet";
 import { PetDetail } from "@/store/types/pet";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
-// import PetProfileNameScreen from "../PetProfile/PetProfileNameScreen";
-// import PetProfileDOBScreen from "../PetProfile/PetProfileDOBScreen";
-// import PetProfileSpeciesScreen from "../PetProfile/PetProfileSpeciesScreen";
-// import PetProfileGenderScreen from "../PetProfile/PetProfileGenderScreen";
-// import PetProfileBreedScreen from "../PetProfile/PetProfileBreedScreen";
-// import PetProfileSpayedScreen from "../PetProfile/PetProfileSpayedScreen";
+import PetProfileNameScreen from "../PetProfile/PetProfileNameScreen";
+import PetProfileDOBScreen from "../PetProfile/PetProfileDOBScreen";
+import PetProfileSpeciesScreen from "../PetProfile/PetProfileSpeciesScreen";
+import PetProfileGenderScreen from "../PetProfile/PetProfileGenderScreen";
+import PetProfileBreedScreen from "../PetProfile/PetProfileBreedScreen";
+import PetProfileSpayedScreen from "../PetProfile/PetProfileSpayedScreen";
 import { useRoute } from "@react-navigation/native";
 import { ActivityIndicator } from "react-native";
 import { colorPrimary } from "@/constant/constant";
@@ -64,7 +64,7 @@ const PetEditInfoScreen: React.FC<{ navigation: NavigationType }> = ({
     >
       {form && (
         <>
-          {/* <Div flex={1}>
+          <Div flex={1}>
             {fileName === "name" && (
               <PetProfileNameScreen pet={form} setPet={setForm} />
             )}
@@ -88,7 +88,7 @@ const PetEditInfoScreen: React.FC<{ navigation: NavigationType }> = ({
             {fileName === "spayed/neutered" && (
               <PetProfileSpayedScreen pet={form} setPet={setForm} />
             )}
-          </Div> */}
+          </Div>
 
           <ButtonPrimary
             bgColor="primary"
