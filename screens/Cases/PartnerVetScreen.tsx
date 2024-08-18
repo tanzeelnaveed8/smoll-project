@@ -1,83 +1,72 @@
-import Header from "@/components/partials/Header";
-import { colorPrimary, fontHauoraSemiBold } from "@/constant/constant";
-import { Div, Text, ScrollDiv } from "react-native-magnus";
-import DoctorListCard from "@/components/partials/DoctorListCard";
-import Container from "@/components/partials/Container";
 import Layout from "@/components/app/Layout";
-import { ActivityIndicator, Dimensions, FlatList } from "react-native";
-import { useEffect, useState } from "react";
-import { useCaseStore } from "@/store/modules/case";
+import DoctorListCard from "@/components/partials/DoctorListCard";
+import { colorPrimary, fontHauoraSemiBold } from "@/constant/constant";
+import { usePartnerStore } from "@/store/modules/partner";
 import { NavigationType } from "@/store/types";
-
-const doctorList = [
-  {
-    name: "Dr. Emily Carter",
-    speciality: "DVM, GPCERT (FelP)",
-    experience: 5,
-    verified: true,
-    nextAvailable: "06:45 PM today",
-  },
-  {
-    name: "Dr. Emily Carter",
-    speciality: "DVM, GPCERT (FelP)",
-    experience: 5,
-    verified: true,
-    nextAvailable: "06:45 PM today",
-  },
-  {
-    name: "Dr. Emily Carter",
-    speciality: "DVM, GPCERT (FelP)",
-    experience: 5,
-    verified: true,
-    nextAvailable: "06:45 PM today",
-  },
-  {
-    name: "Dr. Emily Carter",
-    speciality: "DVM, GPCERT (FelP)",
-    experience: 5,
-    verified: true,
-    nextAvailable: "06:45 PM today",
-  },
-];
-
-const windowHeight = Dimensions.get("window").height;
+import { useRoute } from "@react-navigation/native";
+import { useEffect, useMemo, useState } from "react";
+import { Dimensions, FlatList, RefreshControl } from "react-native";
+import { Div, ScrollDiv, Text } from "react-native-magnus";
 
 const PartnerVetScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
+  const route = useRoute();
+  const { partnerVets, fetchPartnerVets } = usePartnerStore();
+
+  const caseId = (route.params as Record<string, string>)?.caseId;
+  const partnerId = (route.params as Record<string, string>)?.partnerId;
+  const partnerName = (route.params as Record<string, string>)?.partnerName;
+
   const [isLoading, setIsLoading] = useState(false);
-  const { vetDoctorList, fetchVetDoctors } = useCaseStore();
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const vets = useMemo(
+    () => partnerVets.get(partnerId),
+    [partnerVets, partnerId]
+  );
 
   useEffect(() => {
     handleFetchRequests();
-  }, []);
+  }, [partnerId]);
 
-  const handleFetchRequests = async () => {
+  const handleFetchRequests = async (isRefreshing?: boolean) => {
     try {
-      setIsLoading(true);
+      if (isRefreshing) {
+        setIsRefreshing(true);
+      } else {
+        setIsLoading(true);
+      }
 
-      if (vetDoctorList.length === 0) {
-        // await fetchVetDoctors();
+      if (!vets || isRefreshing) {
+        await fetchPartnerVets(partnerId);
       }
     } finally {
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 1000);
+      setIsLoading(false);
+      setIsRefreshing(false);
     }
   };
 
   return (
     <Layout
       showBack
-      title="Harmony Vet Clinic"
+      title={partnerName}
       onBackPress={() => {
         navigation.goBack();
       }}
+      loading={isLoading}
     >
-      <ScrollDiv showsVerticalScrollIndicator={false}>
-        {/* <Header title="Find your Doctor" /> */}
-
-        <Div mt={12}>
+      <FlatList
+        data={vets ?? []}
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            tintColor={colorPrimary}
+            onRefresh={() => handleFetchRequests(true)}
+          />
+        }
+        ListHeaderComponent={
           <Text
             fontSize="xl"
             fontFamily={fontHauoraSemiBold}
@@ -86,34 +75,27 @@ const PartnerVetScreen: React.FC<{ navigation: NavigationType }> = ({
           >
             Find your Doctor
           </Text>
-
-          {!isLoading && (
-            <FlatList
-              data={doctorList}
-              renderItem={({ item, index }) => (
-                <DoctorListCard
-                  mb={index + 1 === doctorList.length ? 0 : 20}
-                  name="Dr. Emily Carter"
-                  speciality="DVM, GPCERT (FelP)"
-                  experience={5}
-                  verified
-                  nextAvailable="06:45 PM today"
-                  onCheckAvailability={() => {
-                    navigation.navigate("PartnerVetDetailScreen");
-                  }}
-                />
-              )}
-              keyExtractor={(item, i) => `${i}`}
-            />
-          )}
-
-          {isLoading && (
-            <Div flex={1} justifyContent="center" minH={windowHeight / 1.4}>
-              <ActivityIndicator size="large" color={colorPrimary} />
-            </Div>
-          )}
-        </Div>
-      </ScrollDiv>
+        }
+        renderItem={({ item, index }) => (
+          <DoctorListCard
+            mb={index + 1 === vets?.length ? 0 : 20}
+            name={item.name}
+            speciality={item.designation}
+            experience={item.yearsOfExperience ?? 0}
+            image={item.profileImg?.url}
+            verified
+            nextAvailable=""
+            onCheckAvailability={() => {
+              navigation.navigate("PartnerVetDetailScreen", {
+                vetId: item.id,
+                partnerId: partnerId,
+                caseId,
+              });
+            }}
+          />
+        )}
+        keyExtractor={(item, i) => `${i}`}
+      />
     </Layout>
   );
 };

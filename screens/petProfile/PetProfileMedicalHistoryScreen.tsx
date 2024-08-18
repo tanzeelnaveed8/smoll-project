@@ -24,6 +24,9 @@ const PetProfileMedicalHistoryScreen: React.FC<Props> = (props) => {
   const petBg = (route.params as Record<string, string>)?.petBg;
   const navigateTo = (route.params as Record<string, string>)?.navigateTo;
   const showBackBtn = (route.params as Record<string, string>)?.showBackBtn;
+  const expertId = (route.params as Record<string, string>)?.expertId;
+  const consultationId = (route.params as Record<string, string>)
+    ?.consultationId;
 
   const { healthHistoryMap } = usePetStore();
   const [open, setOpen] = useState(false);
@@ -41,6 +44,8 @@ const PetProfileMedicalHistoryScreen: React.FC<Props> = (props) => {
       petName: petName,
       petId: petId,
       petBg: petBg,
+      expertId,
+      consultationId,
     });
   };
 

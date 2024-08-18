@@ -12,14 +12,15 @@ const SplashScreen: React.FC<{ navigation: NavigationType }> = ({
   useEffect(() => {
     const getStoredToken = async () => {
       const storedToken = await AsyncStorage.getItem("accessToken");
-      if (storedToken) {
-        console.log("storedToken", storedToken);
 
+      if (storedToken) {
         try {
-          const user = await findUser();
+          await findUser(true);
           navigation.navigate("HomeScreen");
-        } catch (e) {
-          navigation.navigate("OnboardingScreen");
+        } catch (error) {
+          setTimeout(() => {
+            navigation.navigate("OnboardingScreen");
+          }, 1000);
         }
       } else {
         setTimeout(() => {

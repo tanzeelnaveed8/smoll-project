@@ -124,9 +124,6 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
                   flexDir="row"
                   alignItems="center"
                   mb={12}
-                  onPress={() => {
-                    navigation.navigate("CasesRequestScreen");
-                  }}
                 >
                   <Image
                     source={{ uri: item.pet.photos?.[0].url }}
@@ -146,15 +143,16 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
                         {item.pet.name}
                       </Text>
 
-                      {item.status === CaseStatusEnum.OPEN_ESCALATED && (
-                        <Text
-                          fontFamily={fontHauoraSemiBold}
-                          fontSize={"lg"}
-                          color="#2F6E20"
-                        >
-                          {item.requestCount} Request
-                        </Text>
-                      )}
+                      {item.status === CaseStatusEnum.OPEN_ESCALATED &&
+                        item.requestCount && (
+                          <Text
+                            fontFamily={fontHauoraSemiBold}
+                            fontSize={"lg"}
+                            color="#2F6E20"
+                          >
+                            {item.requestCount} Request
+                          </Text>
+                        )}
 
                       {item.scheduledAt && (
                         <Text
@@ -194,7 +192,11 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
                             item.scheduledAt
                           )}
                         >
-                          {getCaseStatusLabel(item.status, item.scheduledAt)}
+                          {getCaseStatusLabel(
+                            item.status,
+                            item.scheduledAt,
+                            item.hasPartnerBooking
+                          )}
                         </Text>
                       </Text>
                     </Div>
@@ -240,20 +242,23 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
                     </Button>
                   )}
 
-                  {item.status === CaseStatusEnum.OPEN_ESCALATED && (
-                    <Button
-                      fontSize={"lg"}
-                      bg="transparent"
-                      p={0}
-                      fontFamily={fontHauoraSemiBold}
-                      color="primary"
-                      onPress={() => {
-                        navigation.navigate("CasesRequestScreen");
-                      }}
-                    >
-                      View Request
-                    </Button>
-                  )}
+                  {item.status === CaseStatusEnum.OPEN_ESCALATED &&
+                    !item.hasPartnerBooking && (
+                      <Button
+                        fontSize={"lg"}
+                        bg="transparent"
+                        p={0}
+                        fontFamily={fontHauoraSemiBold}
+                        color="primary"
+                        onPress={() => {
+                          navigation.navigate("CaseQuotesScreen", {
+                            id: item.id,
+                          });
+                        }}
+                      >
+                        View Requests
+                      </Button>
+                    )}
                 </Div>
               </Div>
             )}

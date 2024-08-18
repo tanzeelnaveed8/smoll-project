@@ -154,8 +154,28 @@ export class CometChatWrapper {
     message: CometChat.BaseMessage,
     chatFor: "experts" | "counsellors"
   ): IMessage {
-    const text = (message as CometChat.TextMessage).getText();
+    console.log("base", message);
+
     const userId = message.getSender().getUid();
+    let text: string | undefined;
+    let image: string | undefined;
+    let video: string | undefined;
+
+    if (message instanceof CometChat.TextMessage) {
+      text = message.getText();
+    } else if (message instanceof CometChat.MediaMessage) {
+      const attachment = message.getAttachment();
+      if (attachment) {
+        const fileType = attachment.getMimeType();
+        const fileUrl = attachment.getUrl();
+        if (fileType.startsWith("image")) {
+          image = fileUrl;
+        } else if (fileType.startsWith("video")) {
+          video = fileUrl;
+        }
+      }
+    }
+
     // TODO: get avatar from store, because getAvatar() is returning null.
     let avatar = undefined;
 
@@ -169,7 +189,9 @@ export class CometChatWrapper {
 
     return {
       _id: message.getId(),
-      text: text,
+      text: text || "",
+      image,
+      video,
       createdAt,
       user: {
         _id: userId,

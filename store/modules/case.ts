@@ -6,6 +6,7 @@ export const useCaseStore = create<CasesState>((set, get) => ({
   cases: null,
   caseRequests: [],
   vetDoctorList: [],
+  casesQuotes: new Map(),
 
   createCase: async (payload) => {
     const { petId, vetId, ...rest } = payload;
@@ -23,18 +24,31 @@ export const useCaseStore = create<CasesState>((set, get) => ({
     await api.delete(`/member/cases/${id}`);
   },
   fetchCases: async (loadMore?: boolean) => {
-    const response = await api.get("/member/cases");
+    const response = await api.get("/member/cases", {
+      params: {
+        page: 1,
+        limit: 10,
+      },
+    });
 
     const cases = get().cases || [];
-
-    console.log("case", response.data);
+    const data = response.data.data;
 
     set(() => ({
-      cases: loadMore ? [...cases, ...response.data] : response.data,
+      cases: loadMore ? [...cases, ...data] : data,
     }));
   },
   fetchCase: async (id) => {
     const response = await api.get(`/member/cases/${id}`);
+    return response.data;
+  },
+  fetchCaseQuotes: async (id: string) => {
+    const response = await api.get(`/member/cases/${id}/quotes`);
+
+    set(() => ({
+      casesQuotes: new Map([...get().casesQuotes, [id, response.data]]),
+    }));
+
     return response.data;
   },
   fetchVetDoctors: async () => {

@@ -2,24 +2,72 @@ import Layout from "@/components/app/Layout";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import { fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
 import { IconCalendarClock } from "@tabler/icons-react-native";
-import React from "react";
-import { FlatList, TouchableOpacity } from "react-native";
+import React, { useState } from "react";
+import { ActivityIndicator, FlatList, TouchableOpacity } from "react-native";
 import { Div, Image, Text } from "react-native-magnus";
+import { showMessage, hideMessage } from "react-native-flash-message";
+import FlashCustomContent from "@/components/partials/FlashCustomContent";
+import { useExpertStore } from "@/store/modules/expert";
+import { useRoute } from "@react-navigation/native";
+import { NavigationType } from "@/store/types";
+import { usePartnerStore } from "@/store/modules/partner";
+
+interface Props {
+  navigation: NavigationType;
+}
 
 const btns = [
-  {
-    text: "Resehdule Booking",
-    icon: <IconCalendarClock width={32} height={32} color={"#427594"} />,
-  },
+  //   {
+  //     text: "Resehdule Booking",
+  //     icon: <IconCalendarClock width={32} height={32} color={"#427594"} />,
+  //   },
   {
     text: "Cancel Booking",
     icon: <IconCalendarClock width={32} height={32} color={"#427594"} />,
   },
 ];
 
-const PartnerVetSuccessfullScreen = () => {
+const PartnerVetSuccessfullScreen: React.FC<Props> = ({ navigation }) => {
+  const route = useRoute();
+
+  const { cancelAppointment } = usePartnerStore();
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const bookingId = (route.params as Record<string, string>)?.bookingId;
+
+  const handleCancelClick = async () => {
+    try {
+      setIsLoading(true);
+
+      showMessage({
+        renderCustomContent: () => (
+          <FlashCustomContent loader message="Cancelling..." />
+        ),
+        message: "",
+        type: "info",
+        autoHide: false,
+      });
+
+      await cancelAppointment(bookingId);
+
+      showMessage({
+        renderCustomContent: () => (
+          <FlashCustomContent message="Appointment cancelled successfully." />
+        ),
+        message: "",
+        type: "success",
+        autoHide: true,
+      });
+
+      navigation.navigate("HomeScreen");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <Layout showCloseIcon onBackPress={() => {}}>
+    <Layout onBackPress={() => {}}>
       <Div flex={1} justifyContent="space-between" pt={20}>
         <Div>
           <Image
@@ -33,37 +81,39 @@ const PartnerVetSuccessfullScreen = () => {
             Thank you for booking with us
           </Text>
           <Text fontSize={"lg"} fontFamily={fontHauoraMedium} mb={32}>
-            We will send a notification once your appointment has been accepted.
+            We will send a notification once your appointment is close.
           </Text>
 
           <Div>
-            <FlatList
-              data={btns}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  style={{
-                    flexDirection: "row",
-                    gap: 24,
-                    alignItems: "center",
-                    marginBottom: 24,
-                  }}
-                >
-                  <Div>{item.icon}</Div>
-                  <Text
-                    fontSize={"lg"}
-                    fontFamily={fontHauoraSemiBold}
-                    color="primary"
-                  >
-                    {item.text}
-                  </Text>
-                </TouchableOpacity>
-              )}
-              keyExtractor={(item) => item.text}
-            />
+            <TouchableOpacity
+              style={{
+                flexDirection: "row",
+                gap: 16,
+                alignItems: "center",
+                marginBottom: 24,
+              }}
+            >
+              <Div>
+                <IconCalendarClock width={32} height={32} color={"#427594"} />
+              </Div>
+              <Text
+                fontSize={"lg"}
+                fontFamily={fontHauoraSemiBold}
+                color="primary"
+                onPress={handleCancelClick}
+              >
+                Cancel Booking
+              </Text>
+            </TouchableOpacity>
           </Div>
         </Div>
 
-        <ButtonPrimary>Appointment Details</ButtonPrimary>
+        <ButtonPrimary
+          disabled={isLoading}
+          onPress={() => navigation.navigate("HomeScreen")}
+        >
+          Appointment details
+        </ButtonPrimary>
       </Div>
     </Layout>
   );

@@ -69,7 +69,6 @@ interface ExpertState {
     }
   ) => Promise<{ id: string }>;
   cancelConsultation: (id: string) => Promise<void>;
-  endConsultation: (id: string) => Promise<void>;
   updateConsultation: (payload: {
     id: string;
     caseId: string;

@@ -1,101 +1,192 @@
 import Layout from "@/components/app/Layout";
 import AvailabilityAndDateSelector from "@/components/partials/AvailabilityAndDateSelector";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
-import Container from "@/components/partials/Container";
 import DoctorCard from "@/components/partials/DoctorCard";
-import Header from "@/components/partials/Header";
-import PartnerVetStarRating from "@/screens/Cases/PartnerVetStarRating";
-import Verified from "@/components/partials/Verified";
 import { fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
+import { usePartnerStore } from "@/store/modules/partner";
 import { NavigationType } from "@/store/types";
-import { useEffect, useState } from "react";
-import {
-  Button,
-  Div,
-  Text,
-  ScrollDiv,
-  Image,
-  Skeleton,
-} from "react-native-magnus";
+import { ExpertAvailability } from "@/store/types/expert";
+import { useRoute } from "@react-navigation/native";
+import dayjs from "dayjs";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Button, Div, ScrollDiv, Skeleton, Text } from "react-native-magnus";
 
-const availabTime = [
-  {
-    id: 1,
-    day: "Thu, 15  Jun",
-    timeSlots: ["10:00am", "11:15am", "1:00pm", "2:00pm", "4:00pm"],
-  },
-  {
-    id: 2,
-    day: "Fri, 16  Jun",
-    timeSlots: ["10:00am", "11:15am", "1:00pm", "2:00pm", "4:00pm"],
-  },
-];
-
-const dummyData = [1, 2, 3, 4, 5, 6, 7, 8];
+const dayOfWeekMap: { [key: string]: number } = {
+  sun: 0,
+  mon: 1,
+  tue: 2,
+  wed: 3,
+  thur: 4,
+  fri: 5,
+  sat: 6,
+};
 
 const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
-  const [selectedTime, setSelectedTime] = useState("");
+  const route = useRoute();
+  const {
+    partnerVetDetails,
+    fetchPartnerVetDetails,
+    fetchPartnerVetAvailability,
+  } = usePartnerStore();
+
+  const caseId = (route.params as Record<string, string>)?.caseId;
+  const partnerId = (route.params as Record<string, string>)?.partnerId;
+  const vetId = (route.params as Record<string, string>)?.vetId;
+
+  const [availability, setAvailability] = useState<ExpertAvailability[]>([]);
+  const [selectedDate, setSelectedDate] = useState<string>();
+  const [selectedTime, setSelectedTime] = useState<{
+    value: { from: string; to: string };
+    label: string;
+  } | null>(null);
+
   const [isLoading, setIsLoading] = useState(false);
+  const [isActionLoading, setIsActionLoading] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [availabilityLoading, setAvailabilityLoading] = useState(false);
+  const [isRequesting, setIsRequesting] = useState(false);
+
+  const partnerDetails = useMemo(() => {
+    return partnerVetDetails.get(vetId);
+  }, [partnerVetDetails, vetId]);
 
   useEffect(() => {
     handleFetchVetDetails();
-  }, []);
+  }, [partnerId, vetId]);
+
+  const availabilities = useMemo<ExpertAvailability[]>(() => {
+    if (!availability) return [];
+
+    return availability.map((a) => ({
+      ...a,
+      intervals: a.intervals.flatMap((interval) => {
+        const start = dayjs(`2000-01-01T${interval.from}`);
+        const end = dayjs(`2000-01-01T${interval.to}`);
+        const slots = [];
+
+        let current = start;
+        while (current.isBefore(end)) {
+          const slotEnd = current.add(30, "minute");
+          if (slotEnd.isAfter(end)) break;
+
+          slots.push({
+            from: current.format("HH:mm"),
+            to: slotEnd.format("HH:mm"),
+          });
+
+          current = slotEnd;
+        }
+
+        return slots;
+      }),
+    }));
+  }, [partnerDetails, availability]);
+
+  const hasNoAvailability = useMemo(() => {
+    return availabilities.every((a) => a.intervals.length === 0);
+  }, [availabilities]);
 
   const handleFetchVetDetails = async () => {
     try {
       setIsLoading(true);
+
+      if (!partnerDetails) {
+        const details = await fetchPartnerVetDetails(vetId, partnerId);
+        setAvailability(details.availabilities);
+      }
     } finally {
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 1000);
+      setIsLoading(false);
     }
   };
 
+  const handleDateSelect = async (date: string) => {
+    try {
+      setAvailabilityLoading(true);
+      setSelectedDate(date);
+
+      const _availability = await fetchPartnerVetAvailability(
+        vetId,
+        partnerId,
+        new Date(date)
+      );
+
+      setAvailability(_availability);
+    } finally {
+      setAvailabilityLoading(false);
+    }
+  };
+
+  const formatTime = useCallback(
+    (
+      availability: ExpertAvailability,
+      interval: { from: string; to: string }
+    ) => {
+      const date = availability.dayOfWeek
+        ? dayjs().day(dayOfWeekMap[availability.dayOfWeek]).format("YYYY-MM-DD")
+        : dayjs(availability.date).format("YYYY-MM-DD");
+
+      const fromTime = dayjs(`${date}T${interval.from}Z`).format("hh:mm A");
+      const toTime = dayjs(`${date}T${interval.to}Z`).format("hh:mm A");
+
+      return `${fromTime} - ${toTime}`;
+    },
+    []
+  );
+
+  const handleProceed = async () => {
+    console.log("selectedDate", selectedDate);
+    console.log("selectedTime", selectedTime);
+
+    if (!selectedDate || !selectedTime) {
+      return;
+    }
+
+    // const scheduledAt = selectedDate
+    const _date = dayjs(selectedDate).format("YYYY-MM-DD");
+
+    const scheduleAt = dayjs(
+      _date.toString() +
+        "T" +
+        dayjs(`${_date}T${selectedTime.value.from}Z`).format("HH:mm")
+    )
+      .utc()
+      .format();
+
+    navigation.navigate("PartnerVetConfirmationScreen", {
+      from: "PartnerVetDetailScreen",
+      vetId,
+      partnerId,
+      selectedTime: JSON.stringify(selectedTime?.value),
+      selectedDate,
+      caseId,
+      scheduleAt,
+    });
+  };
   return (
     <Layout
       showBack
-      title="Dr. Emily Carter"
+      title={partnerDetails?.name}
       onBackPress={() => {
         navigation.goBack();
       }}
+      loading={isLoading}
     >
       <ScrollDiv flex={1} showsVerticalScrollIndicator={false}>
-        {/* <Header title="Book a Slot" /> */}
-
-        <Div flexDir="row" style={{ gap: 24 }} mb={20}>
-          <Image
-            source={require("../../assets/images/doctor-img.png")}
-            w={100}
-            h={100}
-            rounded={100}
+        <Div mb={24}>
+          <DoctorCard
+            name={partnerDetails?.name ?? ""}
+            speciality={partnerDetails?.designation ?? ""}
+            experience={partnerDetails?.yearsOfExperience ?? 0}
+            image={partnerDetails?.profileImg?.url ?? ""}
+            verified={true}
           />
-
-          <Div style={{ gap: 4 }}>
-            <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold}>
-              Dr. Emily Carter
-            </Text>
-            <Text
-              fontSize={"md"}
-              fontFamily={fontHauoraMedium}
-              color="darkGreyText"
-            >
-              DVM, GPCERT (FelP)
-            </Text>
-            <Text
-              fontSize={"md"}
-              fontFamily={fontHauoraMedium}
-              color="darkGreyText"
-            >
-              4 yrs of experience
-            </Text>
-            <Verified />
-          </Div>
         </Div>
+
         <Div maxW={350} mb={20}>
           <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold} mb={4}>
-            Address - Harmony Vet Clinic
+            Address - {partnerDetails?.partnerName}
           </Text>
           <Text
             color="darkGreyText"
@@ -103,16 +194,16 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
             fontSize={"lg"}
             fontFamily={fontHauoraMedium}
           >
-            Villa 12, Street 24, Jumeirah 3, Dubai, United Arab Emirates
+            {partnerDetails?.partnerAddress}
           </Text>
-
-          <PartnerVetStarRating rating={4} />
         </Div>
 
         <Div pb={20} borderTopWidth={1} borderColor="#D0D7DC">
-          {/* <ButtonPrimary bgColor="primary">Instant Consultation</ButtonPrimary> */}
           <Div>
-            <AvailabilityAndDateSelector />
+            <AvailabilityAndDateSelector
+              // allAvailability={allAvailability}
+              onSelect={handleDateSelect}
+            />
 
             <Div mt={16}>
               <Text
@@ -124,80 +215,122 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
               >
                 Availability
               </Text>
-              {!isLoading &&
-                availabTime.map((t) => (
-                  <Div
-                    key={t.id}
-                    // py={12}
-                    pb={12}
-                    mb={12}
-                    borderBottomWidth={1}
-                    borderColor="#E0E0E0"
-                  >
-                    <Text
-                      fontFamily={fontHauoraSemiBold}
-                      fontSize="xl"
-                      lineHeight={24}
-                      color="#222222"
-                      mb={12}
-                    >
-                      {t.day}
-                    </Text>
-                    <Div flexDir="row" flexWrap="wrap" style={{ gap: 8 }}>
-                      {t.timeSlots.map((slot) => (
-                        <Button
-                          key={slot}
-                          fontFamily={fontHauoraMedium}
-                          fontSize="lg"
-                          lineHeight={20}
-                          p={10}
-                          borderWidth={1}
-                          color={
-                            selectedTime === `${t.id}${slot}`
-                              ? "#fff"
-                              : "#494949"
-                          }
-                          borderColor="#E0E0E0"
-                          rounded={4}
-                          bg={
-                            selectedTime === `${t.id}${slot}`
-                              ? "primary"
-                              : "transparent"
-                          }
-                          onPress={() => {
-                            setSelectedTime(`${t.id}${slot}`);
-                          }}
-                        >
-                          {slot}
-                        </Button>
-                      ))}
-                    </Div>
-                  </Div>
-                ))}
 
-              {isLoading && (
+              {availabilityLoading && (
                 <Div flex={1}>
-                  <Skeleton.Box mt="sm" w={100} h={25} mb={4} />
+                  <Skeleton.Box mt="sm" w={100} h={25} mb={4} rounded={4} />
                   <Div flexDir="row" flexWrap="wrap" style={{ gap: 8 }}>
-                    {dummyData.map((item) => (
-                      <Skeleton.Box mt="sm" h={40} w={80} />
+                    {Array.from({ length: 4 }).map(() => (
+                      <Skeleton.Box mt="sm" h={40} w={80} rounded={4} />
                     ))}
                   </Div>
                 </Div>
               )}
+
+              {!availabilityLoading &&
+                availabilities.length > 0 &&
+                availabilities.map((a) => (
+                  <>
+                    {a.intervals.length ? (
+                      <Div
+                        key={a.dayOfWeek || a.date}
+                        pb={12}
+                        mb={12}
+                        borderBottomWidth={1}
+                        borderColor="#E0E0E0"
+                      >
+                        <Text
+                          fontFamily={fontHauoraSemiBold}
+                          fontSize="xl"
+                          lineHeight={24}
+                          color="#222222"
+                          mb={12}
+                          textTransform="capitalize"
+                        >
+                          {a.dayOfWeek ?? dayjs(a.date).format("ddd, DD MMM")}
+                        </Text>
+
+                        <Div
+                          flexDir="row"
+                          flexWrap="wrap"
+                          justifyContent="center"
+                          alignItems="center"
+                          style={{ gap: 8 }}
+                        >
+                          {a.intervals.map((intr, index) => {
+                            const time = formatTime(a, intr);
+
+                            return (
+                              <Div w="48%">
+                                <Button
+                                  key={`${index}:${
+                                    a.dayOfWeek ?? a.date
+                                  }:${time}`}
+                                  fontFamily={fontHauoraMedium}
+                                  fontSize="lg"
+                                  lineHeight={20}
+                                  p={10}
+                                  borderWidth={1}
+                                  color={
+                                    selectedTime?.label ===
+                                    `${index}:${a.dayOfWeek ?? a.date}:${time}`
+                                      ? "#fff"
+                                      : "#494949"
+                                  }
+                                  borderColor="#E0E0E0"
+                                  rounded={8}
+                                  bg={
+                                    selectedTime?.label ===
+                                    `${index}:${a.dayOfWeek ?? a.date}:${time}`
+                                      ? "primary"
+                                      : "transparent"
+                                  }
+                                  onPress={() => {
+                                    setSelectedTime({
+                                      value: { from: intr.from, to: intr.to },
+                                      label: `${index}:${
+                                        a.dayOfWeek ?? a.date
+                                      }:${time}`,
+                                    });
+                                  }}
+                                  w="100%"
+                                >
+                                  <Text
+                                    color={
+                                      selectedTime?.label ===
+                                      `${index}:${
+                                        a.dayOfWeek ?? a.date
+                                      }:${time}`
+                                        ? "#fff"
+                                        : "#494949"
+                                    }
+                                  >
+                                    {time}
+                                  </Text>
+                                </Button>
+                              </Div>
+                            );
+                          })}
+                        </Div>
+                      </Div>
+                    ) : null}
+                  </>
+                ))}
+
+              {!availabilityLoading && hasNoAvailability && (
+                <Text>No availability</Text>
+              )}
             </Div>
-          </Div>
-          <Div mt={80}>
-            <ButtonPrimary
-              onPress={() => {
-                navigation.navigate("PartnerVetConfirmationScreen");
-              }}
-            >
-              Proceed
-            </ButtonPrimary>
           </Div>
         </Div>
       </ScrollDiv>
+      <ButtonPrimary
+        disabled={isActionLoading || !selectedTime}
+        loading={isActionLoading}
+        onPress={handleProceed}
+      >
+        Proceed
+      </ButtonPrimary>
     </Layout>
   );
 };

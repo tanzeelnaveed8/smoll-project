@@ -34,7 +34,7 @@ export interface UserState {
 
   UPDATE_PET_COUNT: (increment: number) => void;
 
-  findUser: () => Promise<User>;
+  findUser: (skipErr?: boolean) => Promise<User>;
   updateUser: (payload: UpdateUserPayloadDto) => Promise<User>;
   sendVerificationEmail: () => Promise<void>;
   verifyEmail: (otp: string) => Promise<void>;

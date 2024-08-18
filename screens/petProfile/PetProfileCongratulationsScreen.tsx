@@ -20,6 +20,8 @@ const PetProfileCongratulationsScreen = ({
   const navigateTo = (route.params as Record<string, string>)?.navigateTo;
   const petId = (route.params as Record<string, string>)?.petId;
   const expertId = (route.params as Record<string, string>)?.expertId;
+  const consultationId = (route.params as Record<string, string>)
+    ?.consultationId;
 
   return (
     <Layout>
@@ -78,6 +80,7 @@ const PetProfileCongratulationsScreen = ({
                 petId: petId,
                 petName: petName,
                 expertId: expertId,
+                consultationId: consultationId,
               });
             }}
           >

@@ -1,5 +1,5 @@
-import React from "react";
-import { Button, Div, ScrollDiv, Text } from "react-native-magnus";
+import React, { useMemo, useState } from "react";
+import { Button, Div, Image, ScrollDiv, Text } from "react-native-magnus";
 import Header from "@/components/partials/Header";
 import Container from "@/components/partials/Container";
 import DoctorCard from "@/components/partials/DoctorCard";
@@ -17,10 +17,88 @@ import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import Layout from "@/components/app/Layout";
 import { NavigationType } from "@/store/types";
 import ScrollWrapper from "@/components/partials/ScrollWrapper";
+import { useRoute } from "@react-navigation/native";
+import { usePartnerStore } from "@/store/modules/partner";
+import dayjs from "dayjs";
+import { ExpertAvailability } from "@/store/types/expert";
+import { useCaseStore } from "@/store/modules/case";
 
 const PartnerVetConfirmationScreen: React.FC<{
   navigation: NavigationType;
 }> = ({ navigation }) => {
+  const route = useRoute();
+  const { partnerVetDetails, bookPartnerVet } = usePartnerStore();
+  const { casesQuotes } = useCaseStore();
+
+  const partnerId = (route.params as Record<string, string>)?.partnerId;
+  const caseId = (route.params as Record<string, string>)?.caseId;
+  const vetId = (route.params as Record<string, string>)?.vetId;
+  const selectedDate = (route.params as Record<string, string>)?.selectedDate;
+  const selectedTime = (route.params as Record<string, string>)?.selectedTime;
+  const scheduleAt = (route.params as Record<string, string>)?.scheduleAt;
+
+  const [loading, setLoading] = useState(false);
+
+  const quote = useMemo(() => {
+    return casesQuotes
+      .get(caseId)
+      ?.find((quote) => quote.partner.id === partnerId);
+  }, [casesQuotes, partnerId, caseId]);
+
+  const partner = useMemo(() => {
+    return quote?.partner;
+  }, [quote]);
+
+  const parsedSelectedTime = JSON.parse(
+    selectedTime
+  ) as ExpertAvailability["intervals"][number];
+  const parsedSelectedDate = new Date(selectedDate);
+
+  const partnerDetails = useMemo(() => {
+    return partnerVetDetails.get(vetId);
+  }, [partnerVetDetails, vetId]);
+
+  const scheduledTime = useMemo(() => {
+    const date = dayjs(parsedSelectedDate).format("YYYY-MM-DD");
+
+    const fromTime = dayjs(`${date}T${parsedSelectedTime.from}Z`).format(
+      "hh:mm A"
+    );
+
+    const toTime = dayjs(`${date}T${parsedSelectedTime.to}Z`).format("hh:mm A");
+
+    return `${fromTime} - ${toTime}`;
+  }, [parsedSelectedDate, parsedSelectedTime]);
+
+  const totalAmount = useMemo(() => {
+    return quote?.services.reduce((acc, service) => {
+      return acc + service.price;
+    }, 0);
+  }, [quote]);
+
+  const bookingCharges = useMemo(() => {
+    // 11% of total amount
+    return ((totalAmount ?? 0) * 11) / 100;
+  }, [totalAmount]);
+
+  const handleBook = async () => {
+    console.log("handleBook", partnerId, vetId, caseId, scheduleAt);
+    if (!partnerId || !vetId || !caseId || !scheduleAt) {
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const { id } = await bookPartnerVet(vetId, partnerId, caseId, scheduleAt);
+
+      navigation.navigate("PartnerVetSuccessfullScreen", {
+        bookingId: id,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <Layout
       showBack
@@ -29,10 +107,71 @@ const PartnerVetConfirmationScreen: React.FC<{
         navigation.goBack();
       }}
     >
-      {/* <ScrollDiv flex={1} showsVerticalScrollIndicator={false}> */}
-      <ScrollWrapper>
-        <ReadonlyItem field="Veterinarian" value="Dr. Emily Carter" mb={16} />
-        <ReadonlyItem field="Clinic" value="Harmony Vet Clinic" mb={12} />
+      <ScrollDiv flex={1} showsVerticalScrollIndicator={false}>
+        <Div h={20}></Div>
+        <ReadonlyItem
+          field="Veterinarian"
+          value={
+            <Div row>
+              <Text
+                fontFamily={fontHauoraSemiBold}
+                fontSize="xl"
+                lineHeight={24}
+              >
+                {partnerDetails?.name}
+              </Text>
+
+              <Image
+                source={{
+                  uri:
+                    partnerDetails?.profileImg?.url ??
+                    "https://via.placeholder.com/150",
+                }}
+                w={50}
+                h={50}
+                rounded={100}
+                right={0}
+                top={-25}
+                position="absolute"
+                bg="#eeeeee"
+                ml="auto"
+              />
+            </Div>
+          }
+          mb={16}
+        />
+
+        <ReadonlyItem
+          field="Clinic"
+          value={
+            <Div row>
+              <Text
+                fontFamily={fontHauoraSemiBold}
+                fontSize="xl"
+                lineHeight={24}
+              >
+                {partnerDetails?.partnerName}
+              </Text>
+
+              <Image
+                source={{
+                  uri:
+                    partner?.clinicImg?.url ??
+                    "https://via.placeholder.com/150",
+                }}
+                w={50}
+                h={50}
+                rounded={100}
+                right={0}
+                top={-25}
+                position="absolute"
+                bg="#eeeeee"
+                ml="auto"
+              />
+            </Div>
+          }
+          mb={12}
+        />
 
         <Text
           fontFamily={fontHauoraSemiBold}
@@ -54,8 +193,8 @@ const PartnerVetConfirmationScreen: React.FC<{
               lineHeight={24}
               color="#222222"
             >
-              10:00am-10:15am {"\n"}
-              Fri, 9 Feb 2024
+              {scheduledTime} {"\n"}
+              {dayjs(parsedSelectedDate).format("ddd, D MMM YYYY")}
             </Text>
           </Div>
 
@@ -65,18 +204,21 @@ const PartnerVetConfirmationScreen: React.FC<{
             fontSize="lg"
             lineHeight={24}
             color="#0189F9"
+            onPress={() => navigation.goBack()}
           >
             Change
           </Button>
         </Div>
 
-        <Div px={16} py={24} rounded={12} borderWidth={1} borderColor="#D0D7DC">
-          <Div
-            pb={16}
-            borderBottomWidth={1}
-            borderBottomColor="#D0D7DC"
-            mb={16}
-          >
+        <Div
+          px={16}
+          py={24}
+          pb={16}
+          rounded={12}
+          borderWidth={1}
+          borderColor="#D0D7DC"
+        >
+          <Div mb={16}>
             <RowText
               name="Billing Summary"
               fontFamily={fontHauoraSemiBold}
@@ -85,27 +227,17 @@ const PartnerVetConfirmationScreen: React.FC<{
 
             <RowText
               name="Consultation charges"
-              value="94 AED"
+              value={`${totalAmount?.toFixed(2)} AED`}
               fontFamily={fontHauoraMedium}
               mb={16}
             />
             <RowText
               name="Advance booking"
-              value="10 AED"
+              value={`${bookingCharges.toFixed(2)} AED`}
               percent="11%"
               fontFamily={fontHauoraMedium}
             />
           </Div>
-
-          <RowText
-            name="Remaining Amt"
-            value="84 AED"
-            fontFamily={fontHauoraBold}
-            mb={2}
-          />
-          <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
-            To be paid in clinic
-          </Text>
         </Div>
 
         <Div mt={24}>
@@ -164,15 +296,15 @@ const PartnerVetConfirmationScreen: React.FC<{
             </Accordion.content>
           </Accordion>
         </Div>
-      </ScrollWrapper>
+      </ScrollDiv>
 
       <Div mt={20}>
         <ButtonPrimary
-          onPress={() => {
-            navigation.navigate("PartnerVetSuccessfullScreen");
-          }}
+          onPress={handleBook}
+          loading={loading}
+          disabled={loading}
         >
-          Pay 10 AED
+          {`Pay ${bookingCharges.toFixed(2)} AED`}
         </ButtonPrimary>
       </Div>
       {/* </ScrollDiv> */}
@@ -186,22 +318,27 @@ const ReadonlyItem = ({
   mb,
 }: {
   field: string;
-  value: string;
+  value: string | React.ReactNode;
   mb?: number;
 }) => {
   return (
     <Div pb={16} borderBottomWidth={1} borderColor="#E0E0E0" mb={mb ? mb : 0}>
       <Text
-        fontFamily={fontHauoraSemiBold}
-        fontSize={"xl"}
+        fontFamily={fontHauoraBold}
+        fontSize={"l"}
         // lineHeight={16}
         color="darkGreyText"
       >
         {field}
       </Text>
-      <Text fontFamily={fontHauoraSemiBold} fontSize="xl" lineHeight={24}>
-        {value}
-      </Text>
+
+      {typeof value === "string" ? (
+        <Text fontFamily={fontHauoraSemiBold} fontSize="xl" lineHeight={24}>
+          {value}
+        </Text>
+      ) : (
+        value
+      )}
     </Div>
   );
 };
