@@ -9,7 +9,8 @@ const SelectCountryDropdown: React.FC<{
   showCountryFlag?: boolean;
   hideCountryCode?: boolean;
   onChange: (e: string) => void;
-}> = ({ showCountryFlag, hideCountryCode, onChange }) => {
+  value?: string;
+}> = ({ showCountryFlag, hideCountryCode, onChange, value }) => {
   const [country, setCountry] = useState<{
     label: string;
     value: string;
@@ -36,6 +37,7 @@ const SelectCountryDropdown: React.FC<{
 
   return (
     <SelectInput
+      value={value}
       label="Select a country"
       options={codes}
       onSelect={(val) => {

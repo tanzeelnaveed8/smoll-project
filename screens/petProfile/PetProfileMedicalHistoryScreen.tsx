@@ -19,6 +19,7 @@ interface Props {
 const PetProfileMedicalHistoryScreen: React.FC<Props> = (props) => {
   const route = useRoute();
 
+  const historyId = (route.params as Record<string, string>)?.historyId;
   const petId = (route.params as Record<string, string>)?.petId;
   const petName = (route.params as Record<string, string>)?.petName;
   const petBg = (route.params as Record<string, string>)?.petBg;
@@ -28,17 +29,35 @@ const PetProfileMedicalHistoryScreen: React.FC<Props> = (props) => {
   const consultationId = (route.params as Record<string, string>)
     ?.consultationId;
 
-  const { healthHistoryMap } = usePetStore();
+  const { petsDetailMap } = usePetStore();
   const [open, setOpen] = useState(false);
   const [healthHistoryId, setHealthHistoryId] = useState("");
 
-  const healthHistory = healthHistoryMap.get(petId);
+  console.log("healthHistoryId", healthHistoryId);
+
+  const healthHistory = petsDetailMap.get(petId)?.healthHistory;
 
   useEffect(() => {
     if (navigateTo === "PetProfileDetailsScreen") return;
   }, []);
 
+  useEffect(() => {
+    if (!historyId) return;
+    setHealthHistoryId(historyId);
+    setOpen(true);
+  }, [historyId]);
+
   const handleConfirm = () => {
+    if (navigateTo === "PetProfileDetailsScreen") {
+      props.navigation.navigate("PetProfileDetailsScreen", {
+        petName: petName,
+        petId: petId,
+        petBg: petBg,
+        expertId,
+        consultationId,
+      });
+      return;
+    }
     props.navigation.navigate("PetProfileCongratulationsScreen", {
       navigateTo: navigateTo,
       petName: petName,
@@ -124,7 +143,7 @@ const PetProfileMedicalHistoryScreen: React.FC<Props> = (props) => {
 
       <Div>
         <ButtonPrimary
-          disabled={!healthHistory || healthHistory.length === 0}
+          // disabled={!healthHistory || healthHistory.length === 0}
           onPress={handleConfirm}
           bgColor="primary"
         >

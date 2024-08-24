@@ -36,7 +36,7 @@ const PetProfileScreen: React.FC<Props> = (props) => {
   const route = useRoute();
   const toast = useToast();
   const { UPDATE_PET_COUNT } = useUserStore();
-  const { addPet, healthHistoryMap } = usePetStore();
+  const { addPet, petsDetailMap } = usePetStore();
 
   const [currentStep, setCurrentStep] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -73,7 +73,7 @@ const PetProfileScreen: React.FC<Props> = (props) => {
     }
 
     return false;
-  }, [currentStep, pet, healthHistoryMap]);
+  }, [currentStep, pet, petsDetailMap]);
 
   const handleNext = async () => {
     const comingFrom = (route.params as Record<string, string>)?.from;

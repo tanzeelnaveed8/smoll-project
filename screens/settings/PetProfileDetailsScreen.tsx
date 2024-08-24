@@ -13,18 +13,12 @@ import ProfileOptionButton from "./ProfileOptionButton";
 import AddButton from "@/components/partials/AddButton";
 import { useRoute } from "@react-navigation/native";
 import { usePetStore } from "@/store/modules/pet";
-import { PetDetail } from "@/store/types/pet";
+import { HealthHistory, PetDetail } from "@/store/types/pet";
 import { UploadedFile } from "@/store/types/file";
 import { useToast } from "react-native-toast-notifications";
 import { showMessage } from "react-native-flash-message";
 
 const btns = ["Basic Details", "Health History"];
-
-const healthHistoryDat = [
-  { name: "DA2PP Vaccination" },
-  { name: "DA2PP Vaccination" },
-  { name: "DA2PP Vaccination" },
-];
 
 type RouteType = { petId: string };
 
@@ -34,12 +28,22 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
   const route = useRoute();
   const toast = useToast();
   const id = (route.params as RouteType)?.petId;
-  const { petsDetailMap, fetchPetDetails, updatePet } = usePetStore();
+  const { petsDetailMap, fetchPetDetails, updatePet, deleteHealthHistory } =
+    usePetStore();
+  // const [healthHistoryDataState, setHealthHistoryDataState] = useState<
+  //   HealthHistory[] | null
+  // >(null);
+
   const [profileImg, setProfileImg] = useState("");
   const [loading, setLoading] = useState(false);
   const [imageLoading, setImageLoading] = useState(false);
+  const [deleteHealthHistoryLoading, setDeleteHealthHistoryLoading] =
+    useState("");
 
   const petDetailsData = petsDetailMap.get(id);
+  const healthHistoryDataState = petsDetailMap.get(id)?.healthHistory;
+  console.log("healthHistoryDataState", healthHistoryDataState);
+
   const [activeTab, setActiveTab] = useState(btns[0]);
 
   useEffect(() => {
@@ -72,6 +76,12 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
     }
   }, [petDetailsData]);
 
+  // useEffect(() => {
+  //   if (petDetailsData && petDetailsData.healthHistory) {
+  //     setHealthHistoryDataState(petDetailsData.healthHistory);
+  //   }
+  // }, []);
+
   const handleUpdateImage = async (file: UploadedFile[]) => {
     if (!petDetailsData) return;
 
@@ -85,6 +95,22 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
       toast.show("Pet Profile Image updated successfully");
     } finally {
       setImageLoading(false);
+    }
+  };
+
+  const deleteHealthHistoryHandler = async (historyId: string) => {
+    // if (!healthHistoryDataState) return;
+    try {
+      setDeleteHealthHistoryLoading(historyId);
+      await deleteHealthHistory(id, historyId);
+
+      // const updatedHealthHistoryState = healthHistoryDataState.filter(
+      //   (item) => item.id?.toString() !== historyId
+      // );
+      // console.log("updatedHealthHistoryState", updatedHealthHistoryState);
+      // setHealthHistoryDataState(updatedHealthHistoryState);
+    } finally {
+      setDeleteHealthHistoryLoading("");
     }
   };
 
@@ -148,8 +174,6 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
       value: "Add Conditions",
     },
   ];
-
-  console.log("petDetailsData==", petDetailsData);
 
   return (
     <Layout
@@ -279,13 +303,30 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
 
           {activeTab === btns[1] && (
             <Div>
-              {petDetailsData?.healthHistory && (
+              {healthHistoryDataState && (
                 <FlatList
                   style={{ marginBottom: 32 }}
-                  data={petDetailsData?.healthHistory}
+                  data={healthHistoryDataState}
                   renderItem={({ item, index }) => (
                     <HealthHistoryCard
-                      mb={index + 1 === healthHistoryDat.length ? 0 : 12}
+                      onOpen={() => {
+                        if (!petDetailsData) return;
+
+                        navigation.navigate("PetProfileMedicalHistoryScreen", {
+                          navigateTo: "PetProfileDetailsScreen",
+                          petId: id ?? "",
+                          petName: petDetailsData.name,
+                          petBg: petDetailsData.photos[0]?.url,
+                          showBackBtn: "true",
+                          historyId: item.id,
+                        });
+                      }}
+                      isLoading={
+                        item.id?.toString() === deleteHealthHistoryLoading
+                      }
+                      name={item.name}
+                      onDelete={() => deleteHealthHistoryHandler(`${item.id}`)}
+                      mb={index + 1 === healthHistoryDataState.length ? 0 : 12}
                     />
                   )}
                   keyExtractor={(item, index) => `${index}`}
@@ -322,7 +363,13 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
 
 export default PetProfileDetailsScreen;
 
-const HealthHistoryCard: React.FC<{ mb?: number }> = ({ mb }) => {
+const HealthHistoryCard: React.FC<{
+  mb?: number;
+  onDelete: () => void;
+  name: string;
+  isLoading: boolean;
+  onOpen: () => void;
+}> = ({ mb, onDelete, name, isLoading, onOpen }) => {
   return (
     <Div
       flexDir="row"
@@ -332,16 +379,25 @@ const HealthHistoryCard: React.FC<{ mb?: number }> = ({ mb }) => {
       borderColor="#E0E0E0"
       mb={typeof mb === "number" ? mb : 0}
     >
-      <Div>
+      <TouchableOpacity style={{ flex: 1 }} onPress={onOpen}>
         <Text fontSize={"sm"} fontFamily={fontHauoraMedium}>
           Title
         </Text>
         <Text fontSize={"xl"} fontFamily={fontHauoraMedium}>
-          DA2PP Vaccination
+          {name}
         </Text>
-      </Div>
+      </TouchableOpacity>
 
-      <Button p={0} bg="transparent" color="#f10" alignSelf="center">
+      <Button
+        p={0}
+        bg="transparent"
+        color="#f10"
+        alignSelf="center"
+        onPress={onDelete}
+        pr={isLoading ? 10 : 0}
+        loading={isLoading}
+        loaderColor="#222"
+      >
         Delete
       </Button>
     </Div>

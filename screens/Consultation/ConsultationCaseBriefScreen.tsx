@@ -161,6 +161,7 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
           status: CaseStatusEnum.OPEN,
         }),
         petId: selectedPet?.value || "",
+        petName: selectedPet?.label || "",
         selectedTime,
         selectedDate,
         scheduleAt,
@@ -189,6 +190,7 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
         consultationId,
         caseId,
         expertId,
+        petName: selectedPet?.label || "",
       });
     } finally {
       setActionLoading(false);

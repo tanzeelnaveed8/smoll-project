@@ -38,6 +38,7 @@ const AccountSetupAddressScreen: React.FC<Props> = (props) => {
     country: "",
     postalCode: "",
   });
+  console.log("address==", address);
 
   const disableConfirm =
     !address.street ||
@@ -203,6 +204,7 @@ const AccountSetupAddressScreen: React.FC<Props> = (props) => {
               /> */}
 
               <SelectCountryDropdown
+                value={address.country}
                 showCountryFlag={true}
                 hideCountryCode
                 onChange={(e: string) => {
