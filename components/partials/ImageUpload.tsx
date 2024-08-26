@@ -22,6 +22,9 @@ interface Props {
   editIcon?: boolean;
   onUnSelect?: (e: string) => void;
   hideUnselectBtn?: boolean;
+  mr?: number;
+  noImage?: boolean;
+  disabled?: boolean;
 }
 
 const ImageUpload: React.FC<Props> = ({
@@ -34,6 +37,9 @@ const ImageUpload: React.FC<Props> = ({
   editIcon,
   onUnSelect,
   hideUnselectBtn,
+  noImage,
+  mr,
+  disabled,
 }) => {
   const { uploadFile } = useFileStore();
 
@@ -42,6 +48,8 @@ const ImageUpload: React.FC<Props> = ({
   const [uploadedFileUrl, setUploadedFileUrl] = useState<null | string>(null);
 
   const pickImage = async () => {
+    if (disabled) return;
+
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 1,
@@ -67,6 +75,9 @@ const ImageUpload: React.FC<Props> = ({
     if (onChange) {
       onChange(uploadedFile);
     }
+    if (noImage) {
+      setImage(null);
+    }
   };
 
   useEffect(() => {
@@ -75,15 +86,19 @@ const ImageUpload: React.FC<Props> = ({
   }, [uri]);
 
   const handleUnSelect = () => {
-    if (onUnSelect && uploadedFileUrl) {
-      onUnSelect(uploadedFileUrl);
+    if (onUnSelect && (uploadedFileUrl || uri)) {
+      if (uri) {
+        onUnSelect(uri);
+      } else if (uploadedFileUrl) {
+        onUnSelect(uploadedFileUrl);
+      }
       setUploadedFileUrl(null);
       setImage(null);
     }
   };
 
   return (
-    <Div position="relative">
+    <Div position="relative" mr={mr ? mr : 0}>
       {image ? (
         <Button px={0} py={0} onPress={pickImage} disabled={loading}>
           <Div

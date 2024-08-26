@@ -51,6 +51,7 @@ const PetProfileScreen: React.FC<Props> = (props) => {
     breed: "",
     dob: new Date().toString(),
     chipNumber: 0,
+    preExistingConditions: "",
   });
 
   const progress = useMemo(

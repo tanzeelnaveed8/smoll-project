@@ -109,7 +109,9 @@ const ExpertsScheduleSuccessScreen: React.FC<Props> = ({ navigation }) => {
 
         <ButtonPrimary
           disabled={isLoading}
-          onPress={() => navigation.navigate("CasesListScreen")}
+          onPress={() =>
+            navigation.navigate("CasesListScreen", { comingFrom: true })
+          }
         >
           View Cases
         </ButtonPrimary>

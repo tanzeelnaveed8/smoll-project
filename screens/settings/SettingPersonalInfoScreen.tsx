@@ -19,6 +19,8 @@ const SettingPersonalInfoScreen: React.FC<{ navigation: NavigationType }> = ({
 }) => {
   const { user } = useUserStore();
 
+  console.log("user ===", user);
+
   return (
     <Layout
       showBack

@@ -171,7 +171,7 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
     },
     {
       title: "Any Pre-Existing Conditions",
-      value: "Add Conditions",
+      value: petDetailsData?.preExistingConditions,
     },
   ];
 
@@ -303,7 +303,7 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
 
           {activeTab === btns[1] && (
             <Div>
-              {healthHistoryDataState && (
+              {healthHistoryDataState && healthHistoryDataState.length > 0 && (
                 <FlatList
                   style={{ marginBottom: 32 }}
                   data={healthHistoryDataState}

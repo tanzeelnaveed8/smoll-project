@@ -25,6 +25,8 @@ export const usePetStore = create<PetState>((set, get) => ({
   },
 
   addPet: async (payload) => {
+    console.log("adding pet", payload);
+
     const response = await api.post("/member/pets", {
       ...payload,
       dob: new Date(payload.dob).toISOString(),
@@ -41,6 +43,7 @@ export const usePetStore = create<PetState>((set, get) => ({
 
   fetchPetDetails: async (id) => {
     const response = await api.get(`/member/pets/${id}`);
+    console.log("fetchPetDetails", response.data);
 
     const petMap = get().petsDetailMap.set(response.data.id, response.data);
     // const healthHistoryData = response.data.healthHistory;

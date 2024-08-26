@@ -64,6 +64,11 @@ const PetProfileBasicDetailScreens: React.FC<Props> = (props) => {
       />
 
       <TextAreaField
+        value={props.pet.preExistingConditions}
+        onChangeText={(text) => {
+          // setChipNumber(text);
+          props.setPet({ ...props.pet, preExistingConditions: text });
+        }}
         placeholder="Any pre-existing conditions (Optional)"
         mb={30}
       />

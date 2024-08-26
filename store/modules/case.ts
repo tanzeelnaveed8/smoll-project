@@ -23,7 +23,7 @@ export const useCaseStore = create<CasesState>((set, get) => ({
   removeCase: async (id: string) => {
     await api.delete(`/member/cases/${id}`);
   },
-  fetchCases: async (page: number) => {
+  fetchCases: async (page: number, clearExistingData) => {
     const response = await api.get("/member/cases", {
       params: {
         page: page,
@@ -35,7 +35,11 @@ export const useCaseStore = create<CasesState>((set, get) => ({
     const data = response.data.data;
 
     set(() => ({
-      cases: existingGases.length > 0 ? [...existingGases, ...data] : data,
+      cases: clearExistingData
+        ? data
+        : existingGases.length > 0
+        ? [...existingGases, ...data]
+        : data,
     }));
 
     return response.data;

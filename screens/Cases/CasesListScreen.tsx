@@ -37,7 +37,7 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
   }, []);
 
   const handleFetchCases = async (isRefresh?: boolean) => {
-    console.log("fetching data");
+    console.log("fetching handleFetchCases");
     try {
       if (isRefresh) {
         setIsRefreshing(true);
@@ -45,8 +45,7 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
         setIsLoading(true);
       }
 
-      const response = await fetchCases(1);
-      console.log("handleLoadMore response", response);
+      const response = await fetchCases(1, isRefresh);
       setNextPageId(response.nextPage);
     } finally {
       setIsLoading(false);
@@ -70,6 +69,7 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
   );
 
   const handleLoadMore = async () => {
+    console.log("nextPageId", nextPageId);
     if (!nextPageId) return;
     console.log("fetching data again");
 

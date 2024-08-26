@@ -24,6 +24,7 @@ export type PetDetail = {
   chipNumber: number;
   photos: UploadedFile[];
   healthHistory?: HealthHistory[];
+  preExistingConditions: string;
 };
 
 export interface Pet {

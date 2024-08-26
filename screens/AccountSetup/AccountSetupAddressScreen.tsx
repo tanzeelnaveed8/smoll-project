@@ -96,7 +96,6 @@ const AccountSetupAddressScreen: React.FC<Props> = (props) => {
   const streetRef = useRef<any>(null);
   const cityRef = useRef<any>(null);
   const postalCodeRef = useRef<any>(null);
-
   const scrollViewRef = useRef<any>(null);
 
   const scrollToInput = (inputRef: React.RefObject<any>) => {
