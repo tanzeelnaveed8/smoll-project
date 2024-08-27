@@ -1047,8 +1047,6 @@ PODS:
   - react-native-onesignal (5.2.2):
     - OneSignalXCFramework (= 5.2.2)
     - React (< 1.0.0, >= 0.13.0)
-  - react-native-otp-verify (1.1.8):
-    - React-Core
   - react-native-safe-area-context (4.10.5):
     - React-Core
   - react-native-webrtc (1.106.1):
@@ -1387,7 +1385,6 @@ DEPENDENCIES:
   - "react-native-cometchat-ui-kit (from `../node_modules/@cometchat/chat-uikit-react-native`)"
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-onesignal (from `../node_modules/react-native-onesignal`)
-  - react-native-otp-verify (from `../node_modules/react-native-otp-verify`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-webrtc (from `../node_modules/react-native-webrtc`)
   - React-nativeconfig (from `../node_modules/react-native/ReactCommon`)
@@ -1521,8 +1518,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/netinfo"
   react-native-onesignal:
     :path: "../node_modules/react-native-onesignal"
-  react-native-otp-verify:
-    :path: "../node_modules/react-native-otp-verify"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-webrtc:
@@ -1637,7 +1632,6 @@ SPEC CHECKSUMS:
   react-native-cometchat-ui-kit: 097307cb4a16198a9b8013c6e6f7b6d627fa6c30
   react-native-netinfo: 27f287f2d191693f3b9d01a4273137fcf91c3b5d
   react-native-onesignal: 592184d34780d04ebbea2b9844d5b6088606cb30
-  react-native-otp-verify: b524a7f44b691644bea08376d6a4782a2df57e09
   react-native-safe-area-context: a240ad4b683349e48b1d51fed1611138d1bdad97
   react-native-webrtc: 4a4c31be61f88d1d3356526eebce72f462a6760e
   React-nativeconfig: fa5de9d8f4dbd5917358f8ad3ad1e08762f01dcb

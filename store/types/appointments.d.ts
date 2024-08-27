@@ -31,6 +31,7 @@ export interface AppointmentDetailResponseDto {
   partner: {
     id: string;
     name: string;
+    address: string;
   };
   vet: {
     id: string;
@@ -60,6 +61,6 @@ export interface AppointmentState {
   fetchAppointments: (
     page: number
   ) => Promise<{ data: AppointmentListResponseDto[]; nextPage: number }>;
-  fetchAppointmentDetail: (id: string) => Promise<void>;
+  fetchAppointmentDetail: (id: string) => Promise<AppointmentDetailResponseDto>;
   deleteAppointment: (id: string) => Promise<void>;
 }

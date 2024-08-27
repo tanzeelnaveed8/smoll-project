@@ -53,40 +53,36 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
   }, [partnerVetDetails, vetId]);
 
   useEffect(() => {
-    handleFetchVetDetails();
+    handleFetchExpertDetails();
   }, [partnerId, vetId]);
 
-  const availabilities = useMemo<ExpertAvailability[]>(() => {
-    if (!availability) return [];
+  // const availabilities = useMemo<ExpertAvailability[]>(() => {
+  //   if (!availability) return [];
 
-    return availability.map((a) => ({
-      ...a,
-      intervals: a.intervals.flatMap((interval) => {
-        const start = dayjs(`2000-01-01T${interval.from}`);
-        const end = dayjs(`2000-01-01T${interval.to}`);
-        const slots = [];
+  //   return availability.map((a) => ({
+  //     ...a,
+  //     intervals: a.intervals.flatMap((interval) => {
+  //       const start = dayjs(`2000-01-01T${interval.from}`);
+  //       const end = dayjs(`2000-01-01T${interval.to}`);
+  //       const slots = [];
 
-        let current = start;
-        while (current.isBefore(end)) {
-          const slotEnd = current.add(30, "minute");
-          if (slotEnd.isAfter(end)) break;
+  //       let current = start;
+  //       while (current.isBefore(end)) {
+  //         const slotEnd = current.add(30, "minute");
+  //         if (slotEnd.isAfter(end)) break;
 
-          slots.push({
-            from: current.format("HH:mm"),
-            to: slotEnd.format("HH:mm"),
-          });
+  //         slots.push({
+  //           from: current.format("HH:mm"),
+  //           to: slotEnd.format("HH:mm"),
+  //         });
 
-          current = slotEnd;
-        }
+  //         current = slotEnd;
+  //       }
 
-        return slots;
-      }),
-    }));
-  }, [partnerDetails, availability]);
-
-  const hasNoAvailability = useMemo(() => {
-    return availabilities.every((a) => a.intervals.length === 0);
-  }, [availabilities]);
+  //       return slots;
+  //     }),
+  //   }));
+  // }, [partnerDetails, availability]);
 
   const handleFetchExpertDetails = async (isRefresh?: boolean) => {
     try {
@@ -136,9 +132,6 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
   );
 
   const handleProceed = async () => {
-    console.log("selectedDate", selectedDate);
-    console.log("selectedTime", selectedTime);
-
     if (!selectedDate || !selectedTime) {
       return;
     }
@@ -164,6 +157,7 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
       scheduleAt,
     });
   };
+
   return (
     <Layout
       showBack
@@ -228,8 +222,8 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
               )}
 
               {!availabilityLoading &&
-                availabilities.length > 0 &&
-                availabilities.map((a) => (
+                availability.length > 0 &&
+                availability.map((a) => (
                   <>
                     {a.intervals.length ? (
                       <Div
@@ -317,7 +311,7 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
                   </>
                 ))}
 
-              {!availabilityLoading && hasNoAvailability && (
+              {!availabilityLoading && availability.length === 0 && (
                 <Text>No availability</Text>
               )}
             </Div>

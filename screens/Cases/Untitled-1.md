@@ -69,3 +69,11 @@ Increase accessToken expiry time
 
 When member is in waiting room, and vet close the case without connecting,
 then trigger a socket event for the mobile app and notification and push notification
+
+
+
+When consultation is done, the browser is not updating the consultation list
+
+feedback api is breaking if two instant consultation stays open.
+chat handling is not properly working
+cancel booking not working

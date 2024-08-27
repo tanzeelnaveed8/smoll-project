@@ -1,12 +1,10 @@
 import Layout from "@/components/app/Layout";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
-import StarRating from "@/components/partials/StarRating";
 import { fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
 import { useCaseStore } from "@/store/modules/case";
 import { NavigationType } from "@/store/types";
 import { useRoute } from "@react-navigation/native";
 import React, { useEffect, useMemo, useState } from "react";
-import { FlatList } from "react-native";
 import { Div, Image, ScrollDiv, Tag, Text } from "react-native-magnus";
 
 const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({

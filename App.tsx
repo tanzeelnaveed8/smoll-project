@@ -1,4 +1,4 @@
-import { PermissionsAndroid, Platform, SafeAreaView, StyleSheet } from "react-native";
+import { SafeAreaView, StyleSheet } from "react-native";
 import { Text, ThemeProvider } from "react-native-magnus";
 
 import * as Font from "expo-font";
@@ -37,7 +37,6 @@ import PetProfileCongratulationsScreen from "./screens/PetProfile/PetProfileCong
 import PetProfileMedicalHistoryScreen from "./screens/PetProfile/PetProfileMedicalHistoryScreen";
 import PetProfileScreen from "./screens/PetProfile/PetProfileScreen";
 
-
 import SlotBookingScreen from "./screens/doctorsScreens/SlotBookingScreen";
 import EditInfoScreen from "./screens/settings/EditInfoScreen";
 import PetEditInfoScreen from "./screens/settings/PetEditInfoScreen";
@@ -54,13 +53,11 @@ import utc from "dayjs/plugin/utc";
 import FlashMessage from "react-native-flash-message";
 import { LogLevel, OneSignal } from "react-native-onesignal";
 import CaseDetailScreen from "./screens/Cases/CaseDetailScreen";
-import CaseForwardedScreen from "./screens/Consultation/CaseForwardedScreen";
 import RequestCallBackScreen from "./screens/Consultation/UnavailableScreen";
 import ExpertsScheduleConfirmationScreen from "./screens/Experts/ExpertsScheduleConfirmationScreen";
 import ExpertsScheduleSuccessScreen from "./screens/Experts/ExpertsScheduleSuccessScreen";
 import NotificationScreen from "./screens/NotificationScreen";
 import NotificationTestScreen from "./screens/NotificationTestScreen";
-import { useExpertStore } from "./store/modules/expert";
 import * as rootNavigation from "./utils/root-navigation";
 import { navigationRef } from "./utils/root-navigation";
 import SplashScreen from "./screens/SplashScreen";
@@ -116,47 +113,7 @@ const Stack = createNativeStackNavigator();
 
 const App = () => {
   const { user } = useUserStore();
-  const { expertDetailMap, fetchExpertDetail } = useExpertStore();
   const [fontsLoaded, setFontsLoaded] = useState(false);
-
-//   useEffect(() => {
-//     const requestBluetoothPermission = async () => {
-//         if (Platform.OS === 'android') {
-//             try {
-//                 const granted = await PermissionsAndroid.request(
-//                     PermissionsAndroid.PERMISSIONS.BLUETOOTH,
-//                     {
-//                         title: "Bluetooth Permission",
-//                         message: "This app needs access to your Bluetooth.",
-//                         buttonNeutral: "Ask Me Later",
-//                         buttonNegative: "Cancel",
-//                         buttonPositive: "OK"
-//                     }
-//                 );
-
-//                 if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-//                     console.log("Bluetooth permission granted");
-//                 } else {
-//                     console.log("Bluetooth permission denied");
-//                     Alert.alert("Permission Denied", "Bluetooth permission is required to use this feature.");
-//                 }
-//             } catch (err) {
-//                 console.warn(err);
-//             }
-//         }
-//     };
-
-//     const checkBluetoothPermission = async () => {
-//         const granted = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.BLUETOOTH);
-//         if (granted) {
-//             console.log("You can use Bluetooth features");
-//         } else {
-//             await requestBluetoothPermission();
-//         }
-//     };
-
-//     checkBluetoothPermission();
-// }, []);
 
   useEffect(() => {
     loadFonts().then(() => setFontsLoaded(true));
@@ -208,10 +165,13 @@ const App = () => {
         });
       }
     });
+
     // Method for listening for notifications received
     OneSignal.Notifications.addEventListener(
       "foregroundWillDisplay",
       (event) => {
+        console.log("event", event);
+
         // @ts-ignore
         if (event.notification?.additionalData?.notificationType === "chat") {
           const currentRoute = rootNavigation.getCurrentRoute();
@@ -247,6 +207,7 @@ const App = () => {
   useEffect(() => {
     if (user) {
       CometChatWrapper.initUIKit(user.id);
+      OneSignal.login(user.playerId);
     }
   }, [user]);
 

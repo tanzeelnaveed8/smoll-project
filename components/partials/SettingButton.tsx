@@ -11,7 +11,9 @@ type PropsType = {
   toggleBtn?: boolean;
   Icon: ReactElement;
   onPress?: () => void;
+  toggleValue?: boolean;
 };
+
 const SettingButton: React.FC<PropsType> = (props) => {
   const {
     iconSize = 32,
@@ -20,6 +22,7 @@ const SettingButton: React.FC<PropsType> = (props) => {
     Icon,
     title,
     onPress,
+    toggleValue,
   } = props;
   return (
     <TouchableOpacity onPress={onPress}>
@@ -63,8 +66,8 @@ const SettingButton: React.FC<PropsType> = (props) => {
           <IconChevronRight fontSize={32} color="#898989" />
         ) : (
           <Toggle
-            onPress={() => null}
-            on={true}
+            onPress={onPress}
+            on={toggleValue}
             activeBg="#0189F9"
             w={52}
             h={32}

@@ -27,6 +27,7 @@ export interface User {
   petCount: number;
   createdAt: string;
   updatedAt: string;
+  playerId: string;
 }
 
 export interface UserState {
