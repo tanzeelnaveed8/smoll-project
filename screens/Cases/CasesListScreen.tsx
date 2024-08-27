@@ -33,7 +33,18 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
   }, 1000);
 
   useEffect(() => {
-    handleFetchCases();
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+
+        const response = await fetchCases(1, true);
+        setNextPageId(response.nextPage);
+      } finally {
+        setIsLoading(false);
+        setIsRefreshing(false);
+      }
+    };
+    fetchData();
   }, []);
 
   const handleFetchCases = async (isRefresh?: boolean) => {

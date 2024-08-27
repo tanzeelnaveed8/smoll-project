@@ -68,7 +68,6 @@ const HomeScreen: React.FC<Props> = (props) => {
       description: "Therapy aids coping, enhances functioning",
       loading: false,
     },
-    
   ]);
 
   const [showAccountSetupModal, setShowAccountSetupModal] = useState(false);

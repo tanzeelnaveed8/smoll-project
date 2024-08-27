@@ -14,13 +14,33 @@ import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
 import ProfileOptionButton from "./ProfileOptionButton";
 import ImageUpload from "@/components/partials/ImageUpload";
+import { UploadedFile } from "@/store/types/file";
+import { useToast } from "react-native-toast-notifications";
 
 const SettingPersonalInfoScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
-  const { user } = useUserStore();
+  const toast = useToast();
+  const { user, updateUser } = useUserStore();
+  const [ImageLoading, setImageLoading] = useState(false);
 
   console.log("user ===", user);
+
+  const handleUpdateImage = async (file: UploadedFile[]) => {
+    if (!user) return;
+    console.log("user proifle file", file);
+
+    try {
+      setImageLoading(true);
+
+      await updateUser({ profileImg: file[0] });
+      // await updatePet(id, { photos: filesArr });
+
+      toast.show("Profile Image updated successfully");
+    } finally {
+      setImageLoading(false);
+    }
+  };
 
   return (
     <Layout
@@ -38,13 +58,12 @@ const SettingPersonalInfoScreen: React.FC<{ navigation: NavigationType }> = ({
                 plusIcon={false}
                 h={98}
                 w={98}
-                editIcon
                 rounded={100}
                 hideUnselectBtn
                 bg="#EFEFEF"
                 userIcon
-                // uri={"../../assets/images/user-img.png"}
-                // onChange={handleUpdateImage}
+                uri={user?.profileImg?.url}
+                onChange={handleUpdateImage}
               />
               <Div
                 w={32}
@@ -52,8 +71,8 @@ const SettingPersonalInfoScreen: React.FC<{ navigation: NavigationType }> = ({
                 rounded={100}
                 bg="#BFBFBF"
                 position="absolute"
-                right={-10}
-                bottom={20}
+                right={-8}
+                bottom={10}
                 alignItems="center"
                 justifyContent="center"
                 pointerEvents="none"

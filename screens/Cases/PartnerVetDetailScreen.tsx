@@ -6,6 +6,7 @@ import { fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
 import { usePartnerStore } from "@/store/modules/partner";
 import { NavigationType } from "@/store/types";
 import { ExpertAvailability } from "@/store/types/expert";
+import { PartnerVetDetails } from "@/store/types/partner";
 import { useRoute } from "@react-navigation/native";
 import dayjs from "dayjs";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -52,8 +53,31 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
     return partnerVetDetails.get(vetId);
   }, [partnerVetDetails, vetId]);
 
+  // const partnerDetails: PartnerVetDetails = {
+  //   name: "Gustaf",
+  //   designation: "Stenners",
+  //   id: "1234",
+  //   partnerName: "partner name",
+  //   yearsOfExperience: 4,
+  //   availabilities: [
+  //     {
+  //       id: "string",
+  //       dayOfWeek: `${Date.now()}`,
+  //       date: `${Date.now()}`,
+  //       intervals: [{ from: "2:30", to: "5:30" }],
+  //     },
+  //   ],
+  //   partnerAddress: "partner address",
+  //   profileImg: {
+  //     filename: "filename",
+  //     filesize: 20,
+  //     mimetype: "image/png",
+  //     url: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAHXSURBVDjLzZNNi9pQFIbzA+YXDP0zLV3Nb3E9a3d1JQh+g7oQLaKCimL8QGKiMdF0OjUTjB+N0fi9Ghim7aa8vScwglBKabvohZfccM95zntObjgA3N+I+2cARVGuJEnydNjief5LpVLpFAoFTyaTufotgCiKtw8POizrMzaOjfnMhCz3kUgkbn8JkGX5utvtelut1telNYf+ScPHDzL0+yEW8wnC4fCT3+/3+Hy+nzrhBEHwTiYTvCRrQwma2sVIFXCnDaAqA7TbbdRqtcdSqZTIZrOvLwCNRsNY2RbGrKI2FN1kddCB3OtAFAU4joPT6YTj8cjas5DP58epVOrtGcCGZVD1+zuFJYusYh/9noQe03a7xW63w3q9drXf77FYLPCerTOA7b00LMMYYzRS3YDD4eCKksmBbdtYLpfuk5zkcrnvyWSyFAwG33DMzjUblJcNymDtfKMAqkbBlEwu6J0AJNoT3DRNRKPR6sVE2RUwCUCJq9XKDd5sNmfAixOaBbUTj8efLwD1ev3dbDZzDymR9tQSuSAgfa3pdOqe6boO1gJ/AWA371W1Wg00m801gznlcpkvFoutdDp9CoVCx1gsJjFpkUjkORAI8KztG+7/+Zn+VD8AV2IaSQGFiWoAAAAASUVORK5CYII=",
+  //   },
+  // };
+
   useEffect(() => {
-    handleFetchVetDetails();
+    // handleFetchVetDetails();
   }, [partnerId, vetId]);
 
   const availabilities = useMemo<ExpertAvailability[]>(() => {

@@ -95,6 +95,9 @@ const Chat: React.FC<Props> = (props) => {
   }, [props.recipientId]);
 
   const fetchMessages = async (isLoadingEarlier = false) => {
+    console.log("props.recipientId", props.recipientId);
+    console.log("user", user.id);
+
     try {
       if (!isLoadingEarlier) {
         setIsLoading(true);
@@ -103,6 +106,8 @@ const Chat: React.FC<Props> = (props) => {
       }
 
       const _user = await CometChatWrapper.getUser(user!.id);
+      console.log("_user==))", _user);
+
       const fetchedMessages = await CometChatWrapper.fetchMessages(
         props.recipientId,
         10,

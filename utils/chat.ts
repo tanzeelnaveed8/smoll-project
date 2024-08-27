@@ -47,7 +47,7 @@ export class CometChatWrapper {
     return CometChat.getLoggedinUser().then(
       (user) => {
         if (!user) {
-          return CometChat.login(userId, authKey).then(
+          return CometChat.login(userId.toLowerCase(), authKey).then(
             (user) => {
               console.log("Login Successful:", { user });
               return user;

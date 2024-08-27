@@ -115,7 +115,13 @@ const ImageUpload: React.FC<Props> = ({
     <Div alignItems="flex-start">
       <Div position="relative" mr={mr ? mr : 0}>
         {image ? (
-          <Button px={0} py={0} onPress={pickImage} disabled={loading}>
+          <Button
+            px={0}
+            rounded={rounded ? rounded : 0}
+            py={0}
+            onPress={pickImage}
+            disabled={loading}
+          >
             <Div
               w={w}
               h={h}

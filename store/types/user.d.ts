@@ -1,4 +1,5 @@
 import { Nullable } from "../types";
+import { UploadedFile } from "./file";
 
 export type UpdateUserPayloadDto = Partial<{
   name: string;
@@ -10,6 +11,7 @@ export type UpdateUserPayloadDto = Partial<{
   country: string;
   timeZone: string;
   postalCode: string;
+  profileImg: UploadedFile;
 }>;
 
 export interface User {
@@ -27,6 +29,7 @@ export interface User {
   petCount: number;
   createdAt: string;
   updatedAt: string;
+  profileImg: UploadedFile;
 }
 
 export interface UserState {
