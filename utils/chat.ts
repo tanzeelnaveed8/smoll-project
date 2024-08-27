@@ -4,9 +4,9 @@ import { CometChatUIKit } from "@cometchat/chat-uikit-react-native";
 import { PermissionsAndroid, Platform } from "react-native";
 import { IMessage } from "react-native-gifted-chat";
 
-const appId = "259470d3b9e30637";
+const appId = "2628206d6e21f7ae";
 const region = "in";
-const authKey = "7f548f7be265876668136a6c1cb6b7b59f42bbee";
+const authKey = "362f20d5564add6ceda70bcfa4605b42271fbd64";
 
 const getPermissions = () => {
   if (Platform.OS == "android") {
