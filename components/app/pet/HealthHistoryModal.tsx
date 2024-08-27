@@ -28,7 +28,7 @@ const initialState = {
 };
 
 const HealthHistoryModal = (props: PropTypes) => {
-  const { addHealthHistory, healthHistoryMap, updateHealthHistory } =
+  const { addHealthHistory, petsDetailMap, updateHealthHistory } =
     usePetStore();
   const toast = useToast();
 
@@ -42,9 +42,13 @@ const HealthHistoryModal = (props: PropTypes) => {
       return;
     }
 
-    const healthHistory = healthHistoryMap
+    // const healthHistory = healthHistoryMap
+    //   .get(props.petId)
+    //   ?.filter((item) => item.id === props.healthHistoryId)
+    //   ?.pop();
+    const healthHistory = petsDetailMap
       .get(props.petId)
-      ?.filter((item) => item.id === props.healthHistoryId)
+      ?.healthHistory?.filter((item) => item.id === props.healthHistoryId)
       ?.pop();
 
     if (healthHistory) {
@@ -79,10 +83,14 @@ const HealthHistoryModal = (props: PropTypes) => {
 
       if (props.healthHistoryId) {
         await updateHealthHistory(props.petId, props.healthHistoryId, form);
-        toast.show("Pet Health History updated successfully");
+        toast.show("Pet Health History updated successfully", {
+          placement: "top",
+        });
       } else {
         await addHealthHistory(props.petId, form);
-        toast.show("Pet Health History added successfully");
+        toast.show("Pet Health History added successfully", {
+          placement: "top",
+        });
       }
       props.onClose();
     } finally {

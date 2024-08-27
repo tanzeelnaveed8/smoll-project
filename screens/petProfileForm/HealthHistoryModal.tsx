@@ -29,7 +29,7 @@ const initialState = {
 };
 
 const PetDetailsModal = (props: PropTypes) => {
-  const { addHealthHistory, healthHistoryMap, updateHealthHistory } =
+  const { addHealthHistory, petsDetailMap, updateHealthHistory } =
     usePetStore();
   const toast = useToast();
 
@@ -43,9 +43,13 @@ const PetDetailsModal = (props: PropTypes) => {
       return;
     }
 
-    const healthHistory = healthHistoryMap
+    // const healthHistory = healthHistoryMap
+    //   .get(props.petId)
+    //   ?.filter((item) => item.id === props.healthHistoryId)
+    //   ?.pop();
+    const healthHistory = petsDetailMap
       .get(props.petId)
-      ?.filter((item) => item.id === props.healthHistoryId)
+      ?.healthHistory?.filter((item) => item.id === props.healthHistoryId)
       ?.pop();
 
     if (healthHistory) {

@@ -44,6 +44,7 @@ interface Props {
   ) => ReactElement;
   mainInputStyle?: StyleProp<TextStyle>;
   disableKeyboardDismissOnSelect?: boolean;
+  value?: string;
 }
 
 const SelectInput: React.FC<Props> = (props) => {
@@ -63,6 +64,18 @@ const SelectInput: React.FC<Props> = (props) => {
       setShowMenu(props.showModal);
     }
   }, [props.showModal]);
+
+  useEffect(() => {
+    if (!props.value || !props.options) return;
+
+    const storedValue = props.options
+      .filter((item) => item.label === props.value)
+      ?.pop();
+
+    if (storedValue && selectedValue?.label !== storedValue.label) {
+      setSelectedValue(storedValue);
+    }
+  }, [props.value, props.options]);
 
   const onSelect = (item: Option) => {
     setSelectedValue(item);

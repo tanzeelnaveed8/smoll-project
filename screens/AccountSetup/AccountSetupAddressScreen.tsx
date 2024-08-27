@@ -38,6 +38,7 @@ const AccountSetupAddressScreen: React.FC<Props> = (props) => {
     country: "",
     postalCode: "",
   });
+  console.log("address==", address);
 
   const disableConfirm =
     !address.street ||
@@ -95,7 +96,6 @@ const AccountSetupAddressScreen: React.FC<Props> = (props) => {
   const streetRef = useRef<any>(null);
   const cityRef = useRef<any>(null);
   const postalCodeRef = useRef<any>(null);
-
   const scrollViewRef = useRef<any>(null);
 
   const scrollToInput = (inputRef: React.RefObject<any>) => {
@@ -203,6 +203,7 @@ const AccountSetupAddressScreen: React.FC<Props> = (props) => {
               /> */}
 
               <SelectCountryDropdown
+                value={address.country}
                 showCountryFlag={true}
                 hideCountryCode
                 onChange={(e: string) => {

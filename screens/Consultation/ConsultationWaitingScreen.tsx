@@ -26,6 +26,7 @@ const ConsultationWaitingScreen: React.FC<{ navigation: NavigationType }> = ({
 
   const consultationId = (route.params as Record<string, string>)
     ?.consultationId;
+  const petName = (route.params as Record<string, string>)?.petName;
 
   const [loading, setLoading] = useState(true);
   const [consultation, setConsultation] = useState<FindOneConsultationResDto>();
@@ -159,7 +160,7 @@ const ConsultationWaitingScreen: React.FC<{ navigation: NavigationType }> = ({
         /> */}
 
         <Text fontSize={"xl"} fontFamily={fontHauoraMedium} textAlign="center">
-          Hang on, {consultation?.vet.name} is checking Lucy case
+          Hang on, {consultation?.vet.name} is checking {petName.trim()}'s case
         </Text>
       </Div>
 

@@ -78,6 +78,7 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
 
   const [documents, setDocuments] = useState<UploadedFile[]>([]);
   const [description, setDescription] = useState("");
+  const [selectedFile, setSelectedFile] = useState("");
 
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -141,6 +142,8 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
     setDocuments([...documents, ...file]);
   };
 
+  console.log("Documents ===", documents);
+
   const handleUnSelectImage = (url: string) => {
     const newDocuments = documents.filter((doc) => doc.url !== url);
     setDocuments(newDocuments);
@@ -161,6 +164,7 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
           status: CaseStatusEnum.OPEN,
         }),
         petId: selectedPet?.value || "",
+        petName: selectedPet?.label || "",
         selectedTime,
         selectedDate,
         scheduleAt,
@@ -189,6 +193,7 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
         consultationId,
         caseId,
         expertId,
+        petName: selectedPet?.label || "",
       });
     } finally {
       setActionLoading(false);
@@ -275,15 +280,43 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
           (JPG/JPEG/PNG/PDF) Max size 8 MB
         </Text>
 
-        <ImageUpload
-          plusIcon={false}
-          w={139}
-          h={150}
-          onUnSelect={handleUnSelectImage}
-          onChange={(file) => {
-            handleImage(file);
-          }}
-        />
+        {/* <Div flexDir="row" style={{ gap: 12 }} overflow="scroll" > */}
+        <ScrollDiv
+          flexDir="row"
+          style={{ gap: 12 }}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+        >
+          {documents.map((item, i) => {
+            return (
+              <ImageUpload
+                key={i}
+                plusIcon={false}
+                mr={12}
+                w={139}
+                h={150}
+                uri={item.url}
+                onUnSelect={handleUnSelectImage}
+                disabled
+                // onChange={(file) => {
+                //   handleImage(file);
+                // }}
+              />
+            );
+          })}
+
+          <ImageUpload
+            plusIcon={false}
+            w={139}
+            h={150}
+            noImage
+            onUnSelect={handleUnSelectImage}
+            onChange={(file) => {
+              handleImage(file);
+            }}
+          />
+        </ScrollDiv>
+        {/* </Div> */}
 
         <Div h={40}></Div>
       </ScrollDiv>

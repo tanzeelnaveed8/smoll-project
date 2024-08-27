@@ -24,6 +24,7 @@ export type PetDetail = {
   chipNumber: number;
   photos: UploadedFile[];
   healthHistory?: HealthHistory[];
+  preExistingConditions: string;
 };
 
 export interface Pet {
@@ -49,7 +50,7 @@ export interface PetBreeds {
 export interface PetState {
   pets: Nullable<Pet[]>;
   petsDetailMap: Map<string, Nullable<PetDetail>>;
-  healthHistoryMap: Map<string, HealthHistory[]>;
+  // healthHistoryMap: Map<string, HealthHistory[]>;
   petBreeds: Nullable<PetBreeds>;
 
   fetchPetBreeds: () => Promise<void>;
@@ -67,4 +68,9 @@ export interface PetState {
     healthHistoryId: string,
     payload: HealthHistory
   ) => Promise<PetDetail>;
+
+  deleteHealthHistory: (
+    petId: string,
+    healthHistoryId: string
+  ) => Promise<void>;
 }

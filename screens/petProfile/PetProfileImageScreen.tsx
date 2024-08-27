@@ -59,7 +59,7 @@ const PetProfileImageScreen: React.FC<Props> = (props) => {
         maxW={350}
       >
         Please make sure to upload three high-quality images in JPEG format so
-        that the vet can clearly see your dog's profile.
+        that the vet can clearly see your pet's profile.
       </Text>
     </Div>
   );

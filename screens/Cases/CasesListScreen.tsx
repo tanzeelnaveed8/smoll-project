@@ -68,6 +68,7 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
   );
 
   const handleLoadMore = async () => {
+    console.log("nextPageId", nextPageId);
     if (!nextPageId) return;
 
     return new Promise<void>(async (resolve) => {

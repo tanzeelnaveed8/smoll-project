@@ -1,11 +1,11 @@
 import { create } from "zustand";
-import { HealthHistory, PetState } from "../types/pet";
+import { HealthHistory, PetDetail, PetState } from "../types/pet";
 import api from "@/utils/api";
 
 export const usePetStore = create<PetState>((set, get) => ({
   petsDetailMap: new Map(),
   petBreeds: null,
-  healthHistoryMap: new Map(),
+  // healthHistoryMap: new Map(),
   pets: null,
 
   fetchPets: async () => {
@@ -25,6 +25,8 @@ export const usePetStore = create<PetState>((set, get) => ({
   },
 
   addPet: async (payload) => {
+    console.log("adding pet", payload);
+
     const response = await api.post("/member/pets", {
       ...payload,
       dob: new Date(payload.dob).toISOString(),
@@ -41,18 +43,19 @@ export const usePetStore = create<PetState>((set, get) => ({
 
   fetchPetDetails: async (id) => {
     const response = await api.get(`/member/pets/${id}`);
+    console.log("fetchPetDetails", response.data);
 
     const petMap = get().petsDetailMap.set(response.data.id, response.data);
-    const healthHistoryData = response.data.healthHistory;
+    // const healthHistoryData = response.data.healthHistory;
 
-    const updatedHealthHistoryMap = get().healthHistoryMap.set(
-      id,
-      healthHistoryData
-    );
+    // const updatedHealthHistoryMap = get().healthHistoryMap.set(
+    //   id,
+    //   healthHistoryData
+    // );
 
     set(() => ({
       petsDetailMap: petMap,
-      healthHistoryMap: updatedHealthHistoryMap,
+      // healthHistoryMap: updatedHealthHistoryMap,
     }));
 
     return response.data;
@@ -86,19 +89,30 @@ export const usePetStore = create<PetState>((set, get) => ({
     );
 
     console.log("addHealthHistory response", response);
+    const petDetailData = get().petsDetailMap.get(petId) as PetDetail;
+    if (!petDetailData) return;
+    const petDetail = { ...petDetailData };
 
-    const existingData = get().healthHistoryMap.get(petId);
-    let data;
-    if (existingData) {
-      data = [response.data, ...existingData];
-    } else {
-      data = [response.data];
+    if (petDetail?.healthHistory && petDetail?.healthHistory?.length > 0) {
+      petDetail.healthHistory.push(response.data);
+    } else if (petDetail) {
+      petDetail.healthHistory = [response.data];
     }
 
-    const updatedHealthHistoryMap = get().healthHistoryMap.set(petId, data);
+    // const existingData = get().healthHistoryMap.get(petId);
+    // let data;
+    // if (existingData) {
+    //   data = [response.data, ...existingData];
+    // } else {
+    //   data = [response.data];
+    // }
+
+    // const updatedHealthHistoryMap = get().healthHistoryMap.set(petId, data);
+    const updatedPetDetailMap = get().petsDetailMap.set(petId, petDetail);
 
     set(() => ({
-      healthHistoryMap: updatedHealthHistoryMap,
+      // healthHistoryMap: updatedHealthHistoryMap,
+      petsDetailMap: updatedPetDetailMap,
     }));
 
     return response.data;
@@ -110,19 +124,55 @@ export const usePetStore = create<PetState>((set, get) => ({
       payload
     );
 
-    const existingData = get().healthHistoryMap.get(petId) as HealthHistory[];
+    const petDetail = get().petsDetailMap.get(petId) as PetDetail;
 
-    const updatedData: HealthHistory[] = existingData.map((item) =>
-      item.id === healthHistoryId ? response.data : item
-    );
+    const udpatedHealthHistory = petDetail.healthHistory?.map((item) => {
+      if (item.id === healthHistoryId) {
+        return response.data;
+      } else {
+        return item;
+      }
+    });
 
-    const updatedHealthHistoryMap = get().healthHistoryMap.set(
-      petId,
-      updatedData
-    );
+    console.log("udpatedHealthHistory", udpatedHealthHistory);
+
+    const updatedPetDetailMap = get().petsDetailMap.set(petId, {
+      ...petDetail,
+      healthHistory: udpatedHealthHistory,
+    });
 
     set(() => ({
-      healthHistoryMap: updatedHealthHistoryMap,
+      // healthHistoryMap: updatedHealthHistoryMap,
+      petsDetailMap: updatedPetDetailMap,
+    }));
+
+    return response.data;
+  },
+
+  deleteHealthHistory: async (petId, healthHistoryId) => {
+    const response = await api.delete(
+      `/member/pets/${petId}/health-history/${healthHistoryId}`
+    );
+
+    const petDetail = get().petsDetailMap.get(petId) as PetDetail;
+    const healthHistoryData = petDetail.healthHistory
+      ? [...petDetail.healthHistory]
+      : [];
+
+    const udpatedHealthHistory = healthHistoryData?.filter(
+      (item) => item.id?.toString() !== healthHistoryId.toString()
+    );
+
+    const updatedPetDetailMap = get().petsDetailMap.set(petId, {
+      ...petDetail,
+      healthHistory: udpatedHealthHistory,
+    });
+
+    console.log("updatedPetDetailMap", updatedPetDetailMap);
+
+    set(() => ({
+      // healthHistoryMap: updatedHealthHistoryMap,
+      petsDetailMap: updatedPetDetailMap,
     }));
 
     return response.data;
