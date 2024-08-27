@@ -33,22 +33,10 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
   }, 1000);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-
-        const response = await fetchCases(1, true);
-        setNextPageId(response.nextPage);
-      } finally {
-        setIsLoading(false);
-        setIsRefreshing(false);
-      }
-    };
-    fetchData();
+    handleFetchCases(undefined, true);
   }, []);
 
-  const handleFetchCases = async (isRefresh?: boolean) => {
-    console.log("fetching handleFetchCases");
+  const handleFetchCases = async (isRefresh?: boolean, reset?: boolean) => {
     try {
       if (isRefresh) {
         setIsRefreshing(true);
@@ -56,7 +44,7 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
         setIsLoading(true);
       }
 
-      const response = await fetchCases(1, isRefresh);
+      const response = await fetchCases(1, isRefresh ?? reset);
       setNextPageId(response.nextPage);
     } finally {
       setIsLoading(false);
@@ -66,7 +54,7 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
 
   const sessionInProgress = useCallback(
     (status: CaseStatusEnum, scheduledAt?: string) => {
-      if (scheduledAt) return false;
+      if (!scheduledAt) return false;
 
       if (status !== CaseStatusEnum.OPEN) return false;
 
@@ -82,7 +70,6 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
   const handleLoadMore = async () => {
     console.log("nextPageId", nextPageId);
     if (!nextPageId) return;
-    console.log("fetching data again");
 
     return new Promise<void>(async (resolve) => {
       const newPage = page + 1;

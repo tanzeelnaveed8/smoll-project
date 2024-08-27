@@ -1,24 +1,20 @@
-import React, { ReactElement } from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
-import { Div, Text, ScrollDiv, Button } from "react-native-magnus";
-import { fontHauora, fontHauoraSemiBold } from "@/constant/constant";
-import SettingButton from "@/components/partials/SettingButton";
-import {
-  IconUserCircle,
-  IconMap,
-  IconPaw,
-  IconBell,
-  IconPrescription,
-  IconWritingSign,
-  IconCreditCard,
-  IconSquareAsterisk,
-  IconGavel,
-  Icon,
-} from "@tabler/icons-react-native";
-import Container from "@/components/partials/Container";
 import Layout from "@/components/app/Layout";
+import SettingButton from "@/components/partials/SettingButton";
+import { fontHauora } from "@/constant/constant";
 import { NavigationType } from "@/store/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+  IconBell,
+  IconCreditCard,
+  IconGavel,
+  IconPaw,
+  IconUserCircle,
+  IconWritingSign,
+} from "@tabler/icons-react-native";
+import React, { useState, useEffect } from "react";
+import { StyleSheet, TouchableOpacity } from "react-native";
+import { Div, ScrollDiv, Text } from "react-native-magnus";
+import { OneSignal } from "react-native-onesignal";
 
 interface OptionType {
   id: number;
@@ -110,6 +106,35 @@ const options: GroupType[] = [
 const SettingsMainScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
+  const [pushNotificationEnabled, setPushNotificationEnabled] = useState(false);
+
+  useEffect(() => {
+    checkPushNotificationStatus();
+  }, []);
+
+  const checkPushNotificationStatus = async () => {
+    const deviceState = await OneSignal.Notifications.getPermissionAsync();
+
+    console.log("deviceState", deviceState);
+    setPushNotificationEnabled(deviceState ?? false);
+  };
+
+  const handlePushNotificationToggle = async (newValue: boolean) => {
+    if (newValue) {
+      const deviceState = await OneSignal.Notifications.getPermissionAsync();
+      if (!deviceState) {
+        const status = await OneSignal.Notifications.requestPermission(false);
+        setPushNotificationEnabled(status);
+      } else {
+        setPushNotificationEnabled(true);
+      }
+    } else {
+      // For turning off, we can't revoke permissions programmatically
+      // So we'll just update the UI state
+      setPushNotificationEnabled(false);
+    }
+  };
+
   const handleLogout = async () => {
     await AsyncStorage.setItem("accessToken", "");
     navigation.navigate("OnboardingScreen");
@@ -134,15 +159,21 @@ const SettingsMainScreen: React.FC<{ navigation: NavigationType }> = ({
                 <SettingButton
                   key={option.id}
                   title={option.title}
-                  // iconName={option.icon}
-                  // iconFamily={option.iconFamily}
-                  // iconFontSize={option?.iconFontSize}
                   description={option?.description}
                   toggleBtn={option?.toggleBtn}
                   Icon={option.icon}
                   onPress={() => {
-                    option.link && navigation.navigate(option.link);
+                    if (option.title === "Push Notification") {
+                      handlePushNotificationToggle(!pushNotificationEnabled);
+                    } else if (option.link) {
+                      navigation.navigate(option.link);
+                    }
                   }}
+                  toggleValue={
+                    option.title === "Push Notification"
+                      ? pushNotificationEnabled
+                      : undefined
+                  }
                 />
               ))}
             </Div>
@@ -161,17 +192,6 @@ const SettingsMainScreen: React.FC<{ navigation: NavigationType }> = ({
               Logout
             </Text>
           </TouchableOpacity>
-
-          {/* <Button
-            color="#427594"
-            fontSize={"xl"}
-            fontFamily={fontHauoraSemiBold}
-            bg="transparent"
-            p={0}
-            mb={8}
-          >
-            Logout
-          </Button> */}
 
           <Text
             fontWeight="400"

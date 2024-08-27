@@ -110,7 +110,7 @@ const PartnerVetSuccessfullScreen: React.FC<Props> = ({ navigation }) => {
 
         <ButtonPrimary
           disabled={isLoading}
-          onPress={() => navigation.navigate("HomeScreen")}
+          onPress={() => navigation.navigate("AppointmentsScreen")}
         >
           Appointment details
         </ButtonPrimary>

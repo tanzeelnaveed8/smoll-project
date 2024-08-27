@@ -29,8 +29,8 @@ const ChatScreen: React.FC<{ navigation: NavigationType }> = ({
 
   useEffect(() => {
     let uikitSettings: UIKitSettings = {
-      appId: "259470d3b9e30637",
-      authKey: "7f548f7be265876668136a6c1cb6b7b59f42bbee",
+      appId: "2628206d6e21f7ae",
+      authKey: "362f20d5564add6ceda70bcfa4605b42271fbd64",
       region: "in",
       subscriptionType: "ALL_USERS",
     };

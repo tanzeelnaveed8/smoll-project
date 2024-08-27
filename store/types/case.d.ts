@@ -117,8 +117,11 @@ export interface CasesState {
   removeCase: (id: string) => Promise<void>;
   fetchCases: (
     page: number,
-    clearExistingData?: boolean
-  ) => Promise<{ nextPage: number; data: CaseListResponseDto[] }>;
+    reset?: boolean
+  ) => Promise<{
+    nextPage: number;
+    data: CaseListResponseDto[];
+  }>;
   fetchCase: (id: string) => Promise<CaseDetail>;
   fetchCaseQuotes: (id: string) => Promise<CaseDetail>;
   fetchVetDoctors: () => Promise<void>;

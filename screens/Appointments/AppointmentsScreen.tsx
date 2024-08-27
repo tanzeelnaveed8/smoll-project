@@ -18,7 +18,7 @@ import {
 } from "react-native";
 import { FlatList } from "react-native-bidirectional-infinite-scroll";
 
-import { Div, Image, Text } from "react-native-magnus";
+import { Div, Image, Tag, Text } from "react-native-magnus";
 
 const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
@@ -48,7 +48,6 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
   // };
 
   const handleFetchAppointments = async (isRefresh?: boolean) => {
-    console.log("fetching data");
     try {
       if (isRefresh) {
         setIsRefreshing(true);
@@ -57,6 +56,9 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
       }
 
       const response = await fetchAppointments(1);
+
+      console.log("fetching data", response.data);
+
       setNextPageId(response.nextPage);
     } finally {
       setIsLoading(false);
@@ -197,7 +199,7 @@ const AppointmentCard: React.FC<{
 
         <Div maxW={254}>
           <Div mb={4} flexDir="row" style={{ gap: 4 }}>
-            <Text
+            <Tag
               fontSize={12}
               fontFamily={fontHauoraSemiBold}
               px={8}
@@ -206,9 +208,10 @@ const AppointmentCard: React.FC<{
               borderWidth={1}
               borderColor="#222"
               style={{ alignSelf: "flex-start" }}
+              bg="transparent"
             >
               {props.type}
-            </Text>
+            </Tag>
 
             {props.alert && (
               <Text

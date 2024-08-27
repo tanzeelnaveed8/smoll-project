@@ -22,18 +22,15 @@ export const useAppointmentStore = create<AppointmentState>((set, get) => ({
     const data = response.data.data;
 
     const updatedData = get().appointment || [];
+
     data.forEach((item: AppointmentListResponseDto) => {
       if (!updatedData.find((existing) => existing.id === item.id)) {
         updatedData.push(item);
       }
     });
 
-    console.log("appointment response data", data);
-
     set(() => ({
       appointment: updatedData,
-      // appointment:
-      //   existingAppointment.length > 0 ? [...existingAppointment, ...data] : data,
     }));
 
     return response.data;
@@ -42,7 +39,7 @@ export const useAppointmentStore = create<AppointmentState>((set, get) => ({
   deleteAppointment: async (id: string) => {
     // const response = await api.delete(`/member/partners/appointments/${id}`);
     get().appointmentDetails.delete(id); // Delete the appointment by ID
-    
+
     set(() => ({
       appointmentDetails: new Map(get().appointmentDetails), // Update state with the modified Map
     }));

@@ -53,13 +53,13 @@ const HomeScreen: React.FC<Props> = (props) => {
     {
       name: "Appointments",
       value: "appointments",
-      description: "Ask vet about food, concerns",
+      description: "Check you Appointments",
       loading: false,
     },
     {
       name: "Chat with Vet",
       value: "vet",
-      description: "Check you Appointments",
+      description: "Ask vet about food, concerns",
       loading: false,
     },
     {
@@ -155,7 +155,7 @@ const HomeScreen: React.FC<Props> = (props) => {
           justifyContent: "flex-start",
         }}
       >
-        <ScrollDiv>
+        <ScrollDiv showsVerticalScrollIndicator={false}>
           <Div
             mb={20}
             flexDir="row"

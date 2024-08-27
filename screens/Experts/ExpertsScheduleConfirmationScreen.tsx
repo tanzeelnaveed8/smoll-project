@@ -86,7 +86,7 @@ const ExpertsScheduleConfirmationScreen: React.FC<{
       });
 
       navigation.navigate("ExpertsScheduleSuccessScreen", {
-        consultationId: id,
+        consultationId: consultationId,
       });
     } catch (err) {
       const error = err as AxiosError<any, any>;
