@@ -13,6 +13,7 @@ import { StyleSheet, TouchableOpacity } from "react-native";
 import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
 import ProfileOptionButton from "./ProfileOptionButton";
+import ImageUpload from "@/components/partials/ImageUpload";
 
 const SettingPersonalInfoScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
@@ -31,31 +32,34 @@ const SettingPersonalInfoScreen: React.FC<{ navigation: NavigationType }> = ({
     >
       <ScrollDiv style={styles.container} showsVerticalScrollIndicator={false}>
         <Div flex={1}>
-          <Div
-            mb={24}
-            w={96}
-            h={96}
-            rounded={100}
-            bg="#EFEFEF"
-            justifyContent="flex-end"
-            pb={15}
-            position="relative"
-            alignItems="center"
-          >
-            <IconUser size={64} color="#222222" strokeWidth={1.5} />
-
-            <Div
-              w={32}
-              h={32}
-              rounded={100}
-              bg="#BFBFBF"
-              position="absolute"
-              right={-12}
-              bottom={20}
-              alignItems="center"
-              justifyContent="center"
-            >
-              <IconEditCircle size={24} color="#222222" />
+          <Div alignItems="flex-start" mb={24}>
+            <Div position="relative">
+              <ImageUpload
+                plusIcon={false}
+                h={98}
+                w={98}
+                editIcon
+                rounded={100}
+                hideUnselectBtn
+                bg="#EFEFEF"
+                userIcon
+                // uri={"../../assets/images/user-img.png"}
+                // onChange={handleUpdateImage}
+              />
+              <Div
+                w={32}
+                h={32}
+                rounded={100}
+                bg="#BFBFBF"
+                position="absolute"
+                right={-10}
+                bottom={20}
+                alignItems="center"
+                justifyContent="center"
+                pointerEvents="none"
+              >
+                <IconEditCircle size={24} color="#222222" />
+              </Div>
             </Div>
           </Div>
 
