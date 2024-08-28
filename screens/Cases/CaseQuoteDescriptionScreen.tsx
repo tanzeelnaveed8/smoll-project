@@ -236,17 +236,13 @@ const ProposalDetailCard: React.FC<{
 
   return (
     <Div pb={16} borderBottomWidth={1} borderColor="#D0D7DC">
-      <Div flexDir="row" alignItems="center" mb={8}>
+      <Div flexDir="row" alignItems="flex-end" mb={8}>
         <Div
-          flexDir="row"
+          // flexDir="row"
           flexWrap="wrap"
           alignItems="center"
           style={{ gap: 4 }}
         >
-          <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold} mr={4}>
-            {servicesName}
-          </Text>
-
           <Tag bg={typeStyles.bg} rounded={40} mb={-1}>
             <Text
               fontSize={12}
@@ -256,6 +252,9 @@ const ProposalDetailCard: React.FC<{
               {type}
             </Text>
           </Tag>
+          <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold} mr={4}>
+            {servicesName}
+          </Text>
         </Div>
 
         <Text

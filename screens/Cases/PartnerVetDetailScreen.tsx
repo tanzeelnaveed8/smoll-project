@@ -49,6 +49,8 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
   const [availabilityLoading, setAvailabilityLoading] = useState(false);
   const [isRequesting, setIsRequesting] = useState(false);
 
+  console.log("availability", availability);
+
   const partnerDetails = useMemo(() => {
     return partnerVetDetails.get(vetId);
   }, [partnerVetDetails, vetId]);
@@ -143,9 +145,10 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
       availability: ExpertAvailability,
       interval: { from: string; to: string }
     ) => {
-      const date = availability.dayOfWeek
-        ? dayjs().day(dayOfWeekMap[availability.dayOfWeek]).format("YYYY-MM-DD")
-        : dayjs(availability.date).format("YYYY-MM-DD");
+      // const date = availability.dayOfWeek
+      //   ? dayjs().day(dayOfWeekMap[availability.dayOfWeek]).format("YYYY-MM-DD")
+      //   : dayjs(availability.date).format("YYYY-MM-DD");
+      const date = dayjs().format("YYYY-MM-DD");
 
       const fromTime = dayjs(`${date}T${interval.from}Z`).format("hh:mm A");
       const toTime = dayjs(`${date}T${interval.to}Z`).format("hh:mm A");
