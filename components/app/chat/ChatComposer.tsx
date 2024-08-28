@@ -98,8 +98,6 @@ const ChatComposer: React.FC<Props> = (props) => {
     }
   };
 
-  console.log("props.loggedInUser", props.loggedInUser);
-
   const handleTyping = () => {
     CometChatWrapper.sendTypingIndicator(props.loggedInUser.getUid());
 
