@@ -33,7 +33,8 @@ export interface State {
     id: string,
     partnerId: string,
     caseId: string,
-    date: string
+    date: string,
+    services: { id: string; label: string }[]
   ) => Promise<{ id: string }>;
   cancelAppointment: (bookingId: string) => Promise<void>;
 }

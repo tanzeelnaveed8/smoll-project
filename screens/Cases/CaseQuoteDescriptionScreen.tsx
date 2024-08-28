@@ -5,7 +5,15 @@ import { useCaseStore } from "@/store/modules/case";
 import { NavigationType } from "@/store/types";
 import { useRoute } from "@react-navigation/native";
 import React, { useEffect, useMemo, useState } from "react";
-import { Div, Image, ScrollDiv, Tag, Text } from "react-native-magnus";
+import { TouchableOpacity } from "react-native";
+import {
+  Checkbox,
+  Div,
+  Image,
+  ScrollDiv,
+  Tag,
+  Text,
+} from "react-native-magnus";
 
 const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
@@ -17,6 +25,9 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
   const caseId = (route.params as Record<string, string>)?.caseId;
 
   const [loading, setLoading] = useState(false);
+  const [selectedServices, setSelectedServices] = useState<
+    { id: string; label: string }[]
+  >([]);
   const caseQuote = casesQuotes.get(caseId);
 
   useEffect(() => {
@@ -26,6 +37,15 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
   const clinicQuote = useMemo(() => {
     return caseQuote?.find((q) => q.partner.id === id);
   }, [caseQuote]);
+
+  useEffect(() => {
+    if (!clinicQuote) return;
+    const servicesData = clinicQuote.services.map((item) => {
+      return { id: item.id, label: item.label };
+    });
+
+    setSelectedServices(servicesData);
+  }, [clinicQuote]);
 
   const cost = useMemo(() => {
     let min = 0;
@@ -45,6 +65,21 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
 
     return { min, max };
   }, [clinicQuote]);
+
+  const handleSelectService = (id: string) => {
+    if (selectedServices.find((item) => item.id === id)) {
+      const updatedServices = selectedServices.filter((item) => item.id !== id);
+      setSelectedServices(updatedServices);
+    } else {
+      const newService = clinicQuote?.services
+        .filter((item) => item.id === id)
+        ?.pop();
+
+      if (!newService) return;
+      const serviceObj = { label: newService.label, id: newService.id };
+      setSelectedServices([...selectedServices, serviceObj]);
+    }
+  };
 
   const fetchQuotes = async () => {
     try {
@@ -89,10 +124,15 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
             <Div mb={16}>
               <ProposalDetailCard
                 key={item.id}
+                id={item.id}
                 servicesName={item.name}
                 type={item.label}
                 price={item.price}
                 description={item.description}
+                selectedServices={selectedServices}
+                onSelect={() => {
+                  handleSelectService(item.id);
+                }}
               />
             </Div>
           ))}
@@ -106,6 +146,7 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
             partnerId: clinicQuote?.partner?.id,
             partnerName: clinicQuote?.partner?.name,
             caseId,
+            selectedServices,
           })
         }
       >
@@ -215,10 +256,21 @@ const ClinicCard: React.FC<{
 
 const ProposalDetailCard: React.FC<{
   servicesName: string;
+  id: string;
   price: number;
   type: string;
   description: string;
-}> = ({ servicesName, type, price, description }) => {
+  selectedServices: { id: string; label: string }[];
+  onSelect: () => void;
+}> = ({
+  id,
+  servicesName,
+  type,
+  price,
+  description,
+  onSelect,
+  selectedServices,
+}) => {
   const [typeStyles, setTypeStyles] = useState({
     bg: "#E7F3F7",
     color: "#222",
@@ -236,45 +288,61 @@ const ProposalDetailCard: React.FC<{
 
   return (
     <Div pb={16} borderBottomWidth={1} borderColor="#D0D7DC">
-      <Div flexDir="row" alignItems="flex-end" mb={8}>
-        <Div
-          // flexDir="row"
-          flexWrap="wrap"
-          alignItems="center"
-          style={{ gap: 4 }}
-        >
-          <Tag bg={typeStyles.bg} rounded={40} mb={-1}>
-            <Text
-              fontSize={12}
-              fontFamily={fontHauoraSemiBold}
-              color={typeStyles.color}
-            >
-              {type}
+      <TouchableOpacity
+        onPress={onSelect}
+        style={{ pointerEvents: type === "Recommended" ? "auto" : "none" }}
+      >
+        <Div flexDir="row" alignItems="flex-end" mb={8}>
+          <Div
+            // flexDir="row"
+            flexWrap="wrap"
+            alignItems="center"
+            style={{ gap: 4 }}
+          >
+            <Tag bg={typeStyles.bg} rounded={40} mb={-1}>
+              <Text
+                fontSize={12}
+                fontFamily={fontHauoraSemiBold}
+                color={typeStyles.color}
+              >
+                {type}
+              </Text>
+            </Tag>
+            <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold} mr={4}>
+              {servicesName}
             </Text>
-          </Tag>
-          <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold} mr={4}>
-            {servicesName}
-          </Text>
+          </Div>
+
+          <Div ml={"auto"}>
+            <Checkbox
+              value={type}
+              ml={"auto"}
+              fontSize={24}
+              mb={5}
+              checked={
+                selectedServices.find((item) => item.id === id) ? true : false
+              }
+              disabled={type !== "Recommended"}
+            />
+            <Text
+              fontSize={"xl"}
+              fontFamily={fontHauoraSemiBold}
+              color="primary"
+            >
+              {price} AED
+            </Text>
+          </Div>
         </Div>
 
         <Text
-          fontSize={"xl"}
+          fontSize={"md"}
           fontFamily={fontHauoraSemiBold}
-          color="primary"
-          ml={"auto"}
+          lineHeight={24}
+          color="darkGreyText"
         >
-          {price} AED
+          {description}
         </Text>
-      </Div>
-
-      <Text
-        fontSize={"md"}
-        fontFamily={fontHauoraSemiBold}
-        lineHeight={24}
-        color="darkGreyText"
-      >
-        {description}
-      </Text>
+      </TouchableOpacity>
     </Div>
   );
 };

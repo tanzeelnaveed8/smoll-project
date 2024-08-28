@@ -35,6 +35,9 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
   const caseId = (route.params as Record<string, string>)?.caseId;
   const partnerId = (route.params as Record<string, string>)?.partnerId;
   const vetId = (route.params as Record<string, string>)?.vetId;
+  const selectedServices = (
+    route.params as { selectedServices: { id: string; label: string }[] }
+  )?.selectedServices;
 
   const [availability, setAvailability] = useState<ExpertAvailability[]>([]);
   const [selectedDate, setSelectedDate] = useState<string>();
@@ -148,7 +151,9 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
       // const date = availability.dayOfWeek
       //   ? dayjs().day(dayOfWeekMap[availability.dayOfWeek]).format("YYYY-MM-DD")
       //   : dayjs(availability.date).format("YYYY-MM-DD");
-      const date = dayjs().format("YYYY-MM-DD");
+      const date = dayjs(dayOfWeekMap[availability.dayOfWeek]).format(
+        "YYYY-MM-DD"
+      );
 
       const fromTime = dayjs(`${date}T${interval.from}Z`).format("hh:mm A");
       const toTime = dayjs(`${date}T${interval.to}Z`).format("hh:mm A");
@@ -182,6 +187,7 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
       selectedDate,
       caseId,
       scheduleAt,
+      selectedServices,
     });
   };
 
@@ -282,7 +288,10 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
                             const time = formatTime(a, intr);
 
                             return (
-                              <Div w="48%">
+                              <Div
+                                w="48%"
+                                mr={a.intervals.length > 1 ? "" : "auto"}
+                              >
                                 <Button
                                   key={`${index}:${
                                     a.dayOfWeek ?? a.date

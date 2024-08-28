@@ -36,6 +36,9 @@ const PartnerVetConfirmationScreen: React.FC<{
   const selectedDate = (route.params as Record<string, string>)?.selectedDate;
   const selectedTime = (route.params as Record<string, string>)?.selectedTime;
   const scheduleAt = (route.params as Record<string, string>)?.scheduleAt;
+  const selectedServices = (
+    route.params as { selectedServices: { id: string; label: string }[] }
+  )?.selectedServices;
 
   const [loading, setLoading] = useState(false);
 
@@ -89,7 +92,13 @@ const PartnerVetConfirmationScreen: React.FC<{
 
     try {
       setLoading(true);
-      const { id } = await bookPartnerVet(vetId, partnerId, caseId, scheduleAt);
+      const { id } = await bookPartnerVet(
+        vetId,
+        partnerId,
+        caseId,
+        scheduleAt,
+        selectedServices
+      );
 
       navigation.navigate("PartnerVetSuccessfullScreen", {
         bookingId: id,
@@ -325,7 +334,7 @@ const ReadonlyItem = ({
     <Div pb={16} borderBottomWidth={1} borderColor="#E0E0E0" mb={mb ? mb : 0}>
       <Text
         fontFamily={fontHauoraBold}
-        fontSize={"l"}
+        // fontSize={"l"}
         // lineHeight={16}
         color="darkGreyText"
       >

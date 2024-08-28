@@ -57,8 +57,6 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
 
       const response = await fetchAppointments(1);
 
-      console.log("fetching data", response.data);
-
       setNextPageId(response.nextPage);
     } finally {
       setIsLoading(false);
@@ -87,6 +85,8 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
       }, 1000);
     });
   };
+
+  console.log("appointment==", appointment);
 
   return (
     <Layout
@@ -138,7 +138,7 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
                 data={appointment}
                 renderItem={({ item, index }) => (
                   <AppointmentCard
-                    img={item.vet.profileImg.url}
+                    img={item.vet?.profileImg?.url}
                     pet={item.pet.name}
                     text={item.partner.name}
                     scheduledTime={item.scheduledAt}

@@ -83,14 +83,14 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
             borderBottomWidth={1}
             borderColor="#D0D7DC"
           >
-            {appointmentDetail?.vet.profileImg.url ? (
+            {appointmentDetail?.vet?.profileImg?.url ? (
               <Image
                 w={100}
                 h={100}
                 rounded={100}
                 mx={"auto"}
                 mb={8}
-                src={appointmentDetail?.vet.profileImg.url}
+                src={appointmentDetail?.vet?.profileImg?.url}
               />
             ) : (
               <Div mb={8}>
