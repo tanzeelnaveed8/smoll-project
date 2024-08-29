@@ -30,6 +30,7 @@ export interface User {
   createdAt: string;
   updatedAt: string;
   profileImg: UploadedFile;
+  stripeCustomerId: string;
 }
 
 export interface UserState {
@@ -41,4 +42,13 @@ export interface UserState {
   updateUser: (payload: UpdateUserPayloadDto) => Promise<User>;
   sendVerificationEmail: () => Promise<void>;
   verifyEmail: (otp: string) => Promise<void>;
+  createPaymentIntent: (
+    customerId: string,
+    price: number,
+    currency: string
+  ) => Promise<{
+    paymentIntent: string;
+    ephemeralKey: string;
+    customer: string;
+  }>;
 }

@@ -40,7 +40,7 @@ const DoctorListCard: React.FC<PropTypes> = (props) => {
       />
 
       {/* card footer */}
-      <Div flexDir="row" mt={17} justifyContent="space-between">
+      <Div flexDir="row" mt={8} justifyContent="space-between">
         <Div>
           {/* <Text
             fontSize="md"

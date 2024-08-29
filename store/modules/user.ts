@@ -57,4 +57,14 @@ export const useUserStore = create<UserState>((set, get) => ({
       },
     }));
   },
+
+  async createPaymentIntent(customerId, price, currency) {
+    const res = await api.post("/member/stripe/create-payment-session", {
+      customerId,
+      price,
+      currency,
+    });
+
+    return res.data;
+  },
 }));

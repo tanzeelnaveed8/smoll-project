@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Button, Div, Image, ScrollDiv, Text } from "react-native-magnus";
 import Header from "@/components/partials/Header";
 import Container from "@/components/partials/Container";
@@ -22,11 +22,22 @@ import { usePartnerStore } from "@/store/modules/partner";
 import dayjs from "dayjs";
 import { ExpertAvailability } from "@/store/types/expert";
 import { useCaseStore } from "@/store/modules/case";
+import { Platform } from "react-native";
+import {
+  initPaymentSheet,
+  presentPaymentSheet,
+} from "@stripe/stripe-react-native";
+import { SetupParams } from "@stripe/stripe-react-native/lib/typescript/src/types/PaymentSheet";
+import { showMessage } from "react-native-flash-message";
+import FlashCustomContent from "@/components/partials/FlashCustomContent";
+import { useAuthStore } from "@/store/modules/auth";
+import { useUserStore } from "@/store/modules/user";
 
 const PartnerVetConfirmationScreen: React.FC<{
   navigation: NavigationType;
 }> = ({ navigation }) => {
   const route = useRoute();
+  const { user, createPaymentIntent } = useUserStore();
   const { partnerVetDetails, bookPartnerVet } = usePartnerStore();
   const { casesQuotes } = useCaseStore();
 
@@ -38,6 +49,7 @@ const PartnerVetConfirmationScreen: React.FC<{
   const scheduleAt = (route.params as Record<string, string>)?.scheduleAt;
 
   const [loading, setLoading] = useState(false);
+  const [actionLoading, setActionLoading] = useState(false);
 
   const quote = useMemo(() => {
     return casesQuotes
@@ -78,25 +90,111 @@ const PartnerVetConfirmationScreen: React.FC<{
 
   const bookingCharges = useMemo(() => {
     // 11% of total amount
-    return ((totalAmount ?? 0) * 11) / 100;
+    const amount = ((totalAmount ?? 0) * 11) / 100;
+    return amount;
   }, [totalAmount]);
 
   const handleBook = async () => {
-    console.log("handleBook", partnerId, vetId, caseId, scheduleAt);
     if (!partnerId || !vetId || !caseId || !scheduleAt) {
       return;
     }
 
     try {
-      setLoading(true);
+      setActionLoading(true);
       const { id } = await bookPartnerVet(vetId, partnerId, caseId, scheduleAt);
 
       navigation.navigate("PartnerVetSuccessfullScreen", {
         bookingId: id,
       });
     } finally {
-      setLoading(false);
+      setActionLoading(false);
     }
+  };
+
+  useEffect(() => {
+    initStripe();
+  }, []);
+
+  const initStripe = async () => {
+    setLoading(true);
+
+    const { ephemeralKey, paymentIntent } = await createPaymentIntent(
+      user!.stripeCustomerId,
+      bookingCharges * 100,
+      "AED"
+    );
+
+    const { error, paymentOption } = await initPaymentSheet({
+      customerEphemeralKeySecret: ephemeralKey,
+      paymentIntentClientSecret: paymentIntent as any,
+      merchantDisplayName: "Smoll",
+      customerId: user!.stripeCustomerId,
+      defaultBillingDetails: {
+        name: user?.name,
+      },
+      appearance: {
+        font: {
+          family:
+            Platform.OS === "android"
+              ? "avenirnextregular"
+              : "AvenirNext-Regular",
+        },
+        shapes: {
+          borderRadius: 12,
+          borderWidth: 0.5,
+        },
+        primaryButton: {
+          colors: {
+            background: "#000000",
+            text: "#ffffff",
+          },
+          shapes: {
+            borderRadius: 20,
+          },
+        },
+        colors: {
+          primary: "#fcfdff",
+          background: "#ffffff",
+          componentBackground: "#f3f8fa",
+          componentBorder: "#f3f8fa",
+          componentDivider: "#000000",
+          primaryText: "#000000",
+          secondaryText: "#000000",
+          componentText: "#000000",
+          placeholderText: "#73757b",
+        },
+      },
+    } as SetupParams);
+
+    if (error) {
+      showMessage({
+        message: "",
+        renderCustomContent: () => (
+          <FlashCustomContent message="Something went wrong" />
+        ),
+        type: "danger",
+      });
+
+      navigation.goBack();
+    }
+
+    setLoading(false);
+  };
+
+  const openPaymentSheet = async () => {
+    const { error } = await presentPaymentSheet();
+
+    if (error) {
+      showMessage({
+        message: "",
+        renderCustomContent: () => (
+          <FlashCustomContent message="Could not process payment, please try again" />
+        ),
+        type: "danger",
+      });
+    }
+
+    handleBook();
   };
 
   return (
@@ -106,6 +204,7 @@ const PartnerVetConfirmationScreen: React.FC<{
       onBackPress={() => {
         navigation.goBack();
       }}
+      loading={loading}
     >
       <ScrollDiv flex={1} showsVerticalScrollIndicator={false}>
         <Div h={20}></Div>
@@ -135,6 +234,8 @@ const PartnerVetConfirmationScreen: React.FC<{
                 position="absolute"
                 bg="#eeeeee"
                 ml="auto"
+                borderWidth={1}
+                borderColor="#D0D7DC"
               />
             </Div>
           }
@@ -167,6 +268,8 @@ const PartnerVetConfirmationScreen: React.FC<{
                 position="absolute"
                 bg="#eeeeee"
                 ml="auto"
+                borderWidth={1}
+                borderColor="#D0D7DC"
               />
             </Div>
           }
@@ -300,9 +403,9 @@ const PartnerVetConfirmationScreen: React.FC<{
 
       <Div mt={20}>
         <ButtonPrimary
-          onPress={handleBook}
-          loading={loading}
-          disabled={loading}
+          onPress={openPaymentSheet}
+          loading={actionLoading}
+          disabled={actionLoading}
         >
           {`Pay ${bookingCharges.toFixed(2)} AED`}
         </ButtonPrimary>

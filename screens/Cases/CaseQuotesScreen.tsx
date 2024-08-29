@@ -10,6 +10,7 @@ import { useCaseStore } from "@/store/modules/case";
 import { NavigationType } from "@/store/types";
 import { CaseQuotesDto } from "@/store/types/case";
 import { useRoute } from "@react-navigation/native";
+import { IconHome } from "@tabler/icons-react-native";
 import React, { useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
@@ -17,7 +18,7 @@ import {
   RefreshControl,
   TouchableOpacity,
 } from "react-native";
-import { Div, Text } from "react-native-magnus";
+import { Div, Image, Text } from "react-native-magnus";
 
 const CaseQuotesScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
@@ -49,6 +50,8 @@ const CaseQuotesScreen: React.FC<{ navigation: NavigationType }> = ({
 
   const handleFetchRequests = async (isRefreshing?: boolean) => {
     const caseQuotes = casesQuotes.get(caseId);
+
+    console.log("caseQuotes", caseQuotes);
 
     if (caseQuotes?.length && !isRefreshing) {
       return;
@@ -106,6 +109,22 @@ const CaseQuotesScreen: React.FC<{ navigation: NavigationType }> = ({
                     });
                   }}
                 >
+                  <Div flexDir="row" alignItems="center" rounded={100}>
+                    {item.partner.clinicImg ? (
+                      <Image
+                        source={{ uri: item.partner.clinicImg.url }}
+                        w={65}
+                        h={65}
+                        rounded={100}
+                        borderWidth={1}
+                        borderColor="#D0D7DC"
+                        mr={12}
+                      />
+                    ) : (
+                      <IconHome size={24} />
+                    )}
+                  </Div>
+
                   <Div maxW="60%">
                     <Text
                       fontSize={"xl"}

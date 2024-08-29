@@ -11,6 +11,7 @@ const Verified = () => {
         fontFamily={fontHauoraMedium}
         color="#494949"
         lineHeight={16}
+        ml={2}
       >
         Verified
       </Text>

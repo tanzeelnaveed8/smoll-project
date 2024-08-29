@@ -136,6 +136,8 @@ const ClinicCard: React.FC<{
           h={64}
           rounded={100}
           mr={8}
+          borderWidth={1}
+          borderColor="#D0D7DC"
         />
         <Div>
           <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold} mb={6}>
