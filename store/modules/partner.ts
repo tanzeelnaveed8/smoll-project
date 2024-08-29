@@ -52,4 +52,11 @@ export const usePartnerStore = create<PartnerState>((set, get) => ({
   cancelAppointment: async (bookingId) => {
     await api.delete(`/member/partners/appointments/${bookingId}`);
   },
+
+  rescheduleAppointment: async (appointmentId) => {
+    const response = await api.post(
+      `/member/partners/appointments/${appointmentId}/reschedule`
+    );
+    console.log("rescheduleAppointment response", response.data);
+  },
 }));

@@ -35,6 +35,7 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
   const caseId = (route.params as Record<string, string>)?.caseId;
   const partnerId = (route.params as Record<string, string>)?.partnerId;
   const vetId = (route.params as Record<string, string>)?.vetId;
+  const backTo = (route.params as Record<string, string>)?.backTo;
   const selectedServices = (
     route.params as { selectedServices: { id: string; label: string }[] }
   )?.selectedServices;
@@ -196,7 +197,11 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
       showBack
       title={partnerDetails?.name}
       onBackPress={() => {
-        navigation.goBack();
+        if (backTo) {
+          navigation.navigate(backTo);
+        } else {
+          navigation.goBack();
+        }
       }}
       loading={isLoading}
     >

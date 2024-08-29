@@ -86,8 +86,6 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
     });
   };
 
-  console.log("appointment==", appointment);
-
   return (
     <Layout
       showBack

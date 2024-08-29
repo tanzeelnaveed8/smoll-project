@@ -52,6 +52,27 @@ export interface AppointmentDetailResponseDto {
       url: string;
     }[];
   };
+  case: {
+    id: string;
+    pet: {
+      name: string;
+      photos: {
+        filename: string;
+        filesize: number;
+        mimetype: string;
+        url: string;
+      }[];
+    };
+  };
+
+  services: {
+    id: string;
+    name: string;
+    description: string;
+    price: number;
+    label: string;
+  };
+  [];
 }
 
 export interface AppointmentState {

@@ -10,10 +10,25 @@ import { usePartnerStore } from "@/store/modules/partner";
 import { NavigationType } from "@/store/types";
 import { AppointmentDetailResponseDto } from "@/store/types/appointments";
 import { useRoute } from "@react-navigation/native";
-import { IconUser, IconUserX } from "@tabler/icons-react-native";
+import {
+  IconCalendarClock,
+  IconUser,
+  IconUserX,
+} from "@tabler/icons-react-native";
 import React, { useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, TouchableOpacity } from "react-native";
 import { Button, Div, Image, Tag, Text } from "react-native-magnus";
+
+const actionBtn = [
+  {
+    icon: <IconCalendarClock width={30} height={30} color={"#427594"} />,
+    text: "Reschedule Booking",
+  },
+  {
+    icon: <IconUserX width={30} height={30} color={"#427594"} />,
+    text: "Cancel Booking",
+  },
+];
 
 const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
@@ -23,10 +38,11 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
   const [showCancelModal, setShowCancelModal] = useState(false);
   const { fetchAppointmentDetail } = useAppointmentStore();
 
-  const { cancelAppointment } = usePartnerStore();
+  const { cancelAppointment, rescheduleAppointment } = usePartnerStore();
 
   const [isLoading, setIsLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [rescheduleLoading, setRescheduleLoading] = useState(false);
 
   const [appointmentDetail, setAppointmentDetail] =
     useState<AppointmentDetailResponseDto | null>(null);
@@ -47,6 +63,8 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
     }
   };
 
+  console.log("appointmentDetail==", appointmentDetail);
+
   const handleDeleteBooking = async () => {
     try {
       setDeleteLoading(true);
@@ -61,6 +79,24 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
       navigation.navigate("AppointmentsScreen");
     } finally {
       setDeleteLoading(false);
+    }
+  };
+
+  const handleRescheduleBooking = async () => {
+    if (!appointmentDetail) return;
+    try {
+      setRescheduleLoading(true);
+      await rescheduleAppointment(id);
+
+      navigation.navigate("PartnerVetDetailScreen", {
+        vetId: appointmentDetail.vet.id,
+        partnerId: appointmentDetail.partner.id,
+        caseId: appointmentDetail.case.id,
+        selectedServices: appointmentDetail.services,
+        backTo: "HomeScreen",
+      });
+    } finally {
+      setRescheduleLoading(false);
     }
   };
 
@@ -172,7 +208,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
               Pet
             </Text>
 
-            <Div flexDir="row" alignItems="center" mb={24}>
+            <Div flexDir="row" alignItems="center" mb={28}>
               <Image
                 w={48}
                 h={48}
@@ -187,29 +223,38 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
             </Div>
 
             <Div>
-              <TouchableOpacity
-                onPress={() => {
-                  setShowCancelModal(true);
-                }}
-              >
-                <Button
-                  bg="transparent"
-                  p={0}
-                  pointerEvents="none"
-                  flexDir="row"
-                  style={{ gap: 12 }}
-                  alignItems="center"
+              {actionBtn.map((item) => (
+                <TouchableOpacity
+                  key={item.text}
+                  style={{ marginBottom: 24 }}
+                  onPress={() => {
+                    if (item.text.includes("Cancel")) {
+                      setShowCancelModal(true);
+                    } else if (item.text.includes("Reschedule")) {
+                      handleRescheduleBooking();
+                    }
+                  }}
                 >
-                  <IconUserX width={26} height={26} color={"#427594"} />
-                  <Text
-                    fontSize={"xl"}
-                    fontFamily={fontHauoraSemiBold}
-                    color="primary"
+                  <Button
+                    bg="transparent"
+                    p={0}
+                    pointerEvents="none"
+                    flexDir="row"
+                    style={{ gap: 12 }}
+                    alignItems="center"
                   >
-                    Cancel Booking
-                  </Text>
-                </Button>
-              </TouchableOpacity>
+                    {/* <IconUserX width={26} height={26} color={"#427594"} /> */}
+                    {item.icon}
+                    <Text
+                      fontSize={"xl"}
+                      fontFamily={fontHauoraSemiBold}
+                      color="primary"
+                    >
+                      {item.text}
+                    </Text>
+                  </Button>
+                </TouchableOpacity>
+              ))}
             </Div>
           </Div>
         </Div>
