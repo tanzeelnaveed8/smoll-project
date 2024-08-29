@@ -35,6 +35,12 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
   const caseId = (route.params as Record<string, string>)?.caseId;
   const partnerId = (route.params as Record<string, string>)?.partnerId;
   const vetId = (route.params as Record<string, string>)?.vetId;
+  const backTo = (route.params as Record<string, string>)?.backTo;
+  const selectedServices = (
+    route.params as {
+      selectedServices: { id: string; label: string; price: number }[];
+    }
+  )?.selectedServices;
 
   const [availability, setAvailability] = useState<ExpertAvailability[]>([]);
   const [selectedDate, setSelectedDate] = useState<string>();
@@ -48,6 +54,8 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [availabilityLoading, setAvailabilityLoading] = useState(false);
   const [isRequesting, setIsRequesting] = useState(false);
+
+  console.log("availability", availability);
 
   const partnerDetails = useMemo(() => {
     return partnerVetDetails.get(vetId);
@@ -179,6 +187,7 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
       selectedDate,
       caseId,
       scheduleAt,
+      selectedServices,
     });
   };
 
@@ -187,7 +196,11 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
       showBack
       title={partnerDetails?.name}
       onBackPress={() => {
-        navigation.goBack();
+        if (backTo) {
+          navigation.navigate(backTo);
+        } else {
+          navigation.goBack();
+        }
       }}
       loading={isLoading}
     >
@@ -279,7 +292,10 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
                             const time = formatTime(a, intr);
 
                             return (
-                              <Div w="48%">
+                              <Div
+                                w="48%"
+                                mr={a.intervals.length > 1 ? "" : "auto"}
+                              >
                                 <Button
                                   key={`${index}:${
                                     a.dayOfWeek ?? a.date

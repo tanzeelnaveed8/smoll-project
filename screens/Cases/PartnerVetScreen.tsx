@@ -17,6 +17,11 @@ const PartnerVetScreen: React.FC<{ navigation: NavigationType }> = ({
   const caseId = (route.params as Record<string, string>)?.caseId;
   const partnerId = (route.params as Record<string, string>)?.partnerId;
   const partnerName = (route.params as Record<string, string>)?.partnerName;
+  const selectedServices = (
+    route.params as {
+      selectedServices: { id: string; label: string; price: number }[];
+    }
+  )?.selectedServices;
 
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -90,6 +95,7 @@ const PartnerVetScreen: React.FC<{ navigation: NavigationType }> = ({
                 vetId: item.id,
                 partnerId: partnerId,
                 caseId,
+                selectedServices,
               });
             }}
           />

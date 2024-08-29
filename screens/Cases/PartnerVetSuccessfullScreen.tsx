@@ -1,7 +1,7 @@
 import Layout from "@/components/app/Layout";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import { fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
-import { IconCalendarClock } from "@tabler/icons-react-native";
+import { IconCalendarClock, IconUserX } from "@tabler/icons-react-native";
 import React, { useState } from "react";
 import { ActivityIndicator, FlatList, TouchableOpacity } from "react-native";
 import { Div, Image, Text } from "react-native-magnus";
@@ -11,30 +11,41 @@ import { useExpertStore } from "@/store/modules/expert";
 import { useRoute } from "@react-navigation/native";
 import { NavigationType } from "@/store/types";
 import { usePartnerStore } from "@/store/modules/partner";
+import { useAppointmentStore } from "@/store/modules/appointments";
 
 interface Props {
   navigation: NavigationType;
 }
 
 const btns = [
-  //   {
-  //     text: "Resehdule Booking",
-  //     icon: <IconCalendarClock width={32} height={32} color={"#427594"} />,
-  //   },
+  {
+    text: "Reschedule Booking",
+    icon: <IconCalendarClock width={30} height={30} color={"#427594"} />,
+  },
   {
     text: "Cancel Booking",
-    icon: <IconCalendarClock width={32} height={32} color={"#427594"} />,
+    icon: <IconUserX width={30} height={30} color={"#427594"} />,
   },
 ];
 
 const PartnerVetSuccessfullScreen: React.FC<Props> = ({ navigation }) => {
   const route = useRoute();
 
-  const { cancelAppointment } = usePartnerStore();
+  const { cancelAppointment, rescheduleAppointment } = useAppointmentStore();
+  const [rescheduleLoading, setRescheduleLoading] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
 
   const bookingId = (route.params as Record<string, string>)?.bookingId;
+  const partnerId = (route.params as Record<string, string>)?.partnerId;
+  const caseId = (route.params as Record<string, string>)?.caseId;
+  const vetId = (route.params as Record<string, string>)?.vetId;
+  const selectedDate = (route.params as Record<string, string>)?.selectedDate;
+  const selectedTime = (route.params as Record<string, string>)?.selectedTime;
+  const scheduleAt = (route.params as Record<string, string>)?.scheduleAt;
+  const selectedServices = (
+    route.params as { selectedServices: { id: string; label: string }[] }
+  )?.selectedServices;
 
   const handleCancelClick = async () => {
     try {
@@ -66,6 +77,42 @@ const PartnerVetSuccessfullScreen: React.FC<Props> = ({ navigation }) => {
     }
   };
 
+  const handleRescheduleBooking = async () => {
+    if (!bookingId) return;
+    try {
+      setRescheduleLoading(true);
+
+      showMessage({
+        renderCustomContent: () => (
+          <FlashCustomContent loader message="Rescheduling..." />
+        ),
+        message: "",
+        type: "info",
+        autoHide: false,
+      });
+
+      await rescheduleAppointment(bookingId);
+
+      showMessage({
+        renderCustomContent: () => (
+          <FlashCustomContent message="Consultation Rescheduled successfully." />
+        ),
+        message: "",
+        type: "success",
+        autoHide: true,
+      });
+
+      navigation.navigate("PartnerVetDetailScreen", {
+        vetId,
+        partnerId,
+        caseId,
+        selectedServices,
+      });
+    } finally {
+      setRescheduleLoading(false);
+    }
+  };
+
   return (
     <Layout onBackPress={() => {}}>
       <Div flex={1} justifyContent="space-between" pt={20}>
@@ -85,31 +132,40 @@ const PartnerVetSuccessfullScreen: React.FC<Props> = ({ navigation }) => {
           </Text>
 
           <Div>
-            <TouchableOpacity
-              style={{
-                flexDirection: "row",
-                gap: 16,
-                alignItems: "center",
-                marginBottom: 24,
-              }}
-            >
-              <Div>
-                <IconCalendarClock width={32} height={32} color={"#427594"} />
-              </Div>
-              <Text
-                fontSize={"lg"}
-                fontFamily={fontHauoraSemiBold}
-                color="primary"
-                onPress={handleCancelClick}
+            {btns.map((item) => (
+              <TouchableOpacity
+                key={item.text}
+                style={{
+                  flexDirection: "row",
+                  gap: 16,
+                  alignItems: "center",
+                  marginBottom: 24,
+                }}
               >
-                Cancel Booking
-              </Text>
-            </TouchableOpacity>
+                <Div>
+                  <IconCalendarClock width={32} height={32} color={"#427594"} />
+                </Div>
+                <Text
+                  fontSize={"lg"}
+                  fontFamily={fontHauoraSemiBold}
+                  color="primary"
+                  onPress={() => {
+                    if (item.text.includes("Reschedule")) {
+                      handleRescheduleBooking();
+                    } else {
+                      handleCancelClick();
+                    }
+                  }}
+                >
+                  {item.text}
+                </Text>
+              </TouchableOpacity>
+            ))}
           </Div>
         </Div>
 
         <ButtonPrimary
-          disabled={isLoading}
+          disabled={isLoading || rescheduleLoading}
           onPress={() => navigation.navigate("AppointmentsScreen")}
         >
           Appointment details

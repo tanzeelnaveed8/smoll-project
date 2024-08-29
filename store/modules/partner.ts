@@ -37,18 +37,16 @@ export const usePartnerStore = create<PartnerState>((set, get) => ({
 
     return response.data;
   },
-  bookPartnerVet: async (id, partnerId, caseId, date) => {
+  bookPartnerVet: async (id, partnerId, caseId, date, services) => {
     const res = await api.post(
       `/member/partners/${partnerId}/vets/${id}/book`,
       {
         scheduleAt: date,
         caseId,
+        services,
       }
     );
 
     return { id: res.data.id };
-  },
-  cancelAppointment: async (bookingId) => {
-    await api.delete(`/member/partners/appointments/${bookingId}`);
   },
 }));

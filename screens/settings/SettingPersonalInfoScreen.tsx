@@ -22,23 +22,20 @@ const SettingPersonalInfoScreen: React.FC<{ navigation: NavigationType }> = ({
 }) => {
   const toast = useToast();
   const { user, updateUser } = useUserStore();
-  const [ImageLoading, setImageLoading] = useState(false);
-
-  console.log("user ===", user);
+  // const [ImageLoading, setImageLoading] = useState(false);
 
   const handleUpdateImage = async (file: UploadedFile[]) => {
     if (!user) return;
-    console.log("user proifle file", file);
 
     try {
-      setImageLoading(true);
+      // setImageLoading(true);
 
       await updateUser({ profileImg: file[0] });
       // await updatePet(id, { photos: filesArr });
 
       toast.show("Profile Image updated successfully");
     } finally {
-      setImageLoading(false);
+      // setImageLoading(false);
     }
   };
 

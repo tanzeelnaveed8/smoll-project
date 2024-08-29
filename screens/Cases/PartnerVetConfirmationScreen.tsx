@@ -39,7 +39,7 @@ const PartnerVetConfirmationScreen: React.FC<{
   const route = useRoute();
   const { user, createPaymentIntent } = useUserStore();
   const { partnerVetDetails, bookPartnerVet } = usePartnerStore();
-  const { casesQuotes } = useCaseStore();
+  const { casesQuotes, fetchCaseQuotes } = useCaseStore();
 
   const partnerId = (route.params as Record<string, string>)?.partnerId;
   const caseId = (route.params as Record<string, string>)?.caseId;
@@ -47,6 +47,13 @@ const PartnerVetConfirmationScreen: React.FC<{
   const selectedDate = (route.params as Record<string, string>)?.selectedDate;
   const selectedTime = (route.params as Record<string, string>)?.selectedTime;
   const scheduleAt = (route.params as Record<string, string>)?.scheduleAt;
+  const selectedServices = (
+    route.params as {
+      selectedServices: { id: string; label: string; price: number }[];
+    }
+  )?.selectedServices;
+
+  console.log("selectedServices", selectedServices);
 
   const [loading, setLoading] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
@@ -82,8 +89,10 @@ const PartnerVetConfirmationScreen: React.FC<{
     return `${fromTime} - ${toTime}`;
   }, [parsedSelectedDate, parsedSelectedTime]);
 
+  console.log("quote==", quote);
+
   const totalAmount = useMemo(() => {
-    return quote?.services.reduce((acc, service) => {
+    return selectedServices.reduce((acc, service) => {
       return acc + service.price;
     }, 0);
   }, [quote]);
@@ -101,10 +110,28 @@ const PartnerVetConfirmationScreen: React.FC<{
 
     try {
       setActionLoading(true);
-      const { id } = await bookPartnerVet(vetId, partnerId, caseId, scheduleAt);
+
+      const updatedServices = selectedServices.map((item) => {
+        return { id: item.id, label: item.label };
+      });
+
+      console.log("updatedServices", updatedServices);
+
+      const { id } = await bookPartnerVet(
+        vetId,
+        partnerId,
+        caseId,
+        scheduleAt,
+        updatedServices
+      );
 
       navigation.navigate("PartnerVetSuccessfullScreen", {
         bookingId: id,
+        vetId,
+        partnerId,
+        caseId,
+        scheduleAt,
+        selectedServices,
       });
     } finally {
       setActionLoading(false);
@@ -112,8 +139,22 @@ const PartnerVetConfirmationScreen: React.FC<{
   };
 
   useEffect(() => {
-    initStripe();
+    initialize();
   }, []);
+
+  const initialize = async () => {
+    await fetchQuote();
+    await initStripe();
+  };
+
+  const fetchQuote = async () => {
+    try {
+      setLoading(true);
+      await fetchCaseQuotes(caseId);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const initStripe = async () => {
     setLoading(true);
@@ -428,7 +469,7 @@ const ReadonlyItem = ({
     <Div pb={16} borderBottomWidth={1} borderColor="#E0E0E0" mb={mb ? mb : 0}>
       <Text
         fontFamily={fontHauoraBold}
-        fontSize={"l"}
+        // fontSize={"l"}
         // lineHeight={16}
         color="darkGreyText"
       >

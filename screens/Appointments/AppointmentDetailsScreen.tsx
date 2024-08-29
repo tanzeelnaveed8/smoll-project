@@ -1,6 +1,7 @@
 import Layout from "@/components/app/Layout";
 import BottomSheet from "@/components/partials/BottomSheet";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
+import FlashCustomContent from "@/components/partials/FlashCustomContent";
 import { fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
 import {
   appointmentFormatedTime,
@@ -10,10 +11,26 @@ import { usePartnerStore } from "@/store/modules/partner";
 import { NavigationType } from "@/store/types";
 import { AppointmentDetailResponseDto } from "@/store/types/appointments";
 import { useRoute } from "@react-navigation/native";
-import { IconUser, IconUserX } from "@tabler/icons-react-native";
+import {
+  IconCalendarClock,
+  IconUser,
+  IconUserX,
+} from "@tabler/icons-react-native";
 import React, { useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, TouchableOpacity } from "react-native";
+import { showMessage } from "react-native-flash-message";
 import { Button, Div, Image, Tag, Text } from "react-native-magnus";
+
+const actionBtn = [
+  {
+    icon: <IconCalendarClock width={30} height={30} color={"#427594"} />,
+    text: "Reschedule Booking",
+  },
+  {
+    icon: <IconUserX width={30} height={30} color={"#427594"} />,
+    text: "Cancel Booking",
+  },
+];
 
 const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
@@ -21,12 +38,12 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
   const route = useRoute();
   const id = (route.params as { id: string })?.id;
   const [showCancelModal, setShowCancelModal] = useState(false);
-  const { fetchAppointmentDetail } = useAppointmentStore();
-
-  const { cancelAppointment } = usePartnerStore();
+  const { fetchAppointmentDetail, cancelAppointment, rescheduleAppointment } =
+    useAppointmentStore();
 
   const [isLoading, setIsLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [rescheduleLoading, setRescheduleLoading] = useState(false);
 
   const [appointmentDetail, setAppointmentDetail] =
     useState<AppointmentDetailResponseDto | null>(null);
@@ -47,6 +64,8 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
     }
   };
 
+  console.log("appointmentDetail==", appointmentDetail);
+
   const handleDeleteBooking = async () => {
     try {
       setDeleteLoading(true);
@@ -64,12 +83,49 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
     }
   };
 
+  const handleRescheduleBooking = async () => {
+    if (!appointmentDetail) return;
+    try {
+      setRescheduleLoading(true);
+
+      showMessage({
+        renderCustomContent: () => (
+          <FlashCustomContent loader message="Rescheduling..." />
+        ),
+        message: "",
+        type: "info",
+        autoHide: false,
+      });
+
+      await rescheduleAppointment(id);
+
+      showMessage({
+        renderCustomContent: () => (
+          <FlashCustomContent message="Consultation Rescheduled successfully." />
+        ),
+        message: "",
+        type: "success",
+        autoHide: true,
+      });
+
+      navigation.navigate("PartnerVetDetailScreen", {
+        vetId: appointmentDetail.vet.id,
+        partnerId: appointmentDetail.partner.id,
+        caseId: appointmentDetail.case.id,
+        selectedServices: appointmentDetail.services,
+        backTo: "HomeScreen",
+      });
+    } finally {
+      setRescheduleLoading(false);
+    }
+  };
+
   return (
     <Layout
       title="Appointment Details"
       showBack
       onBackPress={() => {
-        navigation.goBack();
+        navigation.navigate("AppointmentsScreen");
       }}
       loading={isLoading}
     >
@@ -83,18 +139,26 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
             borderBottomWidth={1}
             borderColor="#D0D7DC"
           >
-            {appointmentDetail?.vet.profileImg.url ? (
+            {appointmentDetail?.vet?.profileImg?.url ? (
               <Image
                 w={100}
                 h={100}
                 rounded={100}
                 mx={"auto"}
                 mb={8}
-                src={appointmentDetail?.vet.profileImg.url}
+                src={appointmentDetail?.vet?.profileImg?.url}
               />
             ) : (
-              <Div mb={8}>
-                <IconUser width={100} height={100} />
+              <Div
+                mb={8}
+                bg="#eeeeee"
+                w={100}
+                h={100}
+                rounded={100}
+                justifyContent="center"
+                alignItems="center"
+              >
+                <IconUser width={"60%"} height={"60%"} color={"#fff"} />
               </Div>
             )}
 
@@ -172,44 +236,57 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
               Pet
             </Text>
 
-            <Div flexDir="row" alignItems="center" mb={24}>
-              <Image
-                w={48}
-                h={48}
-                rounded={48}
-                mr={8}
-                src={appointmentDetail?.pet.photos[0].url}
-                // source={require("../../assets/images/dog.png")}
-              />
+            <Div flexDir="row" alignItems="center" mb={28}>
+              <Div>
+                <Image
+                  w={48}
+                  h={48}
+                  rounded={48}
+                  mr={8}
+                  src={appointmentDetail?.pet.photos[0].url}
+                  // source={require("../../assets/images/dog.png")}
+                />
+              </Div>
+
               <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold}>
                 {appointmentDetail?.pet.name}
               </Text>
             </Div>
 
             <Div>
-              <TouchableOpacity
-                onPress={() => {
-                  setShowCancelModal(true);
-                }}
-              >
-                <Button
-                  bg="transparent"
-                  p={0}
-                  pointerEvents="none"
-                  flexDir="row"
-                  style={{ gap: 12 }}
-                  alignItems="center"
+              {actionBtn.map((item) => (
+                <TouchableOpacity
+                  disabled={rescheduleLoading}
+                  key={item.text}
+                  style={{ marginBottom: 24 }}
+                  onPress={() => {
+                    if (item.text.includes("Cancel")) {
+                      setShowCancelModal(true);
+                    } else if (item.text.includes("Reschedule")) {
+                      handleRescheduleBooking();
+                    }
+                  }}
                 >
-                  <IconUserX width={26} height={26} color={"#427594"} />
-                  <Text
-                    fontSize={"xl"}
-                    fontFamily={fontHauoraSemiBold}
-                    color="primary"
+                  <Button
+                    bg="transparent"
+                    p={0}
+                    pointerEvents="none"
+                    flexDir="row"
+                    style={{ gap: 12 }}
+                    alignItems="center"
                   >
-                    Cancel Booking
-                  </Text>
-                </Button>
-              </TouchableOpacity>
+                    {/* <IconUserX width={26} height={26} color={"#427594"} /> */}
+                    {item.icon}
+                    <Text
+                      fontSize={"xl"}
+                      fontFamily={fontHauoraSemiBold}
+                      color="primary"
+                    >
+                      {item.text}
+                    </Text>
+                  </Button>
+                </TouchableOpacity>
+              ))}
             </Div>
           </Div>
         </Div>

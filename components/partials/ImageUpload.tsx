@@ -82,15 +82,18 @@ const ImageUpload: React.FC<Props> = ({
 
     const file = { uri: localUri, name: filename, type } as unknown as File;
 
-    setLoading(true);
-    const uploadedFile = await uploadFile([file]);
-    setLoading(false);
-    setUploadedFileUrl(uploadedFile[0].url);
-    if (onChange) {
-      onChange(uploadedFile);
-    }
-    if (noImage) {
-      setImage(null);
+    try {
+      setLoading(true);
+      const uploadedFile = await uploadFile([file]);
+      setUploadedFileUrl(uploadedFile[0].url);
+      if (onChange) {
+        onChange(uploadedFile);
+      }
+      if (noImage) {
+        setImage(null);
+      }
+    } finally {
+      setLoading(false);
     }
   };
 

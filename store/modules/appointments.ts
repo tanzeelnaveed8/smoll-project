@@ -10,7 +10,7 @@ export const useAppointmentStore = create<AppointmentState>((set, get) => ({
   appointment: null,
   appointmentDetails: new Map(),
 
-  fetchAppointments: async (page: number) => {
+  fetchAppointments: async (page: number, reset?: boolean) => {
     const response = await api.get("/member/partners/appointments", {
       params: {
         page: page,
@@ -23,6 +23,8 @@ export const useAppointmentStore = create<AppointmentState>((set, get) => ({
 
     const updatedData = get().appointment || [];
 
+    console.log("fetchAppointments response", response.data);
+
     data.forEach((item: AppointmentListResponseDto) => {
       if (!updatedData.find((existing) => existing.id === item.id)) {
         updatedData.push(item);
@@ -30,7 +32,7 @@ export const useAppointmentStore = create<AppointmentState>((set, get) => ({
     });
 
     set(() => ({
-      appointment: updatedData,
+      appointment: reset ? response.data.data : updatedData,
     }));
 
     return response.data;
@@ -57,6 +59,21 @@ export const useAppointmentStore = create<AppointmentState>((set, get) => ({
     }));
 
     return response.data;
+  },
+  cancelAppointment: async (bookingId) => {
+    await api.delete(`/member/partners/appointments/${bookingId}`);
+
+    const updatedAppointments = get().appointment?.filter(
+      (item) => item.id !== bookingId
+    );
+
+    set(() => ({
+      appointment: updatedAppointments,
+    }));
+  },
+
+  rescheduleAppointment: async (appointmentId) => {
+    await api.post(`/member/partners/appointments/${appointmentId}/reschedule`);
   },
 }));
 

@@ -270,6 +270,7 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
                         fontFamily={fontHauoraSemiBold}
                         color="primary"
                         onPress={() => {
+                          console.log("caseId === ", item.id);
                           navigation.navigate("CaseQuotesScreen", {
                             id: item.id,
                           });
