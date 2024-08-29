@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Button, Div, Image, ScrollDiv, Text } from "react-native-magnus";
 import Header from "@/components/partials/Header";
 import Container from "@/components/partials/Container";
@@ -28,7 +28,7 @@ const PartnerVetConfirmationScreen: React.FC<{
 }> = ({ navigation }) => {
   const route = useRoute();
   const { partnerVetDetails, bookPartnerVet } = usePartnerStore();
-  const { casesQuotes } = useCaseStore();
+  const { casesQuotes, fetchCaseQuotes } = useCaseStore();
 
   const partnerId = (route.params as Record<string, string>)?.partnerId;
   const caseId = (route.params as Record<string, string>)?.caseId;
@@ -37,16 +37,42 @@ const PartnerVetConfirmationScreen: React.FC<{
   const selectedTime = (route.params as Record<string, string>)?.selectedTime;
   const scheduleAt = (route.params as Record<string, string>)?.scheduleAt;
   const selectedServices = (
-    route.params as { selectedServices: { id: string; label: string }[] }
+    route.params as {
+      selectedServices: { id: string; label: string; price: number }[];
+    }
   )?.selectedServices;
 
+  console.log("selectedServices", selectedServices);
+
   const [loading, setLoading] = useState(false);
+  const [caseloading, setCaseLoading] = useState(false);
 
   const quote = useMemo(() => {
     return casesQuotes
       .get(caseId)
       ?.find((quote) => quote.partner.id === partnerId);
   }, [casesQuotes, partnerId, caseId]);
+
+  console.log("casesQuotes quote", quote);
+
+  useEffect(() => {
+    // if (quote) return;
+    const fetchQuote = async () => {
+      try {
+        setCaseLoading(true);
+        const response = await fetchCaseQuotes(caseId);
+        console.log(
+          "fetching fetchQoute response ==== ",
+          response,
+          "caseId",
+          caseId
+        );
+      } finally {
+        setCaseLoading(false);
+      }
+    };
+    fetchQuote();
+  }, []);
 
   const partner = useMemo(() => {
     return quote?.partner;
@@ -73,8 +99,10 @@ const PartnerVetConfirmationScreen: React.FC<{
     return `${fromTime} - ${toTime}`;
   }, [parsedSelectedDate, parsedSelectedTime]);
 
+  console.log("quote==", quote);
+
   const totalAmount = useMemo(() => {
-    return quote?.services.reduce((acc, service) => {
+    return selectedServices.reduce((acc, service) => {
       return acc + service.price;
     }, 0);
   }, [quote]);
@@ -92,16 +120,27 @@ const PartnerVetConfirmationScreen: React.FC<{
 
     try {
       setLoading(true);
+      const updatedServices = selectedServices.map((item) => {
+        return { id: item.id, label: item.label };
+      });
+
+      console.log("updatedServices", updatedServices);
+
       const { id } = await bookPartnerVet(
         vetId,
         partnerId,
         caseId,
         scheduleAt,
-        selectedServices
+        updatedServices
       );
 
       navigation.navigate("PartnerVetSuccessfullScreen", {
         bookingId: id,
+        vetId,
+        partnerId,
+        caseId,
+        scheduleAt,
+        selectedServices,
       });
     } finally {
       setLoading(false);

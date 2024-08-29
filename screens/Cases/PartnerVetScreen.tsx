@@ -18,7 +18,9 @@ const PartnerVetScreen: React.FC<{ navigation: NavigationType }> = ({
   const partnerId = (route.params as Record<string, string>)?.partnerId;
   const partnerName = (route.params as Record<string, string>)?.partnerName;
   const selectedServices = (
-    route.params as { selectedServices: { id: string; label: string }[] }
+    route.params as {
+      selectedServices: { id: string; label: string; price: number }[];
+    }
   )?.selectedServices;
 
   const [isLoading, setIsLoading] = useState(false);

@@ -37,7 +37,9 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
   const vetId = (route.params as Record<string, string>)?.vetId;
   const backTo = (route.params as Record<string, string>)?.backTo;
   const selectedServices = (
-    route.params as { selectedServices: { id: string; label: string }[] }
+    route.params as {
+      selectedServices: { id: string; label: string; price: number }[];
+    }
   )?.selectedServices;
 
   const [availability, setAvailability] = useState<ExpertAvailability[]>([]);

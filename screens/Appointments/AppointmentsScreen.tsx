@@ -9,7 +9,7 @@ import {
   useAppointmentStore,
 } from "@/store/modules/appointments";
 import { NavigationType } from "@/store/types";
-import { IconChevronRight } from "@tabler/icons-react-native";
+import { IconChevronRight, IconUser } from "@tabler/icons-react-native";
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
@@ -31,7 +31,7 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
   // const [page, setPage] = useState(1);
 
   useEffect(() => {
-    handleFetchAppointments();
+    handleFetchAppointments(undefined, true);
   }, []);
 
   // const handleFetchAppointments = async () => {
@@ -47,7 +47,10 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
   //   }
   // };
 
-  const handleFetchAppointments = async (isRefresh?: boolean) => {
+  const handleFetchAppointments = async (
+    isRefresh?: boolean,
+    reset?: boolean
+  ) => {
     try {
       if (isRefresh) {
         setIsRefreshing(true);
@@ -55,7 +58,7 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
         setIsLoading(true);
       }
 
-      const response = await fetchAppointments(1);
+      const response = await fetchAppointments(1, reset);
 
       setNextPageId(response.nextPage);
     } finally {
@@ -92,7 +95,7 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
       backBtnText=""
       title="Appointments"
       onBackPress={() => {
-        navigation.goBack();
+        navigation.navigate("HomeScreen");
       }}
     >
       <Div flex={1}>
@@ -136,7 +139,7 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
                 data={appointment}
                 renderItem={({ item, index }) => (
                   <AppointmentCard
-                    img={item.vet?.profileImg?.url}
+                    img={item.partner?.clinicImg?.url}
                     pet={item.pet.name}
                     text={item.partner.name}
                     scheduledTime={item.scheduledAt}
@@ -186,14 +189,27 @@ const AppointmentCard: React.FC<{
         borderBottomWidth={1}
         borderColor={props.isLastChild ? "transparent" : "#D0D7DC"}
       >
-        <Image
-          w={40}
-          h={40}
+        <Div
+          w={60}
+          h={60}
           rounded={100}
-          src={props.img}
-          // source={require("../../assets/images/doctor-img.png")}
+          bg="#eeeeee"
           mr={16}
-        />
+          justifyContent="center"
+          alignItems="center"
+        >
+          {props.img ? (
+            <Image
+              w={"100%"}
+              h={"100%"}
+              rounded={100}
+              src={props.img}
+              // source={require("../../assets/images/doctor-img.png")}
+            />
+          ) : (
+            <IconUser size={24} width={40} height={40} color="#fff" />
+          )}
+        </Div>
 
         <Div maxW={254}>
           <Div mb={4} flexDir="row" style={{ gap: 4 }}>

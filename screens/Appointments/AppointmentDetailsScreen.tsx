@@ -1,6 +1,7 @@
 import Layout from "@/components/app/Layout";
 import BottomSheet from "@/components/partials/BottomSheet";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
+import FlashCustomContent from "@/components/partials/FlashCustomContent";
 import { fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
 import {
   appointmentFormatedTime,
@@ -17,6 +18,7 @@ import {
 } from "@tabler/icons-react-native";
 import React, { useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, TouchableOpacity } from "react-native";
+import { showMessage } from "react-native-flash-message";
 import { Button, Div, Image, Tag, Text } from "react-native-magnus";
 
 const actionBtn = [
@@ -36,9 +38,8 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
   const route = useRoute();
   const id = (route.params as { id: string })?.id;
   const [showCancelModal, setShowCancelModal] = useState(false);
-  const { fetchAppointmentDetail } = useAppointmentStore();
-
-  const { cancelAppointment, rescheduleAppointment } = usePartnerStore();
+  const { fetchAppointmentDetail, cancelAppointment, rescheduleAppointment } =
+    useAppointmentStore();
 
   const [isLoading, setIsLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
@@ -86,7 +87,26 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
     if (!appointmentDetail) return;
     try {
       setRescheduleLoading(true);
+
+      showMessage({
+        renderCustomContent: () => (
+          <FlashCustomContent loader message="Rescheduling..." />
+        ),
+        message: "",
+        type: "info",
+        autoHide: false,
+      });
+
       await rescheduleAppointment(id);
+
+      showMessage({
+        renderCustomContent: () => (
+          <FlashCustomContent message="Consultation Rescheduled successfully." />
+        ),
+        message: "",
+        type: "success",
+        autoHide: true,
+      });
 
       navigation.navigate("PartnerVetDetailScreen", {
         vetId: appointmentDetail.vet.id,
@@ -105,7 +125,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
       title="Appointment Details"
       showBack
       onBackPress={() => {
-        navigation.goBack();
+        navigation.navigate("AppointmentsScreen");
       }}
       loading={isLoading}
     >
@@ -129,8 +149,16 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                 src={appointmentDetail?.vet?.profileImg?.url}
               />
             ) : (
-              <Div mb={8}>
-                <IconUser width={100} height={100} />
+              <Div
+                mb={8}
+                bg="#eeeeee"
+                w={100}
+                h={100}
+                rounded={100}
+                justifyContent="center"
+                alignItems="center"
+              >
+                <IconUser width={"60%"} height={"60%"} color={"#fff"} />
               </Div>
             )}
 
@@ -209,14 +237,17 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
             </Text>
 
             <Div flexDir="row" alignItems="center" mb={28}>
-              <Image
-                w={48}
-                h={48}
-                rounded={48}
-                mr={8}
-                src={appointmentDetail?.pet.photos[0].url}
-                // source={require("../../assets/images/dog.png")}
-              />
+              <Div>
+                <Image
+                  w={48}
+                  h={48}
+                  rounded={48}
+                  mr={8}
+                  src={appointmentDetail?.pet.photos[0].url}
+                  // source={require("../../assets/images/dog.png")}
+                />
+              </Div>
+
               <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold}>
                 {appointmentDetail?.pet.name}
               </Text>
@@ -225,6 +256,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
             <Div>
               {actionBtn.map((item) => (
                 <TouchableOpacity
+                  disabled={rescheduleLoading}
                   key={item.text}
                   style={{ marginBottom: 24 }}
                   onPress={() => {

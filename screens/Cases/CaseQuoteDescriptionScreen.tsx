@@ -26,7 +26,7 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
 
   const [loading, setLoading] = useState(false);
   const [selectedServices, setSelectedServices] = useState<
-    { id: string; label: string }[]
+    { id: string; label: string; price: number }[]
   >([]);
   const caseQuote = casesQuotes.get(caseId);
 
@@ -41,7 +41,7 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
   useEffect(() => {
     if (!clinicQuote) return;
     const servicesData = clinicQuote.services.map((item) => {
-      return { id: item.id, label: item.label };
+      return { id: item.id, label: item.label, price: item.price };
     });
 
     setSelectedServices(servicesData);
@@ -76,7 +76,11 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
         ?.pop();
 
       if (!newService) return;
-      const serviceObj = { label: newService.label, id: newService.id };
+      const serviceObj = {
+        label: newService.label,
+        id: newService.id,
+        price: newService.price,
+      };
       setSelectedServices([...selectedServices, serviceObj]);
     }
   };
@@ -101,7 +105,7 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
       }}
       loading={loading}
     >
-      <ScrollDiv flex={1} pt={20}>
+      <ScrollDiv flex={1} pt={20} showsVerticalScrollIndicator={false}>
         <ClinicCard
           name={clinicQuote?.partner?.name ?? ""}
           min={cost.min}
@@ -137,6 +141,8 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
             </Div>
           ))}
         </Div>
+
+        <Div h={30} />
       </ScrollDiv>
 
       <ButtonPrimary
@@ -314,16 +320,6 @@ const ProposalDetailCard: React.FC<{
           </Div>
 
           <Div ml={"auto"}>
-            <Checkbox
-              value={type}
-              ml={"auto"}
-              fontSize={24}
-              mb={5}
-              checked={
-                selectedServices.find((item) => item.id === id) ? true : false
-              }
-              disabled={type !== "Recommended"}
-            />
             <Text
               fontSize={"xl"}
               fontFamily={fontHauoraSemiBold}
@@ -334,14 +330,28 @@ const ProposalDetailCard: React.FC<{
           </Div>
         </Div>
 
-        <Text
-          fontSize={"md"}
-          fontFamily={fontHauoraSemiBold}
-          lineHeight={24}
-          color="darkGreyText"
-        >
-          {description}
-        </Text>
+        <Div flexDir="row" justifyContent="space-between" alignItems="flex-end">
+          <Text
+            fontSize={"md"}
+            fontFamily={fontHauoraSemiBold}
+            lineHeight={24}
+            color="darkGreyText"
+          >
+            {description}
+          </Text>
+
+          <Checkbox
+            pointerEvents="none"
+            value={type}
+            ml={"auto"}
+            fontSize={24}
+            mb={5}
+            checked={
+              selectedServices.find((item) => item.id === id) ? true : false
+            }
+            disabled={type !== "Recommended"}
+          />
+        </Div>
       </TouchableOpacity>
     </Div>
   );

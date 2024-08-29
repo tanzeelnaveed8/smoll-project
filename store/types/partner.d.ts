@@ -36,6 +36,4 @@ export interface State {
     date: string,
     services: { id: string; label: string }[]
   ) => Promise<{ id: string }>;
-  cancelAppointment: (bookingId: string) => Promise<void>;
-  rescheduleAppointment: (bookingId: string) => Promise<void>;
 }
