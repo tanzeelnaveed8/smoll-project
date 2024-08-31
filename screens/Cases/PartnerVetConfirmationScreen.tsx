@@ -1,37 +1,29 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { Button, Div, Image, ScrollDiv, Text } from "react-native-magnus";
-import Header from "@/components/partials/Header";
-import Container from "@/components/partials/Container";
-import DoctorCard from "@/components/partials/DoctorCard";
+import Layout from "@/components/app/Layout";
+import Accordion from "@/components/partials/Accordion";
+import ButtonPrimary from "@/components/partials/ButtonPrimary";
+import FlashCustomContent from "@/components/partials/FlashCustomContent";
 import {
   fontHauoraBold,
   fontHauoraMedium,
   fontHauoraSemiBold,
 } from "@/constant/constant";
-import {
-  IconCalendarMonth,
-  IconReceiptRefund,
-} from "@tabler/icons-react-native";
-import Accordion from "@/components/partials/Accordion";
-import ButtonPrimary from "@/components/partials/ButtonPrimary";
-import Layout from "@/components/app/Layout";
-import { NavigationType } from "@/store/types";
-import ScrollWrapper from "@/components/partials/ScrollWrapper";
-import { useRoute } from "@react-navigation/native";
-import { usePartnerStore } from "@/store/modules/partner";
-import dayjs from "dayjs";
-import { ExpertAvailability } from "@/store/types/expert";
 import { useCaseStore } from "@/store/modules/case";
-import { Platform } from "react-native";
+import { usePartnerStore } from "@/store/modules/partner";
+import { useUserStore } from "@/store/modules/user";
+import { NavigationType } from "@/store/types";
+import { ExpertAvailability } from "@/store/types/expert";
+import { useRoute } from "@react-navigation/native";
 import {
   initPaymentSheet,
   presentPaymentSheet,
 } from "@stripe/stripe-react-native";
 import { SetupParams } from "@stripe/stripe-react-native/lib/typescript/src/types/PaymentSheet";
+import { IconCalendarMonth } from "@tabler/icons-react-native";
+import dayjs from "dayjs";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Platform } from "react-native";
 import { showMessage } from "react-native-flash-message";
-import FlashCustomContent from "@/components/partials/FlashCustomContent";
-import { useAuthStore } from "@/store/modules/auth";
-import { useUserStore } from "@/store/modules/user";
+import { Button, Div, Image, ScrollDiv, Text } from "react-native-magnus";
 
 const PartnerVetConfirmationScreen: React.FC<{
   navigation: NavigationType;
@@ -52,11 +44,12 @@ const PartnerVetConfirmationScreen: React.FC<{
       selectedServices: { id: string; label: string; price: number }[];
     }
   )?.selectedServices;
-
-  console.log("selectedServices", selectedServices);
+  const paymentIntentId = (route.params as Record<string, string>)
+    ?.paymentIntentId;
 
   const [loading, setLoading] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
+  const paymentIntentRef = useRef<string | undefined>(undefined);
 
   const quote = useMemo(() => {
     return casesQuotes
@@ -89,8 +82,6 @@ const PartnerVetConfirmationScreen: React.FC<{
     return `${fromTime} - ${toTime}`;
   }, [parsedSelectedDate, parsedSelectedTime]);
 
-  console.log("quote==", quote);
-
   const totalAmount = useMemo(() => {
     return selectedServices.reduce((acc, service) => {
       return acc + service.price;
@@ -115,14 +106,13 @@ const PartnerVetConfirmationScreen: React.FC<{
         return { id: item.id, label: item.label };
       });
 
-      console.log("updatedServices", updatedServices);
-
       const { id } = await bookPartnerVet(
         vetId,
         partnerId,
         caseId,
         scheduleAt,
-        updatedServices
+        updatedServices,
+        paymentIntentRef.current
       );
 
       navigation.navigate("PartnerVetSuccessfullScreen", {
@@ -132,6 +122,7 @@ const PartnerVetConfirmationScreen: React.FC<{
         caseId,
         scheduleAt,
         selectedServices,
+        paymentIntentId: paymentIntentRef.current,
       });
     } finally {
       setActionLoading(false);
@@ -144,7 +135,12 @@ const PartnerVetConfirmationScreen: React.FC<{
 
   const initialize = async () => {
     await fetchQuote();
-    await initStripe();
+
+    if (paymentIntentId) {
+      paymentIntentRef.current = paymentIntentId;
+    } else {
+      await initStripe();
+    }
   };
 
   const fetchQuote = async () => {
@@ -164,6 +160,8 @@ const PartnerVetConfirmationScreen: React.FC<{
       bookingCharges * 100,
       "AED"
     );
+
+    paymentIntentRef.current = paymentIntent;
 
     const { error, paymentOption } = await initPaymentSheet({
       customerEphemeralKeySecret: ephemeralKey,

@@ -34,6 +34,7 @@ export interface State {
     partnerId: string,
     caseId: string,
     date: string,
-    services: { id: string; label: string }[]
+    services: { id: string; label: string }[],
+    paymentIntentId?: string
   ) => Promise<{ id: string }>;
 }
