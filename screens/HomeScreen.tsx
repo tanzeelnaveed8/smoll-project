@@ -7,13 +7,17 @@ import {
   fontHauoraSemiBold,
 } from "@/constant/constant";
 import {
+  IconArrowRight,
   IconBell,
   IconChevronRight,
+  IconMichelinStar,
+  IconSettings,
   IconUserCircle,
 } from "@tabler/icons-react-native";
 import {
   ActivityIndicator,
   FlatList,
+  ImageSourcePropType,
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
@@ -39,8 +43,11 @@ interface Props {
 interface OptionTab {
   name: string;
   description: string;
-  value: "counselling" | "vet" | "appointments";
+  value: "counselling" | "petProfileScreen" | "appointments";
   loading: boolean;
+  img: ImageSourcePropType;
+  h: number;
+  w: number;
 }
 
 const HomeScreen: React.FC<Props> = (props) => {
@@ -53,21 +60,36 @@ const HomeScreen: React.FC<Props> = (props) => {
     {
       name: "Appointments",
       value: "appointments",
-      description: "Check you Appointments",
+      description: "All your appointment shows here",
       loading: false,
-    },
-    {
-      name: "Chat with Vet",
-      value: "vet",
-      description: "Ask vet about food, concerns",
-      loading: false,
+      img: require("../assets/images/appointment_.png"),
+      h: 65,
+      w: 55,
     },
     {
       name: "Human Counselling",
       value: "counselling",
-      description: "Therapy aids coping, enhances functioning",
+      description: "Talk to somone knows how it feels loosing a pet",
       loading: false,
+      img: require("../assets/images/human-counselling.png"),
+      h: 50,
+      w: 50,
     },
+    {
+      name: "PetID",
+      value: "petProfileScreen",
+      description: "Add and track your pet’s records",
+      loading: false,
+      img: require("../assets/images/pet-id.png"),
+      h: 60,
+      w: 60,
+    },
+    // {
+    //   name: "Chat with Vet",
+    //   value: "vet",
+    //   description: "Ask vet about food, concerns",
+    //   loading: false,
+    // },
   ]);
 
   const [showAccountSetupModal, setShowAccountSetupModal] = useState(false);
@@ -141,8 +163,10 @@ const HomeScreen: React.FC<Props> = (props) => {
       // } else {
       //   props.navigation.navigate("CounsellingInboxScreen");
       // }
-    } else if (item.value === "vet") {
-      props.navigation.navigate("ExpertsInboxScreen");
+    } else if (item.value === "petProfileScreen") {
+      props.navigation.navigate("PetProfileScreen", {
+        navigateTo: "HomeScreen",
+      });
     } else if (item.value === "appointments") {
       props.navigation.navigate("AppointmentsScreen");
     }
@@ -199,7 +223,7 @@ const HomeScreen: React.FC<Props> = (props) => {
                   props.navigation.navigate("SettingsMainScreen");
                 }}
               >
-                <IconUserCircle
+                <IconSettings
                   width={32}
                   height={32}
                   color={"#222222"}
@@ -230,61 +254,95 @@ const HomeScreen: React.FC<Props> = (props) => {
           )}
 
           <TouchableOpacity
+            style={{
+              borderWidth: 1.4,
+              borderColor: "#222",
+              borderRadius: 40,
+              paddingVertical: 15,
+              flexDirection: "row",
+              marginBottom: 20,
+            }}
             onPress={() => {
               props.navigation.navigate("ExpertsListScreen");
             }}
           >
-            <Div
-              bg="#F3F9FC"
-              px={16}
-              py={18}
-              style={{ borderRadius: 12 }}
-              borderWidth={1}
-              borderColor="#D0D7DC"
-              mb={24}
-            >
-              <Div w={212} mb={16}>
-                <Text fontSize={"2xl"}>Expert Advice for</Text>
-                <Text fontSize={"2xl"} color="primary" mb={4}>
-                  Happier, Healthier Pets
+            <Div justifyContent="center" px={16} py={18}>
+              <Div mb={16}>
+                <Text
+                  fontSize={"2xl"}
+                  fontFamily={fontHauoraBold}
+                  lineHeight={24}
+                >
+                  Chat with pet
                 </Text>
-                <Text>Receive a consultation for your pet</Text>
+                <Text
+                  fontSize={"2xl"}
+                  fontFamily={fontHauoraBold}
+                  lineHeight={24}
+                >
+                  wellness expert
+                </Text>
+
+                <Text>Completly Free!</Text>
               </Div>
 
               <Div style={{ paddingVertical: 2, flexDirection: "row", gap: 6 }}>
-                <Text fontFamily={fontHauoraSemiBold} fontSize={"lg"}>
-                  Get Started
+                <Text
+                  fontFamily={fontHauoraSemiBold}
+                  fontSize={"lg"}
+                  bg="#222"
+                  color="#fff"
+                  rounded={20}
+                  py={9}
+                  px={20}
+                >
+                  Start Now
                 </Text>
-                <Icon
+                <IconArrowRight
+                  width={34}
+                  height={34}
+                  strokeWidth={2.7}
+                  color="#222"
+                  style={{ alignSelf: "center" }}
+                />
+                {/* <Icon
                   alignSelf="center"
                   name="chevron-right"
                   fontFamily="Feather"
                   fontSize={24}
                   color="#222"
-                />
+                /> */}
               </Div>
-
-              <Image
-                source={require("../assets/images/home-page-highfy.png")}
-                w={200}
-                h={170}
-                position="absolute"
-                right={0}
-                bottom={0}
-              />
             </Div>
+
+            <Image
+              source={require("../assets/images/homescreen-hero.png")}
+              w={200}
+              h={170}
+              style={{ objectFit: "contain" }}
+              // position="absolute"
+              // right={0}
+              // bottom={0}
+            />
           </TouchableOpacity>
 
           <Div>
             <Div flexDir="row" style={{ gap: 8 }} alignItems="center" mb={16}>
               <Image
-                source={require("../assets/images/home-start-icon.png")}
+                source={require("../assets/images/home-start-icon-dark.png")}
                 w={24}
                 h={24}
                 mt={2}
               />
+              {/* <IconMichelinStar
+                width={24}
+                height={24}
+                color={"#222"}
+                fill={"#222"}
+                style={{ marginTop: 2 }}
+              /> */}
               <Text fontFamily={fontHauoraBold} fontSize={"xl"}>
-                What do you want to do today?
+                Other services you can do
               </Text>
             </Div>
 
@@ -293,23 +351,41 @@ const HomeScreen: React.FC<Props> = (props) => {
                 key={item.value}
                 px={16}
                 py={12}
-                borderWidth={1}
-                borderColor="#D0D7DC"
+                borderWidth={1.2}
+                borderColor="#222"
                 mb={index + 1 === options.length ? 0 : 8}
-                rounded={12}
+                rounded={20}
                 w={"100%"}
                 disabled={item.loading}
                 onPress={() => handleOptionTabPress(item)}
                 bg="#fff"
                 underlayColor="#f3f3f3"
               >
-                <Div flex={1}>
-                  <Text fontSize={"lg"} fontFamily={fontHauoraBold}>
-                    {item.name}
-                  </Text>
-                  <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
-                    {item.description}
-                  </Text>
+                <Div flex={1} flexDir="row" alignItems="center">
+                  <Image
+                    source={item.img}
+                    w={item.w}
+                    h={item.h}
+                    mr={12}
+                    style={index !== 0 ? { objectFit: "contain" } : {}}
+                  />
+                  <Div>
+                    <Text
+                      fontSize={"xl"}
+                      fontFamily={fontHauoraBold}
+                      lineHeight={20}
+                    >
+                      {item.name}
+                    </Text>
+                    <Text
+                      fontSize={"md"}
+                      fontFamily={fontHauoraMedium}
+                      maxW={"85%"}
+                      lineHeight={18}
+                    >
+                      {item.description}
+                    </Text>
+                  </Div>
                 </Div>
                 {item.loading ? (
                   <ActivityIndicator color={colorPrimary} />

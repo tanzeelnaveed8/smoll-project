@@ -1,6 +1,10 @@
 import Layout from "@/components/app/Layout";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
-import { fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
+import {
+  fontHauoraBold,
+  fontHauoraMedium,
+  fontHauoraSemiBold,
+} from "@/constant/constant";
 import { useCaseStore } from "@/store/modules/case";
 import { NavigationType } from "@/store/types";
 import { useRoute } from "@react-navigation/native";
@@ -14,6 +18,16 @@ import {
   Tag,
   Text,
 } from "react-native-magnus";
+import PartnerVetStarRating from "./PartnerVetStarRating";
+import {
+  IconCircleCheck,
+  IconCircleCheckFilled,
+  IconInfoCircle,
+  IconInfoCircleFilled,
+  IconSquareRoundedCheck,
+  IconSquareRoundedCheckFilled,
+} from "@tabler/icons-react-native";
+import { CaseQuotesDto } from "@/store/types/case";
 
 const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
@@ -95,55 +109,183 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
     }
   };
 
+  const getTotalQuote = (caseQuotes: CaseQuotesDto) => {
+    const q = caseQuotes.services.reduce((total, curr) => {
+      return total + curr.price;
+    }, 0);
+
+    return q;
+  };
+
+  const getMinQuote = (caseQuotes: CaseQuotesDto) => {
+    let q = 0;
+    caseQuotes.services.forEach((service) => {
+      if (service.label !== "Recommended") {
+        q += service.price;
+      }
+    });
+
+    return q;
+  };
+
   return (
     <Layout
       showBack
       backBtnText=""
-      title={clinicQuote?.partner?.name}
+      title={`Case ${caseId}`}
       onBackPress={() => {
         navigation.goBack();
       }}
       loading={loading}
     >
-      <ScrollDiv flex={1} pt={20} showsVerticalScrollIndicator={false}>
-        <ClinicCard
+      <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold} mb={20}>
+        Service Details
+      </Text>
+
+      {/* <ScrollDiv flex={1} pt={20} showsVerticalScrollIndicator={false}> */}
+      {/* <ClinicCard
           name={clinicQuote?.partner?.name ?? ""}
           min={cost.min}
           max={cost.max}
           address={clinicQuote?.partner?.address ?? ""}
           img={clinicQuote?.partner?.clinicImg?.url ?? ""}
-        />
+        /> */}
+
+      <Div
+        flex={1}
+        py={16}
+        px={20}
+        borderWidth={1}
+        borderColor="#222"
+        rounded={28}
+        mb={20}
+      >
+        <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold}>
+          {clinicQuote?.partner?.name}
+        </Text>
+
+        <PartnerVetStarRating rating={4} color="" />
 
         <Text
           fontSize={"md"}
-          fontFamily={fontHauoraSemiBold}
           color="darkGreyText"
-          mb={16}
+          fontFamily={fontHauoraSemiBold}
+          mb={20}
         >
-          Services included
+          {clinicQuote?.partner?.address}
         </Text>
 
-        <Div>
-          {clinicQuote?.services.map((item) => (
-            <Div mb={16}>
-              <ProposalDetailCard
-                key={item.id}
-                id={item.id}
-                servicesName={item.name}
-                type={item.label}
-                price={item.price}
-                description={item.description}
-                selectedServices={selectedServices}
-                onSelect={() => {
-                  handleSelectService(item.id);
-                }}
+        <Div
+          mb={24}
+          flexDir="row"
+          justifyContent="space-between"
+          alignItems="center"
+        >
+          <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold}>
+            Service
+          </Text>
+
+          <Div flexDir="row" alignItems="center" style={{ gap: 12 }}>
+            <Div flexDir="row" alignItems="center" style={{ gap: 5 }}>
+              <Image
+                source={require("../../assets/icons/disable-check.png")}
+                w={15}
+                h={15}
               />
+
+              <Text fontSize={10} fontFamily={fontHauoraMedium}>
+                Mandatory
+              </Text>
             </Div>
-          ))}
+
+            <Div flexDir="row" alignItems="center" style={{ gap: 5 }}>
+              <Image
+                source={require("../../assets/icons/check.png")}
+                w={15}
+                h={15}
+              />
+              <Text fontSize={10} fontFamily={fontHauoraMedium}>
+                Optional
+              </Text>
+            </Div>
+          </Div>
         </Div>
 
-        <Div h={30} />
-      </ScrollDiv>
+        <Div flex={1}>
+          <ScrollDiv borderBottomWidth={2} borderBottomColor="#222">
+            {clinicQuote?.services.map((item, i) => (
+              <Div mb={16}>
+                <ProposalDetailCard
+                  key={item.id}
+                  id={item.id}
+                  servicesName={item.name}
+                  type={item.label}
+                  price={item.price}
+                  description={item.description}
+                  borderWidth={clinicQuote?.services.length === i + 1 ? 0 : 1}
+                  selectedServices={selectedServices}
+                  onSelect={() => {
+                    handleSelectService(item.id);
+                  }}
+                />
+              </Div>
+            ))}
+          </ScrollDiv>
+
+          <Div
+            pt={15}
+            flexDir="row"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Div>
+              <Text
+                fontSize={"xl"}
+                fontFamily={fontHauoraSemiBold}
+                maxW={200}
+                mb={5}
+              >
+                Upfront transparent pricing
+              </Text>
+
+              <Div flexDir="row" alignItems="center" style={{ gap: 1 }}>
+                <IconInfoCircleFilled
+                  width={16}
+                  height={16}
+                  fill={"#222"}
+                  style={{ marginTop: 2 }}
+                />
+                <Text fontSize={11} fontFamily={fontHauoraMedium}>
+                  Understand how quotes work
+                </Text>
+              </Div>
+            </Div>
+
+            {clinicQuote && (
+              <Div>
+                <Div flexDir="row" alignItems="flex-end">
+                  <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
+                    Max{" "}
+                  </Text>
+                  <Text fontSize={"3xl"} fontFamily={fontHauoraBold} mb={-2}>
+                    AED{getTotalQuote(clinicQuote)}
+                  </Text>
+                </Div>
+
+                <Div flexDir="row" alignItems="flex-end">
+                  <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
+                    Min{" "}
+                  </Text>
+                  <Text fontSize={"lg"} fontFamily={fontHauoraMedium}>
+                    AED{getMinQuote(clinicQuote)}
+                  </Text>
+                </Div>
+              </Div>
+            )}
+          </Div>
+        </Div>
+      </Div>
+      {/* </ScrollDiv> */}
 
       <ButtonPrimary
         bgColor="primary"
@@ -156,8 +298,26 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
           })
         }
       >
-        Next
+        Make an Appointment
       </ButtonPrimary>
+
+      <Div
+        flexDir="row"
+        alignItems="center"
+        justifyContent="center"
+        style={{ gap: 1 }}
+        mt={8}
+      >
+        <IconCircleCheckFilled
+          width={16}
+          height={16}
+          fill={"#222"}
+          style={{ marginTop: 2 }}
+        />
+        <Text ml={4} fontSize={12} fontFamily={fontHauoraSemiBold}>
+          Our service is 100% free for pet parents.
+        </Text>
+      </Div>
     </Layout>
   );
 };
@@ -270,6 +430,7 @@ const ProposalDetailCard: React.FC<{
   description: string;
   selectedServices: { id: string; label: string }[];
   onSelect: () => void;
+  borderWidth?: number;
 }> = ({
   id,
   servicesName,
@@ -278,6 +439,7 @@ const ProposalDetailCard: React.FC<{
   description,
   onSelect,
   selectedServices,
+  borderWidth,
 }) => {
   const [typeStyles, setTypeStyles] = useState({
     bg: "#E7F3F7",
@@ -286,73 +448,94 @@ const ProposalDetailCard: React.FC<{
 
   useEffect(() => {
     if (type === "Essential") {
-      setTypeStyles({ bg: "#E7F3F7", color: "#222" });
+      setTypeStyles({ bg: "#848484", color: "#fff" });
     } else if (type === "Recommended") {
       setTypeStyles({ bg: "#10AFE1", color: "#fff" });
-    } else if (type === "Continget") {
-      setTypeStyles({ bg: "#FFC400", color: "##222" });
+    } else if (type === "Continget" || type === "Contigent") {
+      setTypeStyles({ bg: "#FFC400", color: "#222" });
     }
   }, [type]);
 
   return (
-    <Div pb={16} borderBottomWidth={1} borderColor="#D0D7DC">
+    <Div pb={16} borderBottomWidth={borderWidth} borderColor="#D0D7DC">
       <TouchableOpacity
         onPress={onSelect}
-        style={{ pointerEvents: type === "Recommended" ? "auto" : "none" }}
+        style={{
+          pointerEvents: type === "Recommended" ? "auto" : "none",
+          flexDirection: "row",
+        }}
       >
-        <Div flexDir="row" alignItems="flex-end" mb={8}>
+        {selectedServices.find((item) => item.id === id) ? (
+          <Image
+            mr={10}
+            mt={6}
+            source={
+              type === "Recommended"
+                ? require("../../assets/icons/check.png")
+                : require("../../assets/icons/disable-check.png")
+            }
+            w={20}
+            h={20}
+          />
+        ) : (
           <Div
-            // flexDir="row"
-            flexWrap="wrap"
-            alignItems="center"
-            style={{ gap: 4 }}
-          >
-            <Tag bg={typeStyles.bg} rounded={40} mb={-1}>
+            mr={10}
+            mt={6}
+            w={20}
+            h={20}
+            rounded={100}
+            borderWidth={2}
+            borderColor="#D0D7DC"
+          />
+        )}
+
+        <Div maxW={"90%"}>
+          <Div flexDir="row" alignItems="flex-start" mb={8} w="100%">
+            <Text
+              fontSize={"lg"}
+              fontFamily={fontHauoraSemiBold}
+              mr={4}
+              maxW={
+                type === "Recommended"
+                  ? 120
+                  : type === "Contingent" || type === "Contigent"
+                  ? 145
+                  : 160
+              }
+            >
+              {servicesName}
+            </Text>
+
+            <Div
+              flexDir="row"
+              alignItems="center"
+              style={{ gap: 12 }}
+              ml={"auto"}
+            >
               <Text
-                fontSize={12}
+                fontSize={11}
                 fontFamily={fontHauoraSemiBold}
                 color={typeStyles.color}
+                bg={typeStyles.bg}
+                rounded={40}
+                mb={-1}
+                py={3}
+                px={8}
               >
                 {type}
               </Text>
-            </Tag>
-            <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold} mr={4}>
-              {servicesName}
-            </Text>
+
+              <Div>
+                <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold}>
+                  AED{price}
+                </Text>
+              </Div>
+            </Div>
           </Div>
 
-          <Div ml={"auto"}>
-            <Text
-              fontSize={"xl"}
-              fontFamily={fontHauoraSemiBold}
-              color="primary"
-            >
-              {price} AED
-            </Text>
-          </Div>
-        </Div>
-
-        <Div flexDir="row" justifyContent="space-between" alignItems="flex-end">
-          <Text
-            fontSize={"md"}
-            fontFamily={fontHauoraSemiBold}
-            lineHeight={24}
-            color="darkGreyText"
-          >
+          <Text fontSize={13} fontFamily={fontHauoraMedium} maxW={"90%"}>
             {description}
           </Text>
-
-          <Checkbox
-            pointerEvents="none"
-            value={type}
-            ml={"auto"}
-            fontSize={24}
-            mb={5}
-            checked={
-              selectedServices.find((item) => item.id === id) ? true : false
-            }
-            disabled={type !== "Recommended"}
-          />
         </Div>
       </TouchableOpacity>
     </Div>

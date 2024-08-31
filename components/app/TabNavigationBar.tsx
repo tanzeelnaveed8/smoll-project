@@ -3,8 +3,10 @@ import { NavigationType } from "@/store/types";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import {
   IconBriefcase,
+  IconChecklist,
   IconHome,
   IconMessage,
+  IconWindow,
 } from "@tabler/icons-react-native";
 import React from "react";
 import { TouchableOpacity } from "react-native";
@@ -15,27 +17,31 @@ const tabList = [
     name: "Home",
     link: "HomeScreen",
     icon: (active?: boolean) => (
-      <IconHome width={28} height={28} color={active ? "#427594" : "#494949"} />
+      <IconWindow
+        width={28}
+        height={28}
+        color={active ? "#427594" : "#494949"}
+      />
     ),
   },
-  // {
-  //   name: "Chats",
-  //   link: "CounsellingRequestScreen",
-  //   // link: "CounsellingChatScreen",
-  //   icon: (active?: boolean) => (
-  //     <IconMessage
-  //       width={28}
-  //       height={28}
-  //       color={active ? "#427594" : "#494949"}
-  //     />
-  //   ),
-  // },
   {
-    name: "Cases",
+    name: "Chats",
+    link: "CounsellingRequestScreen",
+    // link: "CounsellingChatScreen",
+    icon: (active?: boolean) => (
+      <IconMessage
+        width={28}
+        height={28}
+        color={active ? "#427594" : "#494949"}
+      />
+    ),
+  },
+  {
+    name: "Quotations",
     link: "CasesListScreen",
     // link: "PartnerVetDetailScreen",
     icon: (active?: boolean) => (
-      <IconBriefcase
+      <IconChecklist
         width={28}
         height={28}
         color={active ? "#427594" : "#494949"}
@@ -50,7 +56,7 @@ const TabNavigationBar: React.FC<{
   const route = useRoute();
 
   return (
-    <Div borderTopWidth={2} borderColor="#dcdcdc14">
+    <Div borderTopWidth={0} borderColor="#dcdcdc14">
       <Div
         flexDir="row"
         justifyContent="space-around"

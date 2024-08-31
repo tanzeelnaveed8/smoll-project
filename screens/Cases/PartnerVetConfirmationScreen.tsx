@@ -352,7 +352,7 @@ const PartnerVetConfirmationScreen: React.FC<{
           </Button>
         </Div>
 
-        <Div
+        {/* <Div
           px={16}
           py={24}
           pb={16}
@@ -380,7 +380,7 @@ const PartnerVetConfirmationScreen: React.FC<{
               fontFamily={fontHauoraMedium}
             />
           </Div>
-        </Div>
+        </Div> */}
 
         <Div mt={24}>
           <Text
@@ -446,7 +446,8 @@ const PartnerVetConfirmationScreen: React.FC<{
           loading={actionLoading}
           disabled={actionLoading}
         >
-          {`Pay ${bookingCharges.toFixed(2)} AED`}
+          {/* {`Pay ${bookingCharges.toFixed(2)} AED`} */}
+          Continue
         </ButtonPrimary>
       </Div>
       {/* </ScrollDiv> */}

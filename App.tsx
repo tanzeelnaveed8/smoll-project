@@ -68,6 +68,7 @@ import AppointmentDetailsScreen from "./screens/Appointments/AppointmentDetailsS
 import CaseQuotesScreen from "./screens/Cases/CaseQuotesScreen";
 import CaseQuoteDescriptionScreen from "./screens/Cases/CaseQuoteDescriptionScreen";
 import UnavailableScreen from "./screens/Consultation/UnavailableScreen";
+import PaymentDetailsScreen from "./screens/Cases/PaymentDetailsScreen";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -431,6 +432,114 @@ const App = () => {
                     component={AppointmentDetailsScreen}
                   />
 
+                  {/* <Stack.Screen name="Membership" component={MembershipScreen} />
+                />
+                <Stack.Screen
+                  name="UnavailableScreen"
+                  component={UnavailableScreen}
+                />
+                <Stack.Screen
+                  name="ConsultationVideoScreen"
+                  component={ConsultationVideoScreen}
+                  options={{
+                    gestureEnabled: false,
+                  }}
+                />
+                <Stack.Screen
+                  name="RequestCallBackScreen"
+                  component={RequestCallBackScreen}
+                />
+                <Stack.Screen
+                  name="ExpertsScheduleConfirmationScreen"
+                  component={ExpertsScheduleConfirmationScreen}
+                />
+                <Stack.Screen
+                  name="ExpertsScheduleSuccessScreen"
+                  component={ExpertsScheduleSuccessScreen}
+                  options={{
+                    gestureEnabled: false,
+                  }}
+                />
+                <Stack.Screen
+                  name="CasesListScreen"
+                  component={CasesListScreen}
+                />
+                <Stack.Screen
+                  name="CaseDetailScreen"
+                  component={CaseDetailScreen}
+                />
+                <Stack.Screen
+                  name="CaseQuotesScreen"
+                  component={CaseQuotesScreen}
+                />
+                <Stack.Screen
+                  name="CaseQuoteDescriptionScreen"
+                  component={CaseQuoteDescriptionScreen}
+                />
+                <Stack.Screen
+                  name="PartnerVetScreen"
+                  component={PartnerVetScreen}
+                />
+                <Stack.Screen
+                  name="SlotBookingScreen"
+                  component={SlotBookingScreen}
+                />
+                <Stack.Screen
+                  name="PartnerVetDetailScreen"
+                  component={PartnerVetDetailScreen}
+                />
+                <Stack.Screen
+                  name="PartnerVetConfirmationScreen"
+                  component={PartnerVetConfirmationScreen}
+                />
+                <Stack.Screen
+                  name="PaymentDetailsScreen"
+                  component={PaymentDetailsScreen}
+                />
+                <Stack.Screen
+                  name="PartnerVetSuccessfullScreen"
+                  component={PartnerVetSuccessfullScreen}
+                />
+                <Stack.Screen
+                  name="SettingPersonalInfoScreen"
+                  component={SettingPersonalInfoScreen}
+                />
+                <Stack.Screen
+                  name="EditInfoScreen"
+                  component={EditInfoScreen}
+                />
+                <Stack.Screen
+                  name="PetEditInfoScreen"
+                  component={PetEditInfoScreen}
+                />
+                <Stack.Screen
+                  name="ConsultationFeedbackScreen"
+                  component={ConsultationFeedbackScreen}
+                  options={{
+                    gestureEnabled: false,
+                  }}
+                />
+                <Stack.Screen
+                  name="PetProfileListScreen"
+                  component={PetProfileListScreen}
+                />
+                <Stack.Screen
+                  name="PetProfileDetailsScreen"
+                  component={PetProfileDetailsScreen}
+                />
+                <Stack.Screen
+                  name="SettingsMainScreen"
+                  component={SettingsMainScreen}
+                />
+                {/* Appointments Screens */}
+                  <Stack.Screen
+                    name="AppointmentsScreen"
+                    component={AppointmentsScreen}
+                  />
+                  <Stack.Screen
+                    name="AppointmentDetailsScreen"
+                    component={AppointmentDetailsScreen}
+                  />
                   {/* <Stack.Screen name="Membership" component={MembershipScreen} />
           
 
