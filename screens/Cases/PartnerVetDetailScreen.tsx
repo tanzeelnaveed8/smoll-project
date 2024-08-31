@@ -182,6 +182,14 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
       .utc()
       .format();
 
+    // navigation.navigate("PaymentDetailsScreen", {
+    //   data: {
+    //     caseId,
+    //     selectedServices,
+    //     clinicName: partnerDetails?.partnerName,
+    //   },
+    // });
+
     navigation.navigate("PartnerVetConfirmationScreen", {
       from: "PartnerVetDetailScreen",
       vetId,

@@ -99,8 +99,6 @@ const PartnerVetConfirmationScreen: React.FC<{
     return `${fromTime} - ${toTime}`;
   }, [parsedSelectedDate, parsedSelectedTime]);
 
-  console.log("quote==", quote);
-
   const totalAmount = useMemo(() => {
     return selectedServices.reduce((acc, service) => {
       return acc + service.price;
@@ -113,38 +111,42 @@ const PartnerVetConfirmationScreen: React.FC<{
   }, [totalAmount]);
 
   const handleBook = async () => {
-    console.log("handleBook", partnerId, vetId, caseId, scheduleAt);
-    if (!partnerId || !vetId || !caseId || !scheduleAt) {
-      return;
-    }
-
-    try {
-      setLoading(true);
-      const updatedServices = selectedServices.map((item) => {
-        return { id: item.id, label: item.label };
-      });
-
-      console.log("updatedServices", updatedServices);
-
-      const { id } = await bookPartnerVet(
-        vetId,
-        partnerId,
-        caseId,
-        scheduleAt,
-        updatedServices
-      );
-
-      navigation.navigate("PartnerVetSuccessfullScreen", {
-        bookingId: id,
-        vetId,
-        partnerId,
-        caseId,
-        scheduleAt,
-        selectedServices,
-      });
-    } finally {
-      setLoading(false);
-    }
+    navigation.navigate("PaymentDetailsScreen", {
+      vetId,
+      partnerId,
+      clinicName: partnerDetails?.partnerName,
+      caseId,
+      scheduleAt,
+      selectedServices,
+    });
+    // console.log("handleBook", partnerId, vetId, caseId, scheduleAt);
+    // if (!partnerId || !vetId || !caseId || !scheduleAt) {
+    //   return;
+    // }
+    // try {
+    //   setLoading(true);
+    //   const updatedServices = selectedServices.map((item) => {
+    //     return { id: item.id, label: item.label };
+    //   });
+    //   console.log("updatedServices", updatedServices);
+    //   const { id } = await bookPartnerVet(
+    //     vetId,
+    //     partnerId,
+    //     caseId,
+    //     scheduleAt,
+    //     updatedServices
+    //   );
+    //   navigation.navigate("PartnerVetSuccessfullScreen", {
+    //     bookingId: id,
+    //     vetId,
+    //     partnerId,
+    //     caseId,
+    //     scheduleAt,
+    //     selectedServices,
+    //   });
+    // } finally {
+    //   setLoading(false);
+    // }
   };
 
   return (
@@ -258,7 +260,7 @@ const PartnerVetConfirmationScreen: React.FC<{
           </Button>
         </Div>
 
-        <Div
+        {/* <Div
           px={16}
           py={24}
           pb={16}
@@ -286,7 +288,7 @@ const PartnerVetConfirmationScreen: React.FC<{
               fontFamily={fontHauoraMedium}
             />
           </Div>
-        </Div>
+        </Div> */}
 
         <Div mt={24}>
           <Text
@@ -352,7 +354,8 @@ const PartnerVetConfirmationScreen: React.FC<{
           loading={loading}
           disabled={loading}
         >
-          {`Pay ${bookingCharges.toFixed(2)} AED`}
+          {/* {`Pay ${bookingCharges.toFixed(2)} AED`} */}
+          Continue
         </ButtonPrimary>
       </Div>
       {/* </ScrollDiv> */}

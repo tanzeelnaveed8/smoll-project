@@ -1,6 +1,8 @@
 import Layout from "@/components/app/Layout";
+import StarRating from "@/components/partials/StarRating";
 import {
   colorPrimary,
+  fontHauoraBold,
   fontHauoraMedium,
   fontHauoraSemiBold,
 } from "@/constant/constant";
@@ -18,6 +20,8 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Div, Text } from "react-native-magnus";
+import PartnerVetStarRating from "./PartnerVetStarRating";
+import { IconArrowRight } from "@tabler/icons-react-native";
 
 const CaseQuotesScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
@@ -39,10 +43,21 @@ const CaseQuotesScreen: React.FC<{ navigation: NavigationType }> = ({
     handleFetchRequests();
   }, []);
 
-  const getMinQuote = (caseQuotes: CaseQuotesDto) => {
+  const getTotalQuote = (caseQuotes: CaseQuotesDto) => {
     const q = caseQuotes.services.reduce((total, curr) => {
       return total + curr.price;
     }, 0);
+
+    return q;
+  };
+
+  const getMinQuote = (caseQuotes: CaseQuotesDto) => {
+    let q = 0;
+    caseQuotes.services.forEach((service) => {
+      if (service.label !== "Recommended") {
+        q += service.price;
+      }
+    });
 
     return q;
   };
@@ -71,13 +86,14 @@ const CaseQuotesScreen: React.FC<{ navigation: NavigationType }> = ({
   return (
     <Layout
       showBack
+      title={`Case ${caseId}`}
       onBackPress={() => {
         navigation.goBack();
       }}
     >
       <Div flex={1}>
         <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold} mb={20}>
-          Clinics
+          Quotations
         </Text>
 
         {!isLoading && (
@@ -92,21 +108,74 @@ const CaseQuotesScreen: React.FC<{ navigation: NavigationType }> = ({
                 onRefresh={handleFetchRequests}
               />
             }
-            renderItem={({ item }) => (
-              <Div pb={16} borderBottomWidth={1} borderColor="#D0D7DC" mb={12}>
-                <TouchableOpacity
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                  }}
-                  onPress={() => {
-                    navigation.navigate("CaseQuoteDescriptionScreen", {
-                      id: item.partner.id,
-                      caseId,
-                    });
-                  }}
+            renderItem={({ item }) => {
+              return (
+                <Div
+                  py={16}
+                  px={20}
+                  borderWidth={1}
+                  borderColor="#222"
+                  rounded={35}
+                  mb={25}
                 >
-                  <Div maxW="60%">
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate("CaseQuoteDescriptionScreen", {
+                        id: item.partner.id,
+                        caseId,
+                      });
+                    }}
+                  >
+                    <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold}>
+                      {item.partner.name}
+                    </Text>
+
+                    <PartnerVetStarRating rating={4} color="" />
+
+                    <Text
+                      fontSize={"md"}
+                      color="darkGreyText"
+                      fontFamily={fontHauoraSemiBold}
+                      mb={20}
+                    >
+                      {item.partner.address}
+                    </Text>
+
+                    <Div flexDir="row" alignItems="flex-end">
+                      <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
+                        Min{" "}
+                      </Text>
+                      <Text fontSize={"lg"} fontFamily={fontHauoraMedium}>
+                        AED{getMinQuote(item)}
+                      </Text>
+                    </Div>
+
+                    <Div
+                      flexDir="row"
+                      justifyContent="space-between"
+                      alignItems="center"
+                    >
+                      <Div flexDir="row" alignItems="flex-end">
+                        <Text
+                          fontSize={"md"}
+                          fontFamily={fontHauoraMedium}
+                          mb={3}
+                        >
+                          Max{" "}
+                        </Text>
+                        <Text fontSize={"2xl"} fontFamily={fontHauoraBold}>
+                          AED{getTotalQuote(item)}
+                        </Text>
+                      </Div>
+
+                      <IconArrowRight
+                        color={"#222"}
+                        width={34}
+                        height={34}
+                        strokeWidth={2.4}
+                      />
+                    </Div>
+                    {/* <Div maxW="60%">
                     <Text
                       fontSize={"xl"}
                       fontFamily={fontHauoraSemiBold}
@@ -115,7 +184,7 @@ const CaseQuotesScreen: React.FC<{ navigation: NavigationType }> = ({
                       {item.partner.name}
                     </Text>
 
-                    {/* <Div mb={6}>
+                    <Div mb={6}>
                       <Text
                         fontSize={"md"}
                         color="darkGreyText"
@@ -123,7 +192,7 @@ const CaseQuotesScreen: React.FC<{ navigation: NavigationType }> = ({
                       >
                         {item.rating}/5 Rating
                       </Text>
-                    </Div> */}
+                    </Div>
                     <Text
                       fontSize={"md"}
                       color="darkGreyText"
@@ -139,7 +208,7 @@ const CaseQuotesScreen: React.FC<{ navigation: NavigationType }> = ({
                       fontFamily={fontHauoraSemiBold}
                       color="primary"
                     >
-                      ~{getMinQuote(item)} AED
+                      ~{getTotalQuote(item)} AED
                     </Text>
                     <Text
                       fontSize={"md"}
@@ -148,10 +217,11 @@ const CaseQuotesScreen: React.FC<{ navigation: NavigationType }> = ({
                     >
                       Proposal
                     </Text>
-                  </Div>
-                </TouchableOpacity>
-              </Div>
-            )}
+                  </Div> */}
+                  </TouchableOpacity>
+                </Div>
+              );
+            }}
             keyExtractor={(item, i) => `${i}`}
           />
         )}

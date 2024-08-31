@@ -67,6 +67,7 @@ import AppointmentDetailsScreen from "./screens/Appointments/AppointmentDetailsS
 import CaseQuotesScreen from "./screens/Cases/CaseQuotesScreen";
 import CaseQuoteDescriptionScreen from "./screens/Cases/CaseQuoteDescriptionScreen";
 import UnavailableScreen from "./screens/Consultation/UnavailableScreen";
+import PaymentDetailsScreen from "./screens/Cases/PaymentDetailsScreen";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -329,7 +330,6 @@ const App = () => {
                   name="RequestCallBackScreen"
                   component={RequestCallBackScreen}
                 />
-
                 <Stack.Screen
                   name="ExpertsScheduleConfirmationScreen"
                   component={ExpertsScheduleConfirmationScreen}
@@ -341,17 +341,14 @@ const App = () => {
                     gestureEnabled: false,
                   }}
                 />
-
                 <Stack.Screen
                   name="CasesListScreen"
                   component={CasesListScreen}
                 />
-
                 <Stack.Screen
                   name="CaseDetailScreen"
                   component={CaseDetailScreen}
                 />
-
                 <Stack.Screen
                   name="CaseQuotesScreen"
                   component={CaseQuotesScreen}
@@ -360,7 +357,6 @@ const App = () => {
                   name="CaseQuoteDescriptionScreen"
                   component={CaseQuoteDescriptionScreen}
                 />
-
                 <Stack.Screen
                   name="PartnerVetScreen"
                   component={PartnerVetScreen}
@@ -376,6 +372,10 @@ const App = () => {
                 <Stack.Screen
                   name="PartnerVetConfirmationScreen"
                   component={PartnerVetConfirmationScreen}
+                />
+                <Stack.Screen
+                  name="PaymentDetailsScreen"
+                  component={PaymentDetailsScreen}
                 />
                 <Stack.Screen
                   name="PartnerVetSuccessfullScreen"
@@ -421,7 +421,6 @@ const App = () => {
                   name="AppointmentDetailsScreen"
                   component={AppointmentDetailsScreen}
                 />
-
                 {/* <Stack.Screen name="Membership" component={MembershipScreen} />
           
 

@@ -1,6 +1,10 @@
 import Layout from "@/components/app/Layout";
 import TabNavigationBar from "@/components/app/TabNavigationBar";
-import { colorPrimary, fontHauoraSemiBold } from "@/constant/constant";
+import {
+  colorPrimary,
+  fontHauoraMedium,
+  fontHauoraSemiBold,
+} from "@/constant/constant";
 import { useCaseStore } from "@/store/modules/case";
 import { NavigationType } from "@/store/types";
 import { CaseStatusEnum } from "@/store/types/case.d";
@@ -99,11 +103,16 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
       >
         <Div mb={24}>
           <Text
-            fontSize={"xl"}
+            fontSize={"2xl"}
             fontWeight="bold"
+            mb={20}
             fontFamily={fontHauoraSemiBold}
           >
-            All Cases
+            Quotations
+          </Text>
+
+          <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold}>
+            In-Clinic Requst
           </Text>
         </Div>
         <Div flex={1}>
@@ -147,9 +156,9 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
                   <Image
                     source={{ uri: item.pet.photos?.[0].url }}
                     w={56}
-                    h={56}
+                    h={66}
                     mr={7}
-                    rounded={100}
+                    // rounded={100}
                   />
                   <Div flex={1}>
                     <Div
@@ -158,9 +167,24 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
                       justifyContent="space-between"
                       flex={1}
                     >
-                      <Text fontFamily={fontHauoraSemiBold} fontSize={"xl"}>
-                        {item.pet.name}
-                      </Text>
+                      <Div
+                        flexDir="row"
+                        justifyContent="space-between"
+                        alignItems="center"
+                        w={"100%"}
+                      >
+                        <Text fontFamily={fontHauoraSemiBold} fontSize={"xl"}>
+                          {item.pet.name}
+                        </Text>
+
+                        <Text
+                          fontFamily={fontHauoraMedium}
+                          fontSize={"lg"}
+                          color="#2F6E20"
+                        >
+                          Xyz Quotations
+                        </Text>
+                      </Div>
 
                       {item.status === CaseStatusEnum.OPEN_ESCALATED &&
                         item.requestCount && (
@@ -203,8 +227,8 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
                         fontSize={"md"}
                         color="#494949"
                       >
-                        Case Status:{" "}
-                        <Text
+                        Case Id: {item.id}
+                        {/* <Text
                           fontFamily={fontHauoraSemiBold}
                           color={getCaseStatusColor(
                             item.status,
@@ -216,7 +240,7 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
                             item.scheduledAt,
                             item.hasPartnerBooking
                           )}
-                        </Text>
+                        </Text> */}
                       </Text>
                     </Div>
                   </Div>
