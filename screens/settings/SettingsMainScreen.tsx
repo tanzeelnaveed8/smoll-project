@@ -65,23 +65,23 @@ const options: GroupType[] = [
       },
     ],
   },
-  {
-    id: 2,
-    groupName: "Order & Cases",
-    options: [
-      // {
-      //   id: 1,
-      //   title: "Medicine Order",
-      //   icon: IconPrescription,
-      // },
-      {
-        id: 2,
-        title: "Cases",
-        icon: IconWritingSign,
-        link: "CasesListScreen",
-      },
-    ],
-  },
+  // {
+  //   id: 2,
+  //   groupName: "Order & Cases",
+  //   options: [
+  //     // {
+  //     //   id: 1,
+  //     //   title: "Medicine Order",
+  //     //   icon: IconPrescription,
+  //     // },
+  //     {
+  //       id: 2,
+  //       title: "Cases",
+  //       icon: IconWritingSign,
+  //       link: "CasesListScreen",
+  //     },
+  //   ],
+  // },
   {
     id: 3,
     groupName: "Billing and Security",

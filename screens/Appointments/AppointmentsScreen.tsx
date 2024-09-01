@@ -167,15 +167,11 @@ const AppointmentCard: React.FC<{
           mr={16}
           justifyContent="center"
           alignItems="center"
+          borderColor="#D0D7DC"
+          borderWidth={1}
         >
           {props.img ? (
-            <Image
-              w={"100%"}
-              h={"100%"}
-              rounded={100}
-              src={props.img}
-              // source={require("../../assets/images/doctor-img.png")}
-            />
+            <Image w={"100%"} h={"100%"} rounded={100} src={props.img} />
           ) : (
             <IconUser size={24} width={40} height={40} color="#fff" />
           )}

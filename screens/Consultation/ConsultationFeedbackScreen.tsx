@@ -35,7 +35,7 @@ const ConsultationFeedbackScreen: React.FC<Props> = ({ navigation }) => {
         comment,
       });
 
-      navigation.navigate("CasesListScreen", {
+      navigation.navigate("HomeScreen", {
         from: "ConsultationFeedbackScreen",
       });
     } finally {

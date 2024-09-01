@@ -122,7 +122,10 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
 
       if (!partnerDetails) {
         const details = await fetchPartnerVetDetails(vetId, partnerId);
-        setAvailability(details.availabilities);
+
+        const now = dayjs().format("YYYY-MM-DD");
+
+        handleDateSelect(now);
       }
     } finally {
       setIsLoading(false);
@@ -168,7 +171,6 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
       return;
     }
 
-    // const scheduledAt = selectedDate
     const _date = dayjs(selectedDate).format("YYYY-MM-DD");
 
     const scheduleAt = dayjs(
@@ -178,14 +180,6 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
     )
       .utc()
       .format();
-
-    // navigation.navigate("PaymentDetailsScreen", {
-    //   data: {
-    //     caseId,
-    //     selectedServices,
-    //     clinicName: partnerDetails?.partnerName,
-    //   },
-    // });
 
     navigation.navigate("PartnerVetConfirmationScreen", {
       from: "PartnerVetDetailScreen",
@@ -198,6 +192,8 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
       selectedServices,
     });
   };
+
+  console.log("a", availability);
 
   return (
     <Layout
@@ -338,6 +334,7 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
                                   w="100%"
                                 >
                                   <Text
+                                    fontSize={"lg"}
                                     color={
                                       selectedTime?.label ===
                                       `${index}:${
@@ -355,7 +352,9 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
                           })}
                         </Div>
                       </Div>
-                    ) : null}
+                    ) : (
+                      <Text>No availability</Text>
+                    )}
                   </>
                 ))}
 

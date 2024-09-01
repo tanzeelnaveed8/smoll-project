@@ -44,6 +44,8 @@ const CasesQuotesListScreen: React.FC<{ navigation: NavigationType }> = ({
 
       const response = await fetchCases(1, isRefresh ?? reset, true);
 
+      console.log("res", response);
+
       setNextPageId(response.nextPage);
     } finally {
       setIsLoading(false);

@@ -147,30 +147,32 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
             Service
           </Text>
 
-          <Div flexDir="row" alignItems="center" style={{ gap: 12 }}>
-            <Div flexDir="row" alignItems="center" style={{ gap: 5 }}>
-              <Image
-                source={require("../../assets/icons/disable-check.png")}
-                w={15}
-                h={15}
-              />
+          {!hasPartnerBooking && (
+            <Div flexDir="row" alignItems="center" style={{ gap: 12 }}>
+              <Div flexDir="row" alignItems="center" style={{ gap: 5 }}>
+                <Image
+                  source={require("../../assets/icons/disable-check.png")}
+                  w={15}
+                  h={15}
+                />
 
-              <Text fontSize={10} fontFamily={fontHauoraMedium}>
-                Mandatory
-              </Text>
-            </Div>
+                <Text fontSize={10} fontFamily={fontHauoraMedium}>
+                  Mandatory
+                </Text>
+              </Div>
 
-            <Div flexDir="row" alignItems="center" style={{ gap: 5 }}>
-              <Image
-                source={require("../../assets/icons/check.png")}
-                w={15}
-                h={15}
-              />
-              <Text fontSize={10} fontFamily={fontHauoraMedium}>
-                Optional
-              </Text>
+              <Div flexDir="row" alignItems="center" style={{ gap: 5 }}>
+                <Image
+                  source={require("../../assets/icons/check.png")}
+                  w={15}
+                  h={15}
+                />
+                <Text fontSize={10} fontFamily={fontHauoraMedium}>
+                  Optional
+                </Text>
+              </Div>
             </Div>
-          </Div>
+          )}
         </Div>
 
         <Div flex={1}>
@@ -193,6 +195,7 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
                   onSelect={() => {
                     handleSelectService(item.id);
                   }}
+                  hasPartnerBooking={Boolean(hasPartnerBooking)}
                 />
               </Div>
             ))}
@@ -294,104 +297,6 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
 
 export default CaseQuoteDescriptionScreen;
 
-const ClinicCard: React.FC<{
-  name: string;
-  img: string;
-  address: string;
-  // rating: number;
-  min: number;
-  max: number;
-}> = ({ name, img, address, min, max }) => {
-  return (
-    <Div pb={16} borderBottomWidth={1} borderBottomColor="#D0D7DC" mb={20}>
-      <Div mb={16} flexDir="row" alignItems="center">
-        <Image
-          source={
-            img ? { uri: img } : require("../../assets/images/doctor-img.png")
-          }
-          w={64}
-          h={64}
-          rounded={100}
-          mr={8}
-          borderWidth={1}
-          borderColor="#D0D7DC"
-        />
-        <Div>
-          <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold} mb={6}>
-            {name}
-          </Text>
-          <Div
-            flexDir="row"
-            alignItems="center"
-            style={{ gap: 8, maxWidth: 300 }}
-          >
-            {/* <StarRating size={11} defaultRating={4} columnGap={6} /> */}
-            <Text
-              fontSize={"lg"}
-              fontFamily={fontHauoraMedium}
-              color="darkGreyText"
-            >
-              {address}
-            </Text>
-          </Div>
-        </Div>
-      </Div>
-
-      <Div>
-        <Text
-          color="darkGreyText"
-          fontSize={"md"}
-          fontFamily={fontHauoraMedium}
-          mb={2}
-          lineHeight={24}
-        >
-          Proposal
-        </Text>
-
-        <Div flexDir="row" alignItems="flex-end" style={{ gap: 12 }}>
-          <Div flexDir="row">
-            <Text
-              fontSize={"md"}
-              fontFamily={fontHauoraSemiBold}
-              mr={5}
-              lineHeight={24}
-            >
-              Min
-            </Text>
-            <Text
-              fontSize={"xl"}
-              fontFamily={fontHauoraSemiBold}
-              color="primary"
-              lineHeight={24}
-            >
-              {min} AED
-            </Text>
-          </Div>
-
-          <Div flexDir="row">
-            <Text
-              fontSize={"md"}
-              fontFamily={fontHauoraSemiBold}
-              mr={5}
-              lineHeight={24}
-            >
-              Max
-            </Text>
-            <Text
-              fontSize={"xl"}
-              fontFamily={fontHauoraSemiBold}
-              color="primary"
-              lineHeight={24}
-            >
-              {max} AED
-            </Text>
-          </Div>
-        </Div>
-      </Div>
-    </Div>
-  );
-};
-
 const ProposalDetailCard: React.FC<{
   servicesName: string;
   id: string;
@@ -401,6 +306,7 @@ const ProposalDetailCard: React.FC<{
   selectedServices: { id: string; label: string }[];
   onSelect: () => void;
   borderWidth?: number;
+  hasPartnerBooking?: boolean;
 }> = ({
   id,
   servicesName,
@@ -410,6 +316,7 @@ const ProposalDetailCard: React.FC<{
   onSelect,
   selectedServices,
   borderWidth,
+  hasPartnerBooking,
 }) => {
   const [typeStyles, setTypeStyles] = useState({
     bg: "#E7F3F7",
@@ -434,33 +341,35 @@ const ProposalDetailCard: React.FC<{
           pointerEvents: type === "Recommended" ? "auto" : "none",
           flexDirection: "row",
         }}
+        disabled={hasPartnerBooking}
       >
-        {selectedServices.find((item) => item.id === id) ? (
-          <Image
-            mr={10}
-            mt={2}
-            source={
-              type === "Recommended"
-                ? require("../../assets/icons/check.png")
-                : require("../../assets/icons/disable-check.png")
-            }
-            w={20}
-            h={20}
-          />
-        ) : (
-          <Div
-            mr={10}
-            mt={2}
-            w={20}
-            h={20}
-            rounded={100}
-            borderWidth={2}
-            borderColor="#D0D7DC"
-          />
-        )}
+        {!hasPartnerBooking &&
+          (selectedServices.find((item) => item.id === id) ? (
+            <Image
+              mr={10}
+              mt={2}
+              source={
+                type === "Recommended"
+                  ? require("../../assets/icons/check.png")
+                  : require("../../assets/icons/disable-check.png")
+              }
+              w={20}
+              h={20}
+            />
+          ) : (
+            <Div
+              mr={10}
+              mt={2}
+              w={20}
+              h={20}
+              rounded={100}
+              borderWidth={2}
+              borderColor="#D0D7DC"
+            />
+          ))}
 
-        <Div maxW={"90%"}>
-          <Div flexDir="row" alignItems="flex-start" mb={8} w="100%">
+        <Div flex={1}>
+          <Div flexDir="row" alignItems="flex-start" mb={8} w={"100%"}>
             <Text
               fontSize={"lg"}
               fontFamily={fontHauoraSemiBold}
