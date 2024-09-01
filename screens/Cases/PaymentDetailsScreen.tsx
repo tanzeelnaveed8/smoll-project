@@ -1,31 +1,166 @@
 import Layout from "@/components/app/Layout";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
+import FlashCustomContent from "@/components/partials/FlashCustomContent";
 import { fontHauoraBold, fontHauoraSemiBold } from "@/constant/constant";
+import { useCaseStore } from "@/store/modules/case";
 import { usePartnerStore } from "@/store/modules/partner";
+import { useUserStore } from "@/store/modules/user";
 import { NavigationType, PaymentPageRoute } from "@/store/types";
 import { useRoute } from "@react-navigation/native";
+import {
+  initPaymentSheet,
+  presentPaymentSheet,
+} from "@stripe/stripe-react-native";
+import { SetupParams } from "@stripe/stripe-react-native/lib/typescript/src/types/PaymentSheet";
 import { IconDotsVertical } from "@tabler/icons-react-native";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Platform } from "react-native";
+import { showMessage } from "react-native-flash-message";
 import { Div, Image, Text } from "react-native-magnus";
 
 const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
   const route = useRoute();
-  const { caseId, clinicName, partnerId, scheduleAt, selectedServices, vetId } =
-    route.params as PaymentPageRoute;
+  const {
+    caseId,
+    clinicName,
+    partnerId,
+    scheduleAt,
+    selectedServices,
+    vetId,
+    paymentIntentId,
+  } = route.params as PaymentPageRoute;
 
-  const { partnerVetDetails, bookPartnerVet } = usePartnerStore();
+  const { user, createPaymentIntent } = useUserStore();
+  const { bookPartnerVet } = usePartnerStore();
+  const { casesQuotes, fetchCaseQuotes } = useCaseStore();
 
   const [loading, setLoading] = useState(false);
+  const [actionLoading, setActionLoading] = useState(false);
+  const paymentIntentRef = useRef<string | undefined>(undefined);
+
+  const quote = useMemo(() => {
+    return casesQuotes
+      .get(caseId)
+      ?.find((quote) => quote.partner.id === partnerId);
+  }, [casesQuotes, partnerId, caseId]);
+
+  const partner = useMemo(() => {
+    return quote?.partner;
+  }, [quote]);
+
+  const totalAmount = useMemo(() => {
+    return selectedServices.reduce((acc, service) => {
+      return acc + service.price;
+    }, 0);
+  }, [quote]);
+
+  const bookingCharges = useMemo(() => {
+    // 11% of total amount
+    const amount = ((totalAmount ?? 0) * 11) / 100;
+    return amount;
+  }, [totalAmount]);
+
+  useEffect(() => {
+    initialize();
+  }, []);
+
+  const initStripe = async () => {
+    setLoading(true);
+
+    const { ephemeralKey, paymentIntent } = await createPaymentIntent(
+      user!.stripeCustomerId,
+      bookingCharges * 100,
+      "AED"
+    );
+
+    paymentIntentRef.current = paymentIntent;
+
+    const { error, paymentOption } = await initPaymentSheet({
+      customerEphemeralKeySecret: ephemeralKey,
+      paymentIntentClientSecret: paymentIntent as any,
+      merchantDisplayName: "Smoll",
+      customerId: user!.stripeCustomerId,
+      defaultBillingDetails: {
+        name: user?.name,
+      },
+      appearance: {
+        font: {
+          family:
+            Platform.OS === "android"
+              ? "avenirnextregular"
+              : "AvenirNext-Regular",
+        },
+        shapes: {
+          borderRadius: 12,
+          borderWidth: 0.5,
+        },
+        primaryButton: {
+          colors: {
+            background: "#000000",
+            text: "#ffffff",
+          },
+          shapes: {
+            borderRadius: 20,
+          },
+        },
+        colors: {
+          primary: "#fcfdff",
+          background: "#ffffff",
+          componentBackground: "#f3f8fa",
+          componentBorder: "#f3f8fa",
+          componentDivider: "#000000",
+          primaryText: "#000000",
+          secondaryText: "#000000",
+          componentText: "#000000",
+          placeholderText: "#73757b",
+        },
+      },
+    } as SetupParams);
+
+    if (error) {
+      showMessage({
+        message: "",
+        renderCustomContent: () => (
+          <FlashCustomContent message="Something went wrong" />
+        ),
+        type: "danger",
+      });
+
+      navigation.goBack();
+    }
+
+    setLoading(false);
+  };
+
+  const fetchQuote = async () => {
+    try {
+      setLoading(true);
+      await fetchCaseQuotes(caseId);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const initialize = async () => {
+    await fetchQuote();
+
+    if (paymentIntentId) {
+      paymentIntentRef.current = paymentIntentId;
+    } else {
+      await initStripe();
+    }
+  };
 
   const handleBook = async () => {
-    console.log("handleBook", partnerId, vetId, caseId, scheduleAt);
     if (!partnerId || !vetId || !caseId || !scheduleAt) {
       return;
     }
+
     try {
-      setLoading(true);
+      setActionLoading(true);
+
       const updatedServices = selectedServices.map((item) => {
         return { id: item.id, label: item.label };
       });
@@ -35,8 +170,10 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
         partnerId,
         caseId,
         scheduleAt,
-        updatedServices
+        updatedServices,
+        paymentIntentRef.current
       );
+
       navigation.navigate("PartnerVetSuccessfullScreen", {
         bookingId: id,
         vetId,
@@ -44,22 +181,30 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
         caseId,
         scheduleAt,
         selectedServices,
+        paymentIntentId: paymentIntentRef.current,
       });
     } finally {
-      setLoading(false);
+      setActionLoading(false);
     }
   };
 
-  const totalAmount = useMemo(() => {
-    return selectedServices.reduce((acc, service) => {
-      return acc + service.price;
-    }, 0);
-  }, [selectedServices]);
+  const openPaymentSheet = async () => {
+    const { error } = await presentPaymentSheet();
 
-  const bookingCharges = useMemo(() => {
-    // 11% of total amount
-    return ((totalAmount ?? 0) * 11) / 100;
-  }, [totalAmount]);
+    if (error) {
+      showMessage({
+        message: "",
+        renderCustomContent: () => (
+          <FlashCustomContent message="Could not process payment, please try again" />
+        ),
+        type: "danger",
+      });
+
+      return;
+    }
+
+    handleBook();
+  };
 
   return (
     <Layout
@@ -68,6 +213,7 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
       onBackPress={() => {
         navigation.goBack();
       }}
+      loading={loading}
     >
       <Div flex={1} pt={20}>
         <Div
@@ -79,17 +225,13 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
           <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold}>
             Payment Details
           </Text>
-
-          <Text fontSize={"md"} color="darkGreyText">
-            Case 312421
-          </Text>
         </Div>
 
-        <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold} mb={5}>
+        <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold} mb={5}>
           Here is what your bill will look like at the
         </Text>
 
-        <Text fontSize={"2xl"} fontFamily={fontHauoraBold} mb={25}>
+        <Text fontSize={30} fontFamily={fontHauoraBold} mb={25}>
           {clinicName}
         </Text>
 
@@ -107,7 +249,7 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
             </Text>
 
             <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold} mb={15}>
-              AED{totalAmount}
+              AED {totalAmount}
             </Text>
 
             <Text fontSize={"md"} mb={2}>
@@ -150,9 +292,9 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
           <ButtonPrimary
             bgColor="primary"
             mb={15}
-            loading={loading}
-            disabled={loading}
-            onPress={handleBook}
+            onPress={openPaymentSheet}
+            loading={actionLoading}
+            disabled={actionLoading}
           >
             Pay Now
           </ButtonPrimary>

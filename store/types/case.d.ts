@@ -109,6 +109,7 @@ export interface CaseQuotesDto {
 
 export interface CasesState {
   cases: Nullable<CaseListResponseDto[]>;
+  escalatedCases: Nullable<CaseListResponseDto[]>;
   casesQuotes: Map<string, CaseQuotesDto[]>;
   caseRequests: CaseRequestsDto[];
   vetDoctorList: VetDoctorListDto[];

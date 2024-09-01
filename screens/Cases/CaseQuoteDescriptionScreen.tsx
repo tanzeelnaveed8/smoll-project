@@ -7,27 +7,16 @@ import {
 } from "@/constant/constant";
 import { useCaseStore } from "@/store/modules/case";
 import { NavigationType } from "@/store/types";
+import { CaseQuotesDto } from "@/store/types/case";
 import { useRoute } from "@react-navigation/native";
+import {
+  IconCircleCheckFilled,
+  IconInfoCircleFilled,
+} from "@tabler/icons-react-native";
 import React, { useEffect, useMemo, useState } from "react";
 import { TouchableOpacity } from "react-native";
-import {
-  Checkbox,
-  Div,
-  Image,
-  ScrollDiv,
-  Tag,
-  Text,
-} from "react-native-magnus";
+import { Div, Image, ScrollDiv, Tag, Text } from "react-native-magnus";
 import PartnerVetStarRating from "./PartnerVetStarRating";
-import {
-  IconCircleCheck,
-  IconCircleCheckFilled,
-  IconInfoCircle,
-  IconInfoCircleFilled,
-  IconSquareRoundedCheck,
-  IconSquareRoundedCheckFilled,
-} from "@tabler/icons-react-native";
-import { CaseQuotesDto } from "@/store/types/case";
 
 const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
@@ -37,6 +26,8 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
 
   const id = (route.params as Record<string, string>)?.id;
   const caseId = (route.params as Record<string, string>)?.caseId;
+  const hasPartnerBooking = (route.params as Record<string, string>)
+    ?.hasPartnerBooking;
 
   const [loading, setLoading] = useState(false);
   const [selectedServices, setSelectedServices] = useState<
@@ -59,25 +50,6 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
     });
 
     setSelectedServices(servicesData);
-  }, [clinicQuote]);
-
-  const cost = useMemo(() => {
-    let min = 0;
-    let max = 0;
-
-    clinicQuote?.services.forEach((s) => {
-      if (s.label === "Essential") {
-        min += s.price;
-      }
-
-      max += s.price;
-    });
-
-    if (min === 0) {
-      min = max;
-    }
-
-    return { min, max };
   }, [clinicQuote]);
 
   const handleSelectService = (id: string) => {
@@ -109,12 +81,11 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
     }
   };
 
-  const getTotalQuote = (caseQuotes: CaseQuotesDto) => {
-    const q = caseQuotes.services.reduce((total, curr) => {
-      return total + curr.price;
-    }, 0);
-
-    return q;
+  const getTotalQuote = () => {
+    return selectedServices.reduce(
+      (total, service) => total + service.price,
+      0
+    );
   };
 
   const getMinQuote = (caseQuotes: CaseQuotesDto) => {
@@ -132,7 +103,7 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
     <Layout
       showBack
       backBtnText=""
-      title={`Case ${caseId}`}
+      title="Case"
       onBackPress={() => {
         navigation.goBack();
       }}
@@ -141,15 +112,6 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
       <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold} mb={20}>
         Service Details
       </Text>
-
-      {/* <ScrollDiv flex={1} pt={20} showsVerticalScrollIndicator={false}> */}
-      {/* <ClinicCard
-          name={clinicQuote?.partner?.name ?? ""}
-          min={cost.min}
-          max={cost.max}
-          address={clinicQuote?.partner?.address ?? ""}
-          img={clinicQuote?.partner?.clinicImg?.url ?? ""}
-        /> */}
 
       <Div
         flex={1}
@@ -212,7 +174,11 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
         </Div>
 
         <Div flex={1}>
-          <ScrollDiv borderBottomWidth={2} borderBottomColor="#222">
+          <ScrollDiv
+            borderBottomWidth={2}
+            borderBottomColor="#222"
+            showsVerticalScrollIndicator={false}
+          >
             {clinicQuote?.services.map((item, i) => (
               <Div mb={16}>
                 <ProposalDetailCard
@@ -252,8 +218,8 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
                 <IconInfoCircleFilled
                   width={16}
                   height={16}
-                  fill={"#222"}
-                  style={{ marginTop: 2 }}
+                  color={"#fff"}
+                  fill={"#000"}
                 />
                 <Text fontSize={11} fontFamily={fontHauoraMedium}>
                   Understand how quotes work
@@ -265,19 +231,19 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
               <Div>
                 <Div flexDir="row" alignItems="flex-end">
                   <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
-                    Max{" "}
+                    Max{"  "}
                   </Text>
                   <Text fontSize={"3xl"} fontFamily={fontHauoraBold} mb={-2}>
-                    AED{getTotalQuote(clinicQuote)}
+                    AED {getTotalQuote()}
                   </Text>
                 </Div>
 
                 <Div flexDir="row" alignItems="flex-end">
                   <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
-                    Min{" "}
+                    Min{"  "}
                   </Text>
                   <Text fontSize={"lg"} fontFamily={fontHauoraMedium}>
-                    AED{getMinQuote(clinicQuote)}
+                    AED {getMinQuote(clinicQuote)}
                   </Text>
                 </Div>
               </Div>
@@ -289,16 +255,20 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
 
       <ButtonPrimary
         bgColor="primary"
-        onPress={() =>
-          navigation.navigate("PartnerVetScreen", {
-            partnerId: clinicQuote?.partner?.id,
-            partnerName: clinicQuote?.partner?.name,
-            caseId,
-            selectedServices,
-          })
-        }
+        onPress={() => {
+          if (hasPartnerBooking) {
+            navigation.goBack();
+          } else {
+            navigation.navigate("PartnerVetScreen", {
+              partnerId: clinicQuote?.partner?.id,
+              partnerName: clinicQuote?.partner?.name,
+              caseId,
+              selectedServices,
+            });
+          }
+        }}
       >
-        Make an Appointment
+        {hasPartnerBooking ? "Go Back" : "Make an Appointment"}
       </ButtonPrimary>
 
       <Div
@@ -311,8 +281,8 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
         <IconCircleCheckFilled
           width={16}
           height={16}
-          fill={"#222"}
-          style={{ marginTop: 2 }}
+          color={"#fff"}
+          fill={"#000"}
         />
         <Text ml={4} fontSize={12} fontFamily={fontHauoraSemiBold}>
           Our service is 100% free for pet parents.
@@ -468,7 +438,7 @@ const ProposalDetailCard: React.FC<{
         {selectedServices.find((item) => item.id === id) ? (
           <Image
             mr={10}
-            mt={6}
+            mt={2}
             source={
               type === "Recommended"
                 ? require("../../assets/icons/check.png")
@@ -480,7 +450,7 @@ const ProposalDetailCard: React.FC<{
         ) : (
           <Div
             mr={10}
-            mt={6}
+            mt={2}
             w={20}
             h={20}
             rounded={100}
@@ -512,22 +482,22 @@ const ProposalDetailCard: React.FC<{
               style={{ gap: 12 }}
               ml={"auto"}
             >
-              <Text
+              <Tag
                 fontSize={11}
                 fontFamily={fontHauoraSemiBold}
                 color={typeStyles.color}
                 bg={typeStyles.bg}
                 rounded={40}
-                mb={-1}
+                mt={2}
                 py={3}
                 px={8}
               >
                 {type}
-              </Text>
+              </Tag>
 
               <Div>
                 <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold}>
-                  AED{price}
+                  AED {price}
                 </Text>
               </Div>
             </Div>

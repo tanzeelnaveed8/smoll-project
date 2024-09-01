@@ -4,6 +4,7 @@ import { CasesState } from "../types/case";
 
 export const useCaseStore = create<CasesState>((set, get) => ({
   cases: null,
+  escalatedCases: null,
   caseRequests: [],
   vetDoctorList: [],
   casesQuotes: new Map(),
@@ -23,20 +24,28 @@ export const useCaseStore = create<CasesState>((set, get) => ({
   removeCase: async (id: string) => {
     await api.delete(`/member/cases/${id}`);
   },
-  fetchCases: async (page, reset) => {
+  fetchCases: async (page, reset, isEscalated?: boolean) => {
     const response = await api.get("/member/cases", {
       params: {
         page: page,
         limit: 10,
+        isEscalated,
       },
     });
 
     const existingCases = reset ? [] : get().cases || [];
     const data = response.data.data;
 
-    set(() => ({
-      cases: existingCases.length > 0 ? [...existingCases, ...data] : data,
-    }));
+    if (isEscalated) {
+      set(() => ({
+        escalatedCases:
+          existingCases.length > 0 ? [...existingCases, ...data] : data,
+      }));
+    } else {
+      set(() => ({
+        cases: existingCases.length > 0 ? [...existingCases, ...data] : data,
+      }));
+    }
 
     return response.data;
   },

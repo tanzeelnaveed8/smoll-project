@@ -1,7 +1,6 @@
 import Layout from "@/components/app/Layout";
 import Accordion from "@/components/partials/Accordion";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
-import FlashCustomContent from "@/components/partials/FlashCustomContent";
 import {
   fontHauoraBold,
   fontHauoraMedium,
@@ -13,25 +12,17 @@ import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
 import { ExpertAvailability } from "@/store/types/expert";
 import { useRoute } from "@react-navigation/native";
-import {
-  initPaymentSheet,
-  presentPaymentSheet,
-} from "@stripe/stripe-react-native";
-import { SetupParams } from "@stripe/stripe-react-native/lib/typescript/src/types/PaymentSheet";
 import { IconCalendarMonth } from "@tabler/icons-react-native";
 import dayjs from "dayjs";
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Platform } from "react-native";
-import { showMessage } from "react-native-flash-message";
+import React, { useMemo, useState } from "react";
 import { Button, Div, Image, ScrollDiv, Text } from "react-native-magnus";
 
 const PartnerVetConfirmationScreen: React.FC<{
   navigation: NavigationType;
 }> = ({ navigation }) => {
   const route = useRoute();
-  const { user, createPaymentIntent } = useUserStore();
-  const { partnerVetDetails, bookPartnerVet } = usePartnerStore();
-  const { casesQuotes, fetchCaseQuotes } = useCaseStore();
+  const { partnerVetDetails } = usePartnerStore();
+  const { casesQuotes } = useCaseStore();
 
   const partnerId = (route.params as Record<string, string>)?.partnerId;
   const caseId = (route.params as Record<string, string>)?.caseId;
@@ -46,10 +37,6 @@ const PartnerVetConfirmationScreen: React.FC<{
   )?.selectedServices;
   const paymentIntentId = (route.params as Record<string, string>)
     ?.paymentIntentId;
-
-  const [loading, setLoading] = useState(false);
-  const [actionLoading, setActionLoading] = useState(false);
-  const paymentIntentRef = useRef<string | undefined>(undefined);
 
   const quote = useMemo(() => {
     return casesQuotes
@@ -82,160 +69,6 @@ const PartnerVetConfirmationScreen: React.FC<{
     return `${fromTime} - ${toTime}`;
   }, [parsedSelectedDate, parsedSelectedTime]);
 
-  const totalAmount = useMemo(() => {
-    return selectedServices.reduce((acc, service) => {
-      return acc + service.price;
-    }, 0);
-  }, [quote]);
-
-  const bookingCharges = useMemo(() => {
-    // 11% of total amount
-    const amount = ((totalAmount ?? 0) * 11) / 100;
-    return amount;
-  }, [totalAmount]);
-
-  const handleBook = async () => {
-    if (!partnerId || !vetId || !caseId || !scheduleAt) {
-      return;
-    }
-
-    try {
-      setActionLoading(true);
-
-      const updatedServices = selectedServices.map((item) => {
-        return { id: item.id, label: item.label };
-      });
-
-      const { id } = await bookPartnerVet(
-        vetId,
-        partnerId,
-        caseId,
-        scheduleAt,
-        updatedServices,
-        paymentIntentRef.current
-      );
-
-      navigation.navigate("PartnerVetSuccessfullScreen", {
-        bookingId: id,
-        vetId,
-        partnerId,
-        caseId,
-        scheduleAt,
-        selectedServices,
-        paymentIntentId: paymentIntentRef.current,
-      });
-    } finally {
-      setActionLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    initialize();
-  }, []);
-
-  const initialize = async () => {
-    await fetchQuote();
-
-    if (paymentIntentId) {
-      paymentIntentRef.current = paymentIntentId;
-    } else {
-      await initStripe();
-    }
-  };
-
-  const fetchQuote = async () => {
-    try {
-      setLoading(true);
-      await fetchCaseQuotes(caseId);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const initStripe = async () => {
-    setLoading(true);
-
-    const { ephemeralKey, paymentIntent } = await createPaymentIntent(
-      user!.stripeCustomerId,
-      bookingCharges * 100,
-      "AED"
-    );
-
-    paymentIntentRef.current = paymentIntent;
-
-    const { error, paymentOption } = await initPaymentSheet({
-      customerEphemeralKeySecret: ephemeralKey,
-      paymentIntentClientSecret: paymentIntent as any,
-      merchantDisplayName: "Smoll",
-      customerId: user!.stripeCustomerId,
-      defaultBillingDetails: {
-        name: user?.name,
-      },
-      appearance: {
-        font: {
-          family:
-            Platform.OS === "android"
-              ? "avenirnextregular"
-              : "AvenirNext-Regular",
-        },
-        shapes: {
-          borderRadius: 12,
-          borderWidth: 0.5,
-        },
-        primaryButton: {
-          colors: {
-            background: "#000000",
-            text: "#ffffff",
-          },
-          shapes: {
-            borderRadius: 20,
-          },
-        },
-        colors: {
-          primary: "#fcfdff",
-          background: "#ffffff",
-          componentBackground: "#f3f8fa",
-          componentBorder: "#f3f8fa",
-          componentDivider: "#000000",
-          primaryText: "#000000",
-          secondaryText: "#000000",
-          componentText: "#000000",
-          placeholderText: "#73757b",
-        },
-      },
-    } as SetupParams);
-
-    if (error) {
-      showMessage({
-        message: "",
-        renderCustomContent: () => (
-          <FlashCustomContent message="Something went wrong" />
-        ),
-        type: "danger",
-      });
-
-      navigation.goBack();
-    }
-
-    setLoading(false);
-  };
-
-  const openPaymentSheet = async () => {
-    const { error } = await presentPaymentSheet();
-
-    if (error) {
-      showMessage({
-        message: "",
-        renderCustomContent: () => (
-          <FlashCustomContent message="Could not process payment, please try again" />
-        ),
-        type: "danger",
-      });
-    }
-
-    handleBook();
-  };
-
   return (
     <Layout
       showBack
@@ -243,7 +76,6 @@ const PartnerVetConfirmationScreen: React.FC<{
       onBackPress={() => {
         navigation.goBack();
       }}
-      loading={loading}
     >
       <ScrollDiv flex={1} showsVerticalScrollIndicator={false}>
         <Div h={20}></Div>
@@ -352,36 +184,6 @@ const PartnerVetConfirmationScreen: React.FC<{
           </Button>
         </Div>
 
-        {/* <Div
-          px={16}
-          py={24}
-          pb={16}
-          rounded={12}
-          borderWidth={1}
-          borderColor="#D0D7DC"
-        >
-          <Div mb={16}>
-            <RowText
-              name="Billing Summary"
-              fontFamily={fontHauoraSemiBold}
-              mb={24}
-            />
-
-            <RowText
-              name="Consultation charges"
-              value={`${totalAmount?.toFixed(2)} AED`}
-              fontFamily={fontHauoraMedium}
-              mb={16}
-            />
-            <RowText
-              name="Advance booking"
-              value={`${bookingCharges.toFixed(2)} AED`}
-              percent="11%"
-              fontFamily={fontHauoraMedium}
-            />
-          </Div>
-        </Div> */}
-
         <Div mt={24}>
           <Text
             fontFamily={fontHauoraSemiBold}
@@ -442,15 +244,21 @@ const PartnerVetConfirmationScreen: React.FC<{
 
       <Div mt={20}>
         <ButtonPrimary
-          onPress={openPaymentSheet}
-          loading={actionLoading}
-          disabled={actionLoading}
+          onPress={() =>
+            navigation.navigate("PaymentDetailsScreen", {
+              caseId,
+              clinicName: partner?.name,
+              partnerId,
+              scheduleAt,
+              selectedServices,
+              vetId,
+              paymentIntentId,
+            })
+          }
         >
-          {/* {`Pay ${bookingCharges.toFixed(2)} AED`} */}
           Continue
         </ButtonPrimary>
       </Div>
-      {/* </ScrollDiv> */}
     </Layout>
   );
 };

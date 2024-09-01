@@ -1,6 +1,7 @@
 import Layout from "@/components/app/Layout";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import { usePetStore } from "@/store/modules/pet";
+import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
 import {
   PetGenderEnum,
@@ -8,7 +9,7 @@ import {
   PetSpeciesEnum,
 } from "@/store/types/pet.d";
 import { useRoute } from "@react-navigation/native";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Dimensions, StyleSheet } from "react-native";
 import { Div, ScrollDiv } from "react-native-magnus";
 import * as Progress from "react-native-progress";
@@ -21,8 +22,6 @@ import PetImageUploadScreen from "./PetProfileImageScreen";
 import PetProfileNameScreen from "./PetProfileNameScreen";
 import PetProfileSpayedScreen from "./PetProfileSpayedScreen";
 import PetProfileSpeciesScreen from "./PetProfileSpeciesScreen";
-import { showMessage } from "react-native-flash-message";
-import { useUserStore } from "@/store/modules/user";
 
 const windowWidth = Dimensions.get("window").width;
 

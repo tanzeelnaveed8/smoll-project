@@ -1,10 +1,7 @@
 import { fontHauoraSemiBold } from "@/constant/constant";
-import { NavigationType } from "@/store/types";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native";
 import {
-  IconBriefcase,
   IconChecklist,
-  IconHome,
   IconMessage,
   IconWindow,
 } from "@tabler/icons-react-native";
@@ -17,34 +14,26 @@ const tabList = [
     name: "Home",
     link: "HomeScreen",
     icon: (active?: boolean) => (
-      <IconWindow
-        width={28}
-        height={28}
-        color={active ? "#427594" : "#494949"}
-      />
+      <IconWindow width={28} height={28} color={active ? "#000" : "#494949"} />
     ),
   },
   {
     name: "Chats",
-    link: "CounsellingRequestScreen",
+    link: "ExpertsInboxScreen",
     // link: "CounsellingChatScreen",
     icon: (active?: boolean) => (
-      <IconMessage
-        width={28}
-        height={28}
-        color={active ? "#427594" : "#494949"}
-      />
+      <IconMessage width={28} height={28} color={active ? "#000" : "#494949"} />
     ),
   },
   {
     name: "Quotations",
-    link: "CasesListScreen",
+    link: "CasesQuotesListScreen",
     // link: "PartnerVetDetailScreen",
     icon: (active?: boolean) => (
       <IconChecklist
         width={28}
         height={28}
-        color={active ? "#427594" : "#494949"}
+        color={active ? "#000" : "#494949"}
       />
     ),
   },
@@ -77,7 +66,7 @@ const TabNavigationBar: React.FC<{
           >
             <Div
               h={4}
-              bg={route.name === item.link ? "#427594" : "transparent"}
+              bg={route.name === item.link ? "#000" : "transparent"}
               w={60}
               style={{ borderBottomRightRadius: 4, borderBottomLeftRadius: 4 }}
             />
@@ -85,7 +74,7 @@ const TabNavigationBar: React.FC<{
             <Text
               fontSize={"md"}
               fontFamily={fontHauoraSemiBold}
-              color={route.name === item.link ? "primary" : "#494949"}
+              color={route.name === item.link ? "#000" : "#494949"}
             >
               {item.name}
             </Text>

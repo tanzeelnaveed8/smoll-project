@@ -13,4 +13,5 @@ export type PaymentPageRoute = {
   vetId: string;
   partnerId: string;
   scheduleAt: string;
+  paymentIntentId: string;
 };

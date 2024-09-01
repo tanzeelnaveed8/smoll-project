@@ -29,6 +29,8 @@ const CaseQuotesScreen: React.FC<{ navigation: NavigationType }> = ({
 }) => {
   const route = useRoute();
   const caseId = (route.params as Record<string, string>)?.id;
+  const hasPartnerBooking = (route.params as Record<string, string>)
+    ?.hasPartnerBooking;
 
   const { fetchCaseQuotes, casesQuotes } = useCaseStore();
 
@@ -66,8 +68,6 @@ const CaseQuotesScreen: React.FC<{ navigation: NavigationType }> = ({
   const handleFetchRequests = async (isRefreshing?: boolean) => {
     const caseQuotes = casesQuotes.get(caseId);
 
-    console.log("caseQuotes", caseQuotes);
-
     if (caseQuotes?.length && !isRefreshing) {
       return;
     }
@@ -89,7 +89,7 @@ const CaseQuotesScreen: React.FC<{ navigation: NavigationType }> = ({
   return (
     <Layout
       showBack
-      title={`Case ${caseId}`}
+      title="Case"
       onBackPress={() => {
         navigation.goBack();
       }}
@@ -126,6 +126,7 @@ const CaseQuotesScreen: React.FC<{ navigation: NavigationType }> = ({
                       navigation.navigate("CaseQuoteDescriptionScreen", {
                         id: item.partner.id,
                         caseId,
+                        hasPartnerBooking,
                       });
                     }}
                   >
@@ -146,10 +147,10 @@ const CaseQuotesScreen: React.FC<{ navigation: NavigationType }> = ({
 
                     <Div flexDir="row" alignItems="flex-end">
                       <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
-                        Min{" "}
+                        Min{"  "}
                       </Text>
                       <Text fontSize={"lg"} fontFamily={fontHauoraMedium}>
-                        AED{getMinQuote(item)}
+                        AED {getMinQuote(item)}
                       </Text>
                     </Div>
 
@@ -164,10 +165,10 @@ const CaseQuotesScreen: React.FC<{ navigation: NavigationType }> = ({
                           fontFamily={fontHauoraMedium}
                           mb={3}
                         >
-                          Max{" "}
+                          Max{"  "}
                         </Text>
                         <Text fontSize={"2xl"} fontFamily={fontHauoraBold}>
-                          AED{getTotalQuote(item)}
+                          AED {getTotalQuote(item)}
                         </Text>
                       </Div>
 

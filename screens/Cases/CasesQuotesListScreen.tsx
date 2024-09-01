@@ -8,17 +8,16 @@ import {
 import { useCaseStore } from "@/store/modules/case";
 import { NavigationType } from "@/store/types";
 import { CaseStatusEnum } from "@/store/types/case.d";
-import { getCaseStatusColor, getCaseStatusLabel } from "@/utils/helpers";
 import { useRoute } from "@react-navigation/native";
 import dayjs from "dayjs";
-import React, { useCallback, useEffect, useState } from "react";
-import { RefreshControl, StyleSheet, TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from "react";
+import { RefreshControl, TouchableOpacity } from "react-native";
 import { FlatList } from "react-native-bidirectional-infinite-scroll";
 
 import { Button, Div, Image, Text } from "react-native-magnus";
 import { useInterval } from "usehooks-ts";
 
-const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
+const CasesQuotesListScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
   const route = useRoute();
@@ -26,15 +25,10 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
 
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [renderKey, setRenderKey] = useState(0);
   const [nextPageId, setNextPageId] = useState<number | null>(1);
   const [page, setPage] = useState(1);
 
   const comingFrom = (route.params as Record<string, string | undefined>)?.from;
-
-  useInterval(() => {
-    setRenderKey(Math.random() * 1000);
-  }, 1000);
 
   useEffect(() => {
     handleFetchCases(undefined, true);
@@ -49,6 +43,7 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
       }
 
       const response = await fetchCases(1, isRefresh ?? reset);
+
       setNextPageId(response.nextPage);
     } finally {
       setIsLoading(false);
@@ -56,23 +51,7 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
     }
   };
 
-  const sessionInProgress = useCallback(
-    (status: CaseStatusEnum, scheduledAt?: string) => {
-      if (!scheduledAt) return false;
-
-      if (status !== CaseStatusEnum.OPEN) return false;
-
-      return (
-        scheduledAt &&
-        dayjs(scheduledAt).isBefore(dayjs()) &&
-        dayjs(scheduledAt).isAfter(dayjs().subtract(30, "minutes"))
-      );
-    },
-    [renderKey]
-  );
-
   const handleLoadMore = async () => {
-    console.log("nextPageId", nextPageId);
     if (!nextPageId) return;
 
     return new Promise<void>(async (resolve) => {
@@ -112,14 +91,14 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
           </Text>
 
           <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold}>
-            In-Clinic Requst
+            In-Clinic Requests
           </Text>
         </Div>
         <Div flex={1}>
           <FlatList
-            ListEmptyComponent={() => {
-              return <Text>You have not created any case yet. :(</Text>;
-            }}
+            ListEmptyComponent={() => (
+              <Text>You don't have any escalated case :)</Text>
+            )}
             data={cases}
             style={{ height: "100%" }}
             onEndReached={handleLoadMore} // required, should return a promise
@@ -145,10 +124,10 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
                 >
                   {dayjs(item.createdAt).fromNow()}
                 </Text>
-                <Button
+
+                <Div
                   bg="transparent"
                   p={0}
-                  underlayColor="#f3f3f3"
                   flexDir="row"
                   alignItems="center"
                   mb={12}
@@ -182,33 +161,17 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
                           fontSize={"lg"}
                           color="#2F6E20"
                         >
-                          Xyz Quotations
+                          {item.requestCount} Quotations
                         </Text>
                       </Div>
 
-                      {item.status === CaseStatusEnum.OPEN_ESCALATED &&
-                        item.requestCount && (
-                          <Text
-                            fontFamily={fontHauoraSemiBold}
-                            fontSize={"lg"}
-                            color="#2F6E20"
-                          >
-                            {item.requestCount} Request
-                          </Text>
-                        )}
-
-                      {item.scheduledAt && (
+                      {item.status === CaseStatusEnum.OPEN_ESCALATED && (
                         <Text
                           fontFamily={fontHauoraSemiBold}
                           fontSize={"lg"}
-                          color={getCaseStatusColor(
-                            item.status,
-                            item.scheduledAt
-                          )}
+                          color="#2F6E20"
                         >
-                          {dayjs(item.scheduledAt).format(
-                            "HH:mm A, DD MMM YYYY"
-                          )}
+                          {item.requestCount} Request
                         </Text>
                       )}
                     </Div>
@@ -228,23 +191,10 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
                         color="#494949"
                       >
                         Case Id: {item.id}
-                        {/* <Text
-                          fontFamily={fontHauoraSemiBold}
-                          color={getCaseStatusColor(
-                            item.status,
-                            item.scheduledAt
-                          )}
-                        >
-                          {getCaseStatusLabel(
-                            item.status,
-                            item.scheduledAt,
-                            item.hasPartnerBooking
-                          )}
-                        </Text> */}
                       </Text>
                     </Div>
                   </Div>
-                </Button>
+                </Div>
 
                 <Div
                   py={8}
@@ -266,7 +216,7 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
                     </Text>
                   </TouchableOpacity>
 
-                  {sessionInProgress(item.status, item.scheduledAt) && (
+                  {Boolean(item.requestCount) && (
                     <Button
                       fontSize={"lg"}
                       bg="transparent"
@@ -274,35 +224,15 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
                       fontFamily={fontHauoraSemiBold}
                       color="primary"
                       onPress={() => {
-                        if (!item.consultationId) return;
-
-                        navigation.navigate("ConsultationWaitingScreen", {
-                          consultationId: item.consultationId,
+                        navigation.navigate("CaseQuotesScreen", {
+                          id: item.id,
+                          hasPartnerBooking: item.hasPartnerBooking,
                         });
                       }}
                     >
-                      Join Session
+                      View Requests
                     </Button>
                   )}
-
-                  {item.status === CaseStatusEnum.OPEN_ESCALATED &&
-                    !item.hasPartnerBooking && (
-                      <Button
-                        fontSize={"lg"}
-                        bg="transparent"
-                        p={0}
-                        fontFamily={fontHauoraSemiBold}
-                        color="primary"
-                        onPress={() => {
-                          console.log("caseId === ", item.id);
-                          navigation.navigate("CaseQuotesScreen", {
-                            id: item.id,
-                          });
-                        }}
-                      >
-                        View Requests
-                      </Button>
-                    )}
                 </Div>
               </Div>
             )}
@@ -316,29 +246,4 @@ const CasesListScreen: React.FC<{ navigation: NavigationType }> = ({
   );
 };
 
-export default CasesListScreen;
-
-const styles = StyleSheet.create({
-  tabContainer: {
-    flexDirection: "row",
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 100,
-    backgroundColor: "#EFEFEF",
-    justifyContent: "space-around",
-    marginBottom: 32,
-  },
-  btn: {
-    padding: 8,
-    // fontSize: 16,
-    borderWidth: 1,
-    borderRadius: 34,
-    borderColor: "transparent",
-    width: "65%",
-  },
-  activeBtn: {
-    paddingHorizontal: 30,
-    backgroundColor: "#fff",
-    borderColor: "#427594",
-  },
-});
+export default CasesQuotesListScreen;

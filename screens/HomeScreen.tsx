@@ -164,7 +164,7 @@ const HomeScreen: React.FC<Props> = (props) => {
       //   props.navigation.navigate("CounsellingInboxScreen");
       // }
     } else if (item.value === "petProfileScreen") {
-      props.navigation.navigate("PetProfileScreen", {
+      props.navigation.navigate("PetProfileListScreen", {
         navigateTo: "HomeScreen",
       });
     } else if (item.value === "appointments") {
@@ -266,8 +266,8 @@ const HomeScreen: React.FC<Props> = (props) => {
               props.navigation.navigate("ExpertsListScreen");
             }}
           >
-            <Div justifyContent="center" px={16} py={18}>
-              <Div mb={16}>
+            <Div justifyContent="space-between" px={24}>
+              <Div mb={16} mt={12}>
                 <Text
                   fontSize={"2xl"}
                   fontFamily={fontHauoraBold}
@@ -286,10 +286,16 @@ const HomeScreen: React.FC<Props> = (props) => {
                 <Text>Completly Free!</Text>
               </Div>
 
-              <Div style={{ paddingVertical: 2, flexDirection: "row", gap: 6 }}>
+              <Div
+                style={{
+                  paddingVertical: 2,
+                  flexDirection: "row",
+                  gap: 6,
+                }}
+              >
                 <Text
                   fontFamily={fontHauoraSemiBold}
-                  fontSize={"lg"}
+                  fontSize={"xl"}
                   bg="#222"
                   color="#fff"
                   rounded={20}
@@ -369,7 +375,7 @@ const HomeScreen: React.FC<Props> = (props) => {
                     mr={12}
                     style={index !== 0 ? { objectFit: "contain" } : {}}
                   />
-                  <Div>
+                  <Div flex={1}>
                     <Text
                       fontSize={"xl"}
                       fontFamily={fontHauoraBold}
@@ -380,7 +386,6 @@ const HomeScreen: React.FC<Props> = (props) => {
                     <Text
                       fontSize={"md"}
                       fontFamily={fontHauoraMedium}
-                      maxW={"85%"}
                       lineHeight={18}
                     >
                       {item.description}
