@@ -45,7 +45,7 @@ api.interceptors.response.use(
       }
     }
 
-    console.log(error);
+    console.log(error, message);
 
     throw error;
   }

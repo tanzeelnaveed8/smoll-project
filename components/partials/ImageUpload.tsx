@@ -84,7 +84,9 @@ const ImageUpload: React.FC<Props> = ({
 
     try {
       setLoading(true);
+
       const uploadedFile = await uploadFile([file]);
+
       setUploadedFileUrl(uploadedFile[0].url);
       if (onChange) {
         onChange(uploadedFile);

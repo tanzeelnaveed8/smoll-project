@@ -21,7 +21,7 @@ const CasesQuotesListScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
   const route = useRoute();
-  const { cases, fetchCases } = useCaseStore();
+  const { escalatedCases: cases, fetchCases } = useCaseStore();
 
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -42,7 +42,7 @@ const CasesQuotesListScreen: React.FC<{ navigation: NavigationType }> = ({
         setIsLoading(true);
       }
 
-      const response = await fetchCases(1, isRefresh ?? reset);
+      const response = await fetchCases(1, isRefresh ?? reset, true);
 
       setNextPageId(response.nextPage);
     } finally {

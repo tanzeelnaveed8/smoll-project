@@ -24,7 +24,7 @@ export const useCaseStore = create<CasesState>((set, get) => ({
   removeCase: async (id: string) => {
     await api.delete(`/member/cases/${id}`);
   },
-  fetchCases: async (page, reset, isEscalated?: boolean) => {
+  fetchCases: async (page, reset, isEscalated) => {
     const response = await api.get("/member/cases", {
       params: {
         page: page,

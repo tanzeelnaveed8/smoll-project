@@ -69,7 +69,6 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
 
   const handleLoadMore = async () => {
     if (!nextPageId) return;
-    console.log("fetching data again");
 
     return new Promise<void>(async (resolve) => {
       try {
@@ -81,14 +80,6 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
     });
   };
 
-  const onStartReached = async () => {
-    return new Promise<void>((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 1000);
-    });
-  };
-
   return (
     <Layout
       showBack
@@ -97,73 +88,52 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
       onBackPress={() => {
         navigation.navigate("HomeScreen");
       }}
+      loading={isLoading}
     >
       <Div flex={1}>
-        {!isLoading &&
-          (!appointment || (appointment && appointment?.length === 0)) && (
-            <Div justifyContent="center" alignItems="center">
-              <Text
-                fontSize={"lg"}
-                fontFamily={fontHauoraSemiBold}
-                color="darkGreyText"
-              >
-                No Appointment found
-              </Text>
-            </Div>
-          )}
+        <Div flex={1} pt={24}>
+          <Text
+            fontSize={"xl"}
+            fontFamily={fontHauoraSemiBold}
+            lineHeight={24}
+            mb={22}
+          >
+            Upcoming Appointments
+          </Text>
 
-        {!isLoading && appointment && appointment.length > 0 && (
-          <Div flex={1} pt={24}>
-            <Text
-              fontSize={"xl"}
-              fontFamily={fontHauoraSemiBold}
-              lineHeight={24}
-              mb={22}
-            >
-              Upcoming Appointments
-            </Text>
-
-            <Div>
-              <FlatList
-                onStartReached={onStartReached}
-                onEndReached={handleLoadMore} // required, should return a promise
-                onEndReachedThreshold={20} // optional
-                activityIndicatorColor={"black"} // optional
-                refreshControl={
-                  <RefreshControl
-                    refreshing={isRefreshing}
-                    tintColor={colorPrimary}
-                    onRefresh={() => handleFetchAppointments(true)}
-                  />
-                }
-                data={appointment}
-                renderItem={({ item, index }) => (
-                  <AppointmentCard
-                    img={item.partner?.clinicImg?.url}
-                    pet={item.pet.name}
-                    text={item.partner.name}
-                    scheduledTime={item.scheduledAt}
-                    type={"Clinic Visit"}
-                    alert={""}
-                    isLastChild={index + 1 === appointment.length}
-                    onPress={() => {
-                      navigation.navigate("AppointmentDetailsScreen", {
-                        id: item.id,
-                      });
-                    }}
-                  />
-                )}
-                keyExtractor={(item, index) => `${index}`}
+          <FlatList
+            ListEmptyComponent={() => (
+              <Text>You don't have any appointments yet.</Text>
+            )}
+            onEndReached={handleLoadMore} // required, should return a promise
+            onEndReachedThreshold={20} // optional
+            activityIndicatorColor={"black"} // optional
+            refreshControl={
+              <RefreshControl
+                refreshing={isRefreshing}
+                tintColor={colorPrimary}
+                onRefresh={() => handleFetchAppointments(true)}
               />
-            </Div>
-          </Div>
-        )}
-
-        {isLoading && (
-          <Div flex={1} justifyContent="center">
-            <ActivityIndicator size="large" color={colorPrimary} />
-          </Div>
-        )}
+            }
+            data={appointment}
+            renderItem={({ item, index }) => (
+              <AppointmentCard
+                img={item.partner?.clinicImg?.url}
+                pet={item.pet.name}
+                text={item.partner.name}
+                scheduledTime={item.scheduledAt}
+                type={"Clinic Visit"}
+                alert={""}
+                onPress={() => {
+                  navigation.navigate("AppointmentDetailsScreen", {
+                    id: item.id,
+                  });
+                }}
+              />
+            )}
+            keyExtractor={(item, index) => `${index}`}
+          />
+        </Div>
       </Div>
     </Layout>
   );

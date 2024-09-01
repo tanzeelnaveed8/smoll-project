@@ -142,8 +142,6 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
     setDocuments([...documents, ...file]);
   };
 
-  console.log("Documents ===", documents);
-
   const handleUnSelectImage = (url: string) => {
     const newDocuments = documents.filter((doc) => doc.url !== url);
     setDocuments(newDocuments);
@@ -298,9 +296,6 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
                 uri={item.url}
                 onUnSelect={handleUnSelectImage}
                 disabled
-                // onChange={(file) => {
-                //   handleImage(file);
-                // }}
               />
             );
           })}

@@ -46,19 +46,21 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
       ?.find((quote) => quote.partner.id === partnerId);
   }, [casesQuotes, partnerId, caseId]);
 
-  const partner = useMemo(() => {
-    return quote?.partner;
-  }, [quote]);
-
-  const totalAmount = useMemo(() => {
+  const totalSelectedAmount = useMemo(() => {
     return selectedServices.reduce((acc, service) => {
       return acc + service.price;
     }, 0);
   }, [quote]);
 
+  const totalAmount = useMemo(() => {
+    return quote?.services.reduce((acc, cur) => {
+      return acc + cur.price;
+    }, 0);
+  }, [quote]);
+
   const bookingCharges = useMemo(() => {
     // 11% of total amount
-    const amount = ((totalAmount ?? 0) * 11) / 100;
+    const amount = ((totalSelectedAmount ?? 0) * 11) / 100;
     return amount;
   }, [totalAmount]);
 
@@ -69,69 +71,83 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
   const initStripe = async () => {
     setLoading(true);
 
-    const { ephemeralKey, paymentIntent } = await createPaymentIntent(
-      user!.stripeCustomerId,
-      bookingCharges * 100,
-      "AED"
-    );
+    try {
+      const { ephemeralKey, paymentIntent, paymentIntentClientSecret } =
+        await createPaymentIntent(
+          user!.stripeCustomerId,
+          Math.round(bookingCharges * 100), // Ensure the amount is in cents and rounded
+          "AED"
+        );
 
-    paymentIntentRef.current = paymentIntent;
+      paymentIntentRef.current = paymentIntent;
 
-    const { error, paymentOption } = await initPaymentSheet({
-      customerEphemeralKeySecret: ephemeralKey,
-      paymentIntentClientSecret: paymentIntent as any,
-      merchantDisplayName: "Smoll",
-      customerId: user!.stripeCustomerId,
-      defaultBillingDetails: {
-        name: user?.name,
-      },
-      appearance: {
-        font: {
-          family:
-            Platform.OS === "android"
-              ? "avenirnextregular"
-              : "AvenirNext-Regular",
+      const { error, paymentOption } = await initPaymentSheet({
+        customerEphemeralKeySecret: ephemeralKey,
+        paymentIntentClientSecret: paymentIntentClientSecret, // Remove 'as any' cast
+        merchantDisplayName: "Smoll",
+        customerId: user!.stripeCustomerId,
+        defaultBillingDetails: {
+          name: user?.name,
         },
-        shapes: {
-          borderRadius: 12,
-          borderWidth: 0.5,
-        },
-        primaryButton: {
-          colors: {
-            background: "#000000",
-            text: "#ffffff",
+        appearance: {
+          font: {
+            family:
+              Platform.OS === "android"
+                ? "avenirnextregular"
+                : "AvenirNext-Regular",
           },
           shapes: {
-            borderRadius: 20,
+            borderRadius: 12,
+            borderWidth: 0.5,
+          },
+          primaryButton: {
+            colors: {
+              background: "#000000",
+              text: "#ffffff",
+            },
+            shapes: {
+              borderRadius: 20,
+            },
+          },
+          colors: {
+            primary: "#fcfdff",
+            background: "#ffffff",
+            componentBackground: "#f3f8fa",
+            componentBorder: "#f3f8fa",
+            componentDivider: "#000000",
+            primaryText: "#000000",
+            secondaryText: "#000000",
+            componentText: "#000000",
+            placeholderText: "#73757b",
           },
         },
-        colors: {
-          primary: "#fcfdff",
-          background: "#ffffff",
-          componentBackground: "#f3f8fa",
-          componentBorder: "#f3f8fa",
-          componentDivider: "#000000",
-          primaryText: "#000000",
-          secondaryText: "#000000",
-          componentText: "#000000",
-          placeholderText: "#73757b",
-        },
-      },
-    } as SetupParams);
+      } as SetupParams);
 
-    if (error) {
+      if (error) {
+        console.error("Stripe initialization error:", error);
+        showMessage({
+          message: "",
+          renderCustomContent: () => (
+            <FlashCustomContent message={`Stripe error: ${error.message}`} />
+          ),
+          type: "danger",
+        });
+
+        navigation.goBack();
+      }
+    } catch (error) {
+      console.error("Error initializing Stripe:", error);
       showMessage({
         message: "",
         renderCustomContent: () => (
-          <FlashCustomContent message="Something went wrong" />
+          <FlashCustomContent message="Failed to initialize payment. Please try again." />
         ),
         type: "danger",
       });
-
       navigation.goBack();
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   const fetchQuote = async () => {
@@ -216,7 +232,7 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
       loading={loading}
     >
       <Div flex={1} pt={20}>
-        <Div
+        {/* <Div
           flexDir="row"
           justifyContent="space-between"
           alignItems="center"
@@ -225,7 +241,7 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
           <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold}>
             Payment Details
           </Text>
-        </Div>
+        </Div> */}
 
         <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold} mb={5}>
           Here is what your bill will look like at the
@@ -249,7 +265,7 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
             </Text>
 
             <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold} mb={15}>
-              AED {totalAmount}
+              AED {totalSelectedAmount.toFixed(2)}
             </Text>
 
             <Text fontSize={"md"} mb={2}>
@@ -257,7 +273,7 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
             </Text>
 
             <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold} mb={10}>
-              AED1,{bookingCharges.toFixed(2)}
+              AED {totalAmount?.toFixed(2)}
             </Text>
 
             <IconDotsVertical size={22} strokeWidth={1.5} color={"#222"} />
@@ -277,14 +293,14 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
             <Div>
               <Text mb={2}>Due Now</Text>
               <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold}>
-                AED{bookingCharges.toFixed(2)}
+                AED {bookingCharges.toFixed(2)}
               </Text>
             </Div>
 
             <Div>
               <Text mb={2}>At the clinic</Text>
               <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold}>
-                AED{totalAmount}
+                AED {totalAmount}
               </Text>
             </Div>
           </Div>

@@ -22,10 +22,10 @@ import { showMessage } from "react-native-flash-message";
 import { Button, Div, Image, Tag, Text } from "react-native-magnus";
 
 const actionBtn = [
-  {
-    icon: <IconCalendarClock width={30} height={30} color={"#427594"} />,
-    text: "Reschedule Booking",
-  },
+  // {
+  //   icon: <IconCalendarClock width={30} height={30} color={"#427594"} />,
+  //   text: "Reschedule Booking",
+  // },
   {
     icon: <IconUserX width={30} height={30} color={"#427594"} />,
     text: "Cancel Booking",
@@ -101,7 +101,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
 
       showMessage({
         renderCustomContent: () => (
-          <FlashCustomContent message="Consultation Rescheduled successfully." />
+          <FlashCustomContent message="Please select a different timing." />
         ),
         message: "",
         type: "success",

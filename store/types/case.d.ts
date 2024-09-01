@@ -118,7 +118,8 @@ export interface CasesState {
   removeCase: (id: string) => Promise<void>;
   fetchCases: (
     page: number,
-    reset?: boolean
+    reset?: boolean,
+    isEscalated?: boolean
   ) => Promise<{
     nextPage: number;
     data: CaseListResponseDto[];

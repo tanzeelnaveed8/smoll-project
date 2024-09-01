@@ -18,10 +18,10 @@ interface Props {
 }
 
 const btns = [
-  {
-    text: "Reschedule Booking",
-    icon: <IconCalendarClock width={30} height={30} color={"#427594"} />,
-  },
+  // {
+  //   text: "Reschedule Booking",
+  //   icon: <IconCalendarClock width={30} height={30} color={"#427594"} />,
+  // },
   {
     text: "Cancel Booking",
     icon: <IconUserX width={30} height={30} color={"#427594"} />,
@@ -95,7 +95,7 @@ const PartnerVetSuccessfullScreen: React.FC<Props> = ({ navigation }) => {
 
       showMessage({
         renderCustomContent: () => (
-          <FlashCustomContent message="Consultation Rescheduled successfully." />
+          <FlashCustomContent message="Please select a different timing." />
         ),
         message: "",
         type: "success",

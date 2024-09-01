@@ -48,6 +48,7 @@ export interface UserState {
     currency: string
   ) => Promise<{
     paymentIntent: string;
+    paymentIntentClientSecret: string;
     ephemeralKey: string;
     customer: string;
   }>;
