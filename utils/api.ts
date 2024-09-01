@@ -38,10 +38,12 @@ api.interceptors.response.use(
 
     if (!error.config.url.includes("skiperr")) {
       if (msgStr) {
-        showMessage({
-          message: msgStr,
-          type: "danger",
-        });
+        if (!msgStr.toLowerCase().includes("not found")) {
+          showMessage({
+            message: msgStr,
+            type: "danger",
+          });
+        }
       }
     }
 

@@ -69,6 +69,8 @@ import CaseQuoteDescriptionScreen from "./screens/Cases/CaseQuoteDescriptionScre
 import UnavailableScreen from "./screens/Consultation/UnavailableScreen";
 import PaymentDetailsScreen from "./screens/Cases/PaymentDetailsScreen";
 import CasesQuotesListScreen from "./screens/Cases/CasesQuotesListScreen";
+import NewOnboardingScreen from "./screens/NewOnboardingScreen";
+import SignupScreen from "./components/app/onboarding/SignupScreen";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -248,6 +250,12 @@ const App = () => {
                     name="OnboardingScreen"
                     component={OnboardingScreen}
                   />
+                  <Stack.Screen
+                    name="NewOnboardingScreen"
+                    component={NewOnboardingScreen}
+                  />
+                  <Stack.Screen name="SignupScreen" component={SignupScreen} />
+
                   <Stack.Screen
                     name="AccountSetupAddressScreen"
                     component={AccountSetupAddressScreen}
