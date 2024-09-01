@@ -15,12 +15,7 @@ const NewOnboardingScreen: React.FC<{ navigation: NavigationType }> = ({
   return (
     <Layout>
       <Div px={8} justifyContent="space-between" flex={1}>
-        <Div
-          flexDir="row"
-          justifyContent="space-between"
-          alignItems="center"
-          mb={150}
-        >
+        <Div flexDir="row" justifyContent="space-between" alignItems="center">
           <Image
             w={90}
             h={30}
@@ -49,26 +44,28 @@ const NewOnboardingScreen: React.FC<{ navigation: NavigationType }> = ({
           </TouchableOpacity>
         </Div>
 
-        <Div mb={20}>
-          <Text fontFamily={fontHauora} fontSize={74} lineHeight={74}>
-            Access
-          </Text>
-          <Text fontFamily={fontHauora} fontSize={74} lineHeight={74}>
-            to Pet
-          </Text>
-          <Text fontFamily={fontHauora} fontSize={74} lineHeight={74}>
-            Experts
-          </Text>
-        </Div>
+        <Div>
+          <Div mb={40}>
+            <Text fontFamily={fontHauora} fontSize={74} lineHeight={74}>
+              Access
+            </Text>
+            <Text fontFamily={fontHauora} fontSize={74} lineHeight={74}>
+              to Pet
+            </Text>
+            <Text fontFamily={fontHauora} fontSize={74} lineHeight={74}>
+              Experts
+            </Text>
+          </Div>
 
-        <Image
-          w={"100%"}
-          h={400}
-          mb={40}
-          mx={"auto"}
-          style={{ objectFit: "contain" }}
-          source={require("./../assets/icons/splash-screen-image.png")}
-        />
+          <Image
+            w={"100%"}
+            h={400}
+            mb={40}
+            mx={"auto"}
+            style={{ objectFit: "contain" }}
+            source={require("./../assets/icons/splash-screen-image.png")}
+          />
+        </Div>
       </Div>
     </Layout>
   );

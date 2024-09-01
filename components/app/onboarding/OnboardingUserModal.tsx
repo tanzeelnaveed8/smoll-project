@@ -73,7 +73,6 @@ const OnboardingUserModal: React.FC<Props> = (props) => {
         />
 
         <ButtonPrimary
-          bgColor="primary"
           onPress={handleConfirm}
           loading={loading}
           disabled={loading || !firstName}

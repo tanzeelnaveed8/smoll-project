@@ -45,9 +45,7 @@ const PetBookingScreen = () => {
       </Div>
 
       <Div>
-        <ButtonPrimary bgColor="primary" onTouchEnd={nextFormHandler}>
-          Continue
-        </ButtonPrimary>
+        <ButtonPrimary onTouchEnd={nextFormHandler}>Continue</ButtonPrimary>
       </Div>
     </Div>
   );
