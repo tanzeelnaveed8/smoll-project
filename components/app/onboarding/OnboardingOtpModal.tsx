@@ -208,7 +208,7 @@ const OnboardingOtpModal: React.FC<Props> = (props) => {
             )}
 
             <ButtonPrimary
-              bgColor="primary"
+              // bgColor="primary"
               onPress={() => handleConfirm()}
               loading={isLoading}
               disabled={isLoading || otp.length < 4}

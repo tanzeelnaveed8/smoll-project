@@ -13,6 +13,8 @@ import {
   IconMichelinStar,
   IconSettings,
   IconUserCircle,
+  IconX,
+  IconXboxX,
 } from "@tabler/icons-react-native";
 import {
   ActivityIndicator,
@@ -34,6 +36,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import TabNavigationBar from "@/components/app/TabNavigationBar";
 import { showMessage } from "react-native-flash-message";
 import { useNotificationStore } from "@/store/modules/notification";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface Props {
   navigation: NavigationType;
@@ -94,9 +97,26 @@ const HomeScreen: React.FC<Props> = (props) => {
 
   const [showAccountSetupModal, setShowAccountSetupModal] = useState(false);
   const [showCongratsModal, setShowCongratsModal] = useState(false);
+  const [showAccountSetupButton, setShowAccountSetupButton] = useState(false);
 
   useEffect(() => {
     fetchNotifications(1, 20);
+
+    // handling showAccountSetupButton
+    const checkAccountSetupStatus = async () => {
+      const hideAccountSetupBtn = await AsyncStorage.getItem(
+        "hideAccountSetupBtn"
+      );
+
+      console.log("hideAccountSetupBtn", hideAccountSetupBtn);
+      if (hideAccountSetupBtn) {
+        setShowAccountSetupButton(false);
+      } else {
+        setShowAccountSetupButton(true);
+      }
+    };
+
+    checkAccountSetupStatus();
   }, []);
 
   useEffect(() => {
@@ -172,6 +192,11 @@ const HomeScreen: React.FC<Props> = (props) => {
     }
   };
 
+  const hideAccountSetupModal = () => {
+    AsyncStorage.setItem("hideAccountSetupBtn", "true");
+    setShowAccountSetupButton(false);
+  };
+
   return (
     <>
       <Layout
@@ -237,21 +262,6 @@ const HomeScreen: React.FC<Props> = (props) => {
             <Text fontSize={"5xl"}>Hi, {user?.name}</Text>
             <Text fontSize={"lg"}>How can we help you today?</Text>
           </Div>
-
-          {completedStep < 3 && (
-            <Div mb={16}>
-              <TouchableOpacity
-                onPress={() => {
-                  setShowAccountSetupModal(true);
-                }}
-              >
-                <AccountSetupProgress
-                  progress={completedStep / 3}
-                  completedStepCount={completedStep}
-                />
-              </TouchableOpacity>
-            </Div>
-          )}
 
           <TouchableOpacity
             style={{
@@ -400,7 +410,38 @@ const HomeScreen: React.FC<Props> = (props) => {
               </Button>
             ))}
           </Div>
+
+          <Div h={130} />
         </ScrollDiv>
+
+        {completedStep < 3 && showAccountSetupButton && (
+          <Div
+            mb={16}
+            position="absolute"
+            bottom={15}
+            zIndex={20}
+            w={"100%"}
+            alignSelf="center"
+          >
+            <TouchableOpacity
+              style={styles.actionSetupCloseBtn}
+              onPress={hideAccountSetupModal}
+            >
+              <IconX width={20} height={20} color={"#000"} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => {
+                setShowAccountSetupModal(true);
+              }}
+            >
+              <AccountSetupProgress
+                progress={completedStep / 3}
+                completedStepCount={completedStep}
+              />
+            </TouchableOpacity>
+          </Div>
+        )}
 
         <OnboardingCongratsModal
           isVisible={showCongratsModal}
@@ -425,6 +466,14 @@ const HomeScreen: React.FC<Props> = (props) => {
 export default HomeScreen;
 
 const styles = StyleSheet.create({
+  actionSetupCloseBtn: {
+    position: "absolute",
+    top: 3,
+    right: 4,
+    zIndex: 10,
+    padding: 2,
+  },
+
   notificationCount: {
     position: "absolute",
     top: -4,
