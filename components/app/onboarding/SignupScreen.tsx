@@ -198,6 +198,7 @@ const SignupScreen: React.FC<{ navigation: NavigationType }> = ({
       <OnboardingOtpModal
         isVisible={showOtpModal}
         onSuccess={(isNewUser?: boolean) => {
+          setShowOtpModal(false);
           navigation.navigate("HomeScreen", {
             isNewUser: String(isNewUser),
           });
