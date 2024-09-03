@@ -17,6 +17,7 @@ import { HealthHistory, PetDetail } from "@/store/types/pet";
 import { UploadedFile } from "@/store/types/file";
 import { useToast } from "react-native-toast-notifications";
 import { showMessage } from "react-native-flash-message";
+import ConfirmationModal from "@/components/partials/ConfirmationModal";
 
 const btns = ["Basic Details", "Health History"];
 
@@ -39,6 +40,7 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
   const [imageLoading, setImageLoading] = useState(false);
   const [deleteHealthHistoryLoading, setDeleteHealthHistoryLoading] =
     useState("");
+  const [showDeleteModal, setShowDeleteModal] = useState("");
 
   const petDetailsData = petsDetailMap.get(id);
   const healthHistoryDataState = petsDetailMap.get(id)?.healthHistory;
@@ -98,7 +100,8 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
     }
   };
 
-  const deleteHealthHistoryHandler = async (historyId: string) => {
+  const deleteHealthHistoryHandler = async () => {
+    const historyId = showDeleteModal;
     // if (!healthHistoryDataState) return;
     try {
       setDeleteHealthHistoryLoading(historyId);
@@ -111,8 +114,10 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
       // setHealthHistoryDataState(updatedHealthHistoryState);
     } finally {
       setDeleteHealthHistoryLoading("");
+      setShowDeleteModal("");
     }
   };
+  // deleteHealthHistoryHandler(`${item.id}`);
 
   const petDetails = [
     {
@@ -325,7 +330,7 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                         item.id?.toString() === deleteHealthHistoryLoading
                       }
                       name={item.name}
-                      onDelete={() => deleteHealthHistoryHandler(`${item.id}`)}
+                      onDelete={() => setShowDeleteModal(`${item.id}`)}
                       mb={index + 1 === healthHistoryDataState.length ? 0 : 12}
                     />
                   )}
@@ -351,6 +356,17 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
           )}
         </Div>
       )}
+
+      <ConfirmationModal
+        heading="Delete Health History"
+        text="Are you sure you want to delete this health history?"
+        isLoading={deleteHealthHistoryLoading === showDeleteModal}
+        showModal={showDeleteModal ? true : false}
+        onClose={() => setShowDeleteModal("")}
+        onConfirm={deleteHealthHistoryHandler}
+        confirmText="Confirm"
+        cancelText="Cancel"
+      />
 
       {loading && (
         <Div flex={1} justifyContent="center">

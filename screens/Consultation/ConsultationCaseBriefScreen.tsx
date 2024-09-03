@@ -300,6 +300,20 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
             );
           })}
 
+          {documents.length === 0 && (
+            <ImageUpload
+              plusIcon={false}
+              w={139}
+              h={150}
+              mr={12}
+              noImage
+              onUnSelect={handleUnSelectImage}
+              onChange={(file) => {
+                handleImage(file);
+              }}
+            />
+          )}
+
           <ImageUpload
             plusIcon={false}
             w={139}

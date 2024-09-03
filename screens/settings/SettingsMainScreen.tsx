@@ -1,4 +1,5 @@
 import Layout from "@/components/app/Layout";
+import ConfirmationModal from "@/components/partials/ConfirmationModal";
 import SettingButton from "@/components/partials/SettingButton";
 import { fontHauora } from "@/constant/constant";
 import { NavigationType } from "@/store/types";
@@ -107,6 +108,7 @@ const SettingsMainScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
   const [pushNotificationEnabled, setPushNotificationEnabled] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   useEffect(() => {
     checkPushNotificationStatus();
@@ -136,6 +138,7 @@ const SettingsMainScreen: React.FC<{ navigation: NavigationType }> = ({
   };
 
   const handleLogout = async () => {
+    setShowLogoutModal(false);
     await AsyncStorage.setItem("accessToken", "");
     AsyncStorage.removeItem("hideAccountSetupBtn");
 
@@ -183,7 +186,10 @@ const SettingsMainScreen: React.FC<{ navigation: NavigationType }> = ({
         ))}
 
         <Div mt="auto" mb={20}>
-          <TouchableOpacity onPress={handleLogout} style={{ marginBottom: 10 }}>
+          <TouchableOpacity
+            onPress={() => setShowLogoutModal(true)}
+            style={{ marginBottom: 10 }}
+          >
             <Text
               fontWeight="400"
               fontSize={18}
@@ -207,6 +213,19 @@ const SettingsMainScreen: React.FC<{ navigation: NavigationType }> = ({
           </Text>
         </Div>
       </ScrollDiv>
+
+      <ConfirmationModal
+        heading="Logout?"
+        text="Are you sure you want to logout?"
+        isLoading={false}
+        showModal={showLogoutModal}
+        onClose={() => setShowLogoutModal(false)}
+        onConfirm={handleLogout}
+        confirmText="Confirm"
+        cancelText="Cancel"
+        confirmBgColor="danger"
+        cancelBgColor="dark"
+      />
     </Layout>
   );
 };

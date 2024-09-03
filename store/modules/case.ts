@@ -33,6 +33,8 @@ export const useCaseStore = create<CasesState>((set, get) => ({
       },
     });
 
+    console.log("fetch cases response==", response.data);
+
     const existingCases = reset ? [] : get().cases || [];
     const data = response.data.data;
 
