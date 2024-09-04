@@ -15,6 +15,9 @@ export interface AppointmentListResponseDto {
       mimetype: string;
       url: string;
     };
+    address: string;
+    city: string;
+    country: string;
   };
   vet: {
     id: string;
@@ -32,60 +35,13 @@ export interface AppointmentListResponseDto {
   type: "in-clinic" | "video";
 }
 
-export interface AppointmentDetailResponseDto {
-  id: string;
-  scheduledAt: string;
-  partner: {
-    id: string;
-    name: string;
-    address: string;
-    clinicImg: {
-      filename: string;
-      filesize: number;
-      mimetype: string;
-      url: string;
-    };
-  };
-  vet: {
-    id: string;
-    name: string;
-    profileImg: {
-      filename: string;
-      filesize: number;
-      mimetype: string;
-      url: string;
-    };
-  };
+export interface AppointmentDetailResponseDto
+  extends AppointmentListResponseDto {
+  paymentIntentId?: string;
   pet: {
     name: string;
-    photos: {
-      filename: string;
-      filesize: number;
-      mimetype: string;
-      url: string;
-    }[];
+    photos: UploadedFile[];
   };
-  case: {
-    id: string;
-    pet: {
-      name: string;
-      photos: {
-        filename: string;
-        filesize: number;
-        mimetype: string;
-        url: string;
-      }[];
-    };
-  };
-
-  services: {
-    id: string;
-    name: string;
-    description: string;
-    price: number;
-    label: string;
-  };
-  [];
 }
 
 export interface AppointmentState {
@@ -96,7 +52,10 @@ export interface AppointmentState {
     page: number,
     reset?: boolean
   ) => Promise<{ data: AppointmentListResponseDto[]; nextPage: number }>;
-  fetchAppointmentDetail: (id: string) => Promise<AppointmentDetailResponseDto>;
+  fetchAppointmentDetail: (
+    id: string,
+    type: "in-clinic" | "video"
+  ) => Promise<AppointmentDetailResponseDto>;
   deleteAppointment: (id: string) => Promise<void>;
   cancelAppointment: (bookingId: string) => Promise<void>;
   rescheduleAppointment: (bookingId: string) => Promise<void>;

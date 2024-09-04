@@ -41,6 +41,8 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
 }) => {
   const route = useRoute();
   const id = (route.params as { id: string })?.id;
+  const type = (route.params as { type: string })?.type;
+
   const [showCancelModal, setShowCancelModal] = useState(false);
   const { fetchAppointmentDetail, cancelAppointment, rescheduleAppointment } =
     useAppointmentStore();
@@ -60,7 +62,10 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
     try {
       setIsLoading(true);
 
-      const data = await fetchAppointmentDetail(id);
+      const data = await fetchAppointmentDetail(
+        id,
+        type as "in-clinic" | "video"
+      );
 
       setAppointmentDetail(data);
     } finally {
@@ -112,13 +117,13 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
         autoHide: true,
       });
 
-      navigation.navigate("PartnerVetDetailScreen", {
-        vetId: appointmentDetail.vet.id,
-        partnerId: appointmentDetail.partner.id,
-        caseId: appointmentDetail.case.id,
-        selectedServices: appointmentDetail.services,
-        backTo: "HomeScreen",
-      });
+      // navigation.navigate("PartnerVetDetailScreen", {
+      //   vetId: appointmentDetail.vet.id,
+      //   partnerId: appointmentDetail.partner.id,
+      //   caseId: appointmentDetail.case.id,
+      //   selectedServices: appointmentDetail.services,
+      //   backTo: "HomeScreen",
+      // });
     } finally {
       setRescheduleLoading(false);
     }

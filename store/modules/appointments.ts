@@ -47,9 +47,12 @@ export const useAppointmentStore = create<AppointmentState>((set, get) => ({
     }));
   },
 
-  fetchAppointmentDetail: async (id: string) => {
-    const response = await api.get(`/member/partners/appointments/${id}`);
-    console.log("respnse", response);
+  fetchAppointmentDetail: async (id, type) => {
+    const response = await api.get(`/members/appointments/${id}`, {
+      params: {
+        type: type,
+      },
+    });
 
     set(() => ({
       appointmentDetails: new Map([
