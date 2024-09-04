@@ -145,7 +145,7 @@ const PetProfileMedicalHistoryScreen: React.FC<Props> = (props) => {
         <ButtonPrimary
           // disabled={!healthHistory || healthHistory.length === 0}
           onPress={handleConfirm}
-          bgColor="primary"
+          // bgColor="primary"
         >
           Confirm
         </ButtonPrimary>

@@ -1,6 +1,7 @@
 import Layout from "@/components/app/Layout";
 import ImageUpload from "@/components/partials/ImageUpload";
 import {
+  colorErrorText,
   colorPrimary,
   fontHauoraMedium,
   fontHauoraSemiBold,
@@ -197,21 +198,23 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
               justifyContent="flex-end"
               alignItems="flex-end"
             >
-              <Image
+              {/* <Image
                 source={require("../../assets/images/pet-profile-bg.png")}
                 position="absolute"
                 w={"100%"}
                 h={"100%"}
                 style={{}}
-              />
+              /> */}
 
               <Div mx={"auto"}>
                 <ImageUpload
                   h={92}
                   w={93}
                   editIcon
+                  rounded={100}
                   uri={profileImg}
                   hideUnselectBtn
+                  openImageOnTab
                   onChange={handleUpdateImage}
                 />
               </Div>
@@ -366,6 +369,7 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
         onConfirm={deleteHealthHistoryHandler}
         confirmText="Confirm"
         cancelText="Cancel"
+        confirmBgColor={colorErrorText}
       />
 
       {loading && (

@@ -1,7 +1,7 @@
 import Layout from "@/components/app/Layout";
 import ConfirmationModal from "@/components/partials/ConfirmationModal";
 import SettingButton from "@/components/partials/SettingButton";
-import { fontHauora } from "@/constant/constant";
+import { colorErrorText, fontHauora } from "@/constant/constant";
 import { NavigationType } from "@/store/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
@@ -223,8 +223,8 @@ const SettingsMainScreen: React.FC<{ navigation: NavigationType }> = ({
         onConfirm={handleLogout}
         confirmText="Confirm"
         cancelText="Cancel"
-        confirmBgColor="danger"
-        cancelBgColor="dark"
+        confirmBgColor={colorErrorText}
+        cancelBgColor="#222"
       />
     </Layout>
   );

@@ -69,7 +69,11 @@ const HealthHistoryModal = (props: PropTypes) => {
     if (typeof value === "string" && key !== "documents") {
       formCopy[key] = value;
     } else if (key === "documents" && typeof value === "object") {
-      formCopy.documents = value;
+      if (formCopy.documents.length > 0) {
+        formCopy.documents = [...formCopy.documents, ...value];
+      } else {
+        formCopy.documents = value;
+      }
     } else if (key === "date") {
       formCopy.date = `${value}`;
     }
@@ -98,16 +102,16 @@ const HealthHistoryModal = (props: PropTypes) => {
     }
   };
 
-  const handleUnSelectDocument = () => {
+  const handleUnSelectDocument = (uri: string) => {
     const formCopy = { ...form };
-    formCopy.documents = [];
+    formCopy.documents = formCopy.documents.filter(
+      (document) => document.url !== uri
+    );
     setForm(formCopy);
   };
 
   const isDisabled = useMemo(() => {
-    return (
-      !form.name || !form.date || !form.description || !form.documents.length
-    );
+    return !form.name || !form.date || !form.description;
   }, [form]);
 
   return (
@@ -199,23 +203,45 @@ const HealthHistoryModal = (props: PropTypes) => {
             >
               (JPG/JPEG/PNG/PDF) Max size 8 MB{" "}
             </Text>
+          </Div>
 
-            <ImageUpload
-              plusIcon={false}
-              w={139}
-              h={150}
-              onUnSelect={handleUnSelectDocument}
-              uri={form?.documents[0]?.url || ""}
-              onChange={(file) => {
-                handleFormChange("documents", file);
-              }}
-            />
+          <Div>
+            <ScrollDiv
+              flexDir="row"
+              style={{ gap: 12 }}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+            >
+              {form.documents.map((item) => (
+                <ImageUpload
+                  plusIcon={false}
+                  w={139}
+                  h={150}
+                  disabled
+                  mr={12}
+                  onUnSelect={handleUnSelectDocument}
+                  uri={item?.url || ""}
+                  // onChange={(file) => {
+                  //   handleFormChange("documents", file);
+                  // }}
+                />
+              ))}
+
+              <ImageUpload
+                plusIcon={true}
+                w={139}
+                h={150}
+                noImage
+                onChange={(file) => {
+                  handleFormChange("documents", file);
+                }}
+              />
+            </ScrollDiv>
           </Div>
         </ScrollDiv>
 
         <Div>
           <ButtonPrimary
-            bgColor="primary"
             onPress={handleSubmit}
             loading={loading}
             mt={30}
@@ -229,40 +255,5 @@ const HealthHistoryModal = (props: PropTypes) => {
     </BottomSheet>
   );
 };
-
-function Add({ title, onAdd }: { title: string; onAdd?: () => void }) {
-  return (
-    <Div
-      py={12}
-      borderBottomWidth={1}
-      borderColor="#D0D7DC"
-      flexDir="row"
-      justifyContent="space-between"
-      alignItems="center"
-    >
-      <Text
-        fontFamily={fontHauoraSemiBold}
-        fontSize="xl"
-        lineHeight={24}
-        color="#494949"
-      >
-        {title}
-      </Text>
-
-      <Button
-        bg="transparent"
-        px={0}
-        py={0}
-        fontFamily={fontHauoraSemiBold}
-        fontSize="lg"
-        lineHeight={24}
-        color="#427594"
-        onPress={onAdd}
-      >
-        Add
-      </Button>
-    </Div>
-  );
-}
 
 export default HealthHistoryModal;

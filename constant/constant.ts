@@ -5,6 +5,9 @@ export const fontHauoraSemiBold = "HauoraSemiBold";
 export const fontHauoraMedium = "HauoraMedium";
 export const fontHauoraBold = "HauoraBold";
 
+export const fontCooper = "Cooper";
+export const fontCooperBold = "CooperBold";
+
 /** Colors */
 export const colorGray49 = "#494949";
 export const colorPrimary = "#427594";

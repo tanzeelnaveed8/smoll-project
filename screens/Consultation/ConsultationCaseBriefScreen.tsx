@@ -300,7 +300,7 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
             );
           })}
 
-          {documents.length === 0 && (
+          {/* {documents.length === 0 && (
             <ImageUpload
               plusIcon={false}
               w={139}
@@ -312,7 +312,7 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
                 handleImage(file);
               }}
             />
-          )}
+          )} */}
 
           <ImageUpload
             plusIcon={false}
