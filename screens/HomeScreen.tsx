@@ -89,12 +89,6 @@ const HomeScreen: React.FC<Props> = (props) => {
       h: 60,
       w: 60,
     },
-    // {
-    //   name: "Chat with Vet",
-    //   value: "vet",
-    //   description: "Ask vet about food, concerns",
-    //   loading: false,
-    // },
   ]);
 
   const [showAccountSetupModal, setShowAccountSetupModal] = useState(false);
@@ -110,7 +104,6 @@ const HomeScreen: React.FC<Props> = (props) => {
         "hideAccountSetupBtn"
       );
 
-      console.log("hideAccountSetupBtn", hideAccountSetupBtn);
       if (hideAccountSetupBtn) {
         setShowAccountSetupButton(false);
       } else {
@@ -151,15 +144,6 @@ const HomeScreen: React.FC<Props> = (props) => {
     return completedStep;
   }, [user]);
 
-  const setLoading = (option: OptionTab["value"], loading: boolean) => {
-    setOptions((prev) => {
-      const newOptions = [...prev];
-      const counsellingTab = newOptions.find((tab) => tab.value === option);
-      if (counsellingTab) counsellingTab.loading = loading;
-      return newOptions;
-    });
-  };
-
   const handleOptionTabPress = async (item: OptionTab) => {
     if (item.value === "counselling") {
       showMessage({
@@ -167,24 +151,6 @@ const HomeScreen: React.FC<Props> = (props) => {
         description: "Get ready for some pawsome counselling! 🐾",
         type: "info",
       });
-
-      // TODO: Need to fix it properly
-      // let _sessions = sessions;
-
-      // if (!sessions) {
-      //   try {
-      //     setLoading("counselling", true);
-      //     _sessions = await fetchSessions();
-      //   } finally {
-      //     setLoading("counselling", false);
-      //   }
-      // }
-
-      // if (!_sessions?.length) {
-      //   props.navigation.navigate("CounsellingRequestScreen");
-      // } else {
-      //   props.navigation.navigate("CounsellingInboxScreen");
-      // }
     } else if (item.value === "petProfileScreen") {
       props.navigation.navigate("PetProfileListScreen", {
         navigateTo: "HomeScreen",
@@ -215,11 +181,6 @@ const HomeScreen: React.FC<Props> = (props) => {
           >
             <Div flexDir="row" alignItems="center" style={{ gap: 12 }}>
               <Image w={100} h={27} source={require("../assets/logo.png")} />
-              <Image
-                w={56}
-                h={56}
-                source={require("../assets/images/dog.png")}
-              />
             </Div>
 
             <Div flexDir="row" alignItems="center" style={{ gap: 8 }}>
@@ -234,7 +195,6 @@ const HomeScreen: React.FC<Props> = (props) => {
                   style={{ overflow: "visible" }}
                   onPress={() => {
                     props.navigation.navigate("NotificationTestScreen");
-                    // props.navigation.navigate("AppointmentsScreen");
                   }}
                 >
                   <IconBell
@@ -415,7 +375,7 @@ const HomeScreen: React.FC<Props> = (props) => {
             ))}
           </Div>
 
-          <Div h={130} />
+          <Div h={50} />
         </ScrollDiv>
 
         {completedStep < 3 && showAccountSetupButton && (

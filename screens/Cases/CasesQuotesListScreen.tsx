@@ -15,7 +15,6 @@ import { RefreshControl, TouchableOpacity } from "react-native";
 import { FlatList } from "react-native-bidirectional-infinite-scroll";
 
 import { Button, Div, Image, Text } from "react-native-magnus";
-import { useInterval } from "usehooks-ts";
 
 const CasesQuotesListScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,

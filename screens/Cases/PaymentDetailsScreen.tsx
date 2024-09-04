@@ -306,7 +306,6 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
           </Div>
 
           <ButtonPrimary
-            bgColor="primary"
             mb={15}
             onPress={openPaymentSheet}
             loading={actionLoading}

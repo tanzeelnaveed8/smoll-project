@@ -8,6 +8,7 @@ import { NavigationType } from "@/store/types";
 import React, { useEffect, useRef, useState } from "react";
 import { Dimensions, FlatList, TouchableOpacity } from "react-native";
 import { Button, Div, Image, Text } from "react-native-magnus";
+import { useWindowDimensions } from "react-native";
 
 const images = [
   {
@@ -47,6 +48,8 @@ const windowWidth = Dimensions.get("window").width;
 const NewOnboardingScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
+  const { height } = useWindowDimensions();
+  const fontSize = height < 900 ? 54 : 74;
   const flatListRef = useRef<FlatList>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -109,13 +112,13 @@ const NewOnboardingScreen: React.FC<{ navigation: NavigationType }> = ({
 
           <Div>
             <Div mb={40}>
-              <Text fontFamily={fontHauora} fontSize={74} lineHeight={74}>
+              <Text fontFamily={fontHauora} fontSize={fontSize} lineHeight={74}>
                 Access
               </Text>
-              <Text fontFamily={fontHauora} fontSize={74} lineHeight={74}>
+              <Text fontFamily={fontHauora} fontSize={fontSize} lineHeight={74}>
                 to Pet
               </Text>
-              <Text fontFamily={fontHauora} fontSize={74} lineHeight={74}>
+              <Text fontFamily={fontHauora} fontSize={fontSize} lineHeight={74}>
                 Experts
               </Text>
             </Div>
