@@ -8,12 +8,13 @@ import {
   IconUser,
   IconX,
 } from "@tabler/icons-react-native";
-import { Button, Div, Text } from "react-native-magnus";
+import { Button, Div, Image, Modal, Text } from "react-native-magnus";
 import { colorPrimary, fontHauoraSemiBold } from "@/constant/constant";
 import { useFileStore } from "@/store/modules/file";
 import { UploadedFile } from "@/store/types/file";
 import {
   ActivityIndicator,
+  Linking,
   StyleProp,
   StyleSheet,
   TouchableOpacity,
@@ -34,6 +35,7 @@ interface Props {
   mr?: number;
   noImage?: boolean;
   disabled?: boolean;
+  openImageOnTab?: boolean;
   rounded?: number;
   bg?: string;
 }
@@ -54,12 +56,14 @@ const ImageUpload: React.FC<Props> = ({
   rounded,
   bg,
   userIcon,
+  openImageOnTab,
 }) => {
   const { uploadFile } = useFileStore();
 
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState<null | string>(null);
   const [uploadedFileUrl, setUploadedFileUrl] = useState<null | string>(null);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const pickImage = async () => {
     if (disabled) return;
@@ -116,6 +120,10 @@ const ImageUpload: React.FC<Props> = ({
     }
   };
 
+  const handleOpenImage = () => {
+    setModalVisible(true);
+  };
+
   return (
     <Div alignItems="flex-start">
       <Div position="relative" mr={mr ? mr : 0}>
@@ -124,7 +132,13 @@ const ImageUpload: React.FC<Props> = ({
             px={0}
             rounded={rounded ? rounded : 0}
             py={0}
-            onPress={pickImage}
+            onPress={() => {
+              if (openImageOnTab) {
+                handleOpenImage();
+              } else {
+                pickImage();
+              }
+            }}
             disabled={loading}
           >
             <Div
@@ -203,8 +217,8 @@ const ImageUpload: React.FC<Props> = ({
             justifyContent="center"
             alignItems="center"
             position="absolute"
-            bottom={-10}
-            right={-10}
+            bottom={-7}
+            right={-8}
             p={0}
             onPress={pickImage}
           >
@@ -212,6 +226,33 @@ const ImageUpload: React.FC<Props> = ({
           </Button>
         )}
       </Div>
+
+      <Modal
+        isVisible={modalVisible}
+        // h={"100%"}
+        bg="transparent"
+        onSwipeCancel={() => setModalVisible(false)}
+        onSwipeMove={() => setModalVisible(false)}
+        swipeDirection={"down"}
+      >
+        <Div flex={1}>
+          {image && (
+            <Div
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+                position: "relative",
+              }}
+            >
+              <Image
+                source={{ uri: image }} // Display the selected image
+                style={{ width: "100%", height: "100%", resizeMode: "contain" }}
+              />
+            </Div>
+          )}
+        </Div>
+      </Modal>
     </Div>
   );
 };

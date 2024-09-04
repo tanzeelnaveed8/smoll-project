@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Layout from "@/components/app/Layout";
-import { fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
+import {
+  fontCooper,
+  fontCooperBold,
+  fontHauoraMedium,
+  fontHauoraSemiBold,
+} from "@/constant/constant";
 import { usePetStore } from "@/store/modules/pet";
 import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
