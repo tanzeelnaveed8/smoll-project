@@ -13,8 +13,8 @@ const ConfirmationModal: React.FC<{
   isLoading?: boolean;
   cancelText?: string;
   confirmText?: string;
-  cancelBgColor?: "danger" | "dark" | "primary";
-  confirmBgColor?: "danger" | "dark" | "primary";
+  cancelBgColor?: string;
+  confirmBgColor?: string;
 }> = ({
   heading,
   text,
@@ -48,7 +48,8 @@ const ConfirmationModal: React.FC<{
 
         {cancelText && (
           <ButtonPrimary
-            bgColor={cancelBgColor ? cancelBgColor : "danger"}
+            // bgColor={confirmBgColor ? confirmBgColor : "danger"}
+            bg={confirmBgColor ? confirmBgColor : "#222"}
             mb={12}
             onPress={onConfirm}
             loading={isLoading}
@@ -60,7 +61,7 @@ const ConfirmationModal: React.FC<{
 
         {cancelText && (
           <ButtonPrimary
-            bgColor={cancelBgColor ? cancelBgColor : "primary"}
+            bg={cancelBgColor ? cancelBgColor : "#222"}
             onPress={onClose}
             disabled={isLoading}
           >

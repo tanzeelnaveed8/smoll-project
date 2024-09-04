@@ -1,6 +1,7 @@
 import Layout from "@/components/app/Layout";
 import ImageUpload from "@/components/partials/ImageUpload";
 import {
+  colorErrorText,
   colorPrimary,
   fontHauoraMedium,
   fontHauoraSemiBold,
@@ -366,6 +367,7 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
         onConfirm={deleteHealthHistoryHandler}
         confirmText="Confirm"
         cancelText="Cancel"
+        confirmBgColor={colorErrorText}
       />
 
       {loading && (
