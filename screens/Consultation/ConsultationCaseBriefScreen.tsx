@@ -24,11 +24,17 @@ const NoPetOptions = ({
   setShowModal,
   expertId,
   consultationId,
+  scheduleAt,
+  selectedTime,
+  selectedDate,
 }: {
   navigation: NavigationType;
   setShowModal: (showModal: boolean) => void;
   expertId: string;
   consultationId: string;
+  scheduleAt: string;
+  selectedTime: string;
+  selectedDate: string;
 }) => {
   return (
     <Div pl={14} pt={14}>
@@ -44,6 +50,9 @@ const NoPetOptions = ({
               from: "ConsultationCaseBriefScreen",
               expertId,
               consultationId,
+              scheduleAt,
+              selectedTime,
+              selectedDate,
             });
           });
         }}
@@ -247,6 +256,9 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
                 setShowModal,
                 expertId,
                 consultationId,
+                scheduleAt,
+                selectedTime,
+                selectedDate,
               })
             }
             disableKeyboardDismissOnSelect
@@ -338,7 +350,9 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
         onPress={handleCreateCase}
         loading={actionLoading}
       >
-        {comingFrom === "ExpertsListDetailScreen" ? "Confirm" : "Connect"}
+        {comingFrom === "ExpertsListDetailScreen" || scheduleAt
+          ? "Confirm"
+          : "Connect"}
       </ButtonPrimary>
     </Layout>
   );

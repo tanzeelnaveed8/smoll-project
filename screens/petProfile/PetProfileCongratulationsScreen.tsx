@@ -20,6 +20,10 @@ const PetProfileCongratulationsScreen = ({
   const navigateTo = (route.params as Record<string, string>)?.navigateTo;
   const petId = (route.params as Record<string, string>)?.petId;
   const expertId = (route.params as Record<string, string>)?.expertId;
+  const scheduleAt = (route.params as Record<string, string>)?.scheduleAt;
+  const selectedTime = (route.params as Record<string, string>)?.selectedTime;
+  const selectedDate = (route.params as Record<string, string>)?.selectedDate;
+
   const consultationId = (route.params as Record<string, string>)
     ?.consultationId;
 
@@ -82,6 +86,9 @@ const PetProfileCongratulationsScreen = ({
                 petName: petName,
                 expertId: expertId,
                 consultationId: consultationId,
+                scheduleAt,
+                selectedTime,
+                selectedDate,
               });
             }}
           >

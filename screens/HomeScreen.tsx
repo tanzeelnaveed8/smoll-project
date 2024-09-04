@@ -3,6 +3,7 @@ import IconButton from "@/components/partials/IconButton";
 import {
   colorPrimary,
   fontCooper,
+  fontCooperBold,
   fontHauoraBold,
   fontHauoraMedium,
   fontHauoraSemiBold,
@@ -175,6 +176,7 @@ const HomeScreen: React.FC<Props> = (props) => {
         <ScrollDiv showsVerticalScrollIndicator={false}>
           <Div
             mb={20}
+            mt={5}
             flexDir="row"
             justifyContent="space-between"
             alignItems="center"
@@ -244,20 +246,20 @@ const HomeScreen: React.FC<Props> = (props) => {
               <Div mb={16} mt={12}>
                 <Text
                   fontSize={"2xl"}
-                  fontFamily={fontHauoraBold}
+                  fontFamily={fontCooperBold}
                   lineHeight={24}
                 >
                   Chat with pet
                 </Text>
                 <Text
                   fontSize={"2xl"}
-                  fontFamily={fontHauoraBold}
+                  fontFamily={fontCooperBold}
                   lineHeight={24}
                 >
                   wellness expert
                 </Text>
 
-                <Text>Completly Free!</Text>
+                <Text fontFamily={fontHauoraSemiBold}>Completly Free!</Text>
               </Div>
 
               <Div

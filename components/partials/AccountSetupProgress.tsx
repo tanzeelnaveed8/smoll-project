@@ -51,7 +51,7 @@ const AccountSetupProgress: React.FC<Props> = (props) => {
         height={8}
         width={windowWidth - 40}
         borderColor="transparent"
-        color="#427594"
+        color="#222"
         style={{ backgroundColor: "#EFEFEF", width: "100%" }}
       />
     </Div>

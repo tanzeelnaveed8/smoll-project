@@ -78,6 +78,10 @@ const PetProfileScreen: React.FC<Props> = (props) => {
   const handleNext = async () => {
     const comingFrom = (route.params as Record<string, string>)?.from;
     const expertId = (route.params as Record<string, string>)?.expertId;
+    const scheduleAt = (route.params as Record<string, string>)?.scheduleAt;
+    const selectedTime = (route.params as Record<string, string>)?.selectedTime;
+    const selectedDate = (route.params as Record<string, string>)?.selectedDate;
+
     const consultationId = (route.params as Record<string, string>)
       ?.consultationId;
 
@@ -96,6 +100,9 @@ const PetProfileScreen: React.FC<Props> = (props) => {
           petBg: pet.photos[0].url,
           expertId,
           consultationId,
+          scheduleAt,
+          selectedTime,
+          selectedDate,
         });
 
         toast.show("Pet profile created successfully");
@@ -143,7 +150,7 @@ const PetProfileScreen: React.FC<Props> = (props) => {
             backgroundColor: "#EFEFEF",
             borderRadius: 100,
           }}
-          color="#427594"
+          color="#222"
         />
         {/* screens */}
         {currentStep === 0 && (

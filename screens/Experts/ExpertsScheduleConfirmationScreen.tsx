@@ -27,6 +27,8 @@ const ExpertsScheduleConfirmationScreen: React.FC<{
   const { selectedTime, selectedDate, caseData, petId, expertId, scheduleAt } =
     route.params as Record<string, string>;
 
+  console.log("parsedSelectedTime selectedTime", selectedTime);
+
   const { expertDetailMap, scheduleConsultation } = useExpertStore();
   const { petsDetailMap, fetchPetDetails } = usePetStore();
   const { createCase, removeCase } = useCaseStore();

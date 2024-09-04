@@ -22,10 +22,15 @@ const PetProfileMedicalHistoryScreen: React.FC<Props> = (props) => {
   const historyId = (route.params as Record<string, string>)?.historyId;
   const petId = (route.params as Record<string, string>)?.petId;
   const petName = (route.params as Record<string, string>)?.petName;
+  const scheduleAt = (route.params as Record<string, string>)?.scheduleAt;
+
   const petBg = (route.params as Record<string, string>)?.petBg;
   const navigateTo = (route.params as Record<string, string>)?.navigateTo;
   const showBackBtn = (route.params as Record<string, string>)?.showBackBtn;
   const expertId = (route.params as Record<string, string>)?.expertId;
+  const selectedTime = (route.params as Record<string, string>)?.selectedTime;
+  const selectedDate = (route.params as Record<string, string>)?.selectedDate;
+
   const consultationId = (route.params as Record<string, string>)
     ?.consultationId;
 
@@ -65,6 +70,9 @@ const PetProfileMedicalHistoryScreen: React.FC<Props> = (props) => {
       petBg: petBg,
       expertId,
       consultationId,
+      scheduleAt,
+      selectedTime,
+      selectedDate,
     });
   };
 

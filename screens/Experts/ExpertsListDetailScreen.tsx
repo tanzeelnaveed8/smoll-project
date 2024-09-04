@@ -311,7 +311,7 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
                               bg={
                                 selectedTime?.label ===
                                 `${index}:${a.dayOfWeek ?? a.date}:${time}`
-                                  ? "primary"
+                                  ? "#222"
                                   : "transparent"
                               }
                               onPress={() => {
