@@ -8,10 +8,14 @@ import { NavigationType } from "@/store/types";
 import React from "react";
 import { TouchableOpacity } from "react-native";
 import { Button, Div, Image, Text } from "react-native-magnus";
+import { useWindowDimensions } from "react-native";
 
 const NewOnboardingScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
+  const { height } = useWindowDimensions();
+  const fontSize = height < 900 ? 54 : 74;
+
   return (
     <Layout>
       <Div px={8} justifyContent="space-between" flex={1}>
@@ -46,13 +50,25 @@ const NewOnboardingScreen: React.FC<{ navigation: NavigationType }> = ({
 
         <Div>
           <Div mb={40}>
-            <Text fontFamily={fontHauora} fontSize={74} lineHeight={74}>
+            <Text
+              fontFamily={fontHauora}
+              fontSize={fontSize}
+              lineHeight={fontSize}
+            >
               Access
             </Text>
-            <Text fontFamily={fontHauora} fontSize={74} lineHeight={74}>
+            <Text
+              fontFamily={fontHauora}
+              fontSize={fontSize}
+              lineHeight={fontSize}
+            >
               to Pet
             </Text>
-            <Text fontFamily={fontHauora} fontSize={74} lineHeight={74}>
+            <Text
+              fontFamily={fontHauora}
+              fontSize={fontSize}
+              lineHeight={fontSize}
+            >
               Experts
             </Text>
           </Div>

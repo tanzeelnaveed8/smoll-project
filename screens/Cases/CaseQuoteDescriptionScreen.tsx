@@ -257,7 +257,6 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
       {/* </ScrollDiv> */}
 
       <ButtonPrimary
-        bgColor="primary"
         onPress={() => {
           if (hasPartnerBooking) {
             navigation.goBack();
