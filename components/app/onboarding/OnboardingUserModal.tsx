@@ -2,6 +2,7 @@ import BackButton from "@/components/partials/BackButton";
 import BottomSheet from "@/components/partials/BottomSheet";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import InputField from "@/components/partials/InputField";
+import { fontCooper, fontHeading } from "@/constant/constant";
 import { useUserStore } from "@/store/modules/user";
 import React, { useRef, useState } from "react";
 import { Div, Text } from "react-native-magnus";
@@ -42,7 +43,7 @@ const OnboardingUserModal: React.FC<Props> = (props) => {
       barMb={28}
     >
       <Div>
-        <Text fontSize={"4xl"} mb={20}>
+        <Text fontSize={"4xl"} mb={20} fontFamily={fontHeading}>
           What should we call you?
         </Text>
 

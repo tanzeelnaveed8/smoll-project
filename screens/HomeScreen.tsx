@@ -2,9 +2,11 @@ import Layout from "@/components/app/Layout";
 import IconButton from "@/components/partials/IconButton";
 import {
   colorPrimary,
+  fontCooper,
   fontHauoraBold,
   fontHauoraMedium,
   fontHauoraSemiBold,
+  fontHeading,
 } from "@/constant/constant";
 import {
   IconArrowRight,
@@ -259,7 +261,9 @@ const HomeScreen: React.FC<Props> = (props) => {
           </Div>
 
           <Div mb={16}>
-            <Text fontSize={"5xl"}>Hi, {user?.name}</Text>
+            <Text fontSize={"5xl"} fontFamily={fontHeading}>
+              Hi, {user?.name}
+            </Text>
             <Text fontSize={"lg"}>How can we help you today?</Text>
           </Div>
 

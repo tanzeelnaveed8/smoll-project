@@ -14,6 +14,7 @@ import React, { createRef, useEffect, useRef, useState } from "react";
 import { Div, ScrollDiv, Text } from "react-native-magnus";
 import { useToast } from "react-native-toast-notifications";
 import { Dimensions, KeyboardAvoidingView, Platform } from "react-native";
+import { fontCooper, fontHeading } from "@/constant/constant";
 
 interface Props {
   navigation: NavigationType;
@@ -133,7 +134,7 @@ const AccountSetupAddressScreen: React.FC<Props> = (props) => {
       >
         <Div flex={1}>
           <Div flex={1}>
-            <Text fontSize={"6xl"} mb={4}>
+            <Text fontSize={"6xl"} mb={4} fontFamily={fontHeading}>
               What's your address?
             </Text>
             <Text fontSize={"xl"} mb={20}>

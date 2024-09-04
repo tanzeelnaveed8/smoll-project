@@ -184,7 +184,7 @@ const PetProfileScreen: React.FC<Props> = (props) => {
 
       <Div>
         <ButtonPrimary
-          bgColor="primary"
+          // bgColor="primary"
           onPress={handleNext}
           disabled={isActionDisabled || loading}
           loading={loading}

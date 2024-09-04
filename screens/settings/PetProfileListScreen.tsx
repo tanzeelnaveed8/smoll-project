@@ -5,6 +5,7 @@ import {
   fontCooperBold,
   fontHauoraMedium,
   fontHauoraSemiBold,
+  fontHeading,
 } from "@/constant/constant";
 import { usePetStore } from "@/store/modules/pet";
 import { useUserStore } from "@/store/modules/user";
@@ -53,7 +54,7 @@ const PetProfileListScreen: React.FC<{ navigation: NavigationType }> = ({
     >
       <ScrollDiv style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
         <Div flex={1} pt={20}>
-          <Text fontSize={"6xl"} mb={20}>
+          <Text fontSize={"6xl"} mb={20} fontFamily={fontHeading}>
             Add your lovely pets
           </Text>
 

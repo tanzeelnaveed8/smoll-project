@@ -1,4 +1,5 @@
 import InputField from "@/components/partials/InputField";
+import { fontHeading } from "@/constant/constant";
 import { PetPayloadDto } from "@/store/types/pet";
 import React from "react";
 import { Div, Text } from "react-native-magnus";
@@ -11,7 +12,7 @@ interface Props {
 const PetProfileNameScreen: React.FC<Props> = (props) => {
   return (
     <Div>
-      <Text fontSize={"4xl"} mb={20}>
+      <Text fontSize={"4xl"} mb={20} fontFamily={fontHeading}>
         What is your pet's name?
       </Text>
       <InputField

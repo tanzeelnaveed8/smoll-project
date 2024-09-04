@@ -1,6 +1,7 @@
 import Layout from "@/components/app/Layout";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import InputField from "@/components/partials/InputField";
+import { fontCooper, fontHeading } from "@/constant/constant";
 import { usePetStore } from "@/store/modules/pet";
 import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
@@ -73,7 +74,7 @@ const EditInfoScreen: React.FC<{ navigation: NavigationType }> = ({
     >
       <ScrollDiv keyboardShouldPersistTaps="handled">
         <Div pt={20} flex={1}>
-          <Text fontSize={"4xl"} mb={20}>
+          <Text fontSize={"4xl"} mb={20} fontFamily={fontHeading}>
             {heading || "No Heading Provided"}
           </Text>
           <InputField

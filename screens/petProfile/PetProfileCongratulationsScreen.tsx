@@ -1,7 +1,7 @@
 import { Div, Text } from "react-native-magnus";
 import { IconHeartFilled } from "@tabler/icons-react-native";
 import Container from "@/components/partials/Container";
-import { fontHauoraMedium } from "@/constant/constant";
+import { fontHauoraMedium, fontHeading } from "@/constant/constant";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import ConfettiCannon from "react-native-confetti-cannon";
 import Layout from "@/components/app/Layout";
@@ -57,6 +57,7 @@ const PetProfileCongratulationsScreen = ({
             color="#222222"
             textAlign="center"
             mt={20}
+            fontFamily={fontHeading}
           >
             Congratulations! {petName}'s profile has been added.
           </Text>

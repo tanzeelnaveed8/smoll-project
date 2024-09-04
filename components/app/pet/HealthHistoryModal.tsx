@@ -1,7 +1,12 @@
 import BottomSheet from "@/components/partials/BottomSheet";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import ImageUpload from "@/components/partials/ImageUpload";
-import { fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
+import {
+  fontCooper,
+  fontHauoraMedium,
+  fontHauoraSemiBold,
+  fontHeading,
+} from "@/constant/constant";
 import { useEffect, useMemo, useState } from "react";
 import { Text, Div, Button, ScrollDiv } from "react-native-magnus";
 import InputField from "@/components/partials/InputField";
@@ -130,7 +135,13 @@ const HealthHistoryModal = (props: PropTypes) => {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
-          <Text fontSize={32} lineHeight={40} color="#222222" mb={4}>
+          <Text
+            fontSize={32}
+            lineHeight={40}
+            color="#222222"
+            mb={4}
+            fontFamily={fontHeading}
+          >
             Details
           </Text>
           <Text

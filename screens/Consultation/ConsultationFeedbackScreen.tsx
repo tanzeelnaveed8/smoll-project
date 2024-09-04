@@ -2,7 +2,7 @@ import Layout from "@/components/app/Layout";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import StarRating from "@/components/partials/StarRating";
 import TextAreaField from "@/components/partials/TextAreaField";
-import { fontHauoraSemiBold } from "@/constant/constant";
+import { fontHauoraSemiBold, fontHeading } from "@/constant/constant";
 import { useExpertStore } from "@/store/modules/expert";
 import { NavigationType } from "@/store/types";
 import { useRoute } from "@react-navigation/native";
@@ -47,7 +47,7 @@ const ConsultationFeedbackScreen: React.FC<Props> = ({ navigation }) => {
     <Layout title="Feedback" navigation={navigation} preventBackGesture={true}>
       <ScrollDiv keyboardShouldPersistTaps="handled">
         <Div pt={40} flex={1}>
-          <Text fontSize={"4xl"} mb={20}>
+          <Text fontSize={"4xl"} mb={20} fontFamily={fontHeading}>
             How was your experience?
           </Text>
 

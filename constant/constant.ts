@@ -8,6 +8,10 @@ export const fontHauoraBold = "HauoraBold";
 export const fontCooper = "Cooper";
 export const fontCooperBold = "CooperBold";
 
+/** heading fonts */
+export const fontHeading = fontCooper;
+export const fontHeadingBold = fontCooperBold;
+
 /** Colors */
 export const colorGray49 = "#494949";
 export const colorPrimary = "#427594";

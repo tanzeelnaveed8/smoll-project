@@ -1,7 +1,7 @@
 import Layout from "@/components/app/Layout";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import InputField from "@/components/partials/InputField";
-import { fontHauora } from "@/constant/constant";
+import { fontCooper, fontHauora, fontHeading } from "@/constant/constant";
 import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
 import { useRoute } from "@react-navigation/native";
@@ -62,7 +62,7 @@ const AccountSetupEmailScreen: React.FC<Props> = (props) => {
     >
       <ScrollDiv flex={1} keyboardShouldPersistTaps="handled">
         <Div>
-          <Text fontSize={"6xl"} fontFamily={fontHauora} mb={4}>
+          <Text fontSize={"6xl"} fontFamily={fontHeading} mb={4}>
             What’s your email?
           </Text>
           <Text color="#494949" mb={20} fontSize={"xl"}>

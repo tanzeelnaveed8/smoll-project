@@ -1,6 +1,6 @@
 import InputField from "@/components/partials/InputField";
 import SelectInput from "@/components/partials/SelectInput";
-import { colorPrimary } from "@/constant/constant";
+import { colorPrimary, fontHeading } from "@/constant/constant";
 import { usePetStore } from "@/store/modules/pet";
 import { PetPayloadDto, PetSpeciesEnum } from "@/store/types/pet.d";
 import React, { useEffect, useMemo, useState } from "react";
@@ -45,7 +45,7 @@ const PetProfileBreedScreen: React.FC<Props> = (props) => {
 
   return (
     <Div>
-      <Text fontSize={"4xl"} mb={20}>
+      <Text fontSize={"4xl"} mb={20} fontFamily={fontHeading}>
         What breed is {props.pet.name}?
       </Text>
 

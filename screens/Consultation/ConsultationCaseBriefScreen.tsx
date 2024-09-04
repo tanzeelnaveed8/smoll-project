@@ -1,6 +1,10 @@
 import Layout from "@/components/app/Layout";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
-import { fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
+import {
+  fontHauoraMedium,
+  fontHauoraSemiBold,
+  fontHeading,
+} from "@/constant/constant";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { TouchableOpacity } from "react-native";
 import { Div, ScrollDiv, Text } from "react-native-magnus";
@@ -210,7 +214,7 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
-        <Text fontSize={"4xl"} mb={12}>
+        <Text fontSize={"4xl"} mb={12} fontFamily={fontHeading}>
           Tell the vet your pet's condition
         </Text>
 

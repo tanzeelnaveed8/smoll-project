@@ -1,7 +1,7 @@
 import Layout from "@/components/app/Layout";
 import HealthHistoryModal from "@/components/app/pet/HealthHistoryModal";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
-import { fontHauoraMedium } from "@/constant/constant";
+import { fontCooper, fontHauoraMedium, fontHeading } from "@/constant/constant";
 import { usePetStore } from "@/store/modules/pet";
 import { NavigationType } from "@/store/types";
 import { useRoute } from "@react-navigation/native";
@@ -76,7 +76,13 @@ const PetProfileMedicalHistoryScreen: React.FC<Props> = (props) => {
       navigation={props.navigation}
     >
       <Div flex={1}>
-        <Text fontSize={32} lineHeight={40} color="#222222" mb={4}>
+        <Text
+          fontSize={32}
+          lineHeight={40}
+          color="#222222"
+          mb={4}
+          fontFamily={fontHeading}
+        >
           Add medical history
         </Text>
         <Text

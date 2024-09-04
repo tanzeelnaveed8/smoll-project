@@ -61,7 +61,7 @@ const DoctorListCard: React.FC<PropTypes> = (props) => {
         </Div>
 
         <Button
-          bg="#427594"
+          bg="#222"
           rounded={100}
           fontSize="lg"
           fontFamily={fontHauoraMedium}

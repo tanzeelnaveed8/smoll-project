@@ -4,6 +4,7 @@ import {
   fontHauoraBold,
   fontHauoraMedium,
   fontHauoraSemiBold,
+  fontHeading,
 } from "@/constant/constant";
 import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
@@ -105,7 +106,7 @@ const AccountSetupModal: React.FC<Props> = (props) => {
       h="92%"
     >
       <Div>
-        <Text fontSize={"6xl"} mb={12}>
+        <Text fontSize={"6xl"} mb={12} fontFamily={fontHeading}>
           {user?.name}, let’s finish setting up your account
         </Text>
 

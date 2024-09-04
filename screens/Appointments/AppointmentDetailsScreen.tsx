@@ -2,7 +2,11 @@ import Layout from "@/components/app/Layout";
 import BottomSheet from "@/components/partials/BottomSheet";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import FlashCustomContent from "@/components/partials/FlashCustomContent";
-import { fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
+import {
+  fontHauoraMedium,
+  fontHauoraSemiBold,
+  fontHeading,
+} from "@/constant/constant";
 import {
   appointmentFormatedTime,
   useAppointmentStore,
@@ -301,7 +305,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
           roundedTop={24}
         >
           <Div>
-            <Text fontSize={"6xl"} mb={8}>
+            <Text fontSize={"6xl"} mb={8} fontFamily={fontHeading}>
               Cancel Booking
             </Text>
 

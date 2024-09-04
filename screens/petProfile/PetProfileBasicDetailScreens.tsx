@@ -1,5 +1,6 @@
 import InputField from "@/components/partials/InputField";
 import TextAreaField from "@/components/partials/TextAreaField";
+import { fontHeading } from "@/constant/constant";
 import { PetPayloadDto } from "@/store/types/pet";
 import React, { useRef, useState } from "react";
 import { Keyboard } from "react-native";
@@ -23,7 +24,7 @@ const PetProfileBasicDetailScreens: React.FC<Props> = (props) => {
 
   return (
     <Div>
-      <Text fontSize={"4xl"} mb={20}>
+      <Text fontSize={"4xl"} mb={20} fontFamily={fontHeading}>
         Almost done! We need basic pet details.
       </Text>
 

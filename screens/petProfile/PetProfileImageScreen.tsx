@@ -1,5 +1,5 @@
 import ImageUpload from "@/components/partials/ImageUpload";
-import { fontHauoraMedium } from "@/constant/constant";
+import { fontHauoraMedium, fontHeading } from "@/constant/constant";
 import { NavigationType } from "@/store/types";
 import { UploadedFile } from "@/store/types/file";
 import { PetPayloadDto } from "@/store/types/pet";
@@ -37,7 +37,13 @@ const PetProfileImageScreen: React.FC<Props> = (props) => {
 
   return (
     <Div>
-      <Text fontSize={32} lineHeight={40} color="#222222" mb={16}>
+      <Text
+        fontSize={32}
+        lineHeight={40}
+        color="#222222"
+        mb={16}
+        fontFamily={fontHeading}
+      >
         Upload three images
       </Text>
       <Div mb={24} flexDir="row" style={{ gap: 12 }}>

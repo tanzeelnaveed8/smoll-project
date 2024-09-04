@@ -1,4 +1,5 @@
 import RadioButton from "@/components/partials/RadioButton";
+import { fontHeading } from "@/constant/constant";
 import { PetPayloadDto, PetGenderEnum } from "@/store/types/pet.d";
 import React, { useState } from "react";
 import { FlatList } from "react-native";
@@ -18,7 +19,7 @@ const PetProfileGenderScreen: React.FC<Props> = (props) => {
 
   return (
     <Div>
-      <Text fontSize={"4xl"} mb={20}>
+      <Text fontSize={"4xl"} mb={20} fontFamily={fontHeading}>
         Is {props.pet.name} a Male or a Female?
       </Text>
 

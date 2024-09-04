@@ -1,7 +1,7 @@
 import React from "react";
 import BottomSheet from "./BottomSheet";
 import { Div, Text } from "react-native-magnus";
-import { fontHauoraMedium } from "@/constant/constant";
+import { fontHauoraMedium, fontHeading } from "@/constant/constant";
 import ButtonPrimary from "./ButtonPrimary";
 
 const ConfirmationModal: React.FC<{
@@ -36,7 +36,7 @@ const ConfirmationModal: React.FC<{
       roundedTop={24}
     >
       <Div>
-        <Text fontSize={"6xl"} mb={8}>
+        <Text fontSize={"6xl"} mb={8} fontFamily={fontHeading}>
           {heading}
         </Text>
 

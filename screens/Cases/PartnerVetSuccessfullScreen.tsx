@@ -1,6 +1,10 @@
 import Layout from "@/components/app/Layout";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
-import { fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
+import {
+  fontHauoraMedium,
+  fontHauoraSemiBold,
+  fontHeading,
+} from "@/constant/constant";
 import { IconCalendarClock, IconUserX } from "@tabler/icons-react-native";
 import React, { useState } from "react";
 import { ActivityIndicator, FlatList, TouchableOpacity } from "react-native";
@@ -124,7 +128,7 @@ const PartnerVetSuccessfullScreen: React.FC<Props> = ({ navigation }) => {
             mb={32}
           />
 
-          <Text fontSize={"6xl"} mb={8}>
+          <Text fontSize={"6xl"} mb={8} fontFamily={fontHeading}>
             Thank you for booking with us
           </Text>
           <Text fontSize={"lg"} fontFamily={fontHauoraMedium} mb={32}>

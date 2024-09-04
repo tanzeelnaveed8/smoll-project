@@ -68,7 +68,7 @@ const SettingButton: React.FC<PropsType> = (props) => {
           <Toggle
             onPress={onPress}
             on={toggleValue}
-            activeBg="#0189F9"
+            activeBg="#222"
             w={52}
             h={32}
           />
