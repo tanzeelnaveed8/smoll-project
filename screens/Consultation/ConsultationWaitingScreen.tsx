@@ -7,6 +7,7 @@ import {
 } from "@/constant/constant";
 import { SocketEventEnum } from "@/socket/events";
 import { useSocket } from "@/socket/provider";
+import { useAppointmentStore } from "@/store/modules/appointments";
 import { useExpertStore } from "@/store/modules/expert";
 import { NavigationType } from "@/store/types";
 import { FindOneConsultationResDto } from "@/store/types/expert";
@@ -22,7 +23,8 @@ const ConsultationWaitingScreen: React.FC<{ navigation: NavigationType }> = ({
   const route = useRoute();
   const socket = useSocket();
 
-  const { findOneConsultation, cancelConsultation } = useExpertStore();
+  const { findOneConsultation } = useExpertStore();
+  const { cancelConsultation } = useAppointmentStore();
 
   const consultationId = (route.params as Record<string, string>)
     ?.consultationId;

@@ -75,6 +75,18 @@ export const useAppointmentStore = create<AppointmentState>((set, get) => ({
     }));
   },
 
+  cancelConsultation: async (id: string) => {
+    await api.delete(`/member/vets/consultations/${id}`);
+
+    const updatedAppointments = get().appointment?.filter(
+      (item) => item.id !== id
+    );
+
+    set(() => ({
+      appointment: updatedAppointments,
+    }));
+  },
+
   rescheduleAppointment: async (appointmentId) => {
     await api.post(`/member/partners/appointments/${appointmentId}/reschedule`);
   },

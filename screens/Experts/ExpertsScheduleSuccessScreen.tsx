@@ -14,6 +14,7 @@ import FlashCustomContent from "@/components/partials/FlashCustomContent";
 import { useExpertStore } from "@/store/modules/expert";
 import { useRoute } from "@react-navigation/native";
 import { NavigationType } from "@/store/types";
+import { useAppointmentStore } from "@/store/modules/appointments";
 
 interface Props {
   navigation: NavigationType;
@@ -33,7 +34,7 @@ const btns = [
 const ExpertsScheduleSuccessScreen: React.FC<Props> = ({ navigation }) => {
   const route = useRoute();
 
-  const { cancelConsultation } = useExpertStore();
+  const { cancelConsultation } = useAppointmentStore();
   const [isLoading, setIsLoading] = useState(false);
 
   const consultationId = (route.params as Record<string, string>)

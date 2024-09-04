@@ -48,9 +48,7 @@ export const useExpertStore = create<ExpertState>((set, get) => ({
 
     return { id: data.id };
   },
-  cancelConsultation: async (id) => {
-    await api.delete(`/member/vets/consultations/${id}`);
-  },
+
   updateConsultation: async (payload) => {
     const { id, caseId } = payload;
     const res = await api.patch(`/member/vets/consultations/${id}`, {

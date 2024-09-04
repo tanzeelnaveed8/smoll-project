@@ -11,6 +11,7 @@ import {
   appointmentFormatedTime,
   useAppointmentStore,
 } from "@/store/modules/appointments";
+import { useExpertStore } from "@/store/modules/expert";
 import { usePartnerStore } from "@/store/modules/partner";
 import { NavigationType } from "@/store/types";
 import { AppointmentDetailResponseDto } from "@/store/types/appointments";
@@ -44,8 +45,12 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
   const type = (route.params as { type: string })?.type;
 
   const [showCancelModal, setShowCancelModal] = useState(false);
-  const { fetchAppointmentDetail, cancelAppointment, rescheduleAppointment } =
-    useAppointmentStore();
+  const {
+    fetchAppointmentDetail,
+    cancelAppointment,
+    rescheduleAppointment,
+    cancelConsultation,
+  } = useAppointmentStore();
 
   const [isLoading, setIsLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
@@ -81,7 +86,11 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
 
       console.log("id", id);
 
-      await cancelAppointment(id);
+      if (appointmentDetail?.type === "video") {
+        await cancelConsultation(id);
+      } else {
+        await cancelAppointment(id);
+      }
 
       setShowCancelModal(false);
       setDeleteLoading(false);
@@ -177,12 +186,14 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
               lineHeight={24}
               mb={4}
             >
-              {appointmentDetail?.vet.name}
+              {appointmentDetail?.vet?.name}
             </Text>
 
-            <Text fontSize={12} fontFamily={fontHauoraSemiBold} mb={12}>
-              {appointmentDetail?.partner.name}
-            </Text>
+            {appointmentDetail?.type !== "video" && (
+              <Text fontSize={12} fontFamily={fontHauoraSemiBold}>
+                {appointmentDetail?.partner?.name}
+              </Text>
+            )}
 
             <Div>
               <Tag
@@ -195,8 +206,11 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                 borderColor="#222"
                 mb={16}
                 bg="transparent"
+                mt={12}
               >
-                Clinic Visit
+                {appointmentDetail?.type === "video"
+                  ? "Video Consultation"
+                  : "Clinic Visit"}
               </Tag>
             </Div>
 
@@ -214,36 +228,42 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                 appointmentFormatedTime(appointmentDetail?.scheduledAt)}
             </Text>
 
-            {/* <ButtonPrimary bgColor="primary" mt={24}>
-              Join
-            </ButtonPrimary> */}
+            {appointmentDetail?.type === "video" && (
+              <ButtonPrimary disabled mt={24}>
+                Join
+              </ButtonPrimary>
+            )}
           </Div>
 
           <Div>
-            <Text
-              fontSize={12}
-              fontFamily={fontHauoraSemiBold}
-              color="darkGreyText"
-              mb={8}
-            >
-              Clinic Location
-            </Text>
+            {appointmentDetail?.type !== "video" && (
+              <>
+                <Text
+                  fontSize={12}
+                  fontFamily={fontHauoraSemiBold}
+                  color="darkGreyText"
+                  mb={8}
+                >
+                  Clinic Location
+                </Text>
 
-            <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold} mb={8}>
-              {appointmentDetail?.partner.name ?? "-"}
-            </Text>
-            <Text fontSize={"md"} fontFamily={fontHauoraMedium} mb={24}>
-              {appointmentDetail?.partner.address ?? "-"}
-            </Text>
+                <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold} mb={8}>
+                  {appointmentDetail?.partner?.name ?? "-"}
+                </Text>
+                <Text fontSize={"md"} fontFamily={fontHauoraMedium} mb={24}>
+                  {appointmentDetail?.partner?.address ?? "-"}
+                </Text>
 
-            <Text
-              fontSize={12}
-              fontFamily={fontHauoraSemiBold}
-              color="darkGreyText"
-              mb={8}
-            >
-              Pet
-            </Text>
+                <Text
+                  fontSize={12}
+                  fontFamily={fontHauoraSemiBold}
+                  color="darkGreyText"
+                  mb={8}
+                >
+                  Pet
+                </Text>
+              </>
+            )}
 
             <Div flexDir="row" alignItems="center" mb={28}>
               <Div>
@@ -315,8 +335,8 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
             </Text>
 
             <Text fontSize={"md"} fontFamily={fontHauoraMedium} mb={16}>
-              Are you sure you want to cancel your appointment with Dr. Emily
-              Carter?
+              Are you sure you want to cancel your appointment with Dr.{" "}
+              {appointmentDetail?.vet.name}?
             </Text>
 
             <ButtonPrimary

@@ -58,5 +58,7 @@ export interface AppointmentState {
   ) => Promise<AppointmentDetailResponseDto>;
   deleteAppointment: (id: string) => Promise<void>;
   cancelAppointment: (bookingId: string) => Promise<void>;
+  cancelConsultation: (id: string) => Promise<void>;
+
   rescheduleAppointment: (bookingId: string) => Promise<void>;
 }
