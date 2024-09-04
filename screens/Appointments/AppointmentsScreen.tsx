@@ -118,11 +118,17 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
             data={appointment}
             renderItem={({ item, index }) => (
               <AppointmentCard
-                img={item.partner?.clinicImg?.url}
+                img={item.partner?.clinicImg?.url ?? item.vet?.profileImg?.url}
                 pet={item.pet.name}
-                text={item.partner.name}
+                text={`Your upcoming visit with ${
+                  item.partner?.name ?? item.vet?.name
+                }`}
                 scheduledTime={item.scheduledAt}
-                type={"Clinic Visit"}
+                type={
+                  item.type === "in-clinic"
+                    ? "Clinic Visit"
+                    : "Video Consultation"
+                }
                 alert={""}
                 onPress={() => {
                   navigation.navigate("AppointmentDetailsScreen", {
@@ -177,7 +183,7 @@ const AppointmentCard: React.FC<{
           )}
         </Div>
 
-        <Div maxW={254}>
+        <Div maxW={230}>
           <Div mb={4} flexDir="row" style={{ gap: 4 }}>
             <Tag
               fontSize={12}

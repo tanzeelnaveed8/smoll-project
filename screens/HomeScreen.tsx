@@ -371,7 +371,7 @@ const HomeScreen: React.FC<Props> = (props) => {
             ))}
           </Div>
 
-          <Div h={130} />
+          <Div h={50} />
         </ScrollDiv>
 
         {completedStep < 3 && showAccountSetupButton && (

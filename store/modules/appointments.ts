@@ -11,7 +11,7 @@ export const useAppointmentStore = create<AppointmentState>((set, get) => ({
   appointmentDetails: new Map(),
 
   fetchAppointments: async (page: number, reset?: boolean) => {
-    const response = await api.get("/member/partners/appointments", {
+    const response = await api.get("/members/appointments", {
       params: {
         page: page,
         limit: 10,
@@ -23,13 +23,13 @@ export const useAppointmentStore = create<AppointmentState>((set, get) => ({
 
     const updatedData = get().appointment || [];
 
-    console.log("fetchAppointments response", response.data);
-
     data.forEach((item: AppointmentListResponseDto) => {
       if (!updatedData.find((existing) => existing.id === item.id)) {
         updatedData.push(item);
       }
     });
+
+    console.log("respon", response.data.data);
 
     set(() => ({
       appointment: reset ? response.data.data : updatedData,

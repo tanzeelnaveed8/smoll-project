@@ -29,6 +29,7 @@ export interface AppointmentListResponseDto {
   pet: {
     name: string;
   };
+  type: "in-clinic" | "video";
 }
 
 export interface AppointmentDetailResponseDto {
