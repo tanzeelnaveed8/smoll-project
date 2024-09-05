@@ -14,6 +14,8 @@ export const useFileStore = create<FileState>((set, get) => ({
       headers: { "content-type": "multipart/form-data" },
     });
 
+    console.log("fileupdate response", response);
+
     return response.data;
   },
 }));

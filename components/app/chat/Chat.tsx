@@ -77,40 +77,6 @@ const Chat: React.FC<Props> = (props) => {
       }, 500);
     });
 
-    // useEffect(() => {
-    //   const sb = SendbirdChat.instance;
-    //   const channelHandler = new GroupChannelHandler({
-    //     onMessageReceived: (channel, message) => {
-    //       console.log("Message received:", message);
-
-    //       const receivedMessage = message as SendBirdExtendedBaseMessage;
-    //       // Handle the received message
-    //       const newMessage = {
-    //         _id: receivedMessage.messageId,
-    //         text: receivedMessage.message,
-    //         createdAt: receivedMessage.createdAt,
-    //         user: {
-    //           _id: receivedMessage.sender.userId,
-    //           name: receivedMessage.sender.nickname,
-    //           avatar: receivedMessage.sender.profileUrl,
-    //         },
-    //       };
-    //       setMessages((prevMessages) =>
-    //         GiftedChat.append(prevMessages, [newMessage])
-    //       );
-    //     },
-    //   });
-
-    //   sb.groupChannel.addGroupChannelHandler(
-    //     "UNIQUE_HANDLER_ID",
-    //     channelHandler
-    //   );
-
-    //   return () => {
-    //     sb.groupChannel.removeGroupChannelHandler("UNIQUE_HANDLER_ID");
-    //   };
-    // }, [props.recipientId]);
-
     const listenerId = "TYPING_LISTENER";
 
     CometChat.addMessageListener(
@@ -272,13 +238,12 @@ const Chat: React.FC<Props> = (props) => {
     await fetchMessages(true);
   };
 
-  console.log("message===", messages);
-
   const handleSend = async (newMessages: IMessage[] = []) => {
     if (!channelUrl) return;
     // setMessages((previousMessages) =>
     //   GiftedChat.append(previousMessages, newMessages)
-    // );
+
+    console.log("newMessages", newMessages);
 
     const response = await sendMessage(channelUrl, newMessages);
     console.log("sendbird message response sent", response);

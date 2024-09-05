@@ -5,6 +5,9 @@ import {
   GroupChannelModule,
 } from "@sendbird/chat/groupChannel";
 import { SendableMessage } from "@sendbird/chat/lib/__definition";
+
+import { GroupChannelHandler } from "@sendbird/chat/groupChannel";
+
 import {
   FileMessageCreateParams,
   MessageTypeFilter,
@@ -27,6 +30,14 @@ const sb = SendbirdChat.init({
 //     console.log("sendbird err===_", err);
 //   }
 // };
+
+// Add a channel event handler to listen for new messages
+const channelHandler = new GroupChannelHandler();
+channelHandler.onMessageReceived = (channel, message) => {
+  console.log("New message received:", message);
+};
+
+sb.groupChannel.addGroupChannelHandler("UNIQUE_HANDLER_ID", channelHandler);
 
 const initializeSendbird = async (
   userId: string,

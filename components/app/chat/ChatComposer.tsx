@@ -67,18 +67,26 @@ const ChatComposer: React.FC<Props> = (props) => {
           type: fileType,
         } as unknown as File;
 
-        setIsSending(true);
+        try {
+          setIsSending(true);
 
-        const uploadedFile = await uploadFile([fileObj]);
+          const uploadedFile = await uploadFile([fileObj]);
 
-        file = {
-          name: fileUri.split("/").pop() ?? "",
-          type: fileType,
-          uri: uploadedFile[0].url,
-          size: fileSize,
-        };
-
-        setIsSending(false);
+          file = {
+            name: fileUri.split("/").pop() ?? "",
+            type: fileType,
+            uri: uploadedFile[0].url,
+            size: fileSize,
+          };
+        } catch (err) {
+          const message = err instanceof Error ? err.message : "Unknown error";
+          showMessage({
+            message: `${message}`,
+            type: "danger",
+          });
+        } finally {
+          setIsSending(false);
+        }
       }
 
       const newMessage: IMessage = {
