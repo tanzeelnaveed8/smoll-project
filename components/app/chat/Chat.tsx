@@ -390,7 +390,7 @@ const Chat: React.FC<Props> = (props) => {
       renderMessageImage={(props) => (
         <Image
           source={{
-            uri: "https://file-ap-5.sendbird.com/99973b4892604f39bb5fc8475841e549.jpeg",
+            uri: props?.currentMessage?.image,
             method: "GET",
             headers: {
               "Api-Token": "578655c97a30cd510663efe289dafbbd728770a6",
