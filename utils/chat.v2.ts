@@ -15,26 +15,19 @@ import {
   UserMessageCreateParams,
 } from "@sendbird/chat/message";
 import { IMessage } from "react-native-gifted-chat";
+import { NativeEventEmitter } from "react-native";
 
 const sb = SendbirdChat.init({
   appId: "BA0CAD93-02C5-4AF4-87B4-AEB89048E67F",
   modules: [new GroupChannelModule()],
 });
 
-// const initializeSendbird = async (userId: string, accessToken: string) => {
-//   try {
-//     const user = await sb.connect(userId, accessToken);
-//     console.log("sendgbirduser", user);
-//   } catch (err) {
-//     // Handle error.
-//     console.log("sendbird err===_", err);
-//   }
-// };
+const eventEmitter = new NativeEventEmitter();
 
 // Add a channel event handler to listen for new messages
 const channelHandler = new GroupChannelHandler();
 channelHandler.onMessageReceived = (channel, message) => {
-  console.log("New message received:", message);
+  eventEmitter.emit("messageReceived", message);
 };
 
 sb.groupChannel.addGroupChannelHandler("UNIQUE_HANDLER_ID", channelHandler);
@@ -160,4 +153,10 @@ const sendMessage = async (channelUrl: string, messages: IMessage[]) => {
     console.error("Error sending message:", error);
   }
 };
-export { sb, initializeSendbird, connectGroupChannel, sendMessage };
+export {
+  sb,
+  initializeSendbird,
+  connectGroupChannel,
+  sendMessage,
+  eventEmitter,
+};

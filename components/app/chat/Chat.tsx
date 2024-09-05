@@ -5,7 +5,7 @@ import { CometChat } from "@cometchat/chat-sdk-react-native";
 import { useEffect, useRef, useState } from "react";
 import { ActivityIndicator } from "react-native";
 import { Avatar, GiftedChat, IMessage } from "react-native-gifted-chat";
-import { Div } from "react-native-magnus";
+import { Div, Image } from "react-native-magnus";
 import ChatBubble from "./ChatBubble";
 import ChatComposer from "./ChatComposer";
 import { useSound } from "@/functions/useSound";
@@ -14,7 +14,11 @@ import {
   OpenChannelModule,
   SendbirdOpenChat,
 } from "@sendbird/chat/openChannel";
-import { connectGroupChannel, sendMessage } from "@/utils/chat.v2";
+import {
+  connectGroupChannel,
+  eventEmitter,
+  sendMessage,
+} from "@/utils/chat.v2";
 import { SendBirdExtendedBaseMessage } from "@/store/types";
 import {
   BaseMessage,
@@ -109,20 +113,31 @@ const Chat: React.FC<Props> = (props) => {
   const handleTranformSendbirdMessage = (data: BaseMessage[]) => {
     const transformedMessages = data.map((msg) => {
       const extendedMsg = msg as SendBirdExtendedBaseMessage;
-      return {
+
+      const obj: IMessage = {
         _id: extendedMsg.messageId,
         text: extendedMsg.message,
         createdAt: extendedMsg.createdAt,
+        image: extendedMsg.plainUrl,
         user: {
           _id: extendedMsg.sender?.userId,
           name: extendedMsg.sender?.nickname,
           avatar: extendedMsg.sender?.profileUrl,
         },
       };
+
+      return obj;
     });
 
     return transformedMessages;
   };
+
+  useEffect(() => {
+    eventEmitter.addListener("messageReceived", (message: BaseMessage) => {
+      const transformedMessage = handleTranformSendbirdMessage([message]);
+      setMessages((prevMessages) => [...transformedMessage, ...prevMessages]);
+    });
+  }, []);
 
   // fetch messages
   const fetchMessages = async (isLoadingEarlier = false) => {
@@ -143,25 +158,13 @@ const Chat: React.FC<Props> = (props) => {
         groupName
       );
 
+      console.log("fetch messages response", response);
+
       if (response?.channel) {
         setChannelUrl(response?.channel.url);
       }
 
       if (!response?.messages) return;
-
-      // const transformedMessages = response?.messages.map((msg) => {
-      //   const extendedMsg = msg as SendBirdExtendedBaseMessage;
-      //   return {
-      //     _id: extendedMsg.messageId,
-      //     text: extendedMsg.message,
-      //     createdAt: msg.createdAt,
-      //     user: {
-      //       _id: extendedMsg.sender?.userId,
-      //       name: extendedMsg.sender?.nickname,
-      //       avatar: extendedMsg.sender?.profileUrl,
-      //     },
-      //   };
-      // });
 
       const transformedMessages = handleTranformSendbirdMessage(
         response.messages
@@ -384,6 +387,20 @@ const Chat: React.FC<Props> = (props) => {
       renderChatFooter={() => <Div h={24}></Div>}
       renderChatEmpty={renderChatEmpty}
       onInputTextChanged={handleInputTextChanged}
+      renderMessageImage={(props) => (
+        <Image
+          source={{
+            uri: "https://file-ap-5.sendbird.com/99973b4892604f39bb5fc8475841e549.jpeg",
+            method: "GET",
+            headers: {
+              "Api-Token": "578655c97a30cd510663efe289dafbbd728770a6",
+              Accept: "*/*",
+              "Access-Control-Allow-Origin": "*",
+            },
+          }}
+          style={{ width: 160, height: 100 }}
+        />
+      )}
     />
   );
 };

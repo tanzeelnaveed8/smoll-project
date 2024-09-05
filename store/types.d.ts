@@ -19,6 +19,7 @@ export type PaymentPageRoute = {
 
 export interface SendBirdExtendedBaseMessage extends BaseMessage {
   message: string;
+  plainUrl: string;
   sender: {
     userId: string;
     nickname: string;

@@ -33,13 +33,15 @@ const ChatComposer: React.FC<Props> = (props) => {
   const handleOnSend = async (img?: { img: typeof image }) => {
     const sendProps = props as SendProps<IMessage>;
     const image = img?.img;
+
     if (sendProps.onSend && (text.trim().length > 0 || image)) {
       let file = null;
 
       if (image?.assets) {
         const fileUri = image.assets[0].uri;
         const fileSize = image.assets[0].fileSize ?? 0;
-        const fileType = image.assets[0].type ?? "image";
+        const fileType =
+          (image.assets[0].mimeType || image.assets[0].type) ?? "image";
 
         // Check file size
         const isImage = fileType.startsWith("image");
@@ -78,6 +80,21 @@ const ChatComposer: React.FC<Props> = (props) => {
             uri: uploadedFile[0].url,
             size: fileSize,
           };
+
+          const newMessage: IMessage = {
+            _id: Math.random().toString(36).substring(7),
+            text: text,
+            createdAt: new Date(),
+            user: {
+              _id: 1,
+            },
+            image: file ? file.uri : undefined,
+          };
+
+          sendProps.onSend([newMessage], true);
+
+          setText("");
+          setImage(null);
         } catch (err) {
           const message = err instanceof Error ? err.message : "Unknown error";
           showMessage({
@@ -88,21 +105,6 @@ const ChatComposer: React.FC<Props> = (props) => {
           setIsSending(false);
         }
       }
-
-      const newMessage: IMessage = {
-        _id: Math.random().toString(36).substring(7),
-        text: text,
-        createdAt: new Date(),
-        user: {
-          _id: 1,
-        },
-        image: file ? file.uri : undefined,
-      };
-
-      sendProps.onSend([newMessage], true);
-
-      setText("");
-      setImage(null);
     }
   };
 
