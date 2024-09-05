@@ -71,6 +71,22 @@ import PaymentDetailsScreen from "./screens/Cases/PaymentDetailsScreen";
 import CasesQuotesListScreen from "./screens/Cases/CasesQuotesListScreen";
 import NewOnboardingScreen from "./screens/NewOnboardingScreen";
 import SignupScreen from "./components/app/onboarding/SignupScreen";
+import SendbirdChat, { SessionHandler } from "@sendbird/chat";
+import {
+  OpenChannelCreateParams,
+  OpenChannelModule,
+} from "@sendbird/chat/openChannel";
+import {
+  GroupChannelCreateParams,
+  GroupChannelModule,
+} from "@sendbird/chat/groupChannel";
+import {
+  MentionType,
+  MessageMetaArray,
+  PushNotificationDeliveryOption,
+  UserMessageCreateParams,
+} from "@sendbird/chat/message";
+import { initializeSendbird } from "./utils/chat.v2";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -217,6 +233,14 @@ const App = () => {
       CometChatWrapper.initUIKit(user.id);
       OneSignal.login(user.playerId);
     }
+  }, [user]);
+
+  useEffect(() => {
+    if (!user || !user.name) return;
+    // const sendbirdUserId = "419772";
+    // const sendbirdAccessToken = "d75dad4fde9a54d0518efeb8b62d9ac42d267930";
+
+    initializeSendbird(user.id, user.name, user.profileImg.url);
   }, [user]);
 
   if (!fontsLoaded) {

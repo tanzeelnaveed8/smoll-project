@@ -1,4 +1,5 @@
 import { NavigationProp, RouteProp } from "@react-navigation/native";
+import { BaseMessage } from "@sendbird/chat/message";
 
 export type Nullable<T> = T | null;
 
@@ -15,3 +16,12 @@ export type PaymentPageRoute = {
   scheduleAt: string;
   paymentIntentId: string;
 };
+
+export interface SendBirdExtendedBaseMessage extends BaseMessage {
+  message: string;
+  sender: {
+    userId: string;
+    nickname: string;
+    profileUrl: string;
+  };
+}

@@ -99,14 +99,14 @@ const ChatComposer: React.FC<Props> = (props) => {
   };
 
   const handleTyping = () => {
-    CometChatWrapper.sendTypingIndicator(props.loggedInUser.getUid());
+    // CometChatWrapper.sendTypingIndicator(props.loggedInUser.getUid());
 
     if (typingTimeoutRef.current) {
       clearTimeout(typingTimeoutRef.current);
     }
 
     typingTimeoutRef.current = setTimeout(() => {
-      CometChatWrapper.stopTypingIndicator(props.loggedInUser.getUid());
+      // CometChatWrapper.stopTypingIndicator(props.loggedInUser.getUid());
     }, 500);
   };
 

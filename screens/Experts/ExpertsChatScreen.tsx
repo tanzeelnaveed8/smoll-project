@@ -3,7 +3,9 @@ import Chat from "@/components/app/chat/Chat";
 import { useExpertStore } from "@/store/modules/expert";
 import { NavigationType } from "@/store/types";
 import { useRoute } from "@react-navigation/native";
+import { BaseMessage } from "@sendbird/chat/message";
 import { useEffect, useState } from "react";
+import { IMessage } from "react-native-gifted-chat";
 
 interface Props {
   navigation: NavigationType;

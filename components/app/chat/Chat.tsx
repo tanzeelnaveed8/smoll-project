@@ -9,6 +9,17 @@ import { Div } from "react-native-magnus";
 import ChatBubble from "./ChatBubble";
 import ChatComposer from "./ChatComposer";
 import { useSound } from "@/functions/useSound";
+import SendbirdChat from "@sendbird/chat";
+import {
+  OpenChannelModule,
+  SendbirdOpenChat,
+} from "@sendbird/chat/openChannel";
+import { connectGroupChannel, sendMessage } from "@/utils/chat.v2";
+import { SendBirdExtendedBaseMessage } from "@/store/types";
+import {
+  BaseMessage,
+  MessageCollectionEventHandler,
+} from "@sendbird/chat/lib/__definition";
 
 interface Props {
   initialMessages: IMessage[];
@@ -29,6 +40,7 @@ const Chat: React.FC<Props> = (props) => {
   const [loading, setIsLoading] = useState(true);
   const [lastMessagesEmpty, setLastMessagesEmpty] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+  const [channelUrl, setChannelUrl] = useState<string | null>(null);
 
   const lastMessageIdRef = useRef<number>();
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -50,20 +62,54 @@ const Chat: React.FC<Props> = (props) => {
 
       receiving = true;
 
-      setMessages((previousMessages) =>
-        GiftedChat.append(previousMessages, [
-          CometChatWrapper.transformMessage(
-            props.recipientId,
-            message,
-            props.chatFor
-          ),
-        ])
-      );
+      // setMessages((previousMessages) =>
+      //   GiftedChat.append(previousMessages, [
+      //     CometChatWrapper.transformMessage(
+      //       props.recipientId,
+      //       message,
+      //       props.chatFor
+      //     ),
+      //   ])
+      // );
 
       setTimeout(() => {
         receiving = false;
       }, 500);
     });
+
+    // useEffect(() => {
+    //   const sb = SendbirdChat.instance;
+    //   const channelHandler = new GroupChannelHandler({
+    //     onMessageReceived: (channel, message) => {
+    //       console.log("Message received:", message);
+
+    //       const receivedMessage = message as SendBirdExtendedBaseMessage;
+    //       // Handle the received message
+    //       const newMessage = {
+    //         _id: receivedMessage.messageId,
+    //         text: receivedMessage.message,
+    //         createdAt: receivedMessage.createdAt,
+    //         user: {
+    //           _id: receivedMessage.sender.userId,
+    //           name: receivedMessage.sender.nickname,
+    //           avatar: receivedMessage.sender.profileUrl,
+    //         },
+    //       };
+    //       setMessages((prevMessages) =>
+    //         GiftedChat.append(prevMessages, [newMessage])
+    //       );
+    //     },
+    //   });
+
+    //   sb.groupChannel.addGroupChannelHandler(
+    //     "UNIQUE_HANDLER_ID",
+    //     channelHandler
+    //   );
+
+    //   return () => {
+    //     sb.groupChannel.removeGroupChannelHandler("UNIQUE_HANDLER_ID");
+    //   };
+    // }, [props.recipientId]);
 
     const listenerId = "TYPING_LISTENER";
 
@@ -94,9 +140,28 @@ const Chat: React.FC<Props> = (props) => {
     };
   }, [props.recipientId]);
 
+  const handleTranformSendbirdMessage = (data: BaseMessage[]) => {
+    const transformedMessages = data.map((msg) => {
+      const extendedMsg = msg as SendBirdExtendedBaseMessage;
+      return {
+        _id: extendedMsg.messageId,
+        text: extendedMsg.message,
+        createdAt: extendedMsg.createdAt,
+        user: {
+          _id: extendedMsg.sender?.userId,
+          name: extendedMsg.sender?.nickname,
+          avatar: extendedMsg.sender?.profileUrl,
+        },
+      };
+    });
+
+    return transformedMessages;
+  };
+
+  // fetch messages
   const fetchMessages = async (isLoadingEarlier = false) => {
-    console.log("props.recipientId", props.recipientId);
-    console.log("user", user.id);
+    // const waqarExpertId = "123456";
+    if (!user) return;
 
     try {
       if (!isLoadingEarlier) {
@@ -105,45 +170,100 @@ const Chat: React.FC<Props> = (props) => {
         setIsLoadingEarlier(true);
       }
 
-      const _user = await CometChatWrapper.getUser(user!.id);
-      console.log("_user==))", _user);
-
-      const fetchedMessages = await CometChatWrapper.fetchMessages(
-        props.recipientId,
-        10,
-        props.chatFor,
-        isLoadingEarlier ? lastMessageIdRef.current : undefined
+      const groupName = `${props.recipientId}-${user?.id}`;
+      const response = await connectGroupChannel(
+        user.id, // customer/client id
+        props.recipientId, // provider/vet/expert id
+        groupName
       );
 
-      if (fetchedMessages.length > 0) {
-        // Always update the lastMessageIdRef with the oldest message
-        lastMessageIdRef.current = Number(
-          fetchedMessages[fetchedMessages.length - 1]._id
-        );
-
-        setMessages((prevMessages) => {
-          if (isLoadingEarlier) {
-            // For loading earlier messages, add them before the existing messages
-            return [...prevMessages, ...fetchedMessages];
-          } else {
-            // For initial load, replace all messages
-            return fetchedMessages;
-          }
-        });
+      if (response?.channel) {
+        setChannelUrl(response?.channel.url);
       }
 
-      if (fetchedMessages.length === 0) {
+      if (!response?.messages) return;
+
+      // const transformedMessages = response?.messages.map((msg) => {
+      //   const extendedMsg = msg as SendBirdExtendedBaseMessage;
+      //   return {
+      //     _id: extendedMsg.messageId,
+      //     text: extendedMsg.message,
+      //     createdAt: msg.createdAt,
+      //     user: {
+      //       _id: extendedMsg.sender?.userId,
+      //       name: extendedMsg.sender?.nickname,
+      //       avatar: extendedMsg.sender?.profileUrl,
+      //     },
+      //   };
+      // });
+
+      const transformedMessages = handleTranformSendbirdMessage(
+        response.messages
+      );
+
+      setMessages(transformedMessages);
+
+      if (response.messages.length === 0) {
         setLastMessagesEmpty(true);
       }
-
-      if (!isLoadingEarlier) {
-        setLoggedInUser(_user);
-      }
+    } catch (error) {
+      console.log(error);
     } finally {
       setIsLoading(false);
       setIsLoadingEarlier(false);
     }
   };
+
+  // const fetchMessages = async (isLoadingEarlier = false) => {
+  //   console.log("props.recipientId", props.recipientId);
+  //   console.log("user", user.id);
+
+  //   try {
+  //     if (!isLoadingEarlier) {
+  //       setIsLoading(true);
+  //     } else {
+  //       setIsLoadingEarlier(true);
+  //     }
+
+  //     const _user = await CometChatWrapper.getUser(user!.id);
+  //     console.log("_user==))", _user);
+
+  //     const fetchedMessages = await CometChatWrapper.fetchMessages(
+  //       props.recipientId,
+  //       10,
+  //       props.chatFor,
+  //       isLoadingEarlier ? lastMessageIdRef.current : undefined
+  //     );
+
+  //     if (fetchedMessages.length > 0) {
+  //       // Always update the lastMessageIdRef with the oldest message
+  //       lastMessageIdRef.current = Number(
+  //         fetchedMessages[fetchedMessages.length - 1]._id
+  //       );
+
+  //       // setMessages((prevMessages) => {
+  //       //   if (isLoadingEarlier) {
+  //       //     // For loading earlier messages, add them before the existing messages
+  //       //     return [...prevMessages, ...fetchedMessages];
+  //       //   } else {
+  //       //     // For initial load, replace all messages
+  //       //     return fetchedMessages;
+  //       //   }
+  //       // });
+  //     }
+
+  //     if (fetchedMessages.length === 0) {
+  //       setLastMessagesEmpty(true);
+  //     }
+
+  //     if (!isLoadingEarlier) {
+  //       setLoggedInUser(_user);
+  //     }
+  //   } finally {
+  //     setIsLoading(false);
+  //     setIsLoadingEarlier(false);
+  //   }
+  // };
 
   const handleLoadEarlier = async () => {
     if (isLoadingEarlier) return;
@@ -152,11 +272,22 @@ const Chat: React.FC<Props> = (props) => {
     await fetchMessages(true);
   };
 
-  const handleSend = (newMessages: IMessage[] = []) => {
-    setMessages((previousMessages) =>
-      GiftedChat.append(previousMessages, newMessages)
-    );
+  console.log("message===", messages);
 
+  const handleSend = async (newMessages: IMessage[] = []) => {
+    if (!channelUrl) return;
+    // setMessages((previousMessages) =>
+    //   GiftedChat.append(previousMessages, newMessages)
+    // );
+
+    const response = await sendMessage(channelUrl, newMessages);
+    console.log("sendbird message response sent", response);
+
+    if (!response) return;
+    const transformedMessages = handleTranformSendbirdMessage(response);
+    setMessages((prevMessages) => [...transformedMessages, ...prevMessages]);
+
+    return;
     // Send message to CometChat
     newMessages.forEach((message) => {
       if (message.image) {
@@ -266,7 +397,7 @@ const Chat: React.FC<Props> = (props) => {
 
   return (
     <GiftedChat
-      messages={messages}
+      messages={messages.sort((a, b) => +b.createdAt - +a.createdAt)}
       onSend={(messages) => handleSend(messages)}
       onLoadEarlier={handleLoadEarlier}
       isLoadingEarlier={isLoadingEarlier}
