@@ -17,7 +17,7 @@ const dayOfWeekMap: { [key: string]: number } = {
   mon: 1,
   tue: 2,
   wed: 3,
-  thur: 4,
+  thu: 4,
   fri: 5,
   sat: 6,
 };

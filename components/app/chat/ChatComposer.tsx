@@ -1,12 +1,11 @@
 import IconButton from "@/components/partials/IconButton";
-import { colorPrimary, colorTextPrimary } from "@/constant/constant";
-import { useFileStore } from "@/store/modules/file";
-import { CometChatWrapper } from "@/utils/chat";
-import { CometChat } from "@cometchat/chat-sdk-react-native";
+import { colorTextPrimary } from "@/constant/constant";
+import { sendTypingStatus } from "@/utils/chat.v2";
 import { IconPaperclip, IconSend } from "@tabler/icons-react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useRef, useState } from "react";
 import { ActivityIndicator } from "react-native";
+import { showMessage } from "react-native-flash-message";
 import {
   IMessage,
   InputToolbar,
@@ -14,24 +13,18 @@ import {
   SendProps,
 } from "react-native-gifted-chat";
 import { Div, Input } from "react-native-magnus";
-import { showMessage } from "react-native-flash-message";
-import { sendTypingStatus } from "@/utils/chat.v2";
 
 interface Props extends InputToolbarProps<IMessage> {
-  loggedInUser: CometChat.User;
   isSending: boolean;
   channelUrl: string;
 }
 
 const ChatComposer: React.FC<Props> = (props) => {
-  const { uploadFile } = useFileStore();
-
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [text, setText] = useState("");
   const [image, setImage] = useState<ImagePicker.ImagePickerResult | null>(
     null
   );
-  // const [isSending, setIsSending] = useState(false);
 
   const handleOnSend = async (img?: { img: typeof image }) => {
     const sendProps = props as SendProps<IMessage>;

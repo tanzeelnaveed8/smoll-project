@@ -244,14 +244,6 @@ const App = () => {
     initializeSendbird(user.id, user.name, user.profileImg.url);
   }, [user]);
 
-  // useEffect(() => {
-  //   eventEmitter.addListener("messageReceived", (message: BaseMessage) => {
-  //     const transformedMessage = handleTranformSendbirdMessage([message]);
-  //     console.log("messaged received transformedMessages", transformedMessage);
-  //     setMessages((prevMessages) => [...transformedMessage, ...prevMessages]);
-  //   });
-  // }, []);
-
   if (!fontsLoaded) {
     return <Text>Loading...</Text>; // Or any other loading component
   }
