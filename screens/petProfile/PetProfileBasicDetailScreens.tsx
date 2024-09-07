@@ -28,7 +28,7 @@ const PetProfileBasicDetailScreens: React.FC<Props> = (props) => {
         Almost done! We need basic pet details.
       </Text>
 
-      <InputField
+      {/* <InputField
         value={age}
         onChangeText={(text) => {
           setAge(text);
@@ -38,7 +38,7 @@ const PetProfileBasicDetailScreens: React.FC<Props> = (props) => {
         marginBottom={20}
         inputStyle={{ borderRadius: 12 }}
         keyboardType="number-pad"
-      />
+      /> */}
 
       <InputField
         value={weight}
@@ -56,7 +56,7 @@ const PetProfileBasicDetailScreens: React.FC<Props> = (props) => {
         value={chipNumber}
         onChangeText={(text) => {
           setChipNumber(text);
-          props.setPet({ ...props.pet, chipNumber: parseInt(text) });
+          props.setPet({ ...props.pet, chipNumber: text });
         }}
         placeholder="Chip Number (Optional)"
         marginBottom={20}

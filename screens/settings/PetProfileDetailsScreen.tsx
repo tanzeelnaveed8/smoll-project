@@ -120,8 +120,6 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
   };
   // deleteHealthHistoryHandler(`${item.id}`);
 
-  console.log("petDetailsData", petDetailsData);
-
   const petDetails = [
     {
       title: "Name",

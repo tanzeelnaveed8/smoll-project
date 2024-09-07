@@ -54,6 +54,8 @@ const PetEditInfoScreen: React.FC<{ navigation: NavigationType }> = ({
     }
   };
 
+  console.log("update info pet form=", form);
+
   return (
     <Layout
       showBack
@@ -91,7 +93,7 @@ const PetEditInfoScreen: React.FC<{ navigation: NavigationType }> = ({
           </Div>
 
           <ButtonPrimary
-            bgColor="primary"
+            // bgColor="primary"
             onPress={handleUpdateDetails}
             loading={loading}
             disabled={loading}

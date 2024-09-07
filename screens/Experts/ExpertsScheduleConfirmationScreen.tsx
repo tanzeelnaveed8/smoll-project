@@ -106,6 +106,8 @@ const ExpertsScheduleConfirmationScreen: React.FC<{
     }
   };
 
+  console.log("Confirm Appointment pet", pet);
+
   return (
     <Layout
       showBack
@@ -154,6 +156,7 @@ const ExpertsScheduleConfirmationScreen: React.FC<{
               navigation.navigate("ExpertsListDetailScreen", {
                 expertId,
                 caseData: caseData,
+                petId,
               });
             }}
           >

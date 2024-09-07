@@ -29,6 +29,7 @@ export const usePetStore = create<PetState>((set, get) => ({
 
     const response = await api.post("/member/pets", {
       ...payload,
+      chipNumber: `${payload.chipNumber}`,
       dob: new Date(payload.dob).toISOString(),
     });
 
@@ -63,6 +64,7 @@ export const usePetStore = create<PetState>((set, get) => ({
   updatePet: async (id, payload) => {
     const response = await api.patch(`/member/pets/${id}`, {
       ...payload,
+      chipNumber: `${payload.chipNumber}`,
       dob: payload.dob ? new Date(payload.dob).toISOString() : undefined,
     });
     const data = response.data;
