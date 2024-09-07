@@ -81,12 +81,13 @@ import {
   GroupChannelModule,
 } from "@sendbird/chat/groupChannel";
 import {
+  BaseMessage,
   MentionType,
   MessageMetaArray,
   PushNotificationDeliveryOption,
   UserMessageCreateParams,
 } from "@sendbird/chat/message";
-import { initializeSendbird } from "./utils/chat.v2";
+import { eventEmitter, initializeSendbird } from "./utils/chat.v2";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -242,6 +243,14 @@ const App = () => {
 
     initializeSendbird(user.id, user.name, user.profileImg.url);
   }, [user]);
+
+  // useEffect(() => {
+  //   eventEmitter.addListener("messageReceived", (message: BaseMessage) => {
+  //     const transformedMessage = handleTranformSendbirdMessage([message]);
+  //     console.log("messaged received transformedMessages", transformedMessage);
+  //     setMessages((prevMessages) => [...transformedMessage, ...prevMessages]);
+  //   });
+  // }, []);
 
   if (!fontsLoaded) {
     return <Text>Loading...</Text>; // Or any other loading component

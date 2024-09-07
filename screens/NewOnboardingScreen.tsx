@@ -13,29 +13,35 @@ import { useWindowDimensions } from "react-native";
 const images = [
   {
     img: require("./../assets/images/onboarding-screen/slide-1.png"),
-    width: 350,
-    height: 350,
+    heading: ["Access", "to Pet", "Experts"],
+    width: 330,
+    height: 330,
+  },
+  {
+    img: require("./../assets/images/onboarding-screen/slide-5.png"),
+    heading: ["Recieve &", "Compare", "Upfront Prices"],
+    width: 400,
+    height: 380,
   },
   {
     img: require("./../assets/images/onboarding-screen/slide-2.png"),
+    heading: ["Book", "appointments", "instantly"],
     width: 250,
     height: 300,
   },
   {
     img: require("./../assets/images/onboarding-screen/slide-3.png"),
+    heading: ["Helping You", "Navigate Pet", "Loss"],
     width: 380,
     height: 350,
   },
   {
     img: require("./../assets/images/onboarding-screen/slide-4.png"),
+    heading: ["Get your pet", "a PetID"],
     width: 300,
     height: 350,
   },
-  {
-    img: require("./../assets/images/onboarding-screen/slide-5.png"),
-    width: 400,
-    height: 380,
-  },
+
   // {
   //   img: require("./../assets/images/onboarding-screen/slide-1.png"),
   //   width: 350,
@@ -49,21 +55,21 @@ const NewOnboardingScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
   const { height } = useWindowDimensions();
-  const fontSize = height < 900 ? 54 : 74;
+  const fontSize = height < 900 ? 46 : 60;
   const flatListRef = useRef<FlatList>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     if (currentIndex === images.length - 1) {
-      // setCurrentIndex(0);
-      // const timeout = setTimeout(() => {
-      //   flatListRef.current?.scrollToIndex({
-      //     index: 0,
-      //     animated: false,
-      //   });
-      // }, 100);
-      // return () => clearTimeout(timeout);
-      return;
+      const timeout = setTimeout(() => {
+        setCurrentIndex(0);
+        flatListRef.current?.scrollToIndex({
+          index: 0,
+          animated: true,
+        });
+      }, 8000);
+      return () => clearTimeout(timeout);
+      // return;
     }
 
     const interval = setInterval(() => {
@@ -112,25 +118,17 @@ const NewOnboardingScreen: React.FC<{ navigation: NavigationType }> = ({
 
           <Div>
             <Div mb={40}>
-              <Text fontFamily={fontHauora} fontSize={fontSize} lineHeight={74}>
-                Access
-              </Text>
-              <Text fontFamily={fontHauora} fontSize={fontSize} lineHeight={74}>
-                to Pet
-              </Text>
-              <Text fontFamily={fontHauora} fontSize={fontSize} lineHeight={74}>
-                Experts
-              </Text>
+              {images[currentIndex].heading.map((item, index) => (
+                <Text
+                  key={index}
+                  fontFamily={fontHauoraMedium}
+                  fontSize={fontSize}
+                  lineHeight={58}
+                >
+                  {item}
+                </Text>
+              ))}
             </Div>
-
-            {/* <Image
-            w={"100%"}
-            h={400}
-            mb={40}
-            mx={"auto"}
-            style={{ objectFit: "contain" }}
-            source={require("./../assets/icons/splash-screen-image.png")}
-          /> */}
           </Div>
         </Div>
       </Layout>
@@ -138,7 +136,7 @@ const NewOnboardingScreen: React.FC<{ navigation: NavigationType }> = ({
       <FlatList
         data={images}
         ref={flatListRef}
-        style={{ marginBottom: 20, height: 0, backgroundColor: "#fff" }}
+        style={{ height: 0, backgroundColor: "#fff", pointerEvents: "none" }}
         keyExtractor={(item, i) => `${i}`}
         renderItem={({ item }) => (
           <Div
@@ -162,6 +160,32 @@ const NewOnboardingScreen: React.FC<{ navigation: NavigationType }> = ({
         showsHorizontalScrollIndicator={false}
         pagingEnabled
       />
+
+      {/* Dots Indicator */}
+      <Div
+        flexDir="row"
+        justifyContent="flex-start"
+        alignItems="center"
+        pl={50}
+        pb={50}
+        pt={50}
+        bg="#fff"
+      >
+        {images.map((_, index) => (
+          <Div
+            key={index}
+            style={{
+              height: currentIndex === index ? 5 : 10,
+              width: currentIndex === index ? 15 : 10,
+              borderRadius: 8,
+              borderWidth: 1,
+              borderColor: "#222",
+              backgroundColor: currentIndex === index ? "#222" : "transparent",
+              margin: 3,
+            }}
+          />
+        ))}
+      </Div>
     </>
   );
 };

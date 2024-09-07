@@ -4,7 +4,10 @@ import {
   GroupChannelCreateParams,
   GroupChannelModule,
 } from "@sendbird/chat/groupChannel";
-import { SendableMessage } from "@sendbird/chat/lib/__definition";
+import {
+  GroupChannelListQueryParams,
+  SendableMessage,
+} from "@sendbird/chat/lib/__definition";
 
 import { GroupChannelHandler } from "@sendbird/chat/groupChannel";
 
@@ -24,14 +27,6 @@ const sb = SendbirdChat.init({
 
 const eventEmitter = new NativeEventEmitter();
 
-// Add a channel event handler to listen for new messages
-const channelHandler = new GroupChannelHandler();
-channelHandler.onMessageReceived = (channel, message) => {
-  eventEmitter.emit("messageReceived", message);
-};
-
-sb.groupChannel.addGroupChannelHandler("UNIQUE_HANDLER_ID", channelHandler);
-
 const initializeSendbird = async (
   userId: string,
   nickname: string,
@@ -48,10 +43,66 @@ const initializeSendbird = async (
   }
 };
 
+// Add a channel event handler to listen for new messages
+const channelHandler = new GroupChannelHandler();
+channelHandler.onMessageReceived = (channel, message) => {
+  eventEmitter.emit("messageReceived", message);
+};
+
+channelHandler.onTypingStatusUpdated = (channel) => {
+  console.log("chat.v2.ts typingStatusUpdated", channel);
+  const members = channel.getTypingUsers();
+  console.log("chat.v2.ts typingStatusUpdated", members);
+  eventEmitter.emit("typingStatusUpdated", channel);
+};
+
+const sendTypingStatus = async (channelUrl: string, isTyping: boolean) => {
+  try {
+    const channel: GroupChannel = await sb.groupChannel.getChannel(channelUrl);
+    console.log("chat.v2.ts typingStatusUpdated", isTyping);
+    if (isTyping) {
+      channel.startTyping();
+    } else {
+      channel.endTyping();
+    }
+  } catch (error) {
+    console.error("Error updating typing status:", error);
+  }
+};
+
+sb.groupChannel.addGroupChannelHandler("UNIQUE_HANDLER_ID", channelHandler);
+
+//////////// tesign
+
+// const testing = async () => {
+//   const params = {
+//     userIdsFilter: {
+//       userIds: ["vjXJbuWcU4"],
+//       includeMode: true,
+//       queryType: "AND",
+//     },
+//   };
+
+//   const query = sb.groupChannel.createMyGroupChannelListQuery(
+//     params as GroupChannelListQueryParams
+//   );
+//   const channels = await query.next();
+
+//   console.log("query---=", query);
+//   console.log("query channels==", channels);
+
+//   // Only channel A is returned in a result list through the groupChannels parameter of the callback function.
+// };
+
+// testing();
+
+// //////////////////////
+
 // Function to retrieve messages from a group channel
 const getChannelMessages = async (channelUrl: string) => {
   try {
     const channel: GroupChannel = await sb.groupChannel.getChannel(channelUrl);
+
     const params: PreviousMessageListQueryParams = {
       limit: 20,
       reverse: false,
@@ -60,6 +111,7 @@ const getChannelMessages = async (channelUrl: string) => {
     };
     const query = channel.createPreviousMessageListQuery(params);
     const messages = await query.load();
+
     return messages;
   } catch (error) {
     console.error("Error retrieving messages:", error);
@@ -114,6 +166,7 @@ const sendMessage = async (channelUrl: string, messages: IMessage[]) => {
             .sendFileMessage(params)
             .onSucceeded((msg) => {
               console.log("Image message sent successfully:", msg);
+
               sentMessages.push(msg); // Collect sent message
               resolve(msg);
             })
@@ -159,4 +212,5 @@ export {
   connectGroupChannel,
   sendMessage,
   eventEmitter,
+  sendTypingStatus,
 };

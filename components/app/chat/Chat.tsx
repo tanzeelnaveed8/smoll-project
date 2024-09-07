@@ -17,6 +17,7 @@ import {
 import {
   connectGroupChannel,
   eventEmitter,
+  sb,
   sendMessage,
 } from "@/utils/chat.v2";
 import { SendBirdExtendedBaseMessage } from "@/store/types";
@@ -45,6 +46,8 @@ const Chat: React.FC<Props> = (props) => {
   const [lastMessagesEmpty, setLastMessagesEmpty] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [channelUrl, setChannelUrl] = useState<string | null>(null);
+  const [isSending, setIsSending] = useState(false);
+  const [showLoadEarlierBtn, setShowLoadEarlierBtn] = useState(true);
 
   const lastMessageIdRef = useRef<number>();
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -65,16 +68,6 @@ const Chat: React.FC<Props> = (props) => {
       play("message");
 
       receiving = true;
-
-      // setMessages((previousMessages) =>
-      //   GiftedChat.append(previousMessages, [
-      //     CometChatWrapper.transformMessage(
-      //       props.recipientId,
-      //       message,
-      //       props.chatFor
-      //     ),
-      //   ])
-      // );
 
       setTimeout(() => {
         receiving = false;
@@ -135,7 +128,12 @@ const Chat: React.FC<Props> = (props) => {
   useEffect(() => {
     eventEmitter.addListener("messageReceived", (message: BaseMessage) => {
       const transformedMessage = handleTranformSendbirdMessage([message]);
+      console.log("messaged received transformedMessages", transformedMessage);
       setMessages((prevMessages) => [...transformedMessage, ...prevMessages]);
+    });
+
+    eventEmitter.addListener("typingStatusUpdated", (channel) => {
+      console.log("typingStatusUpdated", channel);
     });
   }, []);
 
@@ -169,6 +167,9 @@ const Chat: React.FC<Props> = (props) => {
       const transformedMessages = handleTranformSendbirdMessage(
         response.messages
       );
+      if (transformedMessages.length === 0) {
+        setShowLoadEarlierBtn(false);
+      }
 
       setMessages(transformedMessages);
 
@@ -183,62 +184,38 @@ const Chat: React.FC<Props> = (props) => {
     }
   };
 
-  // const fetchMessages = async (isLoadingEarlier = false) => {
-  //   console.log("props.recipientId", props.recipientId);
-  //   console.log("user", user.id);
-
-  //   try {
-  //     if (!isLoadingEarlier) {
-  //       setIsLoading(true);
-  //     } else {
-  //       setIsLoadingEarlier(true);
-  //     }
-
-  //     const _user = await CometChatWrapper.getUser(user!.id);
-  //     console.log("_user==))", _user);
-
-  //     const fetchedMessages = await CometChatWrapper.fetchMessages(
-  //       props.recipientId,
-  //       10,
-  //       props.chatFor,
-  //       isLoadingEarlier ? lastMessageIdRef.current : undefined
-  //     );
-
-  //     if (fetchedMessages.length > 0) {
-  //       // Always update the lastMessageIdRef with the oldest message
-  //       lastMessageIdRef.current = Number(
-  //         fetchedMessages[fetchedMessages.length - 1]._id
-  //       );
-
-  //       // setMessages((prevMessages) => {
-  //       //   if (isLoadingEarlier) {
-  //       //     // For loading earlier messages, add them before the existing messages
-  //       //     return [...prevMessages, ...fetchedMessages];
-  //       //   } else {
-  //       //     // For initial load, replace all messages
-  //       //     return fetchedMessages;
-  //       //   }
-  //       // });
-  //     }
-
-  //     if (fetchedMessages.length === 0) {
-  //       setLastMessagesEmpty(true);
-  //     }
-
-  //     if (!isLoadingEarlier) {
-  //       setLoggedInUser(_user);
-  //     }
-  //   } finally {
-  //     setIsLoading(false);
-  //     setIsLoadingEarlier(false);
-  //   }
-  // };
-
   const handleLoadEarlier = async () => {
-    if (isLoadingEarlier) return;
+    if (isLoadingEarlier || !channelUrl) return;
 
     setIsLoadingEarlier(true);
-    await fetchMessages(true);
+
+    try {
+      const channel = await sb.groupChannel.getChannel(channelUrl);
+      const oldestMessage = messages[messages.length - 1];
+      const previousMessages = await channel.getMessagesByTimestamp(
+        +oldestMessage.createdAt,
+        {
+          // messageType: "MESG", // Adjust this if needed
+          nextResultSize: 0,
+          prevResultSize: 20, // Number of messages to fetch
+          includeMetaArray: true,
+          includeReactions: true,
+        }
+      );
+
+      console.log("previousMessages==", previousMessages);
+      if (previousMessages.length === 0) {
+        setShowLoadEarlierBtn(false);
+      }
+
+      const transformedMessages =
+        handleTranformSendbirdMessage(previousMessages);
+      setMessages((prevMessages) => [...prevMessages, ...transformedMessages]);
+    } catch (error) {
+      console.error("Failed to load earlier messages:", error);
+    } finally {
+      setIsLoadingEarlier(false);
+    }
   };
 
   const handleSend = async (newMessages: IMessage[] = []) => {
@@ -248,12 +225,19 @@ const Chat: React.FC<Props> = (props) => {
 
     console.log("newMessages", newMessages);
 
-    const response = await sendMessage(channelUrl, newMessages);
-    console.log("sendbird message response sent", response);
+    try {
+      if (newMessages[0].image) {
+        setIsSending(true);
+      }
+      const response = await sendMessage(channelUrl, newMessages);
+      console.log("sendbird message response sent", response);
 
-    if (!response) return;
-    const transformedMessages = handleTranformSendbirdMessage(response);
-    setMessages((prevMessages) => [...transformedMessages, ...prevMessages]);
+      if (!response) return;
+      const transformedMessages = handleTranformSendbirdMessage(response);
+      setMessages((prevMessages) => [...transformedMessages, ...prevMessages]);
+    } finally {
+      setIsSending(false);
+    }
 
     return;
     // Send message to CometChat
@@ -369,7 +353,7 @@ const Chat: React.FC<Props> = (props) => {
       onSend={(messages) => handleSend(messages)}
       onLoadEarlier={handleLoadEarlier}
       isLoadingEarlier={isLoadingEarlier}
-      loadEarlier={messages.length > 0}
+      loadEarlier={messages.length > 0 && showLoadEarlierBtn}
       isTyping={isTyping}
       user={{
         _id: user!.id,
@@ -382,7 +366,12 @@ const Chat: React.FC<Props> = (props) => {
       }
       listViewProps={{ showsVerticalScrollIndicator: false }}
       renderInputToolbar={(props) => (
-        <ChatComposer {...props} loggedInUser={loggedInUser!} />
+        <ChatComposer
+          {...props}
+          loggedInUser={loggedInUser!}
+          isSending={isSending}
+          channelUrl={channelUrl || ""}
+        />
       )}
       renderChatFooter={() => <Div h={24}></Div>}
       renderChatEmpty={renderChatEmpty}

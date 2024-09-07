@@ -15,9 +15,12 @@ import {
 } from "react-native-gifted-chat";
 import { Div, Input } from "react-native-magnus";
 import { showMessage } from "react-native-flash-message";
+import { sendTypingStatus } from "@/utils/chat.v2";
 
 interface Props extends InputToolbarProps<IMessage> {
   loggedInUser: CometChat.User;
+  isSending: boolean;
+  channelUrl: string;
 }
 
 const ChatComposer: React.FC<Props> = (props) => {
@@ -28,7 +31,7 @@ const ChatComposer: React.FC<Props> = (props) => {
   const [image, setImage] = useState<ImagePicker.ImagePickerResult | null>(
     null
   );
-  const [isSending, setIsSending] = useState(false);
+  // const [isSending, setIsSending] = useState(false);
 
   const handleOnSend = async (img?: { img: typeof image }) => {
     const sendProps = props as SendProps<IMessage>;
@@ -70,14 +73,14 @@ const ChatComposer: React.FC<Props> = (props) => {
         } as unknown as File;
 
         try {
-          setIsSending(true);
+          // setIsSending(true);
 
-          const uploadedFile = await uploadFile([fileObj]);
+          // const uploadedFile = await uploadFile([fileObj]);
 
           file = {
             name: fileUri.split("/").pop() ?? "",
             type: fileType,
-            uri: uploadedFile[0].url,
+            uri: fileUri,
             size: fileSize,
           };
 
@@ -102,8 +105,11 @@ const ChatComposer: React.FC<Props> = (props) => {
             type: "danger",
           });
         } finally {
-          setIsSending(false);
+          // setIsSending(false);
         }
+      } else {
+        sendProps.onSend([{ text: text }], true);
+        setText("");
       }
     }
   };
@@ -152,6 +158,12 @@ const ChatComposer: React.FC<Props> = (props) => {
                 placeholderTextColor="#7B7B7B"
                 borderColor="transparent"
                 onChangeText={(e) => {
+                  if (e.length > 0) {
+                    sendTypingStatus(props.channelUrl, true);
+                  } else {
+                    sendTypingStatus(props.channelUrl, false);
+                  }
+
                   setText(e);
                   handleTyping();
                   if (composerProps.onTextChanged) {
@@ -200,11 +212,11 @@ const ChatComposer: React.FC<Props> = (props) => {
                   h={40}
                   w={40}
                   rounded={100}
-                  disabled={isSending}
+                  disabled={props.isSending}
                   disableUnderlayColor={true}
                   onPress={handleOnSend}
                 >
-                  {isSending ? (
+                  {props.isSending ? (
                     <ActivityIndicator size="small" color={"#fff"} />
                   ) : (
                     <IconSend
