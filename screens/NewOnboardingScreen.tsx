@@ -7,36 +7,42 @@ import {
 import { NavigationType } from "@/store/types";
 import React, { useEffect, useRef, useState } from "react";
 import { Dimensions, FlatList, TouchableOpacity } from "react-native";
-import { Button, Div, Image, Text } from "react-native-magnus";
+import { Button, Div, Text, Image } from "react-native-magnus";
 import { useWindowDimensions } from "react-native";
+import Svg, { Image as SvgImage } from "react-native-svg";
 
 const images = [
   {
     img: require("./../assets/images/onboarding-screen/slide-1.png"),
+    // img: require("../assets/icons/onboarding-icons/icon-1.svg"),
     heading: ["Access", "to Pet", "Experts"],
     width: 260,
     height: 260,
   },
   {
     img: require("./../assets/images/onboarding-screen/slide-5.png"),
+    // img: require("../assets/icons/onboarding-icons/icon-2.svg"),
     heading: ["Recieve &", "Compare", "Upfront Prices"],
     width: 400,
     height: 380,
   },
   {
     img: require("./../assets/images/onboarding-screen/slide-2.png"),
+    // img: require("../assets/icons/onboarding-icons/icon-3.svg"),
     heading: ["Book", "appointments", "instantly"],
     width: 250,
     height: 300,
   },
   {
     img: require("./../assets/images/onboarding-screen/slide-3.png"),
+    // img: require("../assets/icons/onboarding-icons/icon-4.svg"),
     heading: ["Helping You", "Navigate Pet", "Loss"],
     width: 380,
     height: 350,
   },
   {
     img: require("./../assets/images/onboarding-screen/slide-4.png"),
+    // img: require("../assets/icons/onboarding-icons/icon-5.svg"),
     heading: ["Get your pet", "a PetID"],
     width: 300,
     height: 350,
@@ -151,6 +157,15 @@ const NewOnboardingScreen: React.FC<{ navigation: NavigationType }> = ({
               mt={"auto"}
               // bg="red"
             >
+              {/* <Svg
+                width={"80%"}
+                height={"90%"}
+                // mb={20}
+                // alignSelf="flex-start"
+                // style={{ objectFit: "contain" }}
+              >
+                <SvgImage href={item.img} width="100%" height="100%" />
+              </Svg> */}
               <Image
                 w={"80%"}
                 h={"90%"}
