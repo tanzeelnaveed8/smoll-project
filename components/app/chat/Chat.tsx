@@ -23,6 +23,7 @@ import {
 import { SendBirdExtendedBaseMessage } from "@/store/types";
 import {
   BaseMessage,
+  GroupChannel,
   MessageCollectionEventHandler,
 } from "@sendbird/chat/lib/__definition";
 
@@ -82,13 +83,13 @@ const Chat: React.FC<Props> = (props) => {
         // @ts-expect-error - no type provided
         onTypingStarted: (typingIndicator) => {
           if (typingIndicator.sender.uid === props.recipientId.toLowerCase()) {
-            setIsTyping(true);
+            // setIsTyping(true);
           }
         },
         // @ts-expect-error - no type provided
         onTypingEnded: (typingIndicator) => {
           if (typingIndicator.sender.uid === props.recipientId.toLowerCase()) {
-            setIsTyping(false);
+            // setIsTyping(false);
           }
         },
       })
@@ -132,10 +133,29 @@ const Chat: React.FC<Props> = (props) => {
       setMessages((prevMessages) => [...transformedMessage, ...prevMessages]);
     });
 
-    eventEmitter.addListener("typingStatusUpdated", (channel) => {
-      console.log("typingStatusUpdated", channel);
-    });
+    // eventEmitter.addListener("typingStatusUpdated", (channel) => {
+    //   // console.log("typingStatusUpdated", channel);
+    // });
   }, []);
+
+  useEffect(() => {
+    const handleTypingStatusUpdated = (channel: GroupChannel) => {
+      if (channel.url === channelUrl) {
+        const typingMembers = channel.getTypingUsers();
+
+        const isRecipientTyping = typingMembers.some(
+          (member) => member.userId === props.recipientId
+        );
+
+        setIsTyping(isRecipientTyping);
+      }
+    };
+
+    eventEmitter.addListener("typingStatusUpdated", handleTypingStatusUpdated);
+    return () => {
+      eventEmitter.removeAllListeners("typingStatusUpdated");
+    };
+  }, [channelUrl, props.recipientId]);
 
   // fetch messages
   const fetchMessages = async (isLoadingEarlier = false) => {

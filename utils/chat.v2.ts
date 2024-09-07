@@ -50,9 +50,6 @@ channelHandler.onMessageReceived = (channel, message) => {
 };
 
 channelHandler.onTypingStatusUpdated = (channel) => {
-  console.log("chat.v2.ts typingStatusUpdated", channel);
-  const members = channel.getTypingUsers();
-  console.log("chat.v2.ts typingStatusUpdated", members);
   eventEmitter.emit("typingStatusUpdated", channel);
 };
 
