@@ -104,6 +104,8 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
 
   const textAreaRef = useRef<any>(null);
 
+  console.log("selectedPet==", selectedPet);
+
   useEffect(() => {
     fetchAllPets();
   }, []);
@@ -120,12 +122,15 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
 
     setDescription(parsedCase.description);
     setDocuments(parsedCase.assets);
+
+    console.log("useeffect pet==", pet);
+
     setSelectedPet({ label: pet?.name ?? "", value: pet?.id ?? "" });
   }, [caseData]);
 
   const setPet = async () => {
     await fetchAllPets();
-    setSelectedPet({ label: petName, value: petId });
+    // setSelectedPet({ label: petName, value: petId });
   };
 
   const petOptions = useMemo<{ label: string; value: string }[]>(

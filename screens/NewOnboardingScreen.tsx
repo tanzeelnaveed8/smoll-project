@@ -60,6 +60,7 @@ const NewOnboardingScreen: React.FC<{ navigation: NavigationType }> = ({
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
+    const time = 3000;
     if (currentIndex === images.length - 1) {
       const timeout = setTimeout(() => {
         setCurrentIndex(0);
@@ -67,7 +68,7 @@ const NewOnboardingScreen: React.FC<{ navigation: NavigationType }> = ({
           index: 0,
           animated: true,
         });
-      }, 8000);
+      }, time);
       return () => clearTimeout(timeout);
       // return;
     }
@@ -78,7 +79,7 @@ const NewOnboardingScreen: React.FC<{ navigation: NavigationType }> = ({
         index: (currentIndex + 1) % images.length,
         animated: true,
       });
-    }, 8000); // Adjust the interval time as needed
+    }, time); // Adjust the interval time as needed
 
     return () => clearInterval(interval); // Cleanup on unmount
   }, [currentIndex]);

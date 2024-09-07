@@ -70,14 +70,14 @@ const ImageUpload: React.FC<Props> = ({
   const pickImage = async () => {
     if (disabled) return;
 
-    // let result = await ImagePicker.launchImageLibraryAsync({
-    //   mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    //   quality: 1,
-    // });
-
-    let result = await DocumentPicker.getDocumentAsync({
-      type: ["image/*", "application/pdf"],
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 1,
     });
+
+    // let result = await DocumentPicker.getDocumentAsync({
+    //   type: ["image/*", "application/pdf"],
+    // });
 
     if (result.canceled) return;
 
