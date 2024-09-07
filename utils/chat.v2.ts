@@ -5,9 +5,7 @@ import {
   GroupChannelModule,
 } from "@sendbird/chat/groupChannel";
 import { SendableMessage } from "@sendbird/chat/lib/__definition";
-
 import { GroupChannelHandler } from "@sendbird/chat/groupChannel";
-
 import {
   FileMessageCreateParams,
   MessageTypeFilter,
@@ -27,16 +25,19 @@ sb.groupChannel.addGroupChannelHandler("UNIQUE_HANDLER_ID", channelHandler);
 
 const initializeSendbird = async (
   userId: string,
+  playerId: string,
   nickname: string,
   profileUrl: string
 ) => {
-  const user = await sb.connect(
-    userId,
-    "578655c97a30cd510663efe289dafbbd728770a6"
-  );
+  await sb.connect(userId, "578655c97a30cd510663efe289dafbbd728770a6");
 
-  console.log("user", user);
   await sb.updateCurrentUserInfo({ nickname, profileUrl });
+  await sb.currentUser?.updateMetaData(
+    {
+      playerId: playerId,
+    },
+    true
+  );
 };
 
 const sendTypingStatus = async (channelUrl: string, isTyping: boolean) => {

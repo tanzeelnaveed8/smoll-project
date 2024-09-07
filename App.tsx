@@ -225,7 +225,7 @@ const App = () => {
     // const sendbirdUserId = "419772";
     // const sendbirdAccessToken = "d75dad4fde9a54d0518efeb8b62d9ac42d267930";
 
-    initializeSendbird(user.id, user.name, user.profileImg.url);
+    initializeSendbird(user.id, user.playerId, user.name, user.profileImg.url);
   }, [user]);
 
   if (!fontsLoaded) {

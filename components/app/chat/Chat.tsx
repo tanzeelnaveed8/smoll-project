@@ -169,6 +169,7 @@ const Chat: React.FC<Props> = (props) => {
       const response = await sendMessage(channelUrl, newMessages);
 
       if (!response) return;
+
       const transformedMessages = handleTranformSendbirdMessage(response);
       setMessages((prevMessages) => [...transformedMessages, ...prevMessages]);
     } finally {
