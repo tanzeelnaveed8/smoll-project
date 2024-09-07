@@ -94,7 +94,7 @@ const EditInfoScreen: React.FC<{ navigation: NavigationType }> = ({
       <ButtonPrimary
         loading={loading}
         onPress={handleConfirm}
-        bgColor="primary"
+        // bgColor="primary"
       >
         Confirm
       </ButtonPrimary>

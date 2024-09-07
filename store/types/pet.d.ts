@@ -21,7 +21,7 @@ export type PetDetail = {
   gender: PetGenderEnum;
   breed: string;
   dob: string;
-  chipNumber: number;
+  chipNumber: string;
   photos: UploadedFile[];
   healthHistory?: HealthHistory[];
   preExistingConditions: string;

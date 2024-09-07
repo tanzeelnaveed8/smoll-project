@@ -119,6 +119,8 @@ const HealthHistoryModal = (props: PropTypes) => {
     return !form.name || !form.date || !form.description;
   }, [form]);
 
+  console.log("health history form", form);
+
   return (
     <BottomSheet
       isVisible={open}
@@ -223,6 +225,17 @@ const HealthHistoryModal = (props: PropTypes) => {
               horizontal
               showsHorizontalScrollIndicator={false}
             >
+              <ImageUpload
+                plusIcon={true}
+                w={139}
+                h={150}
+                mr={12}
+                noImage
+                onChange={(file) => {
+                  handleFormChange("documents", file);
+                }}
+              />
+
               {form.documents.map((item) => (
                 <ImageUpload
                   plusIcon={false}
@@ -237,16 +250,6 @@ const HealthHistoryModal = (props: PropTypes) => {
                   // }}
                 />
               ))}
-
-              <ImageUpload
-                plusIcon={true}
-                w={139}
-                h={150}
-                noImage
-                onChange={(file) => {
-                  handleFormChange("documents", file);
-                }}
-              />
             </ScrollDiv>
           </Div>
         </ScrollDiv>

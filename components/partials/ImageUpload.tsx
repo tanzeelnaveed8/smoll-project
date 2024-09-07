@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import * as DocumentPicker from "expo-document-picker";
+
 import * as ImagePicker from "expo-image-picker";
 import {
   IconEditCircle,
@@ -68,9 +70,13 @@ const ImageUpload: React.FC<Props> = ({
   const pickImage = async () => {
     if (disabled) return;
 
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      quality: 1,
+    // let result = await ImagePicker.launchImageLibraryAsync({
+    //   mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    //   quality: 1,
+    // });
+
+    let result = await DocumentPicker.getDocumentAsync({
+      type: ["image/*", "application/pdf"],
     });
 
     if (result.canceled) return;
@@ -129,6 +135,7 @@ const ImageUpload: React.FC<Props> = ({
       <Div position="relative" mr={mr ? mr : 0}>
         {image ? (
           <Button
+            bg="transparent"
             px={0}
             rounded={rounded ? rounded : 0}
             py={0}

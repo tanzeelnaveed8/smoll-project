@@ -49,7 +49,7 @@ const PetProfileScreen: React.FC<Props> = (props) => {
     photos: [],
     breed: "",
     dob: new Date().toString(),
-    chipNumber: 0,
+    chipNumber: "",
     preExistingConditions: "",
   });
 
