@@ -3,7 +3,9 @@ import Chat from "@/components/app/chat/Chat";
 import { NavigationType } from "@/store/types";
 import { useRoute } from "@react-navigation/native";
 import { useState } from "react";
+import { View } from "react-native-animatable";
 import { IMessage } from "react-native-gifted-chat";
+import { Text } from "react-native-magnus";
 
 interface Props {
   navigation: NavigationType;
@@ -39,9 +41,12 @@ const CounsellingChatScreen: React.FC<Props> = (props) => {
   // ];
 
   return (
-    <Layout showBack onBackPress={() => props.navigation.goBack()}>
-      <Chat initialMessages={[]} recipientId={counsellorId} />
-    </Layout>
+    // <Layout showBack onBackPress={() => props.navigation.goBack()}>
+    //   <Chat initialMessages={[]} recipientId={counsellorId} />
+    // </Layout>
+    <View>
+      <Text>Hello</Text>
+    </View>
   );
 };
 
