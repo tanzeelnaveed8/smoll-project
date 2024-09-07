@@ -15,7 +15,6 @@ import {
   UserMessageCreateParams,
 } from "@sendbird/chat/message";
 import { IMessage } from "react-native-gifted-chat";
-import { NativeEventEmitter, NativeModules } from "react-native";
 
 const sb = SendbirdChat.init({
   appId: "BA0CAD93-02C5-4AF4-87B4-AEB89048E67F",
@@ -31,7 +30,12 @@ const initializeSendbird = async (
   nickname: string,
   profileUrl: string
 ) => {
-  await sb.connect(userId);
+  const user = await sb.connect(
+    userId,
+    "578655c97a30cd510663efe289dafbbd728770a6"
+  );
+
+  console.log("user", user);
   await sb.updateCurrentUserInfo({ nickname, profileUrl });
 };
 
@@ -58,6 +62,8 @@ const getChannelMessages = async (channelUrl: string) => {
     };
     const query = channel.createPreviousMessageListQuery(params);
     const messages = await query.load();
+
+    console.log("messages", messages);
 
     return messages;
   } catch (error) {

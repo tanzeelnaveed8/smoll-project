@@ -48,7 +48,9 @@ const Chat: React.FC<Props> = (props) => {
         _id: extendedMsg.messageId,
         text: extendedMsg.message,
         createdAt: extendedMsg.createdAt,
-        image: extendedMsg.plainUrl,
+        // Add authentication to the image URL
+        // @ts-expect-error - has url in it but due to wrong type it is not showing.
+        image: extendedMsg.url ? `${extendedMsg.url}` : undefined,
         user: {
           _id: extendedMsg.sender?.userId,
           name: extendedMsg.sender?.nickname,
@@ -137,7 +139,6 @@ const Chat: React.FC<Props> = (props) => {
       const previousMessages = await channel.getMessagesByTimestamp(
         +oldestMessage.createdAt,
         {
-          // messageType: "MESG", // Adjust this if needed
           nextResultSize: 0,
           prevResultSize: 20, // Number of messages to fetch
           includeMetaArray: true,
@@ -257,20 +258,6 @@ const Chat: React.FC<Props> = (props) => {
       )}
       renderChatFooter={() => <Div h={24}></Div>}
       renderChatEmpty={renderChatEmpty}
-      renderMessageImage={(props) => (
-        <Image
-          source={{
-            uri: props?.currentMessage?.image,
-            method: "GET",
-            headers: {
-              "Api-Token": "578655c97a30cd510663efe289dafbbd728770a6",
-              Accept: "*/*",
-              "Access-Control-Allow-Origin": "*",
-            },
-          }}
-          style={{ width: 160, height: 100 }}
-        />
-      )}
     />
   );
 };

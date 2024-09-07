@@ -1,6 +1,6 @@
+import { StripeProvider } from "@stripe/stripe-react-native";
 import { SafeAreaView, StyleSheet } from "react-native";
 import { Text, ThemeProvider } from "react-native-magnus";
-import { StripeProvider } from "@stripe/stripe-react-native";
 
 import * as Font from "expo-font";
 import { useEffect, useState } from "react";
@@ -58,36 +58,20 @@ import ExpertsScheduleConfirmationScreen from "./screens/Experts/ExpertsSchedule
 import ExpertsScheduleSuccessScreen from "./screens/Experts/ExpertsScheduleSuccessScreen";
 import NotificationScreen from "./screens/NotificationScreen";
 import NotificationTestScreen from "./screens/NotificationTestScreen";
+import SplashScreen from "./screens/SplashScreen";
 import * as rootNavigation from "./utils/root-navigation";
 import { navigationRef } from "./utils/root-navigation";
-import SplashScreen from "./screens/SplashScreen";
 
-import AppointmentsScreen from "./screens/Appointments/AppointmentsScreen";
-import AppointmentDetailsScreen from "./screens/Appointments/AppointmentDetailsScreen";
-import CaseQuotesScreen from "./screens/Cases/CaseQuotesScreen";
-import CaseQuoteDescriptionScreen from "./screens/Cases/CaseQuoteDescriptionScreen";
-import UnavailableScreen from "./screens/Consultation/UnavailableScreen";
-import PaymentDetailsScreen from "./screens/Cases/PaymentDetailsScreen";
-import CasesQuotesListScreen from "./screens/Cases/CasesQuotesListScreen";
-import NewOnboardingScreen from "./screens/NewOnboardingScreen";
 import SignupScreen from "./components/app/onboarding/SignupScreen";
-import SendbirdChat, { SessionHandler } from "@sendbird/chat";
-import {
-  OpenChannelCreateParams,
-  OpenChannelModule,
-} from "@sendbird/chat/openChannel";
-import {
-  GroupChannelCreateParams,
-  GroupChannelModule,
-} from "@sendbird/chat/groupChannel";
-import {
-  BaseMessage,
-  MentionType,
-  MessageMetaArray,
-  PushNotificationDeliveryOption,
-  UserMessageCreateParams,
-} from "@sendbird/chat/message";
-import { eventEmitter, initializeSendbird } from "./utils/chat.v2";
+import AppointmentDetailsScreen from "./screens/Appointments/AppointmentDetailsScreen";
+import AppointmentsScreen from "./screens/Appointments/AppointmentsScreen";
+import CaseQuoteDescriptionScreen from "./screens/Cases/CaseQuoteDescriptionScreen";
+import CaseQuotesScreen from "./screens/Cases/CaseQuotesScreen";
+import CasesQuotesListScreen from "./screens/Cases/CasesQuotesListScreen";
+import PaymentDetailsScreen from "./screens/Cases/PaymentDetailsScreen";
+import UnavailableScreen from "./screens/Consultation/UnavailableScreen";
+import NewOnboardingScreen from "./screens/NewOnboardingScreen";
+import { initializeSendbird } from "./utils/chat.v2";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
