@@ -14,8 +14,8 @@ const images = [
   {
     img: require("./../assets/images/onboarding-screen/slide-1.png"),
     heading: ["Access", "to Pet", "Experts"],
-    width: 330,
-    height: 330,
+    width: 260,
+    height: 260,
   },
   {
     img: require("./../assets/images/onboarding-screen/slide-5.png"),
@@ -60,7 +60,7 @@ const NewOnboardingScreen: React.FC<{ navigation: NavigationType }> = ({
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
-    const time = 3000;
+    const time = 8000;
     if (currentIndex === images.length - 1) {
       const timeout = setTimeout(() => {
         setCurrentIndex(0);
@@ -132,61 +132,68 @@ const NewOnboardingScreen: React.FC<{ navigation: NavigationType }> = ({
             </Div>
           </Div>
         </Div>
-      </Layout>
 
-      <FlatList
-        data={images}
-        ref={flatListRef}
-        style={{ height: 0, backgroundColor: "#fff", pointerEvents: "none" }}
-        keyExtractor={(item, i) => `${i}`}
-        renderItem={({ item }) => (
-          <Div
-            w={windowWidth}
-            h={400}
-            justifyContent="center"
-            alignItems="center"
-            mt={"auto"}
-          >
-            <Image
-              w={item.width}
-              h={item.height}
-              alignSelf="flex-start"
-              mx={"auto"}
-              style={{ objectFit: "contain" }}
-              source={item.img}
+        <FlatList
+          data={images}
+          ref={flatListRef}
+          style={{
+            height: 0,
+            backgroundColor: "#fff",
+            pointerEvents: "none",
+          }}
+          keyExtractor={(item, i) => `${i}`}
+          renderItem={({ item }) => (
+            <Div
+              w={windowWidth}
+              h={350}
+              justifyContent="flex-end"
+              alignItems="center"
+              mt={"auto"}
+              // bg="red"
+            >
+              <Image
+                w={"80%"}
+                h={"90%"}
+                mb={20}
+                alignSelf="flex-start"
+                // mx={"auto"}
+                style={{ objectFit: "contain" }}
+                source={item.img}
+              />
+            </Div>
+          )}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          pagingEnabled
+        />
+
+        {/* Dots Indicator */}
+        <Div
+          flexDir="row"
+          justifyContent="flex-start"
+          alignItems="center"
+          pl={20}
+          pb={30}
+          pt={20}
+          bg="#fff"
+        >
+          {images.map((_, index) => (
+            <Div
+              key={index}
+              style={{
+                height: currentIndex === index ? 5 : 10,
+                width: currentIndex === index ? 15 : 10,
+                borderRadius: 8,
+                borderWidth: 1,
+                borderColor: "#222",
+                backgroundColor:
+                  currentIndex === index ? "#222" : "transparent",
+                margin: 3,
+              }}
             />
-          </Div>
-        )}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        pagingEnabled
-      />
-
-      {/* Dots Indicator */}
-      <Div
-        flexDir="row"
-        justifyContent="flex-start"
-        alignItems="center"
-        pl={50}
-        pb={50}
-        pt={50}
-        bg="#fff"
-      >
-        {images.map((_, index) => (
-          <Div
-            key={index}
-            style={{
-              height: currentIndex === index ? 5 : 10,
-              width: currentIndex === index ? 15 : 10,
-              borderRadius: 8,
-              borderWidth: 1,
-              borderColor: "#222",
-              backgroundColor: currentIndex === index ? "#222" : "transparent",
-              margin: 3,
-            }}
-          />
-        ))}
-      </Div>
+          ))}
+        </Div>
+      </Layout>
     </>
   );
 };
