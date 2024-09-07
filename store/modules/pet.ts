@@ -43,7 +43,6 @@ export const usePetStore = create<PetState>((set, get) => ({
 
   fetchPetDetails: async (id) => {
     const response = await api.get(`/member/pets/${id}`);
-    console.log("fetchPetDetails", response.data);
 
     const petMap = get().petsDetailMap.set(response.data.id, response.data);
     // const healthHistoryData = response.data.healthHistory;

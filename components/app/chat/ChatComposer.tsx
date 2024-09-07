@@ -115,15 +115,15 @@ const ChatComposer: React.FC<Props> = (props) => {
   };
 
   const handleTyping = () => {
-    // CometChatWrapper.sendTypingIndicator(props.loggedInUser.getUid());
-
     if (typingTimeoutRef.current) {
       clearTimeout(typingTimeoutRef.current);
     }
 
+    sendTypingStatus(props.channelUrl, true);
+
     typingTimeoutRef.current = setTimeout(() => {
-      // CometChatWrapper.stopTypingIndicator(props.loggedInUser.getUid());
-    }, 500);
+      sendTypingStatus(props.channelUrl, false);
+    }, 2000);
   };
 
   const pickImage = async () => {
@@ -158,12 +158,6 @@ const ChatComposer: React.FC<Props> = (props) => {
                 placeholderTextColor="#7B7B7B"
                 borderColor="transparent"
                 onChangeText={(e) => {
-                  if (e.length > 0) {
-                    sendTypingStatus(props.channelUrl, true);
-                  } else {
-                    sendTypingStatus(props.channelUrl, false);
-                  }
-
                   setText(e);
                   handleTyping();
                   if (composerProps.onTextChanged) {

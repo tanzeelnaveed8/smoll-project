@@ -56,7 +56,7 @@ channelHandler.onTypingStatusUpdated = (channel) => {
 const sendTypingStatus = async (channelUrl: string, isTyping: boolean) => {
   try {
     const channel: GroupChannel = await sb.groupChannel.getChannel(channelUrl);
-    console.log("chat.v2.ts typingStatusUpdated", isTyping);
+
     if (isTyping) {
       channel.startTyping();
     } else {

@@ -120,6 +120,8 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
   };
   // deleteHealthHistoryHandler(`${item.id}`);
 
+  console.log("petDetailsData", petDetailsData);
+
   const petDetails = [
     {
       title: "Name",
@@ -128,8 +130,8 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
       fileName: "name",
     },
     {
-      title: "Date of Birth",
-      value: petDetailsData?.dob,
+      title: "Age",
+      value: petDetailsData?.age,
       link: "PetEditInfoScreen",
       fileName: "dob",
     },
