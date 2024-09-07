@@ -66,7 +66,7 @@ const NewOnboardingScreen: React.FC<{ navigation: NavigationType }> = ({
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
-    const time = 8000;
+    const time = 3000;
     if (currentIndex === images.length - 1) {
       const timeout = setTimeout(() => {
         setCurrentIndex(0);

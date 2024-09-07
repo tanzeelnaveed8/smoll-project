@@ -19,7 +19,6 @@ import CounsellingInboxScreen from "./screens/Counselling/CounsellingInboxScreen
 import CounsellingRequestScreen from "./screens/Counselling/CounsellingRequestScreen";
 import HomeScreen from "./screens/HomeScreen";
 import { SocketProvider } from "./socket/provider";
-import { CometChatWrapper } from "./utils/chat";
 
 import PartnerVetConfirmationScreen from "./screens/Cases/PartnerVetConfirmationScreen";
 import PartnerVetDetailScreen from "./screens/Cases/PartnerVetDetailScreen";
@@ -126,8 +125,6 @@ const App = () => {
   useEffect(() => {
     loadFonts().then(() => setFontsLoaded(true));
 
-    CometChatWrapper.init();
-
     // Remove this method to stop OneSignal Debugging
     OneSignal.Debug.setLogLevel(LogLevel.Verbose);
     // OneSignal Initialization
@@ -215,7 +212,6 @@ const App = () => {
 
   useEffect(() => {
     if (user) {
-      CometChatWrapper.initUIKit(user.id);
       OneSignal.login(user.playerId);
     }
   }, [user]);
