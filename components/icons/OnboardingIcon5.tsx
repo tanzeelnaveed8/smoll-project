@@ -2,9 +2,16 @@ import React from "react";
 
 import Svg, { Path, G, Defs, ClipPath, Rect } from "react-native-svg";
 
-const OnboardingIcon5 = () => {
+const OnboardingIcon5: React.FC<{ width?: number; height?: number }> = ({
+  width,
+  height,
+}) => {
   return (
-    <Svg width="120.125" height="209.023" viewBox="0 0 120.125 209.023">
+    <Svg
+      width={width ? width : "120.125"}
+      height={height ? height : "209.023"}
+      viewBox="0 0 120.125 209.023"
+    >
       <G id="Group_3667" data-name="Group 3667" transform="translate(0 -0.283)">
         <G
           id="Group_3461"

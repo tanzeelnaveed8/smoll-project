@@ -2,12 +2,15 @@ import React from "react";
 
 import Svg, { Path, G, Defs, ClipPath, Rect } from "react-native-svg";
 
-const OnboardingIcon1 = () => {
+const OnboardingIcon1: React.FC<{ width?: number; height?: number }> = ({
+  width,
+  height,
+}) => {
   return (
     <Svg
       //   xmlns="http://www.w3.org/2000/svg"
-      width="273.913"
-      height="273.597"
+      width={width ? width : "273.913"}
+      height={height ? height : "273.597"}
       viewBox="0 0 273.913 273.597"
     >
       <Defs>

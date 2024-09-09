@@ -40,6 +40,10 @@ import TabNavigationBar from "@/components/app/TabNavigationBar";
 import { showMessage } from "react-native-flash-message";
 import { useNotificationStore } from "@/store/modules/notification";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import OnboardingIcon1 from "@/components/icons/OnboardingIcon1";
+import OnboardingIcon2 from "@/components/icons/OnboardingIcon2";
+import OnboardingIcon4 from "@/components/icons/OnboardingIcon4";
+import OnboardingIcon5 from "@/components/icons/OnboardingIcon5";
 
 interface Props {
   navigation: NavigationType;
@@ -51,9 +55,7 @@ interface OptionTab {
   description: string;
   value: "counselling" | "petProfileScreen" | "appointments";
   loading: boolean;
-  img: ImageSourcePropType;
-  h: number;
-  w: number;
+  icon: React.JSX.Element;
 }
 
 const HomeScreen: React.FC<Props> = (props) => {
@@ -68,27 +70,21 @@ const HomeScreen: React.FC<Props> = (props) => {
       value: "appointments",
       description: "All your appointment shows here",
       loading: false,
-      img: require("../assets/images/appointment_.png"),
-      h: 65,
-      w: 55,
+      icon: <OnboardingIcon2 width={65} height={65} />,
     },
     {
       name: "Human Counselling",
       value: "counselling",
       description: "Talk to somone knows how it feels loosing a pet",
       loading: false,
-      img: require("../assets/images/human-counselling.png"),
-      h: 50,
-      w: 50,
+      icon: <OnboardingIcon4 width={55} height={55} />,
     },
     {
       name: "PetID",
       value: "petProfileScreen",
       description: "Add and track your pet’s records",
       loading: false,
-      img: require("../assets/images/pet-id.png"),
-      h: 60,
-      w: 60,
+      icon: <OnboardingIcon5 width={55} height={55} />,
     },
   ]);
 
@@ -175,7 +171,7 @@ const HomeScreen: React.FC<Props> = (props) => {
       >
         <ScrollDiv showsVerticalScrollIndicator={false}>
           <Div
-            mb={20}
+            mb={40}
             mt={5}
             flexDir="row"
             justifyContent="space-between"
@@ -238,6 +234,7 @@ const HomeScreen: React.FC<Props> = (props) => {
               paddingVertical: 15,
               flexDirection: "row",
               marginBottom: 20,
+              alignItems: "center",
             }}
             onPress={() => {
               props.navigation.navigate("ExpertsListScreen");
@@ -298,15 +295,7 @@ const HomeScreen: React.FC<Props> = (props) => {
               </Div>
             </Div>
 
-            <Image
-              source={require("../assets/images/homescreen-hero.png")}
-              w={200}
-              h={170}
-              style={{ objectFit: "contain" }}
-              // position="absolute"
-              // right={0}
-              // bottom={0}
-            />
+            <OnboardingIcon1 width={130} height={130} />
           </TouchableOpacity>
 
           <Div>
@@ -332,26 +321,27 @@ const HomeScreen: React.FC<Props> = (props) => {
             {options.map((item, index) => (
               <Button
                 key={item.value}
-                px={16}
+                px={14}
                 py={12}
                 borderWidth={1.2}
                 borderColor="#222"
                 mb={index + 1 === options.length ? 0 : 8}
                 rounded={20}
                 w={"100%"}
+                h={80}
                 disabled={item.loading}
                 onPress={() => handleOptionTabPress(item)}
                 bg="#fff"
                 underlayColor="#f3f3f3"
               >
-                <Div flex={1} flexDir="row" alignItems="center">
-                  <Image
-                    source={item.img}
-                    w={item.w}
-                    h={item.h}
-                    mr={12}
-                    style={index !== 0 ? { objectFit: "contain" } : {}}
-                  />
+                <Div
+                  flex={1}
+                  flexDir="row"
+                  alignItems="center"
+                  style={{ gap: 12 }}
+                >
+                  {item.icon}
+
                   <Div flex={1}>
                     <Text
                       fontSize={"xl"}

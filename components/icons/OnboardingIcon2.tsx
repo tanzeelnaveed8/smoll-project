@@ -11,9 +11,16 @@ import Svg, {
   Image,
 } from "react-native-svg";
 
-const OnboardingIcon2 = () => {
+const OnboardingIcon2: React.FC<{ width?: number; height?: number }> = ({
+  width,
+  height,
+}) => {
   return (
-    <Svg width="348" height="290" viewBox="0 0 348 290">
+    <Svg
+      width={width ? width : "348"}
+      height={height ? height : "290"}
+      viewBox="0 0 348 290"
+    >
       <Defs>
         <Pattern
           id="pattern"

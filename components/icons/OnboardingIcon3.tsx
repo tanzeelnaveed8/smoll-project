@@ -11,9 +11,16 @@ import Svg, {
   Image,
 } from "react-native-svg";
 
-const OnboardingIcon3 = () => {
+const OnboardingIcon3: React.FC<{ width?: number; height?: number }> = ({
+  width,
+  height,
+}) => {
   return (
-    <Svg width="291" height="291" viewBox="0 0 291 291">
+    <Svg
+      width={width ? width : "291"}
+      height={height ? height : "291"}
+      viewBox="0 0 291 291"
+    >
       <Image
         id="Image_10"
         data-name="Image 10"
