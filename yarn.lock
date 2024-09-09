@@ -757,23 +757,6 @@
     "@babel/helper-validator-identifier" "^7.24.7"
     to-fast-properties "^2.0.0"
 
-"@cometchat/calls-sdk-react-native@^4.0.7":
-  version "4.0.7"
-  resolved "https://registry.yarnpkg.com/@cometchat/calls-sdk-react-native/-/calls-sdk-react-native-4.0.7.tgz#b442e79bba986bd527498daeb42df44fa84d12a9"
-  integrity sha512-85q7WzIB5nnMasEKKCvT/Enp9FaHE2paLqicE0C22SHkNMdQgWtEz7Vng2/ivZFGZUfOWwN2hl6RQlRBm3rM6A==
-
-"@cometchat/chat-sdk-react-native@^4.0.10":
-  version "4.0.10"
-  resolved "https://registry.yarnpkg.com/@cometchat/chat-sdk-react-native/-/chat-sdk-react-native-4.0.10.tgz#86a4f811fe87e4a32e84233ca5d987fd11ad2be1"
-  integrity sha512-zNqglB5wmNYVZ+9HstTbJa04gGOa5/Bc7mcHnC84Rq2xULVSmuYgFwQpxJb9PYCnWiHYMuvuLLkGpiza8v3uXQ==
-
-"@cometchat/chat-uikit-react-native@^4.3.16":
-  version "4.3.16"
-  resolved "https://registry.yarnpkg.com/@cometchat/chat-uikit-react-native/-/chat-uikit-react-native-4.3.16.tgz#aa8618fb00ca2c51048cdbe5e7254b0c563cb727"
-  integrity sha512-tIWH1U1szuiHZK2iERJAfxDzn90AAEfMpdsag/Wj8fGShZpnSCW8UNJVPQwyvdxuBojhscD8aWdDOBgSDfZk7g==
-  dependencies:
-    "@react-native-clipboard/clipboard" "^1.13.2"
-
 "@expo/bunyan@^4.0.0":
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@expo/bunyan/-/bunyan-4.0.0.tgz#be0c1de943c7987a9fbd309ea0b1acd605890c7b"
@@ -1288,11 +1271,6 @@
   version "1.13.2"
   resolved "https://registry.yarnpkg.com/@react-native-clipboard/clipboard/-/clipboard-1.13.2.tgz#28adcfc43ed2addddf79a59198ec1b25087c115e"
   integrity sha512-uVM55oEGc6a6ZmSATDeTcMm55A/C1km5X47g0xaoF0Zagv7N/8RGvLceA5L/izPwflIy78t7XQeJUcnGSib0nA==
-
-"@react-native-clipboard/clipboard@^1.13.2":
-  version "1.14.1"
-  resolved "https://registry.yarnpkg.com/@react-native-clipboard/clipboard/-/clipboard-1.14.1.tgz#835f82fc86881a0808a8405f2576617bb5383554"
-  integrity sha512-SM3el0A28SwoeJljVNhF217o0nI4E7RfalLmuRQcT1/7tGcxUjgFa3jyrEndYUct8/uxxK5EUNGUu1YEDqzxqw==
 
 "@react-native-community/cli-clean@13.6.9":
   version "13.6.9"
