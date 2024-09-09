@@ -9,50 +9,37 @@ import React, { useEffect, useRef, useState } from "react";
 import { Dimensions, FlatList, TouchableOpacity } from "react-native";
 import { Button, Div, Text, Image } from "react-native-magnus";
 import { useWindowDimensions } from "react-native";
-import Svg, { Image as SvgImage } from "react-native-svg";
+
+import OnboardingIcon1 from "@/components/icons/OnboardingIcon1";
+import OnboardingIcon2 from "@/components/icons/OnboardingIcon2";
+import OnboardingIcon3 from "@/components/icons/OnboardingIcon3";
+import OnboardingIcon4 from "@/components/icons/OnboardingIcon4";
+import OnboardingIcon5 from "@/components/icons/OnboardingIcon5";
 
 const images = [
   {
-    img: require("./../assets/images/onboarding-screen/slide-1.png"),
-    // img: require("../assets/icons/onboarding-icons/icon-1.svg"),
+    img: <OnboardingIcon1 />,
     heading: ["Access", "to Pet", "Experts"],
-    width: 260,
-    height: 260,
+    style: { transform: [{ scale: 1.1 }], paddingLeft: 20 },
   },
   {
-    img: require("./../assets/images/onboarding-screen/slide-5.png"),
-    // img: require("../assets/icons/onboarding-icons/icon-2.svg"),
+    img: <OnboardingIcon2 />,
     heading: ["Recieve &", "Compare", "Upfront Prices"],
-    width: 400,
-    height: 380,
   },
   {
-    img: require("./../assets/images/onboarding-screen/slide-2.png"),
-    // img: require("../assets/icons/onboarding-icons/icon-3.svg"),
+    img: <OnboardingIcon3 />,
     heading: ["Book", "appointments", "instantly"],
-    width: 250,
-    height: 300,
   },
   {
-    img: require("./../assets/images/onboarding-screen/slide-3.png"),
-    // img: require("../assets/icons/onboarding-icons/icon-4.svg"),
+    img: <OnboardingIcon4 />,
     heading: ["Helping You", "Navigate Pet", "Loss"],
-    width: 380,
-    height: 350,
+    style: { transform: [{ scale: 1.1 }], paddingLeft: 50 },
   },
   {
-    img: require("./../assets/images/onboarding-screen/slide-4.png"),
-    // img: require("../assets/icons/onboarding-icons/icon-5.svg"),
+    img: <OnboardingIcon5 />,
     heading: ["Get your pet", "a PetID"],
-    width: 300,
-    height: 350,
+    style: { transform: [{ scale: 1.3 }], paddingLeft: 50 },
   },
-
-  // {
-  //   img: require("./../assets/images/onboarding-screen/slide-1.png"),
-  //   width: 350,
-  //   height: 350,
-  // },
 ];
 
 const windowWidth = Dimensions.get("window").width;
@@ -148,33 +135,16 @@ const NewOnboardingScreen: React.FC<{ navigation: NavigationType }> = ({
             pointerEvents: "none",
           }}
           keyExtractor={(item, i) => `${i}`}
-          renderItem={({ item }) => (
+          renderItem={({ item }: { item: (typeof images)[0] }) => (
             <Div
               w={windowWidth}
               h={350}
-              justifyContent="flex-end"
-              alignItems="center"
+              justifyContent="center"
+              alignItems="flex-start"
               mt={"auto"}
-              // bg="red"
+              // pl={50}
             >
-              {/* <Svg
-                width={"80%"}
-                height={"90%"}
-                // mb={20}
-                // alignSelf="flex-start"
-                // style={{ objectFit: "contain" }}
-              >
-                <SvgImage href={item.img} width="100%" height="100%" />
-              </Svg> */}
-              <Image
-                w={"80%"}
-                h={"90%"}
-                mb={20}
-                alignSelf="flex-start"
-                // mx={"auto"}
-                style={{ objectFit: "contain" }}
-                source={item.img}
-              />
+              <Div style={item.style ? { ...item.style } : {}}>{item.img}</Div>
             </Div>
           )}
           horizontal
