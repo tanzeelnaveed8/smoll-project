@@ -7,7 +7,7 @@ import {
   fontHauoraSemiBold,
   fontHeading,
 } from "@/constant/constant";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Text, Div, Button, ScrollDiv } from "react-native-magnus";
 import InputField from "@/components/partials/InputField";
 import DatePickerComponent from "@/components/partials/DatePickerComponent";
@@ -17,6 +17,7 @@ import { usePetStore } from "@/store/modules/pet";
 import { useToast } from "react-native-toast-notifications";
 import TextAreaField from "@/components/partials/TextAreaField";
 import { Keyboard, View } from "react-native";
+import DocumentPicker from "react-native-document-picker";
 
 type PropTypes = {
   open: boolean;
@@ -43,6 +44,7 @@ const HealthHistoryModal = (props: PropTypes) => {
 
   useEffect(() => {
     if (!props.healthHistoryId) {
+      console.log("runing initialState");
       setForm(initialState);
       return;
     }
@@ -70,19 +72,18 @@ const HealthHistoryModal = (props: PropTypes) => {
     key: keyof typeof form,
     value: string | UploadedFile[]
   ) => {
+    console.log("form ===", form);
+
     const formCopy = { ...form };
+
     if (typeof value === "string" && key !== "documents") {
       formCopy[key] = value;
     } else if (key === "documents" && typeof value === "object") {
-      if (formCopy.documents.length > 0) {
-        formCopy.documents = [...formCopy.documents, ...value];
-      } else {
-        formCopy.documents = value;
-      }
     } else if (key === "date") {
       formCopy.date = `${value}`;
     }
 
+    console.log("updated formCopy", formCopy);
     setForm(formCopy);
   };
 
@@ -119,7 +120,7 @@ const HealthHistoryModal = (props: PropTypes) => {
     return !form.name || !form.date || !form.description;
   }, [form]);
 
-  console.log("health history form", form);
+  console.log("form", form);
 
   return (
     <BottomSheet
@@ -225,26 +226,36 @@ const HealthHistoryModal = (props: PropTypes) => {
               horizontal
               showsHorizontalScrollIndicator={false}
             >
+              {/* <Button onPress={handleDocumentSelection}>Select Document</Button> */}
+
               <ImageUpload
                 plusIcon={true}
                 w={139}
                 h={150}
                 mr={12}
                 noImage
+                document
                 onChange={(file) => {
-                  handleFormChange("documents", file);
+                  setForm((prev) => ({
+                    ...prev,
+                    documents: [...file, ...prev.documents],
+                  }));
                 }}
               />
 
-              {form.documents.map((item) => (
+              {form.documents.map((item, i) => (
                 <ImageUpload
+                  key={i}
                   plusIcon={false}
                   w={139}
                   h={150}
                   disabled
                   mr={12}
+                  docType={item.mimetype}
+                  documentName={item.filename}
                   onUnSelect={handleUnSelectDocument}
                   uri={item?.url || ""}
+
                   // onChange={(file) => {
                   //   handleFormChange("documents", file);
                   // }}
