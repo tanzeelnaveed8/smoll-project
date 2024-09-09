@@ -22,7 +22,7 @@ const images = [
   {
     img: require("./../assets/images/onboarding-screen/slide-5.png"),
     // img: require("../assets/icons/onboarding-icons/icon-2.svg"),
-    heading: ["Recieve &", "Compare", "Upfront Prices"],
+    heading: ["Receive &", "Compare", "Upfront Prices"],
     width: 400,
     height: 380,
   },
@@ -61,12 +61,12 @@ const NewOnboardingScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
   const { height } = useWindowDimensions();
-  const fontSize = height < 900 ? 46 : 60;
+  const fontSize = height < 900 ? 46 : 54;
   const flatListRef = useRef<FlatList>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
-    const time = 3000;
+    const time = 4000;
     if (currentIndex === images.length - 1) {
       const timeout = setTimeout(() => {
         setCurrentIndex(0);
@@ -130,7 +130,6 @@ const NewOnboardingScreen: React.FC<{ navigation: NavigationType }> = ({
                   key={index}
                   fontFamily={fontHauoraMedium}
                   fontSize={fontSize}
-                  lineHeight={58}
                 >
                   {item}
                 </Text>
