@@ -41,6 +41,7 @@ const HealthHistoryModal = (props: PropTypes) => {
   const { open, onClose } = props;
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState<HealthHistory>({ ...initialState });
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     if (!props.healthHistoryId) {
@@ -235,6 +236,9 @@ const HealthHistoryModal = (props: PropTypes) => {
                 mr={12}
                 noImage
                 document
+                onLoading={(item) => {
+                  setUploading(item);
+                }}
                 onChange={(file) => {
                   setForm((prev) => ({
                     ...prev,
@@ -271,7 +275,7 @@ const HealthHistoryModal = (props: PropTypes) => {
             loading={loading}
             mt={30}
             mb={30}
-            disabled={loading || isDisabled}
+            disabled={loading || isDisabled || uploading}
           >
             Confirm
           </ButtonPrimary>

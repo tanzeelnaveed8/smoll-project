@@ -241,18 +241,19 @@ const HomeScreen: React.FC<Props> = (props) => {
             }}
           >
             <Div justifyContent="space-between" px={24}>
-              <Div mb={16} mt={12}>
+              <Div mb={16} mt={10}>
                 <Text
                   fontSize={"2xl"}
-                  fontFamily={fontCooperBold}
+                  fontFamily={fontHauoraBold}
                   lineHeight={24}
                 >
                   Chat with pet
                 </Text>
                 <Text
                   fontSize={"2xl"}
-                  fontFamily={fontCooperBold}
+                  fontFamily={fontHauoraBold}
                   lineHeight={24}
+                  mb={3}
                 >
                   wellness expert
                 </Text>

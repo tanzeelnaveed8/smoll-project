@@ -49,6 +49,7 @@ interface Props {
   document?: boolean;
   docType?: string;
   documentName?: string;
+  onLoading?: (isLoading: boolean) => void;
 }
 
 const ImageUpload: React.FC<Props> = ({
@@ -71,6 +72,7 @@ const ImageUpload: React.FC<Props> = ({
   document,
   docType,
   documentName,
+  onLoading,
 }) => {
   const { uploadFile } = useFileStore();
 
@@ -106,6 +108,9 @@ const ImageUpload: React.FC<Props> = ({
 
     try {
       setLoading(true);
+      if (onLoading) {
+        onLoading(true);
+      }
 
       const uploadedFile = await uploadFile([file]);
 
@@ -118,6 +123,9 @@ const ImageUpload: React.FC<Props> = ({
       }
     } finally {
       setLoading(false);
+      if (onLoading) {
+        onLoading(false);
+      }
     }
   };
 
@@ -155,6 +163,9 @@ const ImageUpload: React.FC<Props> = ({
       }
 
       setLoading(true);
+      if (onLoading) {
+        onLoading(true);
+      }
 
       const file = {
         uri: response[0].uri,
@@ -175,10 +186,11 @@ const ImageUpload: React.FC<Props> = ({
       console.warn(err);
     } finally {
       setLoading(false);
+      if (onLoading) {
+        onLoading(false);
+      }
     }
   }, []);
-
-  console.log("docTYpe====", docType);
 
   return (
     <Div alignItems="flex-start">
