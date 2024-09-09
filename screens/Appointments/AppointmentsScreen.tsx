@@ -11,11 +11,7 @@ import {
 import { NavigationType } from "@/store/types";
 import { IconChevronRight, IconUser } from "@tabler/icons-react-native";
 import React, { useEffect, useState } from "react";
-import {
-  ActivityIndicator,
-  RefreshControl,
-  TouchableOpacity,
-} from "react-native";
+import { RefreshControl, TouchableOpacity } from "react-native";
 import { FlatList } from "react-native-bidirectional-infinite-scroll";
 
 import { Div, Image, Tag, Text } from "react-native-magnus";
@@ -28,24 +24,9 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
   const [nextPageId, setNextPageId] = useState(1);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  // const [page, setPage] = useState(1);
-
   useEffect(() => {
     handleFetchAppointments(undefined, true);
   }, []);
-
-  // const handleFetchAppointments = async () => {
-  //   // if (!nextPageId) return;
-  //   try {
-  //     setIsLoading(true);
-  //     const response = await fetchAppointments(1);
-  //     console.log("response", response);
-  //     setNextPageId(response.nextPage);
-  //     console.log("lading data response.nextPage", response.nextPage);
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
 
   const handleFetchAppointments = async (
     isRefresh?: boolean,

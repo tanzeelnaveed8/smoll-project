@@ -67,16 +67,6 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
       availability: ExpertAvailability,
       interval: { from: string; to: string }
     ) => {
-      // const date = availability.dayOfWeek
-      //   ? dayjs().day(dayOfWeekMap[availability.dayOfWeek]).format("YYYY-MM-DD")
-      //   : dayjs(availability?.date).format("YYYY-MM-DD");
-
-      console.log(
-        "availability",
-        availability,
-        dayOfWeekMap[availability.dayOfWeek]
-      );
-
       const date = dayjs()
         .day(dayOfWeekMap[availability.dayOfWeek])
         .format("YYYY-MM-DD");
@@ -294,7 +284,12 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
                     </Text>
 
                     {a.intervals.length > 0 && (
-                      <Div flexDir="row" flexWrap="wrap" style={{ gap: 8 }}>
+                      <Div
+                        flexDir="row"
+                        flexWrap="wrap"
+                        justifyContent="center"
+                        style={{ gap: 8 }}
+                      >
                         {a.intervals.map((intr, index) => {
                           const time = formatTime(a, intr);
 
@@ -302,8 +297,9 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
                             <Button
                               key={`${index}:${a.dayOfWeek ?? a.date}:${time}`}
                               fontFamily={fontHauoraMedium}
-                              fontSize="lg"
                               lineHeight={20}
+                              fontSize={15}
+                              w={170}
                               p={10}
                               borderWidth={1}
                               color={

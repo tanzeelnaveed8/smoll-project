@@ -369,27 +369,28 @@ const ProposalDetailCard: React.FC<{
 
         <Div flex={1}>
           <Div flexDir="row" alignItems="flex-start" mb={8} w={"100%"}>
-            <Text
-              fontSize={"lg"}
-              fontFamily={fontHauoraSemiBold}
-              mr={4}
-              maxW={
-                type === "Recommended"
-                  ? 120
-                  : type === "Contingent" || type === "Contigent"
-                  ? 145
-                  : 160
-              }
-            >
-              {servicesName}
-            </Text>
-
             <Div
               flexDir="row"
               alignItems="center"
-              style={{ gap: 12 }}
-              ml={"auto"}
+              flexWrap="wrap"
+              style={{ gap: 4 }}
+              w={"70%"}
             >
+              <Text
+                fontSize={"lg"}
+                fontFamily={fontHauoraSemiBold}
+                mr={4}
+                maxW={
+                  type === "Recommended"
+                    ? 120
+                    : type === "Contingent" || type === "Contigent"
+                    ? 145
+                    : 160
+                }
+              >
+                {servicesName}
+              </Text>
+
               <Tag
                 fontSize={11}
                 fontFamily={fontHauoraSemiBold}
@@ -402,7 +403,14 @@ const ProposalDetailCard: React.FC<{
               >
                 {type}
               </Tag>
+            </Div>
 
+            <Div
+              flexDir="row"
+              alignItems="center"
+              style={{ gap: 12 }}
+              ml={"auto"}
+            >
               <Div>
                 <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold}>
                   AED {price}
