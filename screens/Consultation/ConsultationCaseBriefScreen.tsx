@@ -216,6 +216,8 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
     }
   };
 
+  console.log("documents == ", documents);
+
   return (
     <Layout
       showBack
@@ -317,27 +319,33 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
               setUploading(item);
             }}
             onUnSelect={handleUnSelectImage}
+            // onChange={(file) => {
+            //   handleImage(file);
+            // }}
+
             onChange={(file) => {
-              handleImage(file);
+              console.log("filess == ", file);
+              setDocuments((prev) => [...file, ...prev]);
             }}
           />
 
-          {documents.map((item, i) => {
-            return (
-              <ImageUpload
-                key={i}
-                plusIcon={false}
-                mr={12}
-                w={139}
-                h={150}
-                uri={item.url}
-                onUnSelect={handleUnSelectImage}
-                disabled
-                docType={item.mimetype}
-                documentName={item.filename}
-              />
-            );
-          })}
+          {documents.length > 0 &&
+            documents.map((item, i) => {
+              return (
+                <ImageUpload
+                  key={i}
+                  plusIcon={false}
+                  mr={12}
+                  w={139}
+                  h={150}
+                  uri={item.url}
+                  onUnSelect={handleUnSelectImage}
+                  disabled
+                  docType={item.mimetype}
+                  documentName={item.filename}
+                />
+              );
+            })}
         </ScrollDiv>
         {/* </Div> */}
 
