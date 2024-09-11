@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 
 import * as ImagePicker from "expo-image-picker";
 import {
+  IconDownload,
   IconEditCircle,
   IconPaperclip,
   IconPlus,
@@ -20,14 +21,19 @@ import { useFileStore } from "@/store/modules/file";
 import { UploadedFile } from "@/store/types/file";
 import DocumentPicker from "react-native-document-picker";
 
+import RNFetchBlob from "rn-fetch-blob";
+
 import {
   ActivityIndicator,
   Linking,
+  PermissionsAndroid,
+  Platform,
   StyleProp,
   StyleSheet,
   TouchableOpacity,
   ViewStyle,
 } from "react-native";
+import { useToast } from "react-native-toast-notifications";
 
 interface Props {
   isPrimary?: boolean;
@@ -75,11 +81,13 @@ const ImageUpload: React.FC<Props> = ({
   onLoading,
 }) => {
   const { uploadFile } = useFileStore();
+  const toast = useToast();
 
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState<null | string>(null);
   const [uploadedFileUrl, setUploadedFileUrl] = useState<null | string>(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [downloadLoading, setDownloadLoading] = useState(false);
 
   const pickImage = async () => {
     if (disabled) return;
@@ -192,6 +200,81 @@ const ImageUpload: React.FC<Props> = ({
     }
   }, []);
 
+  // download file
+
+  const actualDownload = () => {
+    if (!uri) return;
+
+    const { dirs } = RNFetchBlob.fs;
+    const dirToSave =
+      Platform.OS === "ios" ? dirs.DocumentDir : dirs.DownloadDir;
+    const configfb = {
+      fileCache: true,
+      addAndroidDownloads: {
+        useDownloadManager: true,
+        notification: true,
+        mediaScannable: true,
+        title: uri.split("/").pop(),
+        path: `${dirs.DownloadDir}/${uri.split("/").pop()}`,
+      },
+      useDownloadManager: true,
+      notification: true,
+      mediaScannable: true,
+      title: uri.split("/").pop(),
+      path: `${dirToSave}/${uri.split("/").pop()}`,
+    };
+    const configOptions = Platform.select({
+      ios: configfb,
+      android: configfb,
+    });
+
+    RNFetchBlob.config(configOptions || {})
+      .fetch("GET", uri, {})
+      .then((res) => {
+        console.log("file res_-", configfb);
+
+        if (Platform.OS === "ios") {
+          RNFetchBlob.fs.writeFile(configfb.path, res.data, "base64");
+          RNFetchBlob.ios.previewDocument(configfb.path);
+        }
+        if (Platform.OS === "android") {
+          console.log("file downloaded");
+          Linking.openURL(configfb.path);
+        }
+
+        toast.show("File downloaded successfully");
+      })
+      .catch((e) => {
+        console.log("file Download==>", e);
+      });
+  };
+
+  const handleDownload = async () => {
+    if (downloadLoading) return;
+    try {
+      setDownloadLoading(true);
+
+      if (Platform.OS === "ios") {
+        actualDownload();
+      } else {
+        try {
+          const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE
+          );
+          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+            actualDownload();
+          } else {
+            console.log("please grant permission");
+          }
+        } catch (err) {
+          console.log("display error", err);
+        }
+      }
+    } finally {
+      setDownloadLoading(false);
+    }
+  };
+
   return (
     <Div alignItems="flex-start">
       <Div position="relative" mr={mr ? mr : 0}>
@@ -267,6 +350,28 @@ const ImageUpload: React.FC<Props> = ({
                   <IconX width={24} height={24} color={"#fff"} />
                 </Button>
               )}
+
+              <Button
+                position="absolute"
+                zIndex={50}
+                top={2}
+                right={40}
+                p={2}
+                onPress={handleDownload}
+                bg="#00000061"
+                // disabled={downloadLoading}
+              >
+                {downloadLoading ? (
+                  <ActivityIndicator
+                    size="small"
+                    style={{ width: 24, height: 24 }}
+                    color={"#fff"}
+                  />
+                ) : (
+                  <IconDownload width={24} height={24} color={"#fff"} />
+                )}
+              </Button>
+
               {isPrimary && (
                 <IconStarFilled
                   size={21}
