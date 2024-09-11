@@ -18,6 +18,8 @@ import { useRoute } from "@react-navigation/native";
 import ImageUpload from "@/components/partials/ImageUpload";
 import TextAreaField from "@/components/partials/TextAreaField";
 import { CaseStatusEnum, CreateCasePayloadDto } from "@/store/types/case.d";
+import { useNavigation } from "@react-navigation/native";
+import { useAppointmentStore } from "@/store/modules/appointments";
 
 const NoPetOptions = ({
   navigation,
@@ -71,6 +73,8 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
   const { createCase } = useCaseStore();
   const { updateConsultation } = useExpertStore();
   const { pets, fetchPets } = usePetStore();
+  const { cancelConsultation } = useAppointmentStore();
+  const navigationHook = useNavigation();
 
   const route = useRoute();
 
@@ -104,8 +108,6 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
 
   const textAreaRef = useRef<any>(null);
 
-  console.log("selectedPet==", selectedPet);
-
   useEffect(() => {
     fetchAllPets();
   }, []);
@@ -123,14 +125,11 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
     setDescription(parsedCase.description);
     setDocuments(parsedCase.assets);
 
-    console.log("useeffect pet==", pet);
-
     setSelectedPet({ label: pet?.name ?? "", value: pet?.id ?? "" });
   }, [caseData]);
 
   const setPet = async () => {
     await fetchAllPets();
-    // setSelectedPet({ label: petName, value: petId });
   };
 
   const petOptions = useMemo<{ label: string; value: string }[]>(
@@ -154,10 +153,6 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleImage = async (file: UploadedFile[]) => {
-    setDocuments([...documents, ...file]);
   };
 
   const handleUnSelectImage = (url: string) => {
@@ -216,14 +211,17 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
     }
   };
 
-  console.log("documents == ", documents);
+  const handleCancelConsultation = () => {
+    cancelConsultation(consultationId);
+    navigation.goBack();
+  };
 
   return (
     <Layout
       showBack
       title="Case Brief"
       loading={loading}
-      onBackPress={() => navigation.goBack()}
+      onBackPress={handleCancelConsultation}
     >
       <ScrollDiv
         flex={1}

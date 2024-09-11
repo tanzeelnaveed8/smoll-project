@@ -333,6 +333,9 @@ const App = () => {
                   <Stack.Screen
                     name="ConsultationCaseBriefScreen"
                     component={ConsultationCaseBriefScreen}
+                    options={{
+                      gestureEnabled: false,
+                    }}
                   />
                   <Stack.Screen
                     name="ConsultationWaitingScreen"

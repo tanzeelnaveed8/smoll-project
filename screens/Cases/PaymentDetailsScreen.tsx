@@ -59,8 +59,6 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
     }, 0);
   }, [quote]);
 
-  console.log("quote?.services", quote?.services);
-
   const minimumAmount = useMemo(() => {
     return quote?.services.reduce((acc, cur) => {
       return acc + (cur.label.toLowerCase() !== "recommended" ? cur.price : 0);
