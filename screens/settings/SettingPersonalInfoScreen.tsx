@@ -61,6 +61,7 @@ const SettingPersonalInfoScreen: React.FC<{ navigation: NavigationType }> = ({
                 userIcon
                 uri={user?.profileImg?.url}
                 onChange={handleUpdateImage}
+                disableDownload
               />
               <Div
                 w={32}

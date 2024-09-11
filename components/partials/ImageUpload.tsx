@@ -56,6 +56,7 @@ interface Props {
   docType?: string;
   documentName?: string;
   onLoading?: (isLoading: boolean) => void;
+  disableDownload?: boolean;
 }
 
 const ImageUpload: React.FC<Props> = ({
@@ -79,6 +80,7 @@ const ImageUpload: React.FC<Props> = ({
   docType,
   documentName,
   onLoading,
+  disableDownload,
 }) => {
   const { uploadFile } = useFileStore();
   const toast = useToast();
@@ -348,27 +350,28 @@ const ImageUpload: React.FC<Props> = ({
                   <IconX width={24} height={24} color={"#fff"} />
                 </Button>
               )}
-
-              <Button
-                position="absolute"
-                zIndex={50}
-                top={2}
-                right={40}
-                p={2}
-                onPress={handleDownload}
-                bg="#00000061"
-                // disabled={downloadLoading}
-              >
-                {downloadLoading ? (
-                  <ActivityIndicator
-                    size="small"
-                    style={{ width: 24, height: 24 }}
-                    color={"#fff"}
-                  />
-                ) : (
-                  <IconDownload width={24} height={24} color={"#fff"} />
-                )}
-              </Button>
+              {!disableDownload && (
+                <Button
+                  position="absolute"
+                  zIndex={50}
+                  top={2}
+                  right={40}
+                  p={2}
+                  onPress={handleDownload}
+                  bg="#00000061"
+                  // disabled={downloadLoading}
+                >
+                  {downloadLoading ? (
+                    <ActivityIndicator
+                      size="small"
+                      style={{ width: 24, height: 24 }}
+                      color={"#fff"}
+                    />
+                  ) : (
+                    <IconDownload width={24} height={24} color={"#fff"} />
+                  )}
+                </Button>
+              )}
 
               {isPrimary && (
                 <IconStarFilled

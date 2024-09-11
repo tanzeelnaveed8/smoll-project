@@ -190,7 +190,7 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
       }}
     >
       {!loading && (
-        <Div flex={1} pt={20}>
+        <Div flex={1}>
           <Div flexDir="row" alignItems="center" mb={35}>
             <Div
               w={118}
@@ -198,14 +198,6 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
               justifyContent="flex-end"
               alignItems="flex-end"
             >
-              {/* <Image
-                source={require("../../assets/images/pet-profile-bg.png")}
-                position="absolute"
-                w={"100%"}
-                h={"100%"}
-                style={{}}
-              /> */}
-
               <Div mx={"auto"}>
                 <ImageUpload
                   h={92}
@@ -216,6 +208,7 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                   hideUnselectBtn
                   openImageOnTab
                   onChange={handleUpdateImage}
+                  disableDownload
                 />
               </Div>
             </Div>
