@@ -121,8 +121,6 @@ const HealthHistoryModal = (props: PropTypes) => {
     return !form.name || !form.date || !form.description;
   }, [form]);
 
-  console.log("form", form);
-
   return (
     <BottomSheet
       isVisible={open}
@@ -254,6 +252,7 @@ const HealthHistoryModal = (props: PropTypes) => {
                   w={139}
                   h={150}
                   disabled
+                  openImageOnTab
                   mr={12}
                   docType={item.mimetype}
                   documentName={item.filename}
