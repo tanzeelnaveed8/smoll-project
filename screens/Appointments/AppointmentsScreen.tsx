@@ -1,6 +1,7 @@
 import Layout from "@/components/app/Layout";
 import {
   colorPrimary,
+  fontCooper,
   fontHauoraBold,
   fontHauoraSemiBold,
 } from "@/constant/constant";
@@ -23,6 +24,8 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [nextPageId, setNextPageId] = useState(1);
   const [isRefreshing, setIsRefreshing] = useState(false);
+
+  console.log("appointment", appointment);
 
   useEffect(() => {
     handleFetchAppointments(undefined, true);
@@ -73,54 +76,73 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
     >
       <Div flex={1}>
         <Div flex={1} pt={24}>
-          <Text
-            fontSize={"xl"}
-            fontFamily={fontHauoraSemiBold}
-            lineHeight={24}
-            mb={22}
-          >
-            Upcoming Appointments
-          </Text>
+          {!isLoading && appointment && appointment.length > 0 && (
+            <Text
+              fontSize={"xl"}
+              fontFamily={fontHauoraSemiBold}
+              lineHeight={24}
+              mb={22}
+            >
+              Upcoming Appointments
+            </Text>
+          )}
 
-          <FlatList
-            ListEmptyComponent={() => (
-              <Text>You don't have any appointments yet.</Text>
+          {!isLoading && appointment && appointment?.length > 0 && (
+            <FlatList
+              // ListEmptyComponent={() => (
+              //   <Text>You don't have any appointments yet.</Text>
+              // )}
+              onEndReached={handleLoadMore} // required, should return a promise
+              onEndReachedThreshold={20} // optional
+              activityIndicatorColor={"black"} // optional
+              refreshControl={
+                <RefreshControl
+                  refreshing={isRefreshing}
+                  tintColor={colorPrimary}
+                  onRefresh={() => handleFetchAppointments(true)}
+                />
+              }
+              data={appointment}
+              renderItem={({ item, index }) => (
+                <AppointmentCard
+                  img={
+                    item.partner?.clinicImg?.url ?? item.vet?.profileImg?.url
+                  }
+                  pet={item.pet.name}
+                  text={`Your upcoming ${
+                    item.type === "in-clinic" ? "visit" : "consultation"
+                  } with ${item.partner?.name ?? item.vet?.name}`}
+                  scheduledTime={item.scheduledAt}
+                  type={
+                    item.type === "in-clinic"
+                      ? "Clinic Visit"
+                      : "Video Consultation"
+                  }
+                  alert={""}
+                  onPress={() => {
+                    navigation.navigate("AppointmentDetailsScreen", {
+                      id: item.id,
+                      type: item.type,
+                    });
+                  }}
+                />
+              )}
+              keyExtractor={(item, index) => `${index}`}
+            />
+          )}
+
+          {!isLoading &&
+            (!appointment || (appointment && appointment === 0)) && (
+              <Div h={"90%"} justifyContent="center">
+                <Text
+                  fontSize={"5xl"}
+                  textAlign="center"
+                  fontFamily={fontCooper}
+                >
+                  You don't have any upcoming appointments
+                </Text>
+              </Div>
             )}
-            onEndReached={handleLoadMore} // required, should return a promise
-            onEndReachedThreshold={20} // optional
-            activityIndicatorColor={"black"} // optional
-            refreshControl={
-              <RefreshControl
-                refreshing={isRefreshing}
-                tintColor={colorPrimary}
-                onRefresh={() => handleFetchAppointments(true)}
-              />
-            }
-            data={appointment}
-            renderItem={({ item, index }) => (
-              <AppointmentCard
-                img={item.partner?.clinicImg?.url ?? item.vet?.profileImg?.url}
-                pet={item.pet.name}
-                text={`Your upcoming ${
-                  item.type === "in-clinic" ? "visit" : "consultation"
-                } with ${item.partner?.name ?? item.vet?.name}`}
-                scheduledTime={item.scheduledAt}
-                type={
-                  item.type === "in-clinic"
-                    ? "Clinic Visit"
-                    : "Video Consultation"
-                }
-                alert={""}
-                onPress={() => {
-                  navigation.navigate("AppointmentDetailsScreen", {
-                    id: item.id,
-                    type: item.type,
-                  });
-                }}
-              />
-            )}
-            keyExtractor={(item, index) => `${index}`}
-          />
         </Div>
       </Div>
     </Layout>
