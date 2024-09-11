@@ -251,7 +251,6 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
             label="Select Pet"
             options={petOptions}
             onSelect={(value) => {
-              // textAreaRef?.current?.focus();
               setSelectedPet(value);
             }}
             selectedValue={selectedPet}

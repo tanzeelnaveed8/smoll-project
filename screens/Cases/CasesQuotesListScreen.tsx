@@ -44,8 +44,6 @@ const CasesQuotesListScreen: React.FC<{ navigation: NavigationType }> = ({
 
       const response = await fetchCases(1, isRefresh ?? reset, true);
 
-      console.log("res", response);
-
       setNextPageId(response.nextPage);
     } finally {
       setIsLoading(false);
@@ -92,7 +90,7 @@ const CasesQuotesListScreen: React.FC<{ navigation: NavigationType }> = ({
             Quotations
           </Text> */}
 
-          {!isLoading && cases.length > 0 && (
+          {!isLoading && cases && cases?.length > 0 && (
             <Text fontSize={"lg"} mt={10} fontFamily={fontHauoraSemiBold}>
               In-Clinic Requests
             </Text>
@@ -242,14 +240,14 @@ const CasesQuotesListScreen: React.FC<{ navigation: NavigationType }> = ({
             />
           )}
 
-          {!isLoading && cases && cases.length === 0 && (
-            <Div h={"90%"} justifyContent="center">
+          {!isLoading && cases && cases?.length === 0 && (
+            <Div h={"85%"} justifyContent="center">
               <Text
                 fontSize={"5xl"}
                 textAlign="center"
-                maxW={300}
+                maxW={"80%"}
                 mx={"auto"}
-                lineHeight={35}
+                lineHeight={36}
                 fontFamily={fontCooper}
               >
                 You don't have any escalated cases

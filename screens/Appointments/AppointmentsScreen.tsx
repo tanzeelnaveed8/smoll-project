@@ -132,12 +132,15 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
           )}
 
           {!isLoading &&
-            (!appointment || (appointment && appointment === 0)) && (
-              <Div h={"90%"} justifyContent="center">
+            (!appointment || (appointment && appointment?.length === 0)) && (
+              <Div h={"85%"} justifyContent="center">
                 <Text
                   fontSize={"5xl"}
                   textAlign="center"
                   fontFamily={fontCooper}
+                  maxW={"80%"}
+                  mx={"auto"}
+                  lineHeight={36}
                 >
                   You don't have any upcoming appointments
                 </Text>
