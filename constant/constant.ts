@@ -6,6 +6,7 @@ export const fontHauoraMedium = "HauoraMedium";
 export const fontHauoraBold = "HauoraBold";
 
 export const fontCooper = "Cooper";
+export const fontCooperMedium = "CooperMedium";
 export const fontCooperBold = "CooperBold";
 
 /** heading fonts */

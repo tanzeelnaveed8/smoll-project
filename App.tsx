@@ -84,6 +84,7 @@ async function loadFonts() {
     HauoraBold: require("./assets/fonts/Hauora/Hauora-Bold.ttf"),
 
     Cooper: require("./assets/fonts/Cooper/CooperLtBT-Regular.ttf"),
+    CooperMedium: require("./assets/fonts/Cooper/CooperMdBT-Regular.ttf"),
     CooperBold: require("./assets/fonts/Cooper/CooperBlkBT-Regular.ttf"),
   });
 }

@@ -33,7 +33,7 @@ import OnboardingCongratsModal from "@/components/app/onboarding/OnboardingCongr
 import AccountSetupProgress from "@/components/partials/AccountSetupProgress";
 import { useCounsellorStore } from "@/store/modules/counsellor";
 import { useUserStore } from "@/store/modules/user";
-import { NavigationType } from "@/store/types";
+import { NavigationType, PaymentPageRoute } from "@/store/types";
 import { useRoute } from "@react-navigation/native";
 import React, { useEffect, useMemo, useState } from "react";
 import TabNavigationBar from "@/components/app/TabNavigationBar";
@@ -162,6 +162,27 @@ const HomeScreen: React.FC<Props> = (props) => {
     setShowAccountSetupButton(false);
   };
 
+  const paymentParams: PaymentPageRoute = {
+    caseId: "123",
+    clinicName: "Clinic Name",
+    partnerId: "123",
+    scheduleAt: "2024-01-01",
+    selectedServices: [
+      {
+        id: "123",
+        label: "Service 1",
+        price: 100,
+      },
+      {
+        id: "123",
+        label: "Service 1",
+        price: 100,
+      },
+    ],
+    vetId: "123",
+    paymentIntentId: "123",
+  };
+
   return (
     <>
       <Layout
@@ -193,6 +214,11 @@ const HomeScreen: React.FC<Props> = (props) => {
                   style={{ overflow: "visible" }}
                   onPress={() => {
                     props.navigation.navigate("NotificationTestScreen");
+                    // props.navigation.navigate(
+                    //   "PaymentDetailsScreen",
+                    //   paymentParams
+                    // );
+
                     // props.navigation.navigate("NewOnboardingScreen");
                   }}
                 >

@@ -1,7 +1,13 @@
 import Layout from "@/components/app/Layout";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import FlashCustomContent from "@/components/partials/FlashCustomContent";
-import { fontHauoraBold, fontHauoraSemiBold } from "@/constant/constant";
+import {
+  fontCooper,
+  fontCooperMedium,
+  fontHauoraBold,
+  fontHauoraMedium,
+  fontHauoraSemiBold,
+} from "@/constant/constant";
 import { useCaseStore } from "@/store/modules/case";
 import { usePartnerStore } from "@/store/modules/partner";
 import { useUserStore } from "@/store/modules/user";
@@ -243,11 +249,26 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
           </Text>
         </Div> */}
 
-        <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold} mb={5}>
+        <Div
+          flexDir="row"
+          justifyContent="space-between"
+          alignItems="flex-end"
+          mb={40}
+        >
+          <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold}>
+            Payment Details
+          </Text>
+
+          <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold} color="#afafaf">
+            Case {caseId}
+          </Text>
+        </Div>
+
+        <Text fontSize={"xl"} color="#000" fontFamily={fontCooperMedium} mb={8}>
           Here is what your bill will look like at the
         </Text>
 
-        <Text fontSize={30} fontFamily={fontHauoraBold} mb={25}>
+        <Text fontSize={30} fontFamily={fontCooperMedium} mb={25}>
           {clinicName}
         </Text>
 
@@ -258,22 +279,23 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
           px={16}
           pb={14}
           pt={22}
+          mb={22}
         >
           <Div px={20} mb={15}>
             <Text fontSize={"md"} mb={2}>
               Your bill will be a minimum of
             </Text>
 
-            <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold} mb={15}>
-              AED {totalSelectedAmount.toFixed(2)}
+            <Text fontSize={"3xl"} fontFamily={fontHauoraSemiBold} mb={15}>
+              AED{totalSelectedAmount}
             </Text>
 
             <Text fontSize={"md"} mb={2}>
               and a maximum of
             </Text>
 
-            <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold} mb={10}>
-              AED {totalAmount?.toFixed(2)}
+            <Text fontSize={"3xl"} fontFamily={fontHauoraSemiBold} mb={10}>
+              AED{totalAmount}
             </Text>
 
             <IconDotsVertical size={22} strokeWidth={1.5} color={"#222"} />
@@ -288,36 +310,48 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
             alignItems="center"
             justifyContent="space-around"
             style={{ gap: 50 }}
-            mb={25}
+            // mb={25}
           >
             <Div>
-              <Text mb={2}>Due Now</Text>
-              <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold}>
-                AED {bookingCharges.toFixed(2)}
+              <Text mb={2} fontFamily={fontHauoraMedium}>
+                Due Now
+              </Text>
+              <Text fontSize={"3xl"} fontFamily={fontHauoraSemiBold}>
+                AED{bookingCharges}
               </Text>
             </Div>
 
             <Div>
-              <Text mb={2}>At the clinic</Text>
-              <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold}>
-                AED {totalAmount}
+              <Text mb={2} fontFamily={fontHauoraMedium}>
+                At the clinic
+              </Text>
+              <Text fontSize={"3xl"} fontFamily={fontHauoraSemiBold}>
+                AED{totalAmount}
               </Text>
             </Div>
           </Div>
-
-          <ButtonPrimary
-            mb={15}
-            onPress={openPaymentSheet}
-            loading={actionLoading}
-            disabled={actionLoading}
-          >
-            Pay Now
-          </ButtonPrimary>
-
-          <Text fontSize={"md"} textAlign="center" maxW={"80%"} mx={"auto"}>
-            You’ll recieve appointment confirmation after payment is successful
-          </Text>
         </Div>
+
+        <ButtonPrimary
+          mb={15}
+          onPress={openPaymentSheet}
+          loading={actionLoading}
+          disabled={actionLoading}
+          fontFamily={fontHauoraSemiBold}
+          bg="#0000FF"
+        >
+          Pay Now
+        </ButtonPrimary>
+
+        <Text
+          fontSize={"md"}
+          fontFamily={fontHauoraSemiBold}
+          textAlign="center"
+          maxW={"80%"}
+          mx={"auto"}
+        >
+          You’ll recieve appointment confirmation after payment is successful
+        </Text>
       </Div>
 
       <Div justifyContent="center" alignItems="center">
@@ -336,8 +370,8 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
           mb={15}
         >
           <Text
-            fontSize={12}
-            fontFamily={fontHauoraSemiBold}
+            fontSize={"md"}
+            fontFamily={fontHauoraMedium}
             color="#B2B2B2"
             mt={2}
           >
