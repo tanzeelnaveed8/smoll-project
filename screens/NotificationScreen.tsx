@@ -29,13 +29,6 @@ const NotificationScreen: React.FC<{ navigation: NavigationType }> = ({
           </Div>
         </ScrollDiv>
       )}
-      {!true && (
-        <Div h={"85%"} justifyContent="center" alignItems="center">
-          <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold}>
-            No Notification found
-          </Text>
-        </Div>
-      )}
     </Layout>
   );
 };

@@ -2,6 +2,7 @@ import Layout from "@/components/app/Layout";
 import TabNavigationBar from "@/components/app/TabNavigationBar";
 import {
   colorPrimary,
+  fontCooper,
   fontHauoraMedium,
   fontHauoraSemiBold,
 } from "@/constant/constant";
@@ -78,167 +79,183 @@ const CasesQuotesListScreen: React.FC<{ navigation: NavigationType }> = ({
             navigation.goBack();
           }
         }}
-        title="Cases"
+        title="Quotations"
         loading={isLoading}
       >
         <Div mb={24}>
-          <Text
+          {/* <Text
             fontSize={"2xl"}
             fontWeight="bold"
             mb={20}
             fontFamily={fontHauoraSemiBold}
           >
             Quotations
-          </Text>
+          </Text> */}
 
-          <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold}>
-            In-Clinic Requests
-          </Text>
+          {!isLoading && cases.length > 0 && (
+            <Text fontSize={"lg"} mt={10} fontFamily={fontHauoraSemiBold}>
+              In-Clinic Requests
+            </Text>
+          )}
         </Div>
         <Div flex={1}>
-          <FlatList
-            ListEmptyComponent={() => (
-              <Text>You don't have any escalated case :)</Text>
-            )}
-            data={cases}
-            style={{ height: "100%" }}
-            onEndReached={handleLoadMore} // required, should return a promise
-            onEndReachedThreshold={20} // optional
-            activityIndicatorColor={"black"} // optional
-            refreshControl={
-              <RefreshControl
-                refreshing={isRefreshing}
-                tintColor={colorPrimary}
-                onRefresh={() => handleFetchCases(true)}
-              />
-            }
-            showsVerticalScrollIndicator={false}
-            renderItem={({ item, index }) => (
-              <Div mb={index + 1 === cases?.length ? 0 : 12}>
-                <Text
-                  fontSize={"md"}
-                  mb={8}
-                  fontFamily={fontHauoraSemiBold}
-                  style={{
-                    textTransform: "capitalize",
-                  }}
-                >
-                  {dayjs(item.createdAt).fromNow()}
-                </Text>
+          {cases && cases.length > 0 && (
+            <FlatList
+              data={cases}
+              style={{ height: "100%" }}
+              onEndReached={handleLoadMore} // required, should return a promise
+              onEndReachedThreshold={20} // optional
+              activityIndicatorColor={"black"} // optional
+              refreshControl={
+                <RefreshControl
+                  refreshing={isRefreshing}
+                  tintColor={colorPrimary}
+                  onRefresh={() => handleFetchCases(true)}
+                />
+              }
+              showsVerticalScrollIndicator={false}
+              renderItem={({ item, index }) => (
+                <Div mb={index + 1 === cases?.length ? 0 : 12}>
+                  <Text
+                    fontSize={"md"}
+                    mb={8}
+                    fontFamily={fontHauoraSemiBold}
+                    style={{
+                      textTransform: "capitalize",
+                    }}
+                  >
+                    {dayjs(item.createdAt).fromNow()}
+                  </Text>
 
-                <Div
-                  bg="transparent"
-                  p={0}
-                  flexDir="row"
-                  alignItems="center"
-                  mb={12}
-                >
-                  <Image
-                    source={{ uri: item.pet.photos?.[0].url }}
-                    w={56}
-                    h={66}
-                    mr={7}
-                    // rounded={100}
-                  />
-                  <Div flex={1}>
-                    <Div
-                      mb={4}
-                      flexDir="row"
-                      justifyContent="space-between"
-                      flex={1}
-                    >
+                  <Div
+                    bg="transparent"
+                    p={0}
+                    flexDir="row"
+                    alignItems="center"
+                    mb={12}
+                  >
+                    <Image
+                      source={{ uri: item.pet.photos?.[0].url }}
+                      w={56}
+                      h={66}
+                      mr={7}
+                      // rounded={100}
+                    />
+                    <Div flex={1}>
                       <Div
+                        mb={4}
                         flexDir="row"
                         justifyContent="space-between"
-                        alignItems="center"
-                        w={"100%"}
+                        flex={1}
                       >
-                        <Text fontFamily={fontHauoraSemiBold} fontSize={"xl"}>
-                          {item.pet.name}
-                        </Text>
-
-                        <Text
-                          fontFamily={fontHauoraMedium}
-                          fontSize={"lg"}
-                          color="#2F6E20"
+                        <Div
+                          flexDir="row"
+                          justifyContent="space-between"
+                          alignItems="center"
+                          w={"100%"}
                         >
-                          {item.requestCount} Quotations
-                        </Text>
+                          <Text fontFamily={fontHauoraSemiBold} fontSize={"xl"}>
+                            {item.pet.name}
+                          </Text>
+
+                          <Text
+                            fontFamily={fontHauoraMedium}
+                            fontSize={"lg"}
+                            color="#2F6E20"
+                          >
+                            {item.requestCount} Quotations
+                          </Text>
+                        </Div>
+
+                        {item.status === CaseStatusEnum.OPEN_ESCALATED && (
+                          <Text
+                            fontFamily={fontHauoraSemiBold}
+                            fontSize={"lg"}
+                            color="#2F6E20"
+                          >
+                            {item.requestCount} Request
+                          </Text>
+                        )}
                       </Div>
 
-                      {item.status === CaseStatusEnum.OPEN_ESCALATED && (
+                      <Div>
+                        <Text
+                          color="#494949"
+                          fontFamily={fontHauoraSemiBold}
+                          fontSize={"md"}
+                        >
+                          Expert: {item.vet}
+                        </Text>
+
                         <Text
                           fontFamily={fontHauoraSemiBold}
-                          fontSize={"lg"}
-                          color="#2F6E20"
+                          fontSize={"md"}
+                          color="#494949"
                         >
-                          {item.requestCount} Request
+                          Case Id: {item.id}
                         </Text>
-                      )}
-                    </Div>
-
-                    <Div>
-                      <Text
-                        color="#494949"
-                        fontFamily={fontHauoraSemiBold}
-                        fontSize={"md"}
-                      >
-                        Expert: {item.vet}
-                      </Text>
-
-                      <Text
-                        fontFamily={fontHauoraSemiBold}
-                        fontSize={"md"}
-                        color="#494949"
-                      >
-                        Case Id: {item.id}
-                      </Text>
+                      </Div>
                     </Div>
                   </Div>
-                </Div>
 
-                <Div
-                  py={8}
-                  borderTopWidth={1}
-                  borderBottomWidth={1}
-                  borderColor="#D0D7DC"
-                  flexDir="row"
-                  justifyContent="space-between"
-                >
-                  <TouchableOpacity
-                    onPress={() =>
-                      navigation.navigate("CaseDetailScreen", {
-                        caseId: item.id,
-                      })
-                    }
+                  <Div
+                    py={8}
+                    borderTopWidth={1}
+                    borderBottomWidth={1}
+                    borderColor="#D0D7DC"
+                    flexDir="row"
+                    justifyContent="space-between"
                   >
-                    <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold}>
-                      View Case Brief
-                    </Text>
-                  </TouchableOpacity>
-
-                  {Boolean(item.requestCount) && (
-                    <Button
-                      fontSize={"lg"}
-                      bg="transparent"
-                      p={0}
-                      fontFamily={fontHauoraSemiBold}
-                      color="primary"
-                      onPress={() => {
-                        navigation.navigate("CaseQuotesScreen", {
-                          id: item.id,
-                          hasPartnerBooking: item.hasPartnerBooking,
-                        });
-                      }}
+                    <TouchableOpacity
+                      onPress={() =>
+                        navigation.navigate("CaseDetailScreen", {
+                          caseId: item.id,
+                        })
+                      }
                     >
-                      View Requests
-                    </Button>
-                  )}
+                      <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold}>
+                        View Case Brief
+                      </Text>
+                    </TouchableOpacity>
+
+                    {Boolean(item.requestCount) && (
+                      <Button
+                        fontSize={"lg"}
+                        bg="transparent"
+                        p={0}
+                        fontFamily={fontHauoraSemiBold}
+                        color="primary"
+                        onPress={() => {
+                          navigation.navigate("CaseQuotesScreen", {
+                            id: item.id,
+                            hasPartnerBooking: item.hasPartnerBooking,
+                          });
+                        }}
+                      >
+                        View Requests
+                      </Button>
+                    )}
+                  </Div>
                 </Div>
-              </Div>
-            )}
-            keyExtractor={(item, i) => `${i}`}
-          />
+              )}
+              keyExtractor={(item, i) => `${i}`}
+            />
+          )}
+
+          {!isLoading && cases && cases.length === 0 && (
+            <Div h={"90%"} justifyContent="center">
+              <Text
+                fontSize={"5xl"}
+                textAlign="center"
+                maxW={300}
+                mx={"auto"}
+                lineHeight={35}
+                fontFamily={fontCooper}
+              >
+                You don't have any escalated cases
+              </Text>
+            </Div>
+          )}
         </Div>
       </Layout>
 

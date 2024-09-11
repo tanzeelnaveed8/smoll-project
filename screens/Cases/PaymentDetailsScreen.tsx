@@ -1,4 +1,5 @@
 import Layout from "@/components/app/Layout";
+import WalletIcon from "@/components/icons/WalletIcon";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import FlashCustomContent from "@/components/partials/FlashCustomContent";
 import {
@@ -58,6 +59,14 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
     }, 0);
   }, [quote]);
 
+  console.log("quote?.services", quote?.services);
+
+  const minimumAmount = useMemo(() => {
+    return quote?.services.reduce((acc, cur) => {
+      return acc + (cur.label.toLowerCase() !== "recommended" ? cur.price : 0);
+    }, 0);
+  }, [quote]);
+
   const totalAmount = useMemo(() => {
     return quote?.services.reduce((acc, cur) => {
       return acc + cur.price;
@@ -65,13 +74,13 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
   }, [quote]);
 
   const bookingCharges = useMemo(() => {
-    // 11% of total amount
-    const amount = ((totalSelectedAmount ?? 0) * 11) / 100;
+    // 20% of total amount
+    const amount = ((totalSelectedAmount ?? 0) * 20) / 100;
     return amount;
   }, [totalAmount]);
 
   useEffect(() => {
-    initialize();
+    // initialize();
   }, []);
 
   const initStripe = async () => {
@@ -292,21 +301,47 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
             mb={22}
           >
             <Div px={20} mb={15}>
-              <Text fontSize={"md"} mb={2}>
-                Your bill will be a minimum of
+              <Text fontSize={"lg"} mb={8} fontFamily={fontHauoraSemiBold}>
+                Your vet bill will be
               </Text>
 
-              <Text fontSize={"3xl"} fontFamily={fontHauoraSemiBold} mb={15}>
-                AED{totalSelectedAmount}
-              </Text>
+              <Div flexDir="row" alignItems="flex-end" mb={20}>
+                <Div>
+                  <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
+                    Minimum
+                  </Text>
+                  <Text
+                    fontSize={"4xl"}
+                    fontFamily={fontHauoraSemiBold}
+                    lineHeight={30}
+                  >
+                    {minimumAmount}
+                    <Text fontSize={"md"} fontFamily={fontHauoraSemiBold}>
+                      AED
+                    </Text>
+                  </Text>
+                </Div>
 
-              <Text fontSize={"md"} mb={2}>
-                and a maximum of
-              </Text>
+                <Div w={80} h={1} ml={30} mr={10} mb={8} bg="#222" />
 
-              <Text fontSize={"3xl"} fontFamily={fontHauoraSemiBold} mb={10}>
-                AED{totalAmount}
-              </Text>
+                <Div>
+                  <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
+                    Maximum
+                  </Text>
+
+                  <Text
+                    fontSize={"4xl"}
+                    fontFamily={fontHauoraSemiBold}
+                    lineHeight={30}
+                  >
+                    {/* {totalSelectedAmount} */}
+                    {totalSelectedAmount}
+                    <Text fontSize={"md"} fontFamily={fontHauoraSemiBold}>
+                      AED
+                    </Text>
+                  </Text>
+                </Div>
+              </Div>
 
               <IconDotsVertical size={22} strokeWidth={1.5} color={"#222"} />
             </Div>
@@ -324,19 +359,24 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
             >
               <Div>
                 <Text mb={2} fontFamily={fontHauoraMedium}>
-                  Due Now
+                  20% Advance
                 </Text>
-                <Text fontSize={"3xl"} fontFamily={fontHauoraSemiBold}>
-                  AED{bookingCharges}
+                <Text
+                  fontSize={"4xl"}
+                  fontFamily={fontHauoraSemiBold}
+                  lineHeight={30}
+                >
+                  {bookingCharges}
+                  <Text fontSize={"md"} fontFamily={fontHauoraSemiBold}>
+                    AED
+                  </Text>
                 </Text>
               </Div>
 
-              <Div>
-                <Text mb={2} fontFamily={fontHauoraMedium}>
-                  At the clinic
-                </Text>
-                <Text fontSize={"3xl"} fontFamily={fontHauoraSemiBold}>
-                  AED{totalAmount}
+              <Div flexDir="row" alignItems="flex-end" style={{ gap: 6 }}>
+                <WalletIcon mb={4} />
+                <Text fontSize={12} fontFamily={fontHauoraSemiBold} maxW={130}>
+                  Balance paid at the clinic after service is received
                 </Text>
               </Div>
             </Div>
