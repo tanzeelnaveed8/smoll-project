@@ -71,7 +71,7 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
   }, [totalAmount]);
 
   useEffect(() => {
-    // initialize();
+    initialize();
   }, []);
 
   const initStripe = async () => {

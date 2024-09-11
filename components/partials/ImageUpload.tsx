@@ -317,24 +317,22 @@ const ImageUpload: React.FC<Props> = ({
                   bg="#ddd"
                   p={10}
                 >
-                  <IconPaperclip
-                    size={44}
-                    color="#fff"
-                    style={{ marginTop: "auto" }}
-                  />
-                  {documentName && (
-                    <Text
-                      mt={"auto"}
-                      fontFamily={fontHauoraSemiBold}
-                      textAlign="center"
-                      lineHeight={16}
-                      fontSize={12}
-                    >
-                      {documentName.length > 32
-                        ? `${documentName.slice(0, 32)}...`
-                        : documentName}
-                    </Text>
-                  )}
+                  <Div justifyContent="center" alignItems="center">
+                    <IconPaperclip size={44} color="#fff" />
+                    {documentName && (
+                      <Text
+                        fontFamily={fontHauoraSemiBold}
+                        textAlign="center"
+                        lineHeight={16}
+                        fontSize={12}
+                        px={2}
+                      >
+                        {documentName.length > 22
+                          ? `${documentName.slice(0, 22)}...`
+                          : documentName}
+                      </Text>
+                    )}
+                  </Div>
                 </Div>
               )}
               {!hideUnselectBtn && (

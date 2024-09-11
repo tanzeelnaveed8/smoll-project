@@ -311,6 +311,7 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
             w={139}
             h={150}
             mr={12}
+            document
             noImage
             onLoading={(item) => {
               setUploading(item);
@@ -332,6 +333,8 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
                 uri={item.url}
                 onUnSelect={handleUnSelectImage}
                 disabled
+                docType={item.mimetype}
+                documentName={item.filename}
               />
             );
           })}
