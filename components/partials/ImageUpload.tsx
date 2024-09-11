@@ -33,6 +33,7 @@ import {
   TouchableOpacity,
   ViewStyle,
 } from "react-native";
+import { useToast } from "react-native-toast-notifications";
 
 interface Props {
   isPrimary?: boolean;
@@ -80,11 +81,13 @@ const ImageUpload: React.FC<Props> = ({
   onLoading,
 }) => {
   const { uploadFile } = useFileStore();
+  const toast = useToast();
 
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState<null | string>(null);
   const [uploadedFileUrl, setUploadedFileUrl] = useState<null | string>(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [downloadLoading, setDownloadLoading] = useState(false);
 
   const pickImage = async () => {
     if (disabled) return;
@@ -228,6 +231,8 @@ const ImageUpload: React.FC<Props> = ({
     RNFetchBlob.config(configOptions || {})
       .fetch("GET", uri, {})
       .then((res) => {
+        console.log("file res_-", configfb);
+
         if (Platform.OS === "ios") {
           RNFetchBlob.fs.writeFile(configfb.path, res.data, "base64");
           RNFetchBlob.ios.previewDocument(configfb.path);
@@ -236,6 +241,8 @@ const ImageUpload: React.FC<Props> = ({
           console.log("file downloaded");
           Linking.openURL(configfb.path);
         }
+
+        toast.show("File downloaded successfully");
       })
       .catch((e) => {
         console.log("file Download==>", e);
@@ -243,21 +250,28 @@ const ImageUpload: React.FC<Props> = ({
   };
 
   const handleDownload = async () => {
-    if (Platform.OS === "ios") {
-      actualDownload();
-    } else {
-      try {
-        const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE
-        );
-        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-          actualDownload();
-        } else {
-          console.log("please grant permission");
+    if (downloadLoading) return;
+    try {
+      setDownloadLoading(true);
+
+      if (Platform.OS === "ios") {
+        actualDownload();
+      } else {
+        try {
+          const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE
+          );
+          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+            actualDownload();
+          } else {
+            console.log("please grant permission");
+          }
+        } catch (err) {
+          console.log("display error", err);
         }
-      } catch (err) {
-        console.log("display error", err);
       }
+    } finally {
+      setDownloadLoading(false);
     }
   };
 
@@ -340,13 +354,22 @@ const ImageUpload: React.FC<Props> = ({
               <Button
                 position="absolute"
                 zIndex={50}
-                bottom={4}
-                right={4}
+                top={2}
+                right={40}
                 p={2}
                 onPress={handleDownload}
                 bg="#00000061"
+                // disabled={downloadLoading}
               >
-                <IconDownload width={24} height={24} color={"#fff"} />
+                {downloadLoading ? (
+                  <ActivityIndicator
+                    size="small"
+                    style={{ width: 24, height: 24 }}
+                    color={"#fff"}
+                  />
+                ) : (
+                  <IconDownload width={24} height={24} color={"#fff"} />
+                )}
               </Button>
 
               {isPrimary && (
