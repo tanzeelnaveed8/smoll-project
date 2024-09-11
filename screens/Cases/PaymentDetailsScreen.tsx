@@ -22,7 +22,7 @@ import { IconDotsVertical } from "@tabler/icons-react-native";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Platform } from "react-native";
 import { showMessage } from "react-native-flash-message";
-import { Div, Image, Text } from "react-native-magnus";
+import { Div, Image, ScrollDiv, Text } from "react-native-magnus";
 
 const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
@@ -71,7 +71,7 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
   }, [totalAmount]);
 
   useEffect(() => {
-    initialize();
+    // initialize();
   }, []);
 
   const initStripe = async () => {
@@ -237,8 +237,9 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
       }}
       loading={loading}
     >
-      <Div flex={1} pt={20}>
-        {/* <Div
+      <ScrollDiv flex={1} showsVerticalScrollIndicator={false}>
+        <Div flex={1} pt={20} mb={50}>
+          {/* <Div
           flexDir="row"
           justifyContent="space-between"
           alignItems="center"
@@ -249,151 +250,163 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
           </Text>
         </Div> */}
 
-        <Div
-          flexDir="row"
-          justifyContent="space-between"
-          alignItems="flex-end"
-          mb={40}
-        >
-          <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold}>
-            Payment Details
-          </Text>
-
-          <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold} color="#afafaf">
-            Case {caseId}
-          </Text>
-        </Div>
-
-        <Text fontSize={"xl"} color="#000" fontFamily={fontCooperMedium} mb={8}>
-          Here is what your bill will look like at the
-        </Text>
-
-        <Text fontSize={30} fontFamily={fontCooperMedium} mb={25}>
-          {clinicName}
-        </Text>
-
-        <Div
-          borderWidth={2}
-          rounded={25}
-          borderColor="#ccc"
-          px={16}
-          pb={14}
-          pt={22}
-          mb={22}
-        >
-          <Div px={20} mb={15}>
-            <Text fontSize={"md"} mb={2}>
-              Your bill will be a minimum of
+          <Div
+            flexDir="row"
+            justifyContent="space-between"
+            alignItems="flex-end"
+            mb={40}
+          >
+            <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold}>
+              Payment Details
             </Text>
 
-            <Text fontSize={"3xl"} fontFamily={fontHauoraSemiBold} mb={15}>
-              AED{totalSelectedAmount}
+            <Text
+              fontSize={"lg"}
+              fontFamily={fontHauoraSemiBold}
+              color="#afafaf"
+            >
+              Case {caseId}
             </Text>
-
-            <Text fontSize={"md"} mb={2}>
-              and a maximum of
-            </Text>
-
-            <Text fontSize={"3xl"} fontFamily={fontHauoraSemiBold} mb={10}>
-              AED{totalAmount}
-            </Text>
-
-            <IconDotsVertical size={22} strokeWidth={1.5} color={"#222"} />
           </Div>
+
+          <Text
+            fontSize={"xl"}
+            color="#000"
+            fontFamily={fontCooperMedium}
+            mb={8}
+          >
+            Here is what your bill will look like at the
+          </Text>
+
+          <Text fontSize={30} fontFamily={fontCooperMedium} mb={25}>
+            {clinicName}
+          </Text>
 
           <Div
-            bg="#EFE9DB"
-            rounded={15}
-            px={30}
-            py={14}
-            flexDir="row"
-            alignItems="center"
-            justifyContent="space-around"
-            style={{ gap: 50 }}
-            // mb={25}
+            borderWidth={2}
+            rounded={25}
+            borderColor="#ccc"
+            px={16}
+            pb={14}
+            pt={22}
+            mb={22}
           >
-            <Div>
-              <Text mb={2} fontFamily={fontHauoraMedium}>
-                Due Now
+            <Div px={20} mb={15}>
+              <Text fontSize={"md"} mb={2}>
+                Your bill will be a minimum of
               </Text>
-              <Text fontSize={"3xl"} fontFamily={fontHauoraSemiBold}>
-                AED{bookingCharges}
-              </Text>
-            </Div>
 
-            <Div>
-              <Text mb={2} fontFamily={fontHauoraMedium}>
-                At the clinic
+              <Text fontSize={"3xl"} fontFamily={fontHauoraSemiBold} mb={15}>
+                AED{totalSelectedAmount}
               </Text>
-              <Text fontSize={"3xl"} fontFamily={fontHauoraSemiBold}>
+
+              <Text fontSize={"md"} mb={2}>
+                and a maximum of
+              </Text>
+
+              <Text fontSize={"3xl"} fontFamily={fontHauoraSemiBold} mb={10}>
                 AED{totalAmount}
               </Text>
+
+              <IconDotsVertical size={22} strokeWidth={1.5} color={"#222"} />
+            </Div>
+
+            <Div
+              bg="#EFE9DB"
+              rounded={15}
+              px={30}
+              py={14}
+              flexDir="row"
+              alignItems="center"
+              justifyContent="space-around"
+              style={{ gap: 50 }}
+              // mb={25}
+            >
+              <Div>
+                <Text mb={2} fontFamily={fontHauoraMedium}>
+                  Due Now
+                </Text>
+                <Text fontSize={"3xl"} fontFamily={fontHauoraSemiBold}>
+                  AED{bookingCharges}
+                </Text>
+              </Div>
+
+              <Div>
+                <Text mb={2} fontFamily={fontHauoraMedium}>
+                  At the clinic
+                </Text>
+                <Text fontSize={"3xl"} fontFamily={fontHauoraSemiBold}>
+                  AED{totalAmount}
+                </Text>
+              </Div>
             </Div>
           </Div>
-        </Div>
 
-        <ButtonPrimary
-          mb={15}
-          onPress={openPaymentSheet}
-          loading={actionLoading}
-          disabled={actionLoading}
-          fontFamily={fontHauoraSemiBold}
-          bg="#0000FF"
-        >
-          Pay Now
-        </ButtonPrimary>
-
-        <Text
-          fontSize={"md"}
-          fontFamily={fontHauoraSemiBold}
-          textAlign="center"
-          maxW={"80%"}
-          mx={"auto"}
-        >
-          You’ll recieve appointment confirmation after payment is successful
-        </Text>
-      </Div>
-
-      <Div justifyContent="center" alignItems="center">
-        <Div
-          flexDir="row"
-          alignItems="center"
-          justifyContent="center"
-          style={{ gap: 5 }}
-          borderWidth={1}
-          borderLeftWidth={1.5}
-          borderRightWidth={1.5}
-          borderColor="#B2B2B2"
-          py={3}
-          px={12}
-          rounded={5}
-          mb={15}
-        >
-          <Text
-            fontSize={"md"}
-            fontFamily={fontHauoraMedium}
-            color="#B2B2B2"
-            mt={2}
+          <ButtonPrimary
+            mb={15}
+            onPress={openPaymentSheet}
+            loading={actionLoading}
+            disabled={actionLoading}
+            fontFamily={fontHauoraSemiBold}
+            bg="#0000FF"
+            maxW={"85%"}
+            mx={"auto"}
           >
-            Payment securely processed by
-          </Text>
+            Pay Now
+          </ButtonPrimary>
+
           <Text
-            fontSize={"lg"}
-            fontFamily={fontHauoraBold}
-            fontWeight={"900"}
-            color="#B2B2B2"
+            fontSize={12}
+            fontFamily={fontHauoraSemiBold}
+            textAlign="center"
+            maxW={"70%"}
+            mx={"auto"}
           >
-            stripe
+            You’ll recieve appointment confirmation after payment is successful
           </Text>
         </Div>
 
-        <Image
-          source={require("@/assets/images/payment-service.png")}
-          h={80}
-          w={"80%"}
-          style={{ objectFit: "contain" }}
-        />
-      </Div>
+        <Div justifyContent="center" alignItems="center">
+          <Div
+            flexDir="row"
+            alignItems="center"
+            justifyContent="center"
+            style={{ gap: 5 }}
+            borderWidth={1}
+            borderLeftWidth={1.5}
+            borderRightWidth={1.5}
+            borderColor="#B2B2B2"
+            py={3}
+            px={12}
+            rounded={5}
+            mb={10}
+          >
+            <Text
+              fontSize={"md"}
+              fontFamily={fontHauoraMedium}
+              color="#B2B2B2"
+              mt={2}
+            >
+              Payment securely processed by
+            </Text>
+            <Text
+              fontSize={"lg"}
+              fontFamily={fontHauoraBold}
+              fontWeight={"900"}
+              color="#B2B2B2"
+            >
+              stripe
+            </Text>
+          </Div>
+
+          <Image
+            source={require("@/assets/images/payment-service.png")}
+            h={80}
+            w={"80%"}
+            style={{ objectFit: "contain" }}
+          />
+        </Div>
+      </ScrollDiv>
     </Layout>
   );
 };
