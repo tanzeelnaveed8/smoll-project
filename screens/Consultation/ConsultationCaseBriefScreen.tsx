@@ -91,7 +91,7 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
 
   const [documents, setDocuments] = useState<UploadedFile[]>([]);
   const [description, setDescription] = useState("");
-  const [selectedFile, setSelectedFile] = useState("");
+  const [uploading, setUploading] = useState(false);
 
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -306,6 +306,21 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
           horizontal
           showsHorizontalScrollIndicator={false}
         >
+          <ImageUpload
+            plusIcon={false}
+            w={139}
+            h={150}
+            mr={12}
+            noImage
+            onLoading={(item) => {
+              setUploading(item);
+            }}
+            onUnSelect={handleUnSelectImage}
+            onChange={(file) => {
+              handleImage(file);
+            }}
+          />
+
           {documents.map((item, i) => {
             return (
               <ImageUpload
@@ -320,38 +335,13 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
               />
             );
           })}
-
-          {/* {documents.length === 0 && (
-            <ImageUpload
-              plusIcon={false}
-              w={139}
-              h={150}
-              mr={12}
-              noImage
-              onUnSelect={handleUnSelectImage}
-              onChange={(file) => {
-                handleImage(file);
-              }}
-            />
-          )} */}
-
-          <ImageUpload
-            plusIcon={false}
-            w={139}
-            h={150}
-            noImage
-            onUnSelect={handleUnSelectImage}
-            onChange={(file) => {
-              handleImage(file);
-            }}
-          />
         </ScrollDiv>
         {/* </Div> */}
 
         <Div h={40}></Div>
       </ScrollDiv>
       <ButtonPrimary
-        disabled={isActionDisable}
+        disabled={isActionDisable || uploading}
         onPress={handleCreateCase}
         loading={actionLoading}
       >

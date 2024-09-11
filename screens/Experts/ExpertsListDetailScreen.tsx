@@ -218,12 +218,13 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
             loading={isRequesting}
             onPress={handleRequestConsultation}
           >
-            Instant Consultation
+            Instant Video Chat
           </ButtonPrimary>
 
           <ButtonPrimary
             bgColor="primary"
             mb={10}
+            disabled={!expertDetailMap.get(expertId)?.isOnline || isRequesting}
             onPress={() => {
               navigation.navigate("ExpertsChatScreen", {
                 expertId: expertDetailMap.get(expertId)?.id ?? "",
@@ -231,7 +232,7 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
               });
             }}
           >
-            Chat now
+            Text Chat
           </ButtonPrimary>
 
           <Div>

@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
-import * as DocumentPicker from "expo-document-picker";
+import { useCallback, useEffect, useState } from "react";
 
 import * as ImagePicker from "expo-image-picker";
 import {
   IconEditCircle,
+  IconPaperclip,
   IconPlus,
   IconProps,
   IconStarFilled,
@@ -11,9 +11,15 @@ import {
   IconX,
 } from "@tabler/icons-react-native";
 import { Button, Div, Image, Modal, Text } from "react-native-magnus";
-import { colorPrimary, fontHauoraSemiBold } from "@/constant/constant";
+import {
+  colorPrimary,
+  fontHauoraMedium,
+  fontHauoraSemiBold,
+} from "@/constant/constant";
 import { useFileStore } from "@/store/modules/file";
 import { UploadedFile } from "@/store/types/file";
+import DocumentPicker from "react-native-document-picker";
+
 import {
   ActivityIndicator,
   Linking,
@@ -40,6 +46,10 @@ interface Props {
   openImageOnTab?: boolean;
   rounded?: number;
   bg?: string;
+  document?: boolean;
+  docType?: string;
+  documentName?: string;
+  onLoading?: (isLoading: boolean) => void;
 }
 
 const ImageUpload: React.FC<Props> = ({
@@ -59,6 +69,10 @@ const ImageUpload: React.FC<Props> = ({
   bg,
   userIcon,
   openImageOnTab,
+  document,
+  docType,
+  documentName,
+  onLoading,
 }) => {
   const { uploadFile } = useFileStore();
 
@@ -94,6 +108,9 @@ const ImageUpload: React.FC<Props> = ({
 
     try {
       setLoading(true);
+      if (onLoading) {
+        onLoading(true);
+      }
 
       const uploadedFile = await uploadFile([file]);
 
@@ -106,6 +123,9 @@ const ImageUpload: React.FC<Props> = ({
       }
     } finally {
       setLoading(false);
+      if (onLoading) {
+        onLoading(false);
+      }
     }
   };
 
@@ -130,6 +150,48 @@ const ImageUpload: React.FC<Props> = ({
     setModalVisible(true);
   };
 
+  const handleDocumentSelection = useCallback(async () => {
+    if (disabled) return;
+
+    try {
+      const response = await DocumentPicker.pick({
+        presentationStyle: "fullScreen",
+      });
+
+      if (response[0].type?.includes("image")) {
+        setImage(response[0].uri);
+      }
+
+      setLoading(true);
+      if (onLoading) {
+        onLoading(true);
+      }
+
+      const file = {
+        uri: response[0].uri,
+        name: response[0].name,
+        type: response[0].type,
+      } as unknown as File;
+
+      const uploadedFile = await uploadFile([file]);
+
+      setUploadedFileUrl(uploadedFile[0].url);
+      if (onChange) {
+        onChange(uploadedFile);
+      }
+      if (noImage) {
+        setImage(null);
+      }
+    } catch (err) {
+      console.warn(err);
+    } finally {
+      setLoading(false);
+      if (onLoading) {
+        onLoading(false);
+      }
+    }
+  }, []);
+
   return (
     <Div alignItems="flex-start">
       <Div position="relative" mr={mr ? mr : 0}>
@@ -143,7 +205,7 @@ const ImageUpload: React.FC<Props> = ({
               if (openImageOnTab) {
                 handleOpenImage();
               } else {
-                pickImage();
+                document ? handleDocumentSelection() : pickImage();
               }
             }}
             disabled={loading}
@@ -152,11 +214,46 @@ const ImageUpload: React.FC<Props> = ({
               w={w}
               h={h}
               rounded={8}
-              bgImg={{ uri: image }}
+              bgImg={{
+                uri: image,
+              }}
               position="relative"
               alignItems="center"
               justifyContent="center"
+              overflow="hidden"
             >
+              {documentName && docType && !docType.includes("image") && (
+                <Div
+                  position="absolute"
+                  top={0}
+                  left={0}
+                  w={"100%"}
+                  h={"100%"}
+                  justifyContent={"center"}
+                  alignItems={"center"}
+                  bg="#ddd"
+                  p={10}
+                >
+                  <IconPaperclip
+                    size={44}
+                    color="#fff"
+                    style={{ marginTop: "auto" }}
+                  />
+                  {documentName && (
+                    <Text
+                      mt={"auto"}
+                      fontFamily={fontHauoraSemiBold}
+                      textAlign="center"
+                      lineHeight={16}
+                      fontSize={12}
+                    >
+                      {documentName.length > 32
+                        ? `${documentName.slice(0, 32)}...`
+                        : documentName}
+                    </Text>
+                  )}
+                </Div>
+              )}
               {!hideUnselectBtn && (
                 <Button
                   position="absolute"
@@ -189,20 +286,28 @@ const ImageUpload: React.FC<Props> = ({
             bg={bg ? bg : "#F4F6F8"}
             rounded={rounded ? rounded : 8}
             position="relative"
-            onPress={pickImage}
+            disabled={loading}
+            onPress={() => {
+              document ? handleDocumentSelection() : pickImage();
+            }}
           >
-            {plusIcon ? (
-              <IconPlus size={32} color="#222222" strokeWidth={1.5} />
-            ) : userIcon ? (
-              <IconUser size={64} color="#222222" strokeWidth={1.5} />
-            ) : (
-              <Text
-                fontFamily={fontHauoraSemiBold}
-                fontSize="xl"
-                lineHeight={24}
-              >
-                Upload
-              </Text>
+            {loading && <ActivityIndicator size="large" color={colorPrimary} />}
+            {!loading && (
+              <>
+                {plusIcon ? (
+                  <IconPlus size={32} color="#222222" strokeWidth={1.5} />
+                ) : userIcon ? (
+                  <IconUser size={64} color="#222222" strokeWidth={1.5} />
+                ) : (
+                  <Text
+                    fontFamily={fontHauoraSemiBold}
+                    fontSize="xl"
+                    lineHeight={24}
+                  >
+                    Upload
+                  </Text>
+                )}
+              </>
             )}
 
             {isPrimary && (
@@ -227,7 +332,9 @@ const ImageUpload: React.FC<Props> = ({
             bottom={-7}
             right={-8}
             p={0}
-            onPress={pickImage}
+            onPress={() => {
+              document ? handleDocumentSelection() : pickImage();
+            }}
           >
             <IconEditCircle width={24} height={24} color={"#222"} />
           </Button>
