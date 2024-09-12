@@ -69,7 +69,13 @@ export const usePetStore = create<PetState>((set, get) => ({
     });
     const data = response.data;
 
-    const updatedPetMap = get().petsDetailMap.set(id, response.data);
+    console.log("updated pet data", data);
+    const existingHealthHistory = get().petsDetailMap.get(id)?.healthHistory;
+
+    const updatedPetMap = get().petsDetailMap.set(id, {
+      ...response.data,
+      healthHistory: existingHealthHistory,
+    });
 
     const updatedPets = get().pets?.map((pet) =>
       pet.id === id ? { ...pet, name: data.name, photos: data.photos } : pet

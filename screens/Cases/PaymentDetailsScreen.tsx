@@ -1,4 +1,7 @@
 import Layout from "@/components/app/Layout";
+import DotIcon from "@/components/icons/DotIcon";
+import InformationIcon from "@/components/icons/InformationIcon";
+import StripeIcon from "@/components/icons/StripeIcon";
 import WalletIcon from "@/components/icons/WalletIcon";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import FlashCustomContent from "@/components/partials/FlashCustomContent";
@@ -19,9 +22,13 @@ import {
   presentPaymentSheet,
 } from "@stripe/stripe-react-native";
 import { SetupParams } from "@stripe/stripe-react-native/lib/typescript/src/types/PaymentSheet";
-import { IconDotsVertical } from "@tabler/icons-react-native";
+import {
+  IconAlertCircle,
+  IconAlertCircleFilled,
+  IconDotsVertical,
+} from "@tabler/icons-react-native";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Platform } from "react-native";
+import { Platform, TouchableOpacity } from "react-native";
 import { showMessage } from "react-native-flash-message";
 import { Div, Image, ScrollDiv, Text } from "react-native-magnus";
 
@@ -247,7 +254,7 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
       loading={loading}
     >
       <ScrollDiv flex={1} showsVerticalScrollIndicator={false}>
-        <Div flex={1} pt={20} mb={50}>
+        <Div flex={1} pt={10} mb={50}>
           {/* <Div
           flexDir="row"
           justifyContent="space-between"
@@ -265,7 +272,7 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
             alignItems="flex-end"
             mb={40}
           >
-            <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold}>
+            <Text fontSize={"2xl"} fontFamily={fontHauoraSemiBold}>
               Payment Details
             </Text>
 
@@ -278,16 +285,11 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
             </Text>
           </Div>
 
-          <Text
-            fontSize={"xl"}
-            color="#000"
-            fontFamily={fontCooperMedium}
-            mb={8}
-          >
+          <Text fontSize={"2xl"} color="#000" fontFamily={fontCooper} mb={8}>
             Here is what your bill will look like at the
           </Text>
 
-          <Text fontSize={30} fontFamily={fontCooperMedium} mb={25}>
+          <Text fontSize={"6xl"} fontFamily={fontCooper} mb={30}>
             {clinicName}
           </Text>
 
@@ -298,25 +300,26 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
             px={16}
             pb={14}
             pt={22}
-            mb={22}
+            mb={10}
           >
             <Div px={20} mb={15}>
               <Text fontSize={"lg"} mb={8} fontFamily={fontHauoraSemiBold}>
                 Your vet bill will be
               </Text>
 
-              <Div flexDir="row" alignItems="flex-end" mb={20}>
+              <Div flexDir="row" alignItems="flex-end" mb={30}>
                 <Div>
                   <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
                     Minimum
                   </Text>
                   <Text
-                    fontSize={"4xl"}
-                    fontFamily={fontHauoraSemiBold}
-                    lineHeight={30}
+                    fontSize={"5xl"}
+                    fontFamily={fontHauoraBold}
+                    lineHeight={36}
                   >
                     {minimumAmount}
-                    <Text fontSize={"md"} fontFamily={fontHauoraSemiBold}>
+                    <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
+                      {" "}
                       AED
                     </Text>
                   </Text>
@@ -330,31 +333,43 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                   </Text>
 
                   <Text
-                    fontSize={"4xl"}
-                    fontFamily={fontHauoraSemiBold}
-                    lineHeight={30}
+                    fontSize={"5xl"}
+                    fontFamily={fontHauoraBold}
+                    lineHeight={36}
                   >
                     {/* {totalSelectedAmount} */}
                     {totalSelectedAmount}
-                    <Text fontSize={"md"} fontFamily={fontHauoraSemiBold}>
+                    <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
+                      {" "}
                       AED
                     </Text>
                   </Text>
+
+                  <Div
+                    style={{
+                      marginLeft: "auto",
+                      position: "absolute",
+                      bottom: -30,
+                      left: 20,
+                    }}
+                  >
+                    <DotIcon />
+                  </Div>
                 </Div>
               </Div>
-
-              <IconDotsVertical size={22} strokeWidth={1.5} color={"#222"} />
             </Div>
 
             <Div
               bg="#EFE9DB"
-              rounded={15}
+              rounded={22}
               px={30}
               py={14}
               flexDir="row"
               alignItems="center"
               justifyContent="space-around"
               style={{ gap: 50 }}
+              borderWidth={1.5}
+              borderColor="#222"
               // mb={25}
             >
               <Div>
@@ -362,35 +377,53 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                   20% Advance
                 </Text>
                 <Text
-                  fontSize={"4xl"}
-                  fontFamily={fontHauoraSemiBold}
+                  fontSize={"5xl"}
+                  fontFamily={fontHauoraBold}
                   lineHeight={30}
                 >
                   {bookingCharges}
-                  <Text fontSize={"md"} fontFamily={fontHauoraSemiBold}>
+                  <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
+                    {" "}
                     AED
                   </Text>
                 </Text>
               </Div>
 
               <Div flexDir="row" alignItems="flex-end" style={{ gap: 6 }}>
-                <WalletIcon mb={4} />
-                <Text fontSize={12} fontFamily={fontHauoraSemiBold} maxW={130}>
+                <WalletIcon mb={4} width={30} height={30} />
+                <Text fontSize={13} fontFamily={fontHauoraSemiBold} maxW={130}>
                   Balance paid at the clinic after service is received
                 </Text>
               </Div>
             </Div>
           </Div>
 
+          <TouchableOpacity
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              marginBottom: 14,
+              flexDirection: "row",
+              gap: 3,
+            }}
+          >
+            <InformationIcon width={11} height={11} />
+            <Text fontSize={10} mb={1} fontFamily={fontHauoraSemiBold}>
+              Understand how quotations work
+            </Text>
+          </TouchableOpacity>
+
           <ButtonPrimary
-            mb={15}
+            mb={10}
             onPress={openPaymentSheet}
             loading={actionLoading}
             disabled={actionLoading}
             fontFamily={fontHauoraSemiBold}
             bg="#0000FF"
-            maxW={"85%"}
+            maxW={278}
             mx={"auto"}
+            py={16}
+            fontSize={"xl"}
           >
             Pay Now
           </ButtonPrimary>
@@ -407,7 +440,7 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
         </Div>
 
         <Div justifyContent="center" alignItems="center">
-          <Div
+          {/* <Div
             flexDir="row"
             alignItems="center"
             justifyContent="center"
@@ -437,7 +470,9 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
             >
               stripe
             </Text>
-          </Div>
+          </Div> */}
+
+          <StripeIcon />
 
           <Image
             source={require("@/assets/images/payment-service.png")}

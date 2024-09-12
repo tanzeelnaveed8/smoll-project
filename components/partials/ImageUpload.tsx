@@ -56,6 +56,7 @@ interface Props {
   docType?: string;
   documentName?: string;
   onLoading?: (isLoading: boolean) => void;
+  showDownloadBtn?: boolean;
 }
 
 const ImageUpload: React.FC<Props> = ({
@@ -79,6 +80,7 @@ const ImageUpload: React.FC<Props> = ({
   docType,
   documentName,
   onLoading,
+  showDownloadBtn,
 }) => {
   const { uploadFile } = useFileStore();
   const toast = useToast();
@@ -349,26 +351,28 @@ const ImageUpload: React.FC<Props> = ({
                 </Button>
               )}
 
-              <Button
-                position="absolute"
-                zIndex={50}
-                top={2}
-                right={40}
-                p={2}
-                onPress={handleDownload}
-                bg="#00000061"
-                // disabled={downloadLoading}
-              >
-                {downloadLoading ? (
-                  <ActivityIndicator
-                    size="small"
-                    style={{ width: 24, height: 24 }}
-                    color={"#fff"}
-                  />
-                ) : (
-                  <IconDownload width={24} height={24} color={"#fff"} />
-                )}
-              </Button>
+              {showDownloadBtn && (
+                <Button
+                  position="absolute"
+                  zIndex={50}
+                  top={2}
+                  right={40}
+                  p={2}
+                  onPress={handleDownload}
+                  bg="#00000061"
+                  // disabled={downloadLoading}
+                >
+                  {downloadLoading ? (
+                    <ActivityIndicator
+                      size="small"
+                      style={{ width: 24, height: 24 }}
+                      color={"#fff"}
+                    />
+                  ) : (
+                    <IconDownload width={24} height={24} color={"#fff"} />
+                  )}
+                </Button>
+              )}
 
               {isPrimary && (
                 <IconStarFilled

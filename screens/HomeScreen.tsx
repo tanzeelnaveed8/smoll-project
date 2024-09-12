@@ -44,6 +44,10 @@ import OnboardingIcon1 from "@/components/icons/OnboardingIcon1";
 import OnboardingIcon2 from "@/components/icons/OnboardingIcon2";
 import OnboardingIcon4 from "@/components/icons/OnboardingIcon4";
 import OnboardingIcon5 from "@/components/icons/OnboardingIcon5";
+import HomeScreenBoyIcon from "@/components/icons/HomeScreenBoyIcon";
+import ClockIcon from "@/components/icons/ClockIcon";
+import GirlIcon from "@/components/icons/GirlIcon";
+import DogIcon from "@/components/icons/DogIcon";
 
 interface Props {
   navigation: NavigationType;
@@ -70,14 +74,24 @@ const HomeScreen: React.FC<Props> = (props) => {
       value: "appointments",
       description: "All your appointment shows here",
       loading: false,
-      icon: <OnboardingIcon2 width={65} height={65} />,
+      // icon: <OnboardingIcon2 width={65} height={65} />,
+      icon: (
+        <Div style={{ transform: [{ translateY: 3 }] }}>
+          <ClockIcon width={70} height={70} />
+        </Div>
+      ),
     },
     {
       name: "Human Counselling",
       value: "counselling",
       description: "Talk to somone knows how it feels loosing a pet",
       loading: false,
-      icon: <OnboardingIcon4 width={55} height={55} />,
+      // icon: <OnboardingIcon4 width={55} height={55} />,
+      icon: (
+        <Div style={{ marginLeft: -2, transform: [{ translateX: -3 }] }}>
+          <GirlIcon width={72} height={72} />
+        </Div>
+      ),
     },
     {
       name: "PetID",
@@ -85,6 +99,7 @@ const HomeScreen: React.FC<Props> = (props) => {
       description: "Add and track your pet’s records",
       loading: false,
       icon: <OnboardingIcon5 width={55} height={55} />,
+      // icon: <DogIcon width={70} height={70} />,
     },
   ]);
 
@@ -267,25 +282,31 @@ const HomeScreen: React.FC<Props> = (props) => {
               props.navigation.navigate("ExpertsListScreen");
             }}
           >
-            <Div justifyContent="space-between" px={24}>
+            <Div justifyContent="space-between" px={20} pr={0}>
               <Div mb={16} mt={10}>
                 <Text
-                  fontSize={"2xl"}
+                  fontSize={"4xl"}
                   fontFamily={fontHauoraBold}
-                  lineHeight={24}
+                  lineHeight={27}
                 >
                   Chat with pet
                 </Text>
                 <Text
-                  fontSize={"2xl"}
+                  fontSize={"4xl"}
                   fontFamily={fontHauoraBold}
-                  lineHeight={24}
+                  lineHeight={27}
                   mb={3}
                 >
                   wellness expert
                 </Text>
 
-                <Text fontFamily={fontHauoraSemiBold}>Completly Free!</Text>
+                <Text
+                  fontFamily={fontHauoraSemiBold}
+                  fontSize="lg"
+                  lineHeight={20}
+                >
+                  Completly Free!
+                </Text>
               </Div>
 
               <Div
@@ -323,7 +344,11 @@ const HomeScreen: React.FC<Props> = (props) => {
               </Div>
             </Div>
 
-            <OnboardingIcon1 width={130} height={130} />
+            {/* <OnboardingIcon1 width={130} height={130} /> */}
+
+            <Div style={{ transform: [{ translateX: -10 }] }}>
+              <HomeScreenBoyIcon width={190} height={170} />
+            </Div>
           </TouchableOpacity>
 
           <Div>

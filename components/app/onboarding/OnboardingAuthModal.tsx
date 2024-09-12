@@ -23,8 +23,6 @@ import SelectInput from "@/components/partials/SelectInput";
 import { getCountryCodes } from "@/utils/country-codes";
 import { GestureResponderEvent } from "react-native-modal";
 
-import parsePhoneNumber from "libphonenumber-js";
-
 interface Props {
   navigation: NavigationType;
   isVisible: boolean;

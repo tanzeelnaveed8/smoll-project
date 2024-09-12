@@ -3,6 +3,7 @@ import BottomSheet from "./BottomSheet";
 import { Div, Text } from "react-native-magnus";
 import { fontHauoraMedium, fontHeading } from "@/constant/constant";
 import ButtonPrimary from "./ButtonPrimary";
+import { TouchableOpacity } from "react-native";
 
 const ConfirmationModal: React.FC<{
   heading: string;
@@ -28,48 +29,50 @@ const ConfirmationModal: React.FC<{
   confirmBgColor,
 }) => {
   return (
-    <BottomSheet
-      isVisible={showModal}
-      h="45%"
-      showCloseIcon
-      onCloseIconClick={onClose}
-      roundedTop={24}
-    >
-      <Div>
-        <Text fontSize={"6xl"} mb={8} fontFamily={fontHeading}>
-          {heading}
-        </Text>
-
-        {text && (
-          <Text fontSize={"md"} fontFamily={fontHauoraMedium} mb={16}>
-            {text}
+    <>
+      <BottomSheet
+        isVisible={showModal}
+        h={330}
+        showCloseIcon
+        onCloseIconClick={onClose}
+        roundedTop={24}
+      >
+        <Div>
+          <Text fontSize={"6xl"} mb={8} fontFamily={fontHeading}>
+            {heading}
           </Text>
-        )}
 
-        {cancelText && (
-          <ButtonPrimary
-            // bgColor={confirmBgColor ? confirmBgColor : "danger"}
-            bg={confirmBgColor ? confirmBgColor : "#222"}
-            mb={12}
-            onPress={onConfirm}
-            loading={isLoading}
-            disabled={isLoading}
-          >
-            {`${confirmText}`}
-          </ButtonPrimary>
-        )}
+          {text && (
+            <Text fontSize={"md"} fontFamily={fontHauoraMedium} mb={16}>
+              {text}
+            </Text>
+          )}
 
-        {cancelText && (
-          <ButtonPrimary
-            bg={cancelBgColor ? cancelBgColor : "#222"}
-            onPress={onClose}
-            disabled={isLoading}
-          >
-            {cancelText}
-          </ButtonPrimary>
-        )}
-      </Div>
-    </BottomSheet>
+          {cancelText && (
+            <ButtonPrimary
+              // bgColor={confirmBgColor ? confirmBgColor : "danger"}
+              bg={confirmBgColor ? confirmBgColor : "#222"}
+              mb={12}
+              onPress={onConfirm}
+              loading={isLoading}
+              disabled={isLoading}
+            >
+              {`${confirmText}`}
+            </ButtonPrimary>
+          )}
+
+          {cancelText && (
+            <ButtonPrimary
+              bg={cancelBgColor ? cancelBgColor : "#222"}
+              onPress={onClose}
+              disabled={isLoading}
+            >
+              {cancelText}
+            </ButtonPrimary>
+          )}
+        </Div>
+      </BottomSheet>
+    </>
   );
 };
 

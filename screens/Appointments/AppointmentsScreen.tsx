@@ -87,51 +87,55 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
             </Text>
           )}
 
-          {!isLoading && appointment && appointment?.length > 0 && (
-            <FlatList
-              // ListEmptyComponent={() => (
-              //   <Text>You don't have any appointments yet.</Text>
-              // )}
-              onEndReached={handleLoadMore} // required, should return a promise
-              onEndReachedThreshold={20} // optional
-              activityIndicatorColor={"black"} // optional
-              refreshControl={
-                <RefreshControl
-                  refreshing={isRefreshing}
-                  tintColor={colorPrimary}
-                  onRefresh={() => handleFetchAppointments(true)}
-                />
-              }
-              data={appointment}
-              renderItem={({ item, index }) => (
-                <AppointmentCard
-                  img={
-                    item.partner?.clinicImg?.url ?? item.vet?.profileImg?.url
-                  }
-                  pet={item.pet.name}
-                  text={`Your upcoming ${
-                    item.type === "in-clinic" ? "visit" : "consultation"
-                  } with ${item.partner?.name ?? item.vet?.name}`}
-                  scheduledTime={item.scheduledAt}
-                  type={
-                    item.type === "in-clinic"
-                      ? "Clinic Visit"
-                      : "Video Consultation"
-                  }
-                  alert={""}
-                  onPress={() => {
-                    navigation.navigate("AppointmentDetailsScreen", {
-                      id: item.id,
-                      type: item.type,
-                    });
-                  }}
-                />
-              )}
-              keyExtractor={(item, index) => `${index}`}
-            />
-          )}
+          <FlatList
+            ListEmptyComponent={() => (
+              <Div minH={350} justifyContent="flex-end">
+                <Text
+                  fontSize={"5xl"}
+                  textAlign="center"
+                  fontFamily={fontCooper}
+                >
+                  You don't have any upcoming appointments
+                </Text>
+              </Div>
+            )}
+            onEndReached={handleLoadMore} // required, should return a promise
+            onEndReachedThreshold={20} // optional
+            activityIndicatorColor={"black"} // optional
+            refreshControl={
+              <RefreshControl
+                refreshing={isRefreshing}
+                tintColor={colorPrimary}
+                onRefresh={() => handleFetchAppointments(true)}
+              />
+            }
+            data={appointment}
+            renderItem={({ item, index }) => (
+              <AppointmentCard
+                img={item.partner?.clinicImg?.url ?? item.vet?.profileImg?.url}
+                pet={item.pet.name}
+                text={`Your upcoming ${
+                  item.type === "in-clinic" ? "visit" : "consultation"
+                } with ${item.partner?.name ?? item.vet?.name}`}
+                scheduledTime={item.scheduledAt}
+                type={
+                  item.type === "in-clinic"
+                    ? "Clinic Visit"
+                    : "Video Consultation"
+                }
+                alert={""}
+                onPress={() => {
+                  navigation.navigate("AppointmentDetailsScreen", {
+                    id: item.id,
+                    type: item.type,
+                  });
+                }}
+              />
+            )}
+            keyExtractor={(item, index) => `${index}`}
+          />
 
-          {!isLoading &&
+          {/* {!isLoading &&
             (!appointment || (appointment && appointment.length === 0)) && (
               <Div h={"90%"} justifyContent="center">
                 <Text
@@ -142,7 +146,7 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
                   You don't have any upcoming appointments
                 </Text>
               </Div>
-            )}
+            )} */}
         </Div>
       </Div>
     </Layout>

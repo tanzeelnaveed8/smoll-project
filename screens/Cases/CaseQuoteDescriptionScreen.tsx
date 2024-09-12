@@ -182,7 +182,7 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
             showsVerticalScrollIndicator={false}
           >
             {clinicQuote?.services.map((item, i) => (
-              <Div mb={16}>
+              <Div mb={16} key={i}>
                 <ProposalDetailCard
                   key={item.id}
                   id={item.id}

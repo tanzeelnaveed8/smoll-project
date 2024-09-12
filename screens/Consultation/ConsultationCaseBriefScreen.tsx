@@ -339,6 +339,7 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
                   w={139}
                   h={150}
                   uri={item.url}
+                  // showDownloadBtn
                   onUnSelect={handleUnSelectImage}
                   disabled
                   docType={item.mimetype}

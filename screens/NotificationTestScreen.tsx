@@ -141,81 +141,86 @@ const NotificationTestScreen: React.FC<{ navigation: NavigationType }> = ({
         </Div>
       )}
 
-      {!isLoading && notifications && notifications.data.length > 0 && (
-        <Div>
-          <FlatList
-            style={{ height: windowHeight - 150 }}
-            data={notifications.data}
-            showsVerticalScrollIndicator={false}
-            renderItem={({ item, index }) => {
-              return (
+      <Div>
+        <FlatList
+          style={{ height: windowHeight - 150 }}
+          data={notifications.data}
+          ListEmptyComponent={() => (
+            <Div h={600} justifyContent="center" alignItems="center">
+              <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold}>
+                No Notification found
+              </Text>
+            </Div>
+          )}
+          showsVerticalScrollIndicator={false}
+          renderItem={({ item, index }) => {
+            return (
+              <Div
+                key={index}
+                flexDir="row"
+                style={{ gap: 20 }}
+                pb={20}
+                mb={20}
+                borderBottomWidth={1}
+                borderBottomColor={
+                  index + 1 === notifications?.data.length
+                    ? "transparent"
+                    : "#D0D7DC"
+                }
+              >
                 <Div
-                  key={index}
-                  flexDir="row"
-                  style={{ gap: 20 }}
-                  pb={20}
-                  mb={20}
-                  borderBottomWidth={1}
-                  borderBottomColor={
-                    index + 1 === notifications?.data.length
-                      ? "transparent"
-                      : "#D0D7DC"
-                  }
+                  w={40}
+                  h={40}
+                  rounded={40}
+                  bg="#EFEFEF"
+                  justifyContent="center"
+                  alignItems="center"
                 >
-                  <Div
-                    w={40}
-                    h={40}
-                    rounded={40}
-                    bg="#EFEFEF"
-                    justifyContent="center"
-                    alignItems="center"
-                  >
-                    <IconAlertCircle width={24} height={24} color={"#222222"} />
-                  </Div>
-
-                  <Div>
-                    <Text
-                      fontSize={"lg"}
-                      fontFamily={fontHauoraMedium}
-                      color="darkGreyText"
-                      mb={8}
-                      w={290}
-                    >
-                      {item.message}
-                    </Text>
-
-                    <Text
-                      fontSize={"md"}
-                      fontFamily={fontHauoraMedium}
-                      color="#7B7B7B"
-                    >
-                      {timeAgo(item.createdAt)}
-                      {/* 01 hours ago */}
-                    </Text>
-                  </Div>
+                  <IconAlertCircle width={24} height={24} color={"#222222"} />
                 </Div>
-              );
-            }}
-            onStartReached={onStartReached}
-            keyExtractor={(item, i) => i.toString()}
-            onEndReached={loadMore} // required, should return a promise
-            onEndReachedThreshold={10} // optional
-            // showDefaultLoadingIndicators={true} // optional
-            activityIndicatorColor={"black"} // optional
-            // FooterLoadingIndicator={() => {
-            //   return (
-            //     <Div pb={20}>
-            //       <ActivityIndicator size="large" color={colorPrimary} />
-            //     </Div>
-            //   );
-            // }}
-          />
 
-          {/* <Div justifyContent="center">
+                <Div>
+                  <Text
+                    fontSize={"lg"}
+                    fontFamily={fontHauoraMedium}
+                    color="darkGreyText"
+                    mb={8}
+                    w={290}
+                  >
+                    {item.message}
+                  </Text>
+
+                  <Text
+                    fontSize={"md"}
+                    fontFamily={fontHauoraMedium}
+                    color="#7B7B7B"
+                  >
+                    {timeAgo(item.createdAt)}
+                    {/* 01 hours ago */}
+                  </Text>
+                </Div>
+              </Div>
+            );
+          }}
+          onStartReached={onStartReached}
+          keyExtractor={(item, i) => i.toString()}
+          onEndReached={loadMore} // required, should return a promise
+          onEndReachedThreshold={10} // optional
+          // showDefaultLoadingIndicators={true} // optional
+          activityIndicatorColor={"black"} // optional
+          // FooterLoadingIndicator={() => {
+          //   return (
+          //     <Div pb={20}>
+          //       <ActivityIndicator size="large" color={colorPrimary} />
+          //     </Div>
+          //   );
+          // }}
+        />
+
+        {/* <Div justifyContent="center">
             <ActivityIndicator size="large" color={colorPrimary} />
           </Div> */}
-        </Div>
-      )}
+      </Div>
 
       {isLoading && (
         <Div justifyContent="center" minH={600}>
@@ -223,13 +228,13 @@ const NotificationTestScreen: React.FC<{ navigation: NavigationType }> = ({
         </Div>
       )}
 
-      {!isLoading && (!notifications || notifications?.data.length === 0) && (
+      {/* {!isLoading && (!notifications || notifications?.data.length === 0) && (
         <Div h={"70%"} justifyContent="center" alignItems="center">
           <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold}>
             No Notification found
           </Text>
         </Div>
-      )}
+      )} */}
     </Div>
   );
 };
