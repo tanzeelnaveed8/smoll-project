@@ -23,6 +23,8 @@ import SelectInput from "@/components/partials/SelectInput";
 import { getCountryCodes } from "@/utils/country-codes";
 import { GestureResponderEvent } from "react-native-modal";
 
+import parsePhoneNumber from "libphonenumber-js";
+
 interface Props {
   navigation: NavigationType;
   isVisible: boolean;
@@ -46,8 +48,10 @@ const OnboardingAuthModal: React.FC<Props> = (props) => {
   const [phone, setPhone] = useState("");
   const [codes, setCodes] = useState<{ label: string; value: string }[]>([]);
 
+  // old code / not in use, check SignupScreen.tsx
   const handlePhoneChange = (value: string) => {
     // Remove any non-digit characters
+    console.log("handlePhoneChange value", value);
     let cleanedValue = value.replace(/\D/g, "");
 
     // Remove country code if present and valid
