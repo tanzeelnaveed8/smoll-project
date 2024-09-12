@@ -214,6 +214,7 @@ const HomeScreen: React.FC<Props> = (props) => {
                   style={{ overflow: "visible" }}
                   onPress={() => {
                     props.navigation.navigate("NotificationTestScreen");
+
                     // props.navigation.navigate(
                     //   "PaymentDetailsScreen",
                     //   paymentParams
@@ -442,7 +443,7 @@ const HomeScreen: React.FC<Props> = (props) => {
         />
       </Layout>
 
-      <TabNavigationBar navigation={props.navigation} />
+      {/* <TabNavigationBar navigation={props.navigation} /> */}
     </>
   );
 };

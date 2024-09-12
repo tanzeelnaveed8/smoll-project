@@ -92,7 +92,7 @@ const CasesQuotesListScreen: React.FC<{ navigation: NavigationType }> = ({
             Quotations
           </Text> */}
 
-          {!isLoading && cases.length > 0 && (
+          {!isLoading && cases && cases.length > 0 && (
             <Text fontSize={"lg"} mt={10} fontFamily={fontHauoraSemiBold}>
               In-Clinic Requests
             </Text>
@@ -242,7 +242,7 @@ const CasesQuotesListScreen: React.FC<{ navigation: NavigationType }> = ({
             />
           )}
 
-          {!isLoading && cases && cases.length === 0 && (
+          {!isLoading && (!cases || (cases && cases.length === 0)) && (
             <Div h={"90%"} justifyContent="center">
               <Text
                 fontSize={"5xl"}
@@ -259,7 +259,7 @@ const CasesQuotesListScreen: React.FC<{ navigation: NavigationType }> = ({
         </Div>
       </Layout>
 
-      <TabNavigationBar navigation={navigation} />
+      {/* <TabNavigationBar navigation={navigation} /> */}
     </>
   );
 };

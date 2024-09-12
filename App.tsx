@@ -1,13 +1,14 @@
 import { StripeProvider } from "@stripe/stripe-react-native";
 import { SafeAreaView, StyleSheet } from "react-native";
-import { Text, ThemeProvider } from "react-native-magnus";
+import { Div, Text, ThemeProvider } from "react-native-magnus";
 
 import * as Font from "expo-font";
-import { useEffect, useState } from "react";
-import { fontHauora } from "./constant/constant";
+import React, { useEffect, useState } from "react";
+import { fontHauora, fontHauoraSemiBold } from "./constant/constant";
 
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import AccountSetupAddressScreen from "./screens/AccountSetup/AccountSetupAddressScreen";
 import AccountSetupEmailOtpScreen from "./screens/AccountSetup/AccountSetupEmailOtpScreen";
 import AccountSetupEmailScreen from "./screens/AccountSetup/AccountSetupEmailScreen";
@@ -32,6 +33,7 @@ import ExpertsChatScreen from "./screens/Experts/ExpertsChatScreen";
 import ExpertsInboxScreen from "./screens/Experts/ExpertsInboxScreen";
 import ExpertsListDetailScreen from "./screens/Experts/ExpertsListDetailScreen";
 import ExpertsListScreen from "./screens/Experts/ExpertsListScreen";
+// import PetProfileCongratulationsScreen from "./screens/PetProfile/PetProfileCongratulationsScreen";
 import PetProfileCongratulationsScreen from "./screens/PetProfile/PetProfileCongratulationsScreen";
 import PetProfileMedicalHistoryScreen from "./screens/PetProfile/PetProfileMedicalHistoryScreen";
 import PetProfileScreen from "./screens/PetProfile/PetProfileScreen";
@@ -71,6 +73,11 @@ import PaymentDetailsScreen from "./screens/Cases/PaymentDetailsScreen";
 import UnavailableScreen from "./screens/Consultation/UnavailableScreen";
 import NewOnboardingScreen from "./screens/NewOnboardingScreen";
 import { initializeSendbird } from "./utils/chat.v2";
+import {
+  IconChecklist,
+  IconMessage,
+  IconWindow,
+} from "@tabler/icons-react-native";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -118,6 +125,124 @@ const theme = {
 };
 
 const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
+
+const TabNavigation = () => {
+  const TabButton: React.FC<{ focused: boolean; icon: React.ReactNode }> = ({
+    focused,
+    icon,
+  }) => {
+    return (
+      <>
+        <Div
+          h={4}
+          bg={focused ? "#000" : "transparent"}
+          w={60}
+          mb={2}
+          style={{
+            borderBottomRightRadius: 4,
+            borderBottomLeftRadius: 4,
+          }}
+        />
+        {icon}
+      </>
+    );
+  };
+
+  return (
+    <Tab.Navigator
+      screenOptions={{
+        tabBarStyle: {
+          height: 62,
+          paddingBottom: 8,
+          paddingTop: 2,
+        },
+        tabBarLabelStyle: {
+          fontSize: 14,
+          fontFamily: fontHauoraSemiBold,
+        },
+        tabBarInactiveTintColor: "#494949",
+        tabBarActiveTintColor: "#222",
+      }}
+    >
+      <Tab.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ focused }) => (
+            <TabButton
+              focused={focused}
+              icon={
+                <IconWindow
+                  width={28}
+                  height={28}
+                  color={focused ? "#000" : "#494949"}
+                />
+              }
+            />
+          ),
+        }}
+      />
+
+      {/* <Tab.Screen
+        name="HumanCounsellingMessage"
+        component={HumanCounsellingMessageScreen}
+        options={{
+          title: "Chats",
+          headerShown: false,
+          tabBarIcon: ({ focused }) => (
+            <IconMessage
+              width={28}
+              height={28}
+              color={focused ? "#427594" : "#494949"}
+            />
+          ),
+        }}
+      /> */}
+
+      <Tab.Screen
+        name="Chats"
+        component={ExpertsInboxScreen}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ focused }) => (
+            <TabButton
+              focused={focused}
+              icon={
+                <IconMessage
+                  width={28}
+                  height={28}
+                  color={focused ? "#000" : "#494949"}
+                />
+              }
+            />
+          ),
+        }}
+      />
+
+      <Tab.Screen
+        name="Quotations"
+        component={CasesQuotesListScreen}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ focused }) => (
+            <TabButton
+              focused={focused}
+              icon={
+                <IconChecklist
+                  width={28}
+                  height={28}
+                  color={focused ? "#000" : "#494949"}
+                />
+              }
+            />
+          ),
+        }}
+      />
+    </Tab.Navigator>
+  );
+};
 
 const App = () => {
   const { user } = useUserStore();
@@ -126,6 +251,7 @@ const App = () => {
   useEffect(() => {
     loadFonts().then(() => setFontsLoaded(true));
 
+    return;
     // Remove this method to stop OneSignal Debugging
     OneSignal.Debug.setLogLevel(LogLevel.Verbose);
     // OneSignal Initialization
@@ -213,7 +339,7 @@ const App = () => {
 
   useEffect(() => {
     if (user) {
-      OneSignal.login(user.playerId);
+      // OneSignal.login(user.playerId);
     }
   }, [user]);
 
@@ -277,11 +403,18 @@ const App = () => {
                     name="AccountSetupEmailOtpScreen"
                     component={AccountSetupEmailOtpScreen}
                   />
-                  <Stack.Screen
+                  {/* <Stack.Screen
                     name="HomeScreen"
                     component={HomeScreen}
                     options={{ headerShown: false }}
+                  /> */}
+
+                  <Stack.Screen
+                    name="HomeScreen"
+                    component={TabNavigation}
+                    options={{ headerShown: false }}
                   />
+
                   <Stack.Screen
                     name="NotificationScreen"
                     component={NotificationScreen}

@@ -132,7 +132,7 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
           )}
 
           {!isLoading &&
-            (!appointment || (appointment && appointment === 0)) && (
+            (!appointment || (appointment && appointment.length === 0)) && (
               <Div h={"90%"} justifyContent="center">
                 <Text
                   fontSize={"5xl"}
