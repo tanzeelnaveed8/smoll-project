@@ -62,18 +62,6 @@ const ConsultationWaitingScreen: React.FC<{ navigation: NavigationType }> = ({
     }
   }, []);
 
-  // const initialTime = 154;
-  // const [time, setTime] = useState(initialTime);
-
-  // useEffect(() => {
-  //   if (time > 0) {
-  //     const timerId = setInterval(() => {
-  //       setTime((prevTime) => prevTime - 1);
-  //     }, 1000);
-  //     return () => clearInterval(timerId);
-  //   }
-  // }, [time]);
-
   const findConsultation = async () => {
     try {
       setLoading(true);
@@ -84,12 +72,6 @@ const ConsultationWaitingScreen: React.FC<{ navigation: NavigationType }> = ({
     } finally {
       setLoading(false);
     }
-  };
-
-  const formatTime = (seconds: number) => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
   };
 
   const handleCancelConsultation = async () => {
@@ -140,26 +122,6 @@ const ConsultationWaitingScreen: React.FC<{ navigation: NavigationType }> = ({
         <Div mt={18} mb={24}>
           <ActivityIndicator size="large" color={colorPrimary} />
         </Div>
-
-        {/* <Text fontSize={40}>{formatTime(time)}</Text>
-
-        <Text fontSize={"lg"} fontFamily={fontHauoraMedium} mb={12}>
-          Time left
-        </Text>
-
-        <Progress.Bar
-          //   progress={0.2}
-          progress={(initialTime - time) / initialTime}
-          height={8}
-          width={252}
-          borderColor="transparent"
-          color="#427594"
-          style={{
-            backgroundColor: "#EFEFEF",
-            width: "100%",
-            marginBottom: 32,
-          }}
-        /> */}
 
         <Text fontSize={"xl"} fontFamily={fontHauoraMedium} textAlign="center">
           Hang on, {consultation?.vet.name} is checking {petName.trim()}'s case

@@ -98,6 +98,18 @@ PODS:
     - OneSignalXCFramework/OneSignalNotifications
     - OneSignalXCFramework/OneSignalOSCore
     - OneSignalXCFramework/OneSignalOutcomes
+  - Permission-Camera (3.8.4):
+    - RNPermissions
+  - Permission-LocationAlways (3.8.4):
+    - RNPermissions
+  - Permission-LocationWhenInUse (3.8.4):
+    - RNPermissions
+  - Permission-Microphone (3.8.4):
+    - RNPermissions
+  - Permission-Notifications (3.8.4):
+    - RNPermissions
+  - Permission-PhotoLibrary (3.8.4):
+    - RNPermissions
   - RCT-Folly (2024.01.01.00):
     - boost
     - DoubleConversion
@@ -1409,6 +1421,12 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - sendbird-calls-react-native (1.1.2):
+    - React-Core
+    - SendBirdCalls (= 1.10.18)
+  - SendBirdCalls (1.10.18):
+    - SendBirdWebRTC (~> 1.8.1)
+  - SendBirdWebRTC (1.8.1)
   - SocketRocket (0.7.0)
   - Stripe (23.28.1):
     - StripeApplePay (= 23.28.1)
@@ -1467,6 +1485,12 @@ DEPENDENCIES:
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - hermes-engine (from `../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
   - OneSignalXCFramework (< 6.0, >= 5.0.0)
+  - Permission-Camera (from `../node_modules/react-native-permissions/ios/Camera`)
+  - Permission-LocationAlways (from `../node_modules/react-native-permissions/ios/LocationAlways`)
+  - Permission-LocationWhenInUse (from `../node_modules/react-native-permissions/ios/LocationWhenInUse`)
+  - Permission-Microphone (from `../node_modules/react-native-permissions/ios/Microphone`)
+  - Permission-Notifications (from `../node_modules/react-native-permissions/ios/Notifications`)
+  - Permission-PhotoLibrary (from `../node_modules/react-native-permissions/ios/PhotoLibrary`)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCT-Folly/Fabric (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTDeprecation (from `../node_modules/react-native/ReactApple/Libraries/RCTFoundation/RCTDeprecation`)
@@ -1532,12 +1556,15 @@ DEPENDENCIES:
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
+  - "sendbird-calls-react-native (from `../node_modules/@sendbird/calls-react-native`)"
   - "stripe-react-native (from `../node_modules/@stripe/stripe-react-native`)"
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
   trunk:
     - OneSignalXCFramework
+    - SendBirdCalls
+    - SendBirdWebRTC
     - SocketRocket
     - Stripe
     - StripeApplePay
@@ -1584,6 +1611,18 @@ EXTERNAL SOURCES:
   hermes-engine:
     :podspec: "../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec"
     :tag: hermes-2024-06-28-RNv0.74.3-7bda0c267e76d11b68a585f84cfdd65000babf85
+  Permission-Camera:
+    :path: "../node_modules/react-native-permissions/ios/Camera"
+  Permission-LocationAlways:
+    :path: "../node_modules/react-native-permissions/ios/LocationAlways"
+  Permission-LocationWhenInUse:
+    :path: "../node_modules/react-native-permissions/ios/LocationWhenInUse"
+  Permission-Microphone:
+    :path: "../node_modules/react-native-permissions/ios/Microphone"
+  Permission-Notifications:
+    :path: "../node_modules/react-native-permissions/ios/Notifications"
+  Permission-PhotoLibrary:
+    :path: "../node_modules/react-native-permissions/ios/PhotoLibrary"
   RCT-Folly:
     :podspec: "../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec"
   RCTDeprecation:
@@ -1710,6 +1749,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-svg"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
+  sendbird-calls-react-native:
+    :path: "../node_modules/@sendbird/calls-react-native"
   stripe-react-native:
     :path: "../node_modules/@stripe/stripe-react-native"
   Yoga:
@@ -1734,6 +1775,12 @@ SPEC CHECKSUMS:
   glog: fdfdfe5479092de0c4bdbebedd9056951f092c4f
   hermes-engine: 1f547997900dd0752dc0cc0ae6dd16173c49e09b
   OneSignalXCFramework: 46ca7cd13f44fc5bec42ec3a5f4ff1548a9244d4
+  Permission-Camera: 7ec9ee99704766ff9b90198183387a7f5d82b0c1
+  Permission-LocationAlways: 8fd5518716c3045f9c4edf77b901126098d79b60
+  Permission-LocationWhenInUse: 24d97eeb25d8ff9f2232e070f792eeb1360ccaf0
+  Permission-Microphone: 3c985f25f8f89889c9e056622476deb291877194
+  Permission-Notifications: e06c4b115105e9aed6ed8d03c9894c23c1051731
+  Permission-PhotoLibrary: 6db9318df71ad74e9774cecedde95285f5a32d6a
   RCT-Folly: 02617c592a293bd6d418e0a88ff4ee1f88329b47
   RCTDeprecation: 4c7eeb42be0b2e95195563c49be08d0b839d22b4
   RCTRequired: d530a0f489699c8500e944fde963102c42dcd0c2
@@ -1797,6 +1844,9 @@ SPEC CHECKSUMS:
   RNScreens: b32a9ff15bea7fcdbe5dff6477bc503f792b1208
   RNSVG: 5da7a24f31968ec74f0b091e3440080f347e279b
   RNVectorIcons: 2a2f79274248390b80684ea3c4400bd374a15c90
+  sendbird-calls-react-native: 3d8567491c1847df62f209896113efa3b6492730
+  SendBirdCalls: 653e17821fbd0326a08eab8b777c95f7092e4e95
+  SendBirdWebRTC: 441cc06f611871544ca7774c76e057708c01027f
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
   Stripe: 20e24971647daa5750e7764faa1e8aefe4917243
   stripe-react-native: 55fbdae947bc2698d55193947fd17872d0eab786
@@ -1809,6 +1859,6 @@ SPEC CHECKSUMS:
   StripeUICore: 22b314dc9f7ea8814d0f9eeba0ddb5e4b77f34f3
   Yoga: 04f1db30bb810187397fa4c37dd1868a27af229c
 
-PODFILE CHECKSUM: cf17b7658b208697fd9d686be82aa758f69683d7
+PODFILE CHECKSUM: bc5eaa5818ba73b06d54a0cef6b376bd46c4791f
 
 COCOAPODS: 1.14.2

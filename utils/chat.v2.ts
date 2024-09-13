@@ -13,11 +13,13 @@ import {
   UserMessageCreateParams,
 } from "@sendbird/chat/message";
 import { IMessage } from "react-native-gifted-chat";
+import { SendbirdCalls } from "@sendbird/calls-react-native";
 
 const sb = SendbirdChat.init({
-  appId: "BA0CAD93-02C5-4AF4-87B4-AEB89048E67F",
+  appId: process.env.EXPO_PUBLIC_SENDBIRD_APP_ID as string,
   modules: [new GroupChannelModule()],
 });
+SendbirdCalls.initialize(process.env.EXPO_PUBLIC_SENDBIRD_APP_ID as string);
 
 const channelHandler = new GroupChannelHandler();
 
@@ -29,7 +31,10 @@ const initializeSendbird = async (
   nickname: string,
   profileUrl: string
 ) => {
-  await sb.connect(userId, "578655c97a30cd510663efe289dafbbd728770a6");
+  await sb.connect(
+    userId,
+    process.env.EXPO_PUBLIC_SENDBIRD_ACCESS_TOKEN as string
+  );
 
   await sb.updateCurrentUserInfo({ nickname, profileUrl });
   await sb.currentUser?.updateMetaData(
@@ -38,6 +43,11 @@ const initializeSendbird = async (
     },
     true
   );
+
+  await SendbirdCalls.authenticate({
+    userId,
+    accessToken: process.env.EXPO_PUBLIC_SENDBIRD_ACCESS_TOKEN as string,
+  });
 };
 
 const sendTypingStatus = async (channelUrl: string, isTyping: boolean) => {
