@@ -23,6 +23,8 @@ import {
   ActivityIndicator,
   FlatList,
   ImageSourcePropType,
+  ImageStyle,
+  StyleProp,
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
@@ -59,7 +61,11 @@ interface OptionTab {
   description: string;
   value: "counselling" | "petProfileScreen" | "appointments";
   loading: boolean;
-  icon: React.JSX.Element;
+  icon?: React.JSX.Element;
+  img?: ImageSourcePropType;
+  width?: number;
+  height?: number;
+  style?: StyleProp<ImageStyle>;
 }
 
 const HomeScreen: React.FC<Props> = (props) => {
@@ -98,7 +104,14 @@ const HomeScreen: React.FC<Props> = (props) => {
       value: "petProfileScreen",
       description: "Add and track your pet’s records",
       loading: false,
-      icon: <OnboardingIcon5 width={55} height={55} />,
+      // icon: <OnboardingIcon5 width={55} height={55} />,
+      img: require("../assets/images/home-pet-img.png"),
+      width: 70,
+      height: 68,
+      style: {
+        transform: [{ translateX: 5 }, { translateY: 2 }],
+        objectFit: "contain",
+      },
       // icon: <DogIcon width={70} height={70} />,
     },
   ]);
@@ -393,7 +406,16 @@ const HomeScreen: React.FC<Props> = (props) => {
                   alignItems="center"
                   style={{ gap: 12 }}
                 >
-                  {item.icon}
+                  {item.icon ? (
+                    item.icon
+                  ) : (
+                    <Image
+                      source={item.img}
+                      w={item.width}
+                      h={item.height}
+                      style={item.style}
+                    />
+                  )}
 
                   <Div flex={1}>
                     <Text

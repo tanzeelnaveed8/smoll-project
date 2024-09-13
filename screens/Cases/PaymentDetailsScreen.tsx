@@ -1,6 +1,9 @@
 import Layout from "@/components/app/Layout";
+import AccurateCostIcon from "@/components/icons/AccurateCostIcon";
+import AedoIcon from "@/components/icons/AedoIcon";
 import DotIcon from "@/components/icons/DotIcon";
 import InformationIcon from "@/components/icons/InformationIcon";
+import RefundIcon from "@/components/icons/RefundIcon";
 import StripeIcon from "@/components/icons/StripeIcon";
 import WalletIcon from "@/components/icons/WalletIcon";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
@@ -31,6 +34,21 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Platform, TouchableOpacity } from "react-native";
 import { showMessage } from "react-native-flash-message";
 import { Div, Image, ScrollDiv, Text } from "react-native-magnus";
+
+const icons = [
+  {
+    icon: <AedoIcon />,
+    text: "Completly Free",
+  },
+  {
+    icon: <RefundIcon />,
+    text: "Fully Refundable",
+  },
+  {
+    icon: <AccurateCostIcon />,
+    text: "Accurate Costs",
+  },
+];
 
 const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
@@ -254,7 +272,7 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
       loading={loading}
     >
       <ScrollDiv flex={1} showsVerticalScrollIndicator={false}>
-        <Div flex={1} pt={10} mb={50}>
+        <Div flex={1} pt={10} mb={25}>
           {/* <Div
           flexDir="row"
           justifyContent="space-between"
@@ -285,11 +303,16 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
             </Text>
           </Div>
 
-          <Text fontSize={"2xl"} color="#000" fontFamily={fontCooper} mb={8}>
+          <Text fontSize={"2xl"} color="#000">
             Here is what your bill will look like at the
           </Text>
 
-          <Text fontSize={"6xl"} fontFamily={fontCooper} mb={30}>
+          <Text
+            fontSize={"6xl"}
+            fontFamily={fontCooper}
+            mb={30}
+            lineHeight={40}
+          >
             {clinicName}
           </Text>
 
@@ -439,6 +462,23 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
           </Text>
         </Div>
 
+        <Div
+          flexDir="row"
+          justifyContent="center"
+          alignItems="flex-end"
+          style={{ gap: 40 }}
+          mb={30}
+        >
+          {icons.map((item) => (
+            <Div alignItems="center">
+              {item.icon}
+              <Text mt={6} fontSize={"xs"} fontFamily={fontHauoraSemiBold}>
+                {item.text}
+              </Text>
+            </Div>
+          ))}
+        </Div>
+
         <Div justifyContent="center" alignItems="center">
           {/* <Div
             flexDir="row"
@@ -477,6 +517,7 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
           <Image
             source={require("@/assets/images/payment-service.png")}
             h={80}
+            mt={5}
             w={"80%"}
             style={{ objectFit: "contain" }}
           />
