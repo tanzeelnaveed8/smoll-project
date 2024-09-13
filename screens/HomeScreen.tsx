@@ -295,17 +295,13 @@ const HomeScreen: React.FC<Props> = (props) => {
               props.navigation.navigate("ExpertsListScreen");
             }}
           >
-            <Div justifyContent="space-between" px={20} pr={0}>
-              <Div mb={16} mt={10}>
-                <Text
-                  fontSize={"4xl"}
-                  fontFamily={fontHauoraBold}
-                  lineHeight={27}
-                >
+            <Div px={20} pr={0} h={191}>
+              <Div mb={30} mt={34}>
+                <Text fontSize={24} fontFamily={fontHauoraBold} lineHeight={27}>
                   Chat with pet
                 </Text>
                 <Text
-                  fontSize={"4xl"}
+                  fontSize={24}
                   fontFamily={fontHauoraBold}
                   lineHeight={27}
                   mb={3}
@@ -331,18 +327,18 @@ const HomeScreen: React.FC<Props> = (props) => {
               >
                 <Text
                   fontFamily={fontHauoraSemiBold}
-                  fontSize={"xl"}
+                  fontSize={"md"}
                   bg="#222"
                   color="#fff"
                   rounded={20}
-                  py={9}
+                  py={7}
                   px={20}
                 >
                   Start Now
                 </Text>
                 <IconArrowRight
-                  width={34}
-                  height={34}
+                  width={28}
+                  height={28}
                   strokeWidth={2.7}
                   color="#222"
                   style={{ alignSelf: "center" }}
@@ -392,9 +388,9 @@ const HomeScreen: React.FC<Props> = (props) => {
                 borderWidth={1.2}
                 borderColor="#222"
                 mb={index + 1 === options.length ? 0 : 8}
-                rounded={20}
+                rounded={25}
                 w={"100%"}
-                h={80}
+                h={83}
                 disabled={item.loading}
                 onPress={() => handleOptionTabPress(item)}
                 bg="#fff"
@@ -419,16 +415,17 @@ const HomeScreen: React.FC<Props> = (props) => {
 
                   <Div flex={1}>
                     <Text
-                      fontSize={"xl"}
+                      fontSize={19}
                       fontFamily={fontHauoraBold}
                       lineHeight={20}
                     >
                       {item.name}
                     </Text>
                     <Text
-                      fontSize={"md"}
+                      fontSize={12}
                       fontFamily={fontHauoraMedium}
                       lineHeight={18}
+                      maxW={"90%"}
                     >
                       {item.description}
                     </Text>

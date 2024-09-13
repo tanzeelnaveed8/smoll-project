@@ -4,7 +4,7 @@ import InputField from "@/components/partials/InputField";
 import { fontHauora } from "@/constant/constant";
 import { NavigationType } from "@/store/types";
 import React, { useRef, useState, useEffect } from "react";
-import { Div, Text } from "react-native-magnus";
+import { Div, Image, Text } from "react-native-magnus";
 import BottomSheet from "@/components/partials/BottomSheet";
 import BackButton from "@/components/partials/BackButton";
 import OnboardingOtpModal from "./OnboardingOtpModal";
@@ -244,7 +244,14 @@ const Country: React.FC<{
         alignItems="center"
         px={16}
       >
-        <Div h={18} w={18} bgImg={{ uri: flag }} mr={16} />
+        {/* <Div h={18} w={18} bgImg={{ uri: flag }} mr={16} /> */}
+        <Image
+          src={flag}
+          h={18}
+          w={26}
+          mr={16}
+          style={{ objectFit: "contain" }}
+        />
         <Text fontSize="lg">{label}</Text>
       </Div>
     </TouchableOpacity>

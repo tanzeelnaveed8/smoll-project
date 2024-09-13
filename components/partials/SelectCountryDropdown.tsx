@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import SelectInput from "./SelectInput";
 import { GestureResponderEvent } from "react-native-modal";
 import { TouchableOpacity } from "react-native";
-import { Div, Text } from "react-native-magnus";
+import { Div, Image, Text } from "react-native-magnus";
 import { getCountryCodes } from "@/utils/country-codes";
 
 const SelectCountryDropdown: React.FC<{
@@ -84,7 +84,14 @@ const Country: React.FC<{
         alignItems="center"
         px={16}
       >
-        <Div h={18} w={18} bgImg={{ uri: flag }} mr={16} />
+        {/* <Div h={18} w={18} bgImg={{ uri: flag }} mr={16} /> */}
+        <Image
+          src={flag}
+          w={24}
+          h={20}
+          mr={16}
+          style={{ objectFit: "contain" }}
+        />
         <Text fontSize="lg">{label}</Text>
       </Div>
     </TouchableOpacity>

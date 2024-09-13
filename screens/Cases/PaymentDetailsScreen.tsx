@@ -105,7 +105,7 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
   }, [totalAmount]);
 
   useEffect(() => {
-    // initialize();
+    initialize();
   }, []);
 
   const initStripe = async () => {
@@ -470,7 +470,7 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
           mb={30}
         >
           {icons.map((item) => (
-            <Div alignItems="center">
+            <Div alignItems="center" key={item.text}>
               {item.icon}
               <Text mt={6} fontSize={"xs"} fontFamily={fontHauoraSemiBold}>
                 {item.text}
@@ -518,7 +518,7 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
             source={require("@/assets/images/payment-service.png")}
             h={80}
             mt={5}
-            w={"80%"}
+            w={"72%"}
             style={{ objectFit: "contain" }}
           />
         </Div>

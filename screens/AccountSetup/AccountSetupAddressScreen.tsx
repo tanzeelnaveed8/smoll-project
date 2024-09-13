@@ -115,7 +115,7 @@ const AccountSetupAddressScreen: React.FC<Props> = (props) => {
         if (isUpdating) {
           props.navigation.navigate("SettingPersonalInfoScreen");
         } else {
-          props.navigation.navigate("HomeScreen", {
+          props.navigation.navigate("Home", {
             showSetupModal: "true",
           });
         }

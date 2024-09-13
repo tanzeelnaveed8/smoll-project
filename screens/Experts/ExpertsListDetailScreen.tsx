@@ -235,6 +235,15 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
             Text Chat
           </ButtonPrimary>
 
+          <Text
+            fontSize={"lg"}
+            my={5}
+            fontFamily={fontHauoraMedium}
+            textAlign="center"
+          >
+            Or book a session for a later time
+          </Text>
+
           <Div>
             <AvailabilityAndDateSelector
               // allAvailability={allAvailability}
