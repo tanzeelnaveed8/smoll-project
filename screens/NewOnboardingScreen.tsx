@@ -6,9 +6,15 @@ import {
 } from "@/constant/constant";
 import { NavigationType } from "@/store/types";
 import React, { useEffect, useRef, useState } from "react";
-import { Dimensions, FlatList, TouchableOpacity } from "react-native";
+import {
+  Dimensions,
+  FlatList,
+  ImageResolvedAssetSource,
+  TouchableOpacity,
+} from "react-native";
 import { Button, Div, Text, Image } from "react-native-magnus";
 import { useWindowDimensions } from "react-native";
+import { Image as RNImage } from "react-native";
 
 import OnboardingIcon1 from "@/components/icons/OnboardingIcon1";
 import OnboardingIcon2 from "@/components/icons/OnboardingIcon2";
@@ -16,29 +22,62 @@ import OnboardingIcon3 from "@/components/icons/OnboardingIcon3";
 import OnboardingIcon4 from "@/components/icons/OnboardingIcon4";
 import OnboardingIcon5 from "@/components/icons/OnboardingIcon5";
 
+// const images = [
+//   {
+//     icon: <OnboardingIcon1 />,
+//     heading: ["Access", "to Pet", "Experts"],
+//     style: { transform: [{ scale: 1.1 }], paddingLeft: 20 },
+//   },
+//   {
+//     icon: <OnboardingIcon2 />,
+//     heading: ["Recieve &", "Compare", "Upfront Prices"],
+//   },
+//   {
+//     icon: <OnboardingIcon3 />,
+//     heading: ["Book", "appointments", "instantly"],
+//   },
+//   {
+//     icon: <OnboardingIcon4 />,
+//     heading: ["Helping You", "Navigate Pet", "Loss"],
+//     style: { transform: [{ scale: 1.1 }], paddingLeft: 50 },
+//   },
+//   {
+//     icon: <OnboardingIcon5 />,
+//     heading: ["Get your pet", "a PetID"],
+//     style: { transform: [{ scale: 1.3 }], paddingLeft: 50 },
+//   },
+// ];
+
 const images = [
   {
-    img: <OnboardingIcon1 />,
+    img: require("./../assets/images/onboarding-screen/new/slide-1.png"),
     heading: ["Access", "to Pet", "Experts"],
-    style: { transform: [{ scale: 1.1 }], paddingLeft: 20 },
+    width: 260,
+    height: 260,
   },
   {
-    img: <OnboardingIcon2 />,
-    heading: ["Recieve &", "Compare", "Upfront Prices"],
-  },
-  {
-    img: <OnboardingIcon3 />,
+    img: require("./../assets/images/onboarding-screen/new/slide-2.png"),
     heading: ["Book", "appointments", "instantly"],
+    width: 250,
+    height: 300,
   },
   {
-    img: <OnboardingIcon4 />,
+    img: require("./../assets/images/onboarding-screen/new/slide-3.png"),
     heading: ["Helping You", "Navigate Pet", "Loss"],
-    style: { transform: [{ scale: 1.1 }], paddingLeft: 50 },
+    width: 380,
+    height: 350,
   },
   {
-    img: <OnboardingIcon5 />,
+    img: require("./../assets/images/onboarding-screen/new/slide-4.png"),
     heading: ["Get your pet", "a PetID"],
-    style: { transform: [{ scale: 1.3 }], paddingLeft: 50 },
+    width: 300,
+    height: 350,
+  },
+  {
+    img: require("./../assets/images/onboarding-screen/new/slide-5.png"),
+    heading: ["Recieve &", "Compare", "Upfront Prices"],
+    width: 400,
+    height: 380,
   },
 ];
 
@@ -48,9 +87,18 @@ const NewOnboardingScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
   const { height } = useWindowDimensions();
-  const fontSize = height < 900 ? 46 : 54;
+  const fontSize = height < 900 ? 44 : 50;
   const flatListRef = useRef<FlatList>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    // Preload images
+    images.forEach((image) => {
+      const resolvedImage: ImageResolvedAssetSource =
+        RNImage.resolveAssetSource(image.img);
+      resolvedImage.uri && RNImage.prefetch(resolvedImage.uri);
+    });
+  }, []);
 
   useEffect(() => {
     const time = 4000;
@@ -117,6 +165,7 @@ const NewOnboardingScreen: React.FC<{ navigation: NavigationType }> = ({
                   key={index}
                   fontFamily={fontHauoraMedium}
                   fontSize={fontSize}
+                  lineHeight={fontSize + 12}
                 >
                   {item}
                 </Text>
@@ -143,7 +192,17 @@ const NewOnboardingScreen: React.FC<{ navigation: NavigationType }> = ({
               mt={"auto"}
               // pl={50}
             >
-              <Div style={item.style ? { ...item.style } : {}}>{item.img}</Div>
+              {/* <Div style={item.style ? { ...item.style } : {}}>{item.icon}</Div> */}
+
+              <Image
+                w={"90%"}
+                h={"100%"}
+                mb={20}
+                alignSelf="flex-start"
+                // mx={"auto"}
+                style={{ objectFit: "contain" }}
+                source={item.img}
+              />
             </Div>
           )}
           horizontal

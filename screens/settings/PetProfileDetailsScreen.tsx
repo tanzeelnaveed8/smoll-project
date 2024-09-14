@@ -45,7 +45,6 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
 
   const petDetailsData = petsDetailMap.get(id);
   const healthHistoryDataState = petsDetailMap.get(id)?.healthHistory;
-  console.log("healthHistoryDataState", healthHistoryDataState);
 
   const [activeTab, setActiveTab] = useState(btns[0]);
 
@@ -178,6 +177,11 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
     {
       title: "Any Pre-Existing Conditions",
       value: petDetailsData?.preExistingConditions,
+      link: "EditInfoScreen",
+      heading: "Any Pre-Existing Conditions",
+      placeholder: "Pre-Existing Conditions",
+      fieldKey: "preExistingConditions",
+      dataValue: petDetailsData?.preExistingConditions,
     },
   ];
 

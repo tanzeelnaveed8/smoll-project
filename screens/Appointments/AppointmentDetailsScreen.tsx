@@ -322,7 +322,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
 
         <BottomSheet
           isVisible={showCancelModal}
-          h="45%"
+          h={340}
           showCloseIcon
           onCloseIconClick={() => {
             setShowCancelModal(false);

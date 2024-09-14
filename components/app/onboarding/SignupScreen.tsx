@@ -4,7 +4,7 @@ import InputField from "@/components/partials/InputField";
 import { fontHauora } from "@/constant/constant";
 import { NavigationType } from "@/store/types";
 import React, { useRef, useState, useEffect } from "react";
-import { Div, Text } from "react-native-magnus";
+import { Div, Image, Text } from "react-native-magnus";
 import BottomSheet from "@/components/partials/BottomSheet";
 import BackButton from "@/components/partials/BackButton";
 import OnboardingOtpModal from "./OnboardingOtpModal";
@@ -23,6 +23,7 @@ import SelectInput from "@/components/partials/SelectInput";
 import { getCountryCodes } from "@/utils/country-codes";
 import { GestureResponderEvent } from "react-native-modal";
 import Layout from "../Layout";
+import parsePhoneNumber from "libphonenumber-js";
 
 interface Props {
   navigation: NavigationType;
@@ -50,6 +51,8 @@ const SignupScreen: React.FC<{ navigation: NavigationType }> = ({
   const [codes, setCodes] = useState<{ label: string; value: string }[]>([]);
 
   const handlePhoneChange = (value: string) => {
+    const phoneNumber = parsePhoneNumber(value);
+
     // Remove any non-digit characters
     let cleanedValue = value.replace(/\D/g, "");
 
@@ -61,7 +64,14 @@ const SignupScreen: React.FC<{ navigation: NavigationType }> = ({
     }
 
     // Limit to 10 digits
-    cleanedValue = cleanedValue.slice(0, 10);
+
+    if (phoneNumber && phoneNumber.isValid()) {
+      console.log("phoneNumber.valid", phoneNumber.isValid());
+      const formattedPhone = phoneNumber.formatNational();
+      cleanedValue = formattedPhone;
+    }
+
+    // cleanedValue = cleanedValue.slice(0, 10);
 
     setPhone(cleanedValue);
   };
@@ -163,7 +173,7 @@ const SignupScreen: React.FC<{ navigation: NavigationType }> = ({
               }}
               value={phone}
               focus={isFocused}
-              maxLength={15}
+              maxLength={17}
               textContentType={
                 Platform.OS === "ios" ? "telephoneNumber" : undefined
               }
@@ -234,7 +244,14 @@ const Country: React.FC<{
         alignItems="center"
         px={16}
       >
-        <Div h={18} w={18} bgImg={{ uri: flag }} mr={16} />
+        {/* <Div h={18} w={18} bgImg={{ uri: flag }} mr={16} /> */}
+        <Image
+          src={flag}
+          h={18}
+          w={26}
+          mr={16}
+          style={{ objectFit: "contain" }}
+        />
         <Text fontSize="lg">{label}</Text>
       </Div>
     </TouchableOpacity>

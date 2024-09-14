@@ -1,11 +1,15 @@
 import React from "react";
 import { Path, Svg } from "react-native-svg";
 
-const WalletIcon: React.FC<{ mb?: number }> = ({ mb }) => {
+const WalletIcon: React.FC<{
+  mb?: number;
+  width?: number;
+  height?: number;
+}> = ({ mb, width, height }) => {
   return (
     <Svg
-      width="27.236"
-      height="22.877"
+      width={width ? width : "27.236"}
+      height={height ? height : "22.877"}
       viewBox="0 0 27.236 22.877"
       style={{ marginBottom: mb }}
     >

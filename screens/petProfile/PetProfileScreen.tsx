@@ -119,7 +119,7 @@ const PetProfileScreen: React.FC<Props> = (props) => {
 
     if (currentStep === 0) {
       if (comingFrom === "modal") {
-        props.navigation.navigate("HomeScreen", {
+        props.navigation.navigate("Home", {
           showSetupModal: "true",
         });
 

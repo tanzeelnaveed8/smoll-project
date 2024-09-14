@@ -1,6 +1,8 @@
 import Layout from "@/components/app/Layout";
+import ConfirmationModal from "@/components/partials/ConfirmationModal";
 import FlashCustomContent from "@/components/partials/FlashCustomContent";
 import {
+  colorErrorText,
   colorPrimary,
   fontHauoraMedium,
   fontHauoraSemiBold,
@@ -35,6 +37,8 @@ const ConsultationWaitingScreen: React.FC<{ navigation: NavigationType }> = ({
   const [loading, setLoading] = useState(true);
   const [consultation, setConsultation] = useState<FindOneConsultationResDto>();
   const [cancelLoading, setCancelLoading] = useState(false);
+  const [showCancelConsultationModal, setShowCancelConsultationModal] =
+    useState(false);
 
   useEffect(() => {
     findConsultation();
@@ -142,12 +146,25 @@ const ConsultationWaitingScreen: React.FC<{ navigation: NavigationType }> = ({
           paddingVertical: 2,
         }}
         disabled={cancelLoading}
-        onPress={handleCancelConsultation}
+        onPress={() => setShowCancelConsultationModal(true)}
       >
         <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold} color="primary">
           Cancel
         </Text>
       </TouchableOpacity>
+
+      <ConfirmationModal
+        heading="Cancel Consultation?"
+        text="Are you sure you want to cancel the consultation?"
+        isLoading={false}
+        showModal={showCancelConsultationModal}
+        onClose={() => setShowCancelConsultationModal(false)}
+        onConfirm={handleCancelConsultation}
+        confirmText="Confirm"
+        cancelText="Cancel"
+        confirmBgColor={colorErrorText}
+        cancelBgColor="#222"
+      />
     </Layout>
   );
 };

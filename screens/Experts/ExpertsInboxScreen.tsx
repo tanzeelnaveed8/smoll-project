@@ -53,7 +53,7 @@ const ExpertsInboxScreen: React.FC<Props> = (props) => {
       showBack
       title="Inbox"
       loading={loading}
-      onBackPress={() => props.navigation.navigate("HomeScreen")}
+      onBackPress={() => props.navigation.navigate("Home")}
     >
       <Div mb={24}>
         <Text fontSize={"xl"} fontWeight="bold" fontFamily={fontHauoraSemiBold}>

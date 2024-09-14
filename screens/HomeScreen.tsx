@@ -23,6 +23,8 @@ import {
   ActivityIndicator,
   FlatList,
   ImageSourcePropType,
+  ImageStyle,
+  StyleProp,
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
@@ -44,6 +46,10 @@ import OnboardingIcon1 from "@/components/icons/OnboardingIcon1";
 import OnboardingIcon2 from "@/components/icons/OnboardingIcon2";
 import OnboardingIcon4 from "@/components/icons/OnboardingIcon4";
 import OnboardingIcon5 from "@/components/icons/OnboardingIcon5";
+import HomeScreenBoyIcon from "@/components/icons/HomeScreenBoyIcon";
+import ClockIcon from "@/components/icons/ClockIcon";
+import GirlIcon from "@/components/icons/GirlIcon";
+import DogIcon from "@/components/icons/DogIcon";
 
 interface Props {
   navigation: NavigationType;
@@ -55,7 +61,11 @@ interface OptionTab {
   description: string;
   value: "counselling" | "petProfileScreen" | "appointments";
   loading: boolean;
-  icon: React.JSX.Element;
+  icon?: React.JSX.Element;
+  img?: ImageSourcePropType;
+  width?: number;
+  height?: number;
+  style?: StyleProp<ImageStyle>;
 }
 
 const HomeScreen: React.FC<Props> = (props) => {
@@ -70,21 +80,39 @@ const HomeScreen: React.FC<Props> = (props) => {
       value: "appointments",
       description: "All your appointment shows here",
       loading: false,
-      icon: <OnboardingIcon2 width={65} height={65} />,
+      // icon: <OnboardingIcon2 width={65} height={65} />,
+      icon: (
+        <Div style={{ transform: [{ translateY: 3 }] }}>
+          <ClockIcon width={70} height={70} />
+        </Div>
+      ),
     },
     {
       name: "Human Counselling",
       value: "counselling",
       description: "Talk to somone knows how it feels loosing a pet",
       loading: false,
-      icon: <OnboardingIcon4 width={55} height={55} />,
+      // icon: <OnboardingIcon4 width={55} height={55} />,
+      icon: (
+        <Div style={{ marginLeft: -2, transform: [{ translateX: -3 }] }}>
+          <GirlIcon width={72} height={72} />
+        </Div>
+      ),
     },
     {
       name: "PetID",
       value: "petProfileScreen",
       description: "Add and track your pet’s records",
       loading: false,
-      icon: <OnboardingIcon5 width={55} height={55} />,
+      // icon: <OnboardingIcon5 width={55} height={55} />,
+      img: require("../assets/images/home-pet-img.png"),
+      width: 70,
+      height: 68,
+      style: {
+        transform: [{ translateX: 5 }, { translateY: 2 }],
+        objectFit: "contain",
+      },
+      // icon: <DogIcon width={70} height={70} />,
     },
   ]);
 
@@ -214,6 +242,7 @@ const HomeScreen: React.FC<Props> = (props) => {
                   style={{ overflow: "visible" }}
                   onPress={() => {
                     props.navigation.navigate("NotificationTestScreen");
+
                     // props.navigation.navigate(
                     //   "PaymentDetailsScreen",
                     //   paymentParams
@@ -266,25 +295,27 @@ const HomeScreen: React.FC<Props> = (props) => {
               props.navigation.navigate("ExpertsListScreen");
             }}
           >
-            <Div justifyContent="space-between" px={24}>
-              <Div mb={16} mt={10}>
-                <Text
-                  fontSize={"2xl"}
-                  fontFamily={fontHauoraBold}
-                  lineHeight={24}
-                >
+            <Div px={20} pr={0} h={191}>
+              <Div mb={30} mt={34}>
+                <Text fontSize={24} fontFamily={fontHauoraBold} lineHeight={27}>
                   Chat with pet
                 </Text>
                 <Text
-                  fontSize={"2xl"}
+                  fontSize={24}
                   fontFamily={fontHauoraBold}
-                  lineHeight={24}
+                  lineHeight={27}
                   mb={3}
                 >
                   wellness expert
                 </Text>
 
-                <Text fontFamily={fontHauoraSemiBold}>Completly Free!</Text>
+                <Text
+                  fontFamily={fontHauoraSemiBold}
+                  fontSize="lg"
+                  lineHeight={20}
+                >
+                  Completly Free!
+                </Text>
               </Div>
 
               <Div
@@ -296,18 +327,18 @@ const HomeScreen: React.FC<Props> = (props) => {
               >
                 <Text
                   fontFamily={fontHauoraSemiBold}
-                  fontSize={"xl"}
+                  fontSize={"md"}
                   bg="#222"
                   color="#fff"
                   rounded={20}
-                  py={9}
+                  py={7}
                   px={20}
                 >
                   Start Now
                 </Text>
                 <IconArrowRight
-                  width={34}
-                  height={34}
+                  width={28}
+                  height={28}
                   strokeWidth={2.7}
                   color="#222"
                   style={{ alignSelf: "center" }}
@@ -322,7 +353,11 @@ const HomeScreen: React.FC<Props> = (props) => {
               </Div>
             </Div>
 
-            <OnboardingIcon1 width={130} height={130} />
+            {/* <OnboardingIcon1 width={130} height={130} /> */}
+
+            <Div style={{ transform: [{ translateX: -10 }] }}>
+              <HomeScreenBoyIcon width={190} height={170} />
+            </Div>
           </TouchableOpacity>
 
           <Div>
@@ -353,9 +388,9 @@ const HomeScreen: React.FC<Props> = (props) => {
                 borderWidth={1.2}
                 borderColor="#222"
                 mb={index + 1 === options.length ? 0 : 8}
-                rounded={20}
+                rounded={25}
                 w={"100%"}
-                h={80}
+                h={83}
                 disabled={item.loading}
                 onPress={() => handleOptionTabPress(item)}
                 bg="#fff"
@@ -367,20 +402,30 @@ const HomeScreen: React.FC<Props> = (props) => {
                   alignItems="center"
                   style={{ gap: 12 }}
                 >
-                  {item.icon}
+                  {item.icon ? (
+                    item.icon
+                  ) : (
+                    <Image
+                      source={item.img}
+                      w={item.width}
+                      h={item.height}
+                      style={item.style}
+                    />
+                  )}
 
                   <Div flex={1}>
                     <Text
-                      fontSize={"xl"}
+                      fontSize={19}
                       fontFamily={fontHauoraBold}
                       lineHeight={20}
                     >
                       {item.name}
                     </Text>
                     <Text
-                      fontSize={"md"}
+                      fontSize={12}
                       fontFamily={fontHauoraMedium}
                       lineHeight={18}
+                      maxW={"90%"}
                     >
                       {item.description}
                     </Text>
@@ -442,7 +487,7 @@ const HomeScreen: React.FC<Props> = (props) => {
         />
       </Layout>
 
-      <TabNavigationBar navigation={props.navigation} />
+      {/* <TabNavigationBar navigation={props.navigation} /> */}
     </>
   );
 };

@@ -252,6 +252,7 @@ const HealthHistoryModal = (props: PropTypes) => {
                   w={139}
                   h={150}
                   disabled
+                  showDownloadBtn
                   openImageOnTab
                   mr={12}
                   docType={item.mimetype}

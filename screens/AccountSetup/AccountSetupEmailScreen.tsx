@@ -54,7 +54,7 @@ const AccountSetupEmailScreen: React.FC<Props> = (props) => {
         if (isUpdatingEmail) {
           props.navigation.navigate("SettingPersonalInfoScreen");
         } else {
-          props.navigation.navigate("HomeScreen", {
+          props.navigation.navigate("Home", {
             showSetupModal: "true",
           });
         }
