@@ -126,8 +126,6 @@ const App = () => {
   useEffect(() => {
     loadFonts().then(() => setFontsLoaded(true));
 
-    // Remove this method to stop OneSignal Debugging
-    OneSignal.Debug.setLogLevel(LogLevel.Verbose);
     // OneSignal Initialization
     OneSignal.initialize(process.env.EXPO_PUBLIC_ONE_SIGNAL_APP_ID as string);
     // requestPermission will show the native iOS or Android notification permission prompt.
@@ -212,15 +210,16 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    if (user) {
+    if (user && user.name) {
       OneSignal.login(user.playerId);
+
+      initializeSendbird(
+        user.id,
+        user.playerId,
+        user.name,
+        user.profileImg.url
+      );
     }
-  }, [user]);
-
-  useEffect(() => {
-    if (!user || !user.name) return;
-
-    initializeSendbird(user.id, user.playerId, user.name, user.profileImg.url);
   }, [user]);
 
   if (!fontsLoaded) {
@@ -244,7 +243,6 @@ const App = () => {
                   process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
                 }
                 merchantIdentifier="merchant.identifier" // required for Apple Pay
-                urlScheme="your-url-scheme" // required for 3D Secure and bank redirects
               >
                 <Stack.Navigator
                   initialRouteName="SplashScreen"

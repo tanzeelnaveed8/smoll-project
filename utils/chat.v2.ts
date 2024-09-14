@@ -4,7 +4,10 @@ import {
   GroupChannelCreateParams,
   GroupChannelModule,
 } from "@sendbird/chat/groupChannel";
-import { SendableMessage } from "@sendbird/chat/lib/__definition";
+import {
+  SendableMessage,
+  SendbirdChatWith,
+} from "@sendbird/chat/lib/__definition";
 import { GroupChannelHandler } from "@sendbird/chat/groupChannel";
 import {
   FileMessageCreateParams,
@@ -14,16 +17,13 @@ import {
 } from "@sendbird/chat/message";
 import { IMessage } from "react-native-gifted-chat";
 import { SendbirdCalls } from "@sendbird/calls-react-native";
+import { useUserStore } from "@/store/modules/user";
+import Permissions, { PERMISSIONS } from "react-native-permissions";
+import { Platform } from "react-native";
 
-const sb = SendbirdChat.init({
-  appId: process.env.EXPO_PUBLIC_SENDBIRD_APP_ID as string,
-  modules: [new GroupChannelModule()],
-});
-SendbirdCalls.initialize(process.env.EXPO_PUBLIC_SENDBIRD_APP_ID as string);
+let sb: SendbirdChatWith<GroupChannelModule[]> | null = null;
 
 const channelHandler = new GroupChannelHandler();
-
-sb.groupChannel.addGroupChannelHandler("UNIQUE_HANDLER_ID", channelHandler);
 
 const initializeSendbird = async (
   userId: string,
@@ -31,26 +31,70 @@ const initializeSendbird = async (
   nickname: string,
   profileUrl: string
 ) => {
-  await sb.connect(
-    userId,
-    process.env.EXPO_PUBLIC_SENDBIRD_ACCESS_TOKEN as string
-  );
+  try {
+    sb = SendbirdChat.init({
+      appId: process.env.EXPO_PUBLIC_SENDBIRD_APP_ID as string,
+      modules: [new GroupChannelModule()],
+    });
 
-  await sb.updateCurrentUserInfo({ nickname, profileUrl });
-  await sb.currentUser?.updateMetaData(
-    {
-      playerId: playerId,
-    },
-    true
-  );
+    sb.groupChannel.addGroupChannelHandler("UNIQUE_HANDLER_ID", channelHandler);
+    await sb.connect(
+      userId,
+      process.env.EXPO_PUBLIC_SENDBIRD_ACCESS_TOKEN as string
+    );
+    await sb.updateCurrentUserInfo({ nickname, profileUrl });
+    await sb.currentUser?.updateMetaData(
+      {
+        playerId: playerId,
+      },
+      true
+    );
 
-  await SendbirdCalls.authenticate({
-    userId,
-    accessToken: process.env.EXPO_PUBLIC_SENDBIRD_ACCESS_TOKEN as string,
+    await requestPermissions();
+
+    SendbirdCalls.setLoggerLevel("info");
+    SendbirdCalls.initialize(process.env.EXPO_PUBLIC_SENDBIRD_APP_ID as string);
+
+    // Authenticate the user for calls
+    await SendbirdCalls.authenticate({
+      userId,
+      accessToken: process.env.EXPO_PUBLIC_SENDBIRD_ACCESS_TOKEN as string,
+    });
+  } catch (err) {
+    console.log("error", err);
+  }
+};
+
+const requestPermissions = async (): Promise<boolean> => {
+  const CALL_PERMISSIONS = Platform.select({
+    android: [
+      PERMISSIONS.ANDROID.CAMERA,
+      PERMISSIONS.ANDROID.RECORD_AUDIO,
+      PERMISSIONS.ANDROID.BLUETOOTH_CONNECT,
+    ],
+    ios: [PERMISSIONS.IOS.CAMERA, PERMISSIONS.IOS.MICROPHONE],
+    default: [],
   });
+
+  const permissionStatuses = await Promise.all(
+    CALL_PERMISSIONS.map((permission) => Permissions.check(permission))
+  );
+
+  const permissionsToRequest = CALL_PERMISSIONS.filter(
+    (_, index) => permissionStatuses[index] !== "granted"
+  );
+
+  if (permissionsToRequest.length > 0) {
+    const result = await Permissions.requestMultiple(permissionsToRequest);
+    return Object.values(result).every((value) => value === "granted");
+  }
+
+  return true;
 };
 
 const sendTypingStatus = async (channelUrl: string, isTyping: boolean) => {
+  if (!sb) return;
+
   const channel: GroupChannel = await sb.groupChannel.getChannel(channelUrl);
 
   if (isTyping) {
@@ -63,6 +107,8 @@ const sendTypingStatus = async (channelUrl: string, isTyping: boolean) => {
 // Function to retrieve messages from a group channel
 const getChannelMessages = async (channelUrl: string) => {
   try {
+    if (!sb) return;
+
     const channel: GroupChannel = await sb.groupChannel.getChannel(channelUrl);
 
     const params: PreviousMessageListQueryParams = {
@@ -96,6 +142,8 @@ const connectGroupChannel = async (
   };
 
   try {
+    if (!sb) return;
+
     const channel: GroupChannel = await sb.groupChannel.createChannel(params);
 
     // Retrieve messages from the newly created channel
@@ -109,6 +157,8 @@ const connectGroupChannel = async (
 // Function to send messages to a group channel
 const sendMessage = async (channelUrl: string, messages: IMessage[]) => {
   try {
+    if (!sb) return;
+
     const channel: GroupChannel = await sb.groupChannel.getChannel(channelUrl);
     const sentMessages: SendableMessage[] = []; // Array to collect sent messages
 
@@ -178,4 +228,5 @@ export {
   connectGroupChannel,
   sendMessage,
   sendTypingStatus,
+  requestPermissions,
 };

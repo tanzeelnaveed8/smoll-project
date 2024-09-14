@@ -35,8 +35,6 @@ const Layout: React.FC<Props> = ({
   title,
   showCloseIcon,
   loading,
-  preventBackGesture,
-  navigation,
 }) => {
   const externalStyles: {} = style ? style : {};
 

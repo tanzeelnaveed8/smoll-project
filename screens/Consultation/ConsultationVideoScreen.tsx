@@ -1,10 +1,19 @@
+import { colorPrimary } from "@/constant/constant";
+import { SocketEventEnum } from "@/socket/events";
+import { useSocket } from "@/socket/provider";
+import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
+import { requestPermissions } from "@/utils/chat.v2";
 import { useRoute } from "@react-navigation/native";
-import { SendbirdCalls, DirectCall } from "@sendbird/calls-react-native";
+import {
+  DirectCall,
+  DirectCallVideoView,
+  SendbirdCalls,
+} from "@sendbird/calls-react-native";
+import { IconVideoOff } from "@tabler/icons-react-native";
 import React, { useEffect, useState } from "react";
-import { Platform } from "react-native";
-import { Div, Button, Icon, Text } from "react-native-magnus";
-import Permissions, { PERMISSIONS } from "react-native-permissions";
+import { ActivityIndicator, Platform } from "react-native";
+import { Button, Div, Icon, WINDOW_HEIGHT } from "react-native-magnus";
 
 const CustomVideoCallView: React.FC<{
   call: DirectCall;
@@ -12,6 +21,22 @@ const CustomVideoCallView: React.FC<{
 }> = ({ call, onEnded }) => {
   const [isMuted, setIsMuted] = useState(false);
   const [isVideoEnabled, setIsVideoEnabled] = useState(true);
+
+  useEffect(() => {
+    console.log("call", call);
+
+    call.accept();
+
+    const unsubscribe = call.addListener({
+      onEnded: () => {
+        onEnded();
+      },
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [call, onEnded]);
 
   const toggleMute = () => {
     if (isMuted) {
@@ -33,56 +58,84 @@ const CustomVideoCallView: React.FC<{
 
   return (
     <Div flex={1}>
-      <Div flex={1} bg="gray200">
-        {/* This is where the video streams would be rendered */}
-        {/* You'll need to implement this part using Sendbird's video view components */}
-      </Div>
-      <Div
-        position="absolute"
-        bottom={20}
-        left={0}
-        right={0}
-        flexDir="row"
-        justifyContent="space-around"
+      <DirectCallVideoView
+        viewType="remote"
+        callId={call.callId}
+        style={{
+          flex: 1,
+        }}
+      />
+
+      <DirectCallVideoView
+        viewType="local"
+        callId={call.callId}
+        style={{
+          position: "absolute",
+          width: 100,
+          height: 150,
+          top: 20,
+          right: 20,
+          zIndex: 1,
+        }}
       >
-        <Button
-          bg="red500"
-          h={50}
-          w={50}
-          rounded="circle"
-          onPress={() => {
-            call.end();
-            onEnded();
-          }}
+        <Div justifyContent="center" alignItems="center" flex={1}>
+          {!isVideoEnabled && <IconVideoOff size={40} color="white" />}
+        </Div>
+      </DirectCallVideoView>
+
+      <Div position="absolute" w="100%" alignItems="center" bottom={20}>
+        <Div
+          w={"80%"}
+          justifyContent="space-between"
+          flexDir="row"
+          bg="rgba(0,0,0,0.5)"
+          p={10}
+          px={20}
+          rounded={30}
         >
-          <Icon name="phone-off" color="white" fontFamily="Feather" />
-        </Button>
-        <Button
-          bg={isMuted ? "gray500" : "blue500"}
-          h={50}
-          w={50}
-          rounded="circle"
-          onPress={toggleMute}
-        >
-          <Icon
-            name={isMuted ? "mic-off" : "mic"}
-            color="white"
-            fontFamily="Feather"
-          />
-        </Button>
-        <Button
-          bg={isVideoEnabled ? "blue500" : "gray500"}
-          h={50}
-          w={50}
-          rounded="circle"
-          onPress={toggleVideo}
-        >
-          <Icon
-            name={isVideoEnabled ? "video" : "video-off"}
-            color="white"
-            fontFamily="Feather"
-          />
-        </Button>
+          <Button
+            bg={isMuted ? "gray500" : "blue500"}
+            h={50}
+            w={50}
+            rounded="circle"
+            onPress={toggleMute}
+          >
+            <Icon
+              name={isMuted ? "mic-off" : "mic"}
+              color="white"
+              fontFamily="Feather"
+              fontSize={20}
+            />
+          </Button>
+          <Button
+            bg={isVideoEnabled ? "blue500" : "gray500"}
+            h={50}
+            w={50}
+            rounded="circle"
+            onPress={toggleVideo}
+          >
+            <Icon
+              name={isVideoEnabled ? "video" : "video-off"}
+              color="white"
+              fontFamily="Feather"
+              fontSize={20}
+            />
+          </Button>
+          <Button
+            bg="red500"
+            h={50}
+            w={50}
+            rounded="circle"
+            onPress={() => call.end()}
+          >
+            <Icon
+              name="phone-off"
+              color="white"
+              fontFamily="Feather"
+              fontSize={20}
+            />
+          </Button>
+        </Div>
       </Div>
     </Div>
   );
@@ -92,47 +145,32 @@ const ConsultationVideoScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
   const route = useRoute();
+  const { user } = useUserStore();
+  const socket = useSocket();
 
   const expertId = (route.params as Record<string, string>)?.expertId;
   const caseId = (route.params as Record<string, string>)?.caseId;
-  const consultationId = (route.params as Record<string, string>)
-    ?.consultationId;
 
-  const [incomingCall, setIncomingCall] = useState<DirectCall | null>(null);
+  const [directCall, setDirectCall] = useState<DirectCall | null>(null);
 
   useEffect(() => {
-    requestPermissions().then((hasPermissions) => {
-      console.log("hasPermissions", hasPermissions);
-      if (hasPermissions) {
-        let directCall: DirectCall | null = null;
-        let unsubscribe: () => void;
-
-        SendbirdCalls.setListener({
-          onRinging: async (callProps) => {
-            console.log("testing");
-            const uid = callProps.caller?.userId;
-
-            if (expertId.toLowerCase() !== uid?.toLowerCase()) return;
-
-            directCall = await SendbirdCalls.getDirectCall(callProps.callId);
-
-            setIncomingCall(directCall);
-            directCall.accept();
-
-            // Add call event listener here
-            unsubscribe = directCall.addListener({
-              onEnded: () => {
-                endHandler();
-              },
-            });
-          },
-        });
-
-        return () => {
-          unsubscribe();
-        };
+    socket?.on(SocketEventEnum.VET_CALL_INITIATE_WITH_CALL_ID, async (data) => {
+      if (data.memberId === user?.id) {
+        // requestPermissions().then(async (hasPermissions) => {
+        //   if (hasPermissions) {
+        //     const directCall = await SendbirdCalls.getDirectCall(data.callId);
+        //     directCall.accept().catch((error) => {
+        //       console.log("error", error);
+        //     });
+        //     setDirectCall(directCall);
+        //   }
+        // });
       }
     });
+
+    return () => {
+      socket?.off(SocketEventEnum.VET_CALL_INITIATE_WITH_CALL_ID);
+    };
   }, []);
 
   const endHandler = async () => {
@@ -142,43 +180,20 @@ const ConsultationVideoScreen: React.FC<{ navigation: NavigationType }> = ({
     });
   };
 
-  const requestPermissions = async (): Promise<boolean> => {
-    const CALL_PERMISSIONS = Platform.select({
-      android: [
-        PERMISSIONS.ANDROID.CAMERA,
-        PERMISSIONS.ANDROID.RECORD_AUDIO,
-        PERMISSIONS.ANDROID.BLUETOOTH_CONNECT,
-      ],
-      ios: [PERMISSIONS.IOS.CAMERA, PERMISSIONS.IOS.MICROPHONE],
-      default: [],
-    });
-
-    const result = await Permissions.requestMultiple(CALL_PERMISSIONS);
-
-    console.log("result", result);
-
-    const noPermissions = Object.values(result).some(
-      (value) => value !== "granted"
-    );
-
-    return !noPermissions;
-  };
-
-  console.log("incomingCall", incomingCall);
-
   return (
     <Div flex={1}>
-      {incomingCall ? (
+      {directCall ? (
         <CustomVideoCallView
-          call={incomingCall}
+          call={directCall}
           onEnded={() => {
-            setIncomingCall(null);
+            setDirectCall(null);
+            SET_CALL_ID(null);
             endHandler();
           }}
         />
       ) : (
-        <Div flex={1} alignItems="center" justifyContent="center">
-          <Text>Waiting for incoming call...</Text>
+        <Div flex={1} justifyContent="center" minH={WINDOW_HEIGHT / 1.4}>
+          <ActivityIndicator size="large" color={colorPrimary} />
         </Div>
       )}
     </Div>

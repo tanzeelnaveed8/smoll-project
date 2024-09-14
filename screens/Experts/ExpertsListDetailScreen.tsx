@@ -256,8 +256,14 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
                 <Div flex={1}>
                   <Skeleton.Box mt="sm" w={100} h={25} mb={4} rounded={4} />
                   <Div flexDir="row" flexWrap="wrap" style={{ gap: 8 }}>
-                    {Array.from({ length: 4 }).map(() => (
-                      <Skeleton.Box mt="sm" h={40} w={80} rounded={4} />
+                    {Array.from({ length: 4 }).map((_, index) => (
+                      <Skeleton.Box
+                        mt="sm"
+                        h={40}
+                        w={80}
+                        rounded={4}
+                        key={index}
+                      />
                     ))}
                   </Div>
                 </Div>
@@ -349,7 +355,6 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
         </Div>
       </ScrollDiv>
       <ButtonPrimary
-        // navigation.navigate("PartnerVetConfirmationScreen");
         onPress={handleScheduleConsultation}
         disabled={isActionLoading || !selectedTime}
         loading={isActionLoading}

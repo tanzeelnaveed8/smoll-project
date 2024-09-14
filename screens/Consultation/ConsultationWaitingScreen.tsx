@@ -9,11 +9,13 @@ import { SocketEventEnum } from "@/socket/events";
 import { useSocket } from "@/socket/provider";
 import { useAppointmentStore } from "@/store/modules/appointments";
 import { useExpertStore } from "@/store/modules/expert";
+import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
 import { FindOneConsultationResDto } from "@/store/types/expert";
 import { useRoute } from "@react-navigation/native";
+import { DirectCall, SendbirdCalls } from "@sendbird/calls-react-native";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, TouchableOpacity } from "react-native";
+import { ActivityIndicator, Platform, TouchableOpacity } from "react-native";
 import { hideMessage, showMessage } from "react-native-flash-message";
 import { Div, Image, Text } from "react-native-magnus";
 
@@ -60,6 +62,11 @@ const ConsultationWaitingScreen: React.FC<{ navigation: NavigationType }> = ({
         }
       });
     }
+
+    return () => {
+      socket?.off(SocketEventEnum.VET_CALL_INITIATE);
+      socket?.off(SocketEventEnum.VET_CLOSE_CONSULTATION);
+    };
   }, []);
 
   const findConsultation = async () => {

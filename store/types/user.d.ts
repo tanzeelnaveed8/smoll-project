@@ -31,12 +31,15 @@ export interface User {
   updatedAt: string;
   profileImg: UploadedFile;
   stripeCustomerId: string;
+  playerId: string;
 }
 
 export interface UserState {
   user: Nullable<User>;
+  callId: Nullable<string>;
 
   UPDATE_PET_COUNT: (increment: number) => void;
+  SET_CALL_ID: (callId: string | null) => void;
 
   findUser: (skipErr?: boolean) => Promise<User>;
   updateUser: (payload: UpdateUserPayloadDto) => Promise<User>;

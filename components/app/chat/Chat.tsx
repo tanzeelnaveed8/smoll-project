@@ -129,7 +129,7 @@ const Chat: React.FC<Props> = (props) => {
   };
 
   const handleLoadEarlier = async () => {
-    if (isLoadingEarlier || !channelUrl) return;
+    if (isLoadingEarlier || !channelUrl || !sb) return;
 
     setIsLoadingEarlier(true);
 
