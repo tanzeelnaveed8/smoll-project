@@ -1,9 +1,6 @@
 import { colorPrimary } from "@/constant/constant";
-import { SocketEventEnum } from "@/socket/events";
-import { useSocket } from "@/socket/provider";
 import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
-import { requestPermissions } from "@/utils/chat.v2";
 import { useRoute } from "@react-navigation/native";
 import {
   DirectCall,
@@ -14,6 +11,7 @@ import { IconVideoOff } from "@tabler/icons-react-native";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, Platform } from "react-native";
 import { Button, Div, Icon, WINDOW_HEIGHT } from "react-native-magnus";
+import Permissions, { PERMISSIONS } from "react-native-permissions";
 
 const CustomVideoCallView: React.FC<{
   call: DirectCall;
@@ -145,8 +143,7 @@ const ConsultationVideoScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
   const route = useRoute();
-  const { user } = useUserStore();
-  const socket = useSocket();
+  const { callId, SET_CALL_ID } = useUserStore();
 
   const expertId = (route.params as Record<string, string>)?.expertId;
   const caseId = (route.params as Record<string, string>)?.caseId;
@@ -154,22 +151,19 @@ const ConsultationVideoScreen: React.FC<{ navigation: NavigationType }> = ({
   const [directCall, setDirectCall] = useState<DirectCall | null>(null);
 
   useEffect(() => {
-    socket?.on(SocketEventEnum.VET_CALL_INITIATE_WITH_CALL_ID, async (data) => {
-      if (data.memberId === user?.id) {
-        // requestPermissions().then(async (hasPermissions) => {
-        //   if (hasPermissions) {
-        //     const directCall = await SendbirdCalls.getDirectCall(data.callId);
-        //     directCall.accept().catch((error) => {
-        //       console.log("error", error);
-        //     });
-        //     setDirectCall(directCall);
-        //   }
-        // });
+    (async () => {
+      if (callId) {
+        requestPermissions().then(async (hasPermissions) => {
+          if (hasPermissions) {
+            const directCall = await SendbirdCalls.getDirectCall(callId);
+            setDirectCall(directCall);
+          }
+        });
       }
-    });
+    })();
 
     return () => {
-      socket?.off(SocketEventEnum.VET_CALL_INITIATE_WITH_CALL_ID);
+      SET_CALL_ID(null);
     };
   }, []);
 
@@ -178,6 +172,33 @@ const ConsultationVideoScreen: React.FC<{ navigation: NavigationType }> = ({
       expertId: expertId,
       caseId: caseId,
     });
+  };
+
+  const requestPermissions = async (): Promise<boolean> => {
+    const CALL_PERMISSIONS = Platform.select({
+      android: [
+        PERMISSIONS.ANDROID.CAMERA,
+        PERMISSIONS.ANDROID.RECORD_AUDIO,
+        PERMISSIONS.ANDROID.BLUETOOTH_CONNECT,
+      ],
+      ios: [PERMISSIONS.IOS.CAMERA, PERMISSIONS.IOS.MICROPHONE],
+      default: [],
+    });
+
+    const permissionStatuses = await Promise.all(
+      CALL_PERMISSIONS.map((permission) => Permissions.check(permission))
+    );
+
+    const permissionsToRequest = CALL_PERMISSIONS.filter(
+      (_, index) => permissionStatuses[index] !== "granted"
+    );
+
+    if (permissionsToRequest.length > 0) {
+      const result = await Permissions.requestMultiple(permissionsToRequest);
+      return Object.values(result).every((value) => value === "granted");
+    }
+
+    return true;
   };
 
   return (

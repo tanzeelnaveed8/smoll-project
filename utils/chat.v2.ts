@@ -60,6 +60,23 @@ const initializeSendbird = async (
       userId,
       accessToken: process.env.EXPO_PUBLIC_SENDBIRD_ACCESS_TOKEN as string,
     });
+
+    SendbirdCalls.setListener({
+      onRinging: async (call) => {
+        console.log("trigger");
+        const { SET_CALL_ID } = useUserStore.getState();
+
+        SET_CALL_ID(call.callId);
+
+        const directCall = await SendbirdCalls.getDirectCall(call.callId);
+
+        const unsubscribe = directCall.addListener({
+          onEnded() {
+            unsubscribe();
+          },
+        });
+      },
+    });
   } catch (err) {
     console.log("error", err);
   }
