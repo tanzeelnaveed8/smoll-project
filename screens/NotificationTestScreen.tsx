@@ -27,6 +27,7 @@ const NotificationTestScreen: React.FC<{ navigation: NavigationType }> = ({
   const { fetchNotifications, notifications, readAllNotification } =
     useNotificationStore();
   // const [data, setData] = useState<NotificationListDto>([]);
+
   const [page, setPage] = useState(1);
   const [nextPageId, setNextPageid] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
@@ -144,7 +145,7 @@ const NotificationTestScreen: React.FC<{ navigation: NavigationType }> = ({
       <Div>
         <FlatList
           style={{ height: windowHeight - 150 }}
-          data={notifications.data}
+          data={notifications?.data}
           ListEmptyComponent={() => (
             <Div h={600} justifyContent="center" alignItems="center">
               <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold}>
