@@ -342,7 +342,7 @@ const App = () => {
         user.id,
         user.playerId,
         user.name,
-        user.profileImg.url
+        user.profileImg?.url ?? ""
       );
     }
   }, [user]);

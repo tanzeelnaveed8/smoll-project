@@ -190,27 +190,6 @@ const HomeScreen: React.FC<Props> = (props) => {
     setShowAccountSetupButton(false);
   };
 
-  const paymentParams: PaymentPageRoute = {
-    caseId: "123",
-    clinicName: "Clinic Name",
-    partnerId: "123",
-    scheduleAt: "2024-01-01",
-    selectedServices: [
-      {
-        id: "123",
-        label: "Service 1",
-        price: 100,
-      },
-      {
-        id: "123",
-        label: "Service 1",
-        price: 100,
-      },
-    ],
-    vetId: "123",
-    paymentIntentId: "123",
-  };
-
   return (
     <>
       <Layout
