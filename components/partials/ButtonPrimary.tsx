@@ -1,15 +1,17 @@
-import { fontHauora } from "@/constant/constant";
+import { fontHauora, fontHauoraMedium } from "@/constant/constant";
 import { NavigationType } from "@/store/types";
 import React from "react";
-import { Button, ButtonProps } from "react-native-magnus";
+import { Button, ButtonProps, Text } from "react-native-magnus";
 
 interface ButtonPrimaryProps extends ButtonProps {
   onTouchEnd?: () => void;
-  children: string;
+  children: string | React.ReactNode;
   bgColor?: "dark" | "primary" | "danger";
   link?: string;
   params?: { [key: string]: string };
   navigation?: NavigationType;
+  icon?: React.ReactNode;
+  textColor?: string;
 }
 
 const ButtonPrimary: React.FC<ButtonPrimaryProps> = ({
@@ -19,6 +21,8 @@ const ButtonPrimary: React.FC<ButtonPrimaryProps> = ({
   link,
   navigation,
   params = {},
+  icon,
+  textColor,
   ...restProps
 }) => {
   return (
@@ -37,15 +41,20 @@ const ButtonPrimary: React.FC<ButtonPrimaryProps> = ({
           ? "#E02A2A"
           : "#427594"
       }
-      fontSize={18}
-      fontFamily={fontHauora}
       rounded="circle"
-      color="white"
       ripple
-      style={{ width: "100%" }}
+      style={{ width: "100%", columnGap: 10 }}
       {...restProps}
     >
-      {children}
+      {icon && icon}
+      <Text
+        color={textColor ?? "white"}
+        mb={2}
+        fontSize={18}
+        fontFamily={fontHauoraMedium}
+      >
+        {children}
+      </Text>
     </Button>
   );
 };

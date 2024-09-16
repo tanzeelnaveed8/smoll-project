@@ -1,4 +1,6 @@
 import Layout from "@/components/app/Layout";
+import ChatIcon from "@/components/icons/ChatIcon";
+import VideoIcon from "@/components/icons/VideoIcon";
 import AvailabilityAndDateSelector from "@/components/partials/AvailabilityAndDateSelector";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import DoctorCard from "@/components/partials/DoctorCard";
@@ -217,8 +219,11 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
             disabled={!expertDetailMap.get(expertId)?.isOnline || isRequesting}
             loading={isRequesting}
             onPress={handleRequestConsultation}
+            icon={<VideoIcon />}
+            textColor="#222"
+            bg="#6CDE79"
           >
-            Instant Video Chat
+            Video
           </ButtonPrimary>
 
           <ButtonPrimary
@@ -231,8 +236,11 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
                 expertName: expertDetailMap.get(expertId)?.name ?? "",
               });
             }}
+            icon={<ChatIcon />}
+            textColor="#222"
+            bg="#B8D7DE"
           >
-            Text Chat
+            Text
           </ButtonPrimary>
 
           <Text
