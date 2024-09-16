@@ -28,6 +28,7 @@ import { SetupParams } from "@stripe/stripe-react-native/lib/typescript/src/type
 import {
   IconAlertCircle,
   IconAlertCircleFilled,
+  IconCalendarCheck,
   IconDotsVertical,
 } from "@tabler/icons-react-native";
 import React, { useEffect, useMemo, useRef, useState } from "react";
@@ -37,7 +38,7 @@ import { Div, Image, ScrollDiv, Text } from "react-native-magnus";
 
 const icons = [
   {
-    icon: <AedoIcon />,
+    icon: <IconCalendarCheck width={32} height={32} color={"#505050"} />,
     text: "Completly Free",
   },
   {
@@ -304,7 +305,7 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
           </Div>
 
           <Text fontSize={"2xl"} color="#000">
-            Here is what your bill will look like at the
+            Your final bill at
           </Text>
 
           <Text
@@ -322,16 +323,12 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
             borderColor="#ccc"
             px={16}
             pb={14}
-            pt={22}
+            pt={16}
             mb={10}
           >
             <Div px={20} mb={15}>
-              <Text fontSize={"lg"} mb={8} fontFamily={fontHauoraSemiBold}>
-                Your vet bill will be
-              </Text>
-
               <Div flexDir="row" alignItems="flex-end" mb={30}>
-                <Div>
+                {/* <Div>
                   <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
                     Minimum
                   </Text>
@@ -346,13 +343,13 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                       AED
                     </Text>
                   </Text>
-                </Div>
+                </Div> */}
 
-                <Div w={80} h={1} ml={30} mr={10} mb={8} bg="#222" />
+                {/* <Div w={80} h={1} ml={30} mr={10} mb={8} bg="#222" /> */}
 
                 <Div>
                   <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
-                    Maximum
+                    Final Maximum
                   </Text>
 
                   <Text
@@ -373,7 +370,7 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                       marginLeft: "auto",
                       position: "absolute",
                       bottom: -30,
-                      left: 20,
+                      left: 8,
                     }}
                   >
                     <DotIcon />
@@ -383,21 +380,15 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
             </Div>
 
             <Div
-              bg="#EFE9DB"
-              rounded={22}
-              px={30}
-              py={14}
               flexDir="row"
               alignItems="center"
               justifyContent="space-around"
-              style={{ gap: 50 }}
-              borderWidth={1.5}
-              borderColor="#222"
+              style={{ gap: 20 }}
               // mb={25}
             >
-              <Div>
-                <Text mb={2} fontFamily={fontHauoraMedium}>
-                  20% Advance
+              <Div bg="#EFE9DB" rounded={22} px={22} py={18}>
+                <Text mb={5} fontSize={13} fontFamily={fontHauoraMedium}>
+                  20% Advance due now
                 </Text>
                 <Text
                   fontSize={"5xl"}
@@ -412,10 +403,16 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                 </Text>
               </Div>
 
-              <Div flexDir="row" alignItems="flex-end" style={{ gap: 6 }}>
+              <Div style={{ gap: 2 }}>
                 <WalletIcon mb={4} width={30} height={30} />
-                <Text fontSize={13} fontFamily={fontHauoraSemiBold} maxW={130}>
-                  Balance paid at the clinic after service is received
+                <Text
+                  fontSize={11}
+                  lineHeight={15}
+                  fontFamily={fontHauoraSemiBold}
+                  maxW={130}
+                >
+                  Final balance to be paid at the clinic, depending on services
+                  received.
                 </Text>
               </Div>
             </Div>
@@ -432,7 +429,7 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
           >
             <InformationIcon width={11} height={11} />
             <Text fontSize={10} mb={1} fontFamily={fontHauoraSemiBold}>
-              Understand how quotations work
+              Understand how payment work
             </Text>
           </TouchableOpacity>
 
@@ -448,12 +445,12 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
             py={16}
             fontSize={"xl"}
           >
-            Pay Now
+            Confirm Appointment
           </ButtonPrimary>
 
           <Text
             fontSize={12}
-            fontFamily={fontHauoraSemiBold}
+            fontFamily={fontHauoraBold}
             textAlign="center"
             maxW={"70%"}
             mx={"auto"}
@@ -480,38 +477,6 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
         </Div>
 
         <Div justifyContent="center" alignItems="center">
-          {/* <Div
-            flexDir="row"
-            alignItems="center"
-            justifyContent="center"
-            style={{ gap: 5 }}
-            borderWidth={1}
-            borderLeftWidth={1.5}
-            borderRightWidth={1.5}
-            borderColor="#B2B2B2"
-            py={3}
-            px={12}
-            rounded={5}
-            mb={10}
-          >
-            <Text
-              fontSize={"md"}
-              fontFamily={fontHauoraMedium}
-              color="#B2B2B2"
-              mt={2}
-            >
-              Payment securely processed by
-            </Text>
-            <Text
-              fontSize={"lg"}
-              fontFamily={fontHauoraBold}
-              fontWeight={"900"}
-              color="#B2B2B2"
-            >
-              stripe
-            </Text>
-          </Div> */}
-
           <StripeIcon />
 
           <Image
