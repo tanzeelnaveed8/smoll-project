@@ -100,10 +100,6 @@ PODS:
     - OneSignalXCFramework/OneSignalOutcomes
   - Permission-Camera (3.8.4):
     - RNPermissions
-  - Permission-LocationAlways (3.8.4):
-    - RNPermissions
-  - Permission-LocationWhenInUse (3.8.4):
-    - RNPermissions
   - Permission-Microphone (3.8.4):
     - RNPermissions
   - Permission-Notifications (3.8.4):
@@ -1428,12 +1424,12 @@ PODS:
     - SendBirdWebRTC (~> 1.8.1)
   - SendBirdWebRTC (1.8.1)
   - SocketRocket (0.7.0)
-  - Stripe (23.28.1):
-    - StripeApplePay (= 23.28.1)
-    - StripeCore (= 23.28.1)
-    - StripePayments (= 23.28.1)
-    - StripePaymentsUI (= 23.28.1)
-    - StripeUICore (= 23.28.1)
+  - Stripe (23.28.3):
+    - StripeApplePay (= 23.28.3)
+    - StripeCore (= 23.28.3)
+    - StripePayments (= 23.28.3)
+    - StripePaymentsUI (= 23.28.3)
+    - StripeUICore (= 23.28.3)
   - stripe-react-native (0.38.6):
     - React-Core
     - Stripe (~> 23.28.0)
@@ -1442,28 +1438,28 @@ PODS:
     - StripePayments (~> 23.28.0)
     - StripePaymentSheet (~> 23.28.0)
     - StripePaymentsUI (~> 23.28.0)
-  - StripeApplePay (23.28.1):
-    - StripeCore (= 23.28.1)
-  - StripeCore (23.28.1)
-  - StripeFinancialConnections (23.28.1):
-    - StripeCore (= 23.28.1)
-    - StripeUICore (= 23.28.1)
-  - StripePayments (23.28.1):
-    - StripeCore (= 23.28.1)
-    - StripePayments/Stripe3DS2 (= 23.28.1)
-  - StripePayments/Stripe3DS2 (23.28.1):
-    - StripeCore (= 23.28.1)
-  - StripePaymentSheet (23.28.1):
-    - StripeApplePay (= 23.28.1)
-    - StripeCore (= 23.28.1)
-    - StripePayments (= 23.28.1)
-    - StripePaymentsUI (= 23.28.1)
-  - StripePaymentsUI (23.28.1):
-    - StripeCore (= 23.28.1)
-    - StripePayments (= 23.28.1)
-    - StripeUICore (= 23.28.1)
-  - StripeUICore (23.28.1):
-    - StripeCore (= 23.28.1)
+  - StripeApplePay (23.28.3):
+    - StripeCore (= 23.28.3)
+  - StripeCore (23.28.3)
+  - StripeFinancialConnections (23.28.3):
+    - StripeCore (= 23.28.3)
+    - StripeUICore (= 23.28.3)
+  - StripePayments (23.28.3):
+    - StripeCore (= 23.28.3)
+    - StripePayments/Stripe3DS2 (= 23.28.3)
+  - StripePayments/Stripe3DS2 (23.28.3):
+    - StripeCore (= 23.28.3)
+  - StripePaymentSheet (23.28.3):
+    - StripeApplePay (= 23.28.3)
+    - StripeCore (= 23.28.3)
+    - StripePayments (= 23.28.3)
+    - StripePaymentsUI (= 23.28.3)
+  - StripePaymentsUI (23.28.3):
+    - StripeCore (= 23.28.3)
+    - StripePayments (= 23.28.3)
+    - StripeUICore (= 23.28.3)
+  - StripeUICore (23.28.3):
+    - StripeCore (= 23.28.3)
   - Yoga (0.0.0)
 
 DEPENDENCIES:
@@ -1486,8 +1482,6 @@ DEPENDENCIES:
   - hermes-engine (from `../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
   - OneSignalXCFramework (< 6.0, >= 5.0.0)
   - Permission-Camera (from `../node_modules/react-native-permissions/ios/Camera`)
-  - Permission-LocationAlways (from `../node_modules/react-native-permissions/ios/LocationAlways`)
-  - Permission-LocationWhenInUse (from `../node_modules/react-native-permissions/ios/LocationWhenInUse`)
   - Permission-Microphone (from `../node_modules/react-native-permissions/ios/Microphone`)
   - Permission-Notifications (from `../node_modules/react-native-permissions/ios/Notifications`)
   - Permission-PhotoLibrary (from `../node_modules/react-native-permissions/ios/PhotoLibrary`)
@@ -1613,10 +1607,6 @@ EXTERNAL SOURCES:
     :tag: hermes-2024-06-28-RNv0.74.3-7bda0c267e76d11b68a585f84cfdd65000babf85
   Permission-Camera:
     :path: "../node_modules/react-native-permissions/ios/Camera"
-  Permission-LocationAlways:
-    :path: "../node_modules/react-native-permissions/ios/LocationAlways"
-  Permission-LocationWhenInUse:
-    :path: "../node_modules/react-native-permissions/ios/LocationWhenInUse"
   Permission-Microphone:
     :path: "../node_modules/react-native-permissions/ios/Microphone"
   Permission-Notifications:
@@ -1776,8 +1766,6 @@ SPEC CHECKSUMS:
   hermes-engine: 1f547997900dd0752dc0cc0ae6dd16173c49e09b
   OneSignalXCFramework: 46ca7cd13f44fc5bec42ec3a5f4ff1548a9244d4
   Permission-Camera: 7ec9ee99704766ff9b90198183387a7f5d82b0c1
-  Permission-LocationAlways: 8fd5518716c3045f9c4edf77b901126098d79b60
-  Permission-LocationWhenInUse: 24d97eeb25d8ff9f2232e070f792eeb1360ccaf0
   Permission-Microphone: 3c985f25f8f89889c9e056622476deb291877194
   Permission-Notifications: e06c4b115105e9aed6ed8d03c9894c23c1051731
   Permission-PhotoLibrary: 6db9318df71ad74e9774cecedde95285f5a32d6a
@@ -1848,17 +1836,17 @@ SPEC CHECKSUMS:
   SendBirdCalls: 653e17821fbd0326a08eab8b777c95f7092e4e95
   SendBirdWebRTC: 441cc06f611871544ca7774c76e057708c01027f
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
-  Stripe: 20e24971647daa5750e7764faa1e8aefe4917243
+  Stripe: cdf416cf2efe286f532a6306de0fcaa0ecc8c71a
   stripe-react-native: 55fbdae947bc2698d55193947fd17872d0eab786
-  StripeApplePay: 5b098a0ba6136f4b587e03f5a3776461b4f20dd4
-  StripeCore: 880a68482cf78d4745c5213c2fd3446efc73574b
-  StripeFinancialConnections: 49a19ca17dbb3055a8b559a1e3adfe769784a8f8
-  StripePayments: 3af5b03fa1831c301a4d1621eb0e790280dccb46
-  StripePaymentSheet: 8321efebb6d104add8fce929286d414545913114
-  StripePaymentsUI: 4c35e12ebcd4bd9bd21e379f03f730bee097250d
-  StripeUICore: 22b314dc9f7ea8814d0f9eeba0ddb5e4b77f34f3
+  StripeApplePay: efb62ffc08e6cd4f161d77ddb45de2451075c54e
+  StripeCore: 9731f05e327c3dcaf7d7abd116840ceaa9482bbe
+  StripeFinancialConnections: 46c0049aaab3a179193502bce4a8096eb7b73f55
+  StripePayments: dd1867a620b0b8b5e294e9ff2f1f7b7770765f47
+  StripePaymentSheet: d155dfde74e90784d054deffb4f561a1f6dd638f
+  StripePaymentsUI: c24f990b03a68a7f6fe704b15dd487e7bb6b603e
+  StripeUICore: f2d514e900c37436dc5427fdf2c29d68ab1c2935
   Yoga: 04f1db30bb810187397fa4c37dd1868a27af229c
 
-PODFILE CHECKSUM: a806dc7fcb308a34d4f87c6c19bca5d34de73f69
+PODFILE CHECKSUM: 59c48ad74299e9c69c14c4f450aa953b23e95a04
 
 COCOAPODS: 1.14.2

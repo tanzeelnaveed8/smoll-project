@@ -1,5 +1,10 @@
 import { StripeProvider } from "@stripe/stripe-react-native";
-import { SafeAreaView, StyleSheet } from "react-native";
+import {
+  Platform,
+  PushNotification,
+  SafeAreaView,
+  StyleSheet,
+} from "react-native";
 import { Div, Text, ThemeProvider } from "react-native-magnus";
 
 import * as Font from "expo-font";
@@ -72,12 +77,15 @@ import CasesQuotesListScreen from "./screens/Cases/CasesQuotesListScreen";
 import PaymentDetailsScreen from "./screens/Cases/PaymentDetailsScreen";
 import UnavailableScreen from "./screens/Consultation/UnavailableScreen";
 import NewOnboardingScreen from "./screens/NewOnboardingScreen";
-import { initializeSendbird } from "./utils/chat.v2";
+import { initializeSendbird, sb } from "./utils/chat.v2";
 import {
   IconChecklist,
   IconMessage,
   IconWindow,
 } from "@tabler/icons-react-native";
+import PushNotificationIOS from "@react-native-community/push-notification-ios";
+import { SendbirdCalls } from "@sendbird/calls-react-native";
+import { PushTokenType } from "@sendbird/chat";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -244,6 +252,42 @@ const TabNavigation = () => {
   );
 };
 
+PushNotificationIOS.requestPermissions({
+  alert: true,
+  badge: false,
+  sound: false,
+  critical: true,
+});
+
+SendbirdCalls.setLoggerLevel("info");
+SendbirdCalls.initialize(process.env.EXPO_PUBLIC_SENDBIRD_APP_ID as string);
+SendbirdCalls.setListener({
+  onRinging: (call) => {
+    const { SET_CALL_ID } = useUserStore.getState();
+    console.log("trigger video call");
+
+    SET_CALL_ID(call.callId);
+  },
+});
+
+console.log("trigger1");
+
+PushNotificationIOS.addEventListener("register", async (token) => {
+  const _user = SendbirdCalls.currentUser;
+  console.log("_user", _user);
+
+  if (_user) {
+    const allToken = await sb?.getMyPushTokensByToken("", PushTokenType.APNS);
+
+    for (const t of allToken?.deviceTokens ?? []) {
+      await SendbirdCalls.unregisterPushToken(t);
+    }
+
+    SendbirdCalls.registerPushToken(token, true);
+    sb?.registerAPNSPushTokenForCurrentUser(token);
+  }
+});
+
 const App = () => {
   const { user } = useUserStore();
   const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -263,22 +307,11 @@ const App = () => {
         notificationType?: string;
         consultationId?: string;
       };
+
       if (additionalData?.notificationType === "consultation-notification") {
         rootNavigation.navigate("ConsultationWaitingScreen", {
           consultationId: additionalData.consultationId,
         });
-      }
-
-      if (event.notification?.additionalData?.notificationType === "chat") {
-        const expertId = event.notification?.additionalData?.expertId;
-        const expertName = event.notification?.additionalData?.expertName;
-
-        if (expertId) {
-          rootNavigation.navigate("ExpertsChatScreen", {
-            expertId,
-            expertName,
-          });
-        }
       }
 
       if (
@@ -300,28 +333,7 @@ const App = () => {
     OneSignal.Notifications.addEventListener(
       "foregroundWillDisplay",
       (event) => {
-        console.log("event", event);
-
-        // @ts-ignore
-        if (event.notification?.additionalData?.notificationType === "chat") {
-          const currentRoute = rootNavigation.getCurrentRoute();
-          // @ts-ignore
-          const expertId = event.notification?.additionalData?.expertId;
-          // @ts-ignore
-          const expertName = event.notification?.additionalData?.expertName;
-
-          if (
-            currentRoute?.name !== "ExpertsChatScreen" &&
-            // @ts-ignore
-            currentRoute?.params?.expertId !== expertId &&
-            // @ts-ignore
-            currentRoute?.params?.expertName !== expertName
-          ) {
-            event.notification.display();
-          }
-        } else {
-          event.notification.display();
-        }
+        event.notification.display();
       }
     );
 
@@ -331,12 +343,15 @@ const App = () => {
         "foregroundWillDisplay",
         () => {}
       );
+      PushNotificationIOS.removeEventListener("register");
+      PushNotificationIOS.removeEventListener("notification");
     };
   }, []);
 
   useEffect(() => {
     if (user && user.name) {
       OneSignal.login(user.playerId);
+      console.log("trigger0");
 
       initializeSendbird(
         user.id,
@@ -346,6 +361,42 @@ const App = () => {
       );
     }
   }, [user]);
+
+  const handlePushNotification = (notification: PushNotification) => {
+    // const data = notification.getData();
+    // // @ts-expect-error
+    // const sendbirdData = data.sendbird;
+    // const currentRoute = rootNavigation.getCurrentRoute();
+    // const channel = sendbirdData.channel;
+    // const message = sendbirdData.message;
+    // console.log("trigger", "a");
+    // if (channel && message) {
+    //   const isCurrentChat =
+    //     currentRoute?.name === "ExpertsChatScreen" &&
+    //     currentRoute?.params?.channelUrl === channel.url;
+    //   if (!isCurrentChat) {
+    //     // Show notification only if not in the current chat screen
+    //     if (Platform.OS === "ios") {
+    //       // Ensure we have a valid identifier
+    //       const identifier = data.id || `${Date.now()}`;
+    //       // Show the notification
+    //       PushNotificationIOS.addNotificationRequest({
+    //         id: identifier,
+    //         title: "New Message",
+    //         body: "You have a new message",
+    //         userInfo: data,
+    //       });
+    //       // PushNotificationIOS.addNotificationRequest({
+    //       //   id: message.messageId,
+    //       //   body: message.message,
+    //       //   title: `New message from ${channel.name}`,
+    //       //   userInfo: { channelUrl: channel.url },
+    //       // });
+    //     }
+    //   }
+    // }
+    // notification.finish(PushNotificationIOS.FetchResult.NoData);
+  };
 
   if (!fontsLoaded) {
     return <Text>Loading...</Text>; // Or any other loading component
@@ -379,6 +430,9 @@ const App = () => {
                   <Stack.Screen
                     name="OnboardingScreen"
                     component={OnboardingScreen}
+                    options={{
+                      gestureEnabled: false,
+                    }}
                   />
                   <Stack.Screen
                     name="NewOnboardingScreen"
@@ -407,7 +461,7 @@ const App = () => {
                   <Stack.Screen
                     name="HomeScreen"
                     component={TabNavigation}
-                    options={{ headerShown: false }}
+                    options={{ headerShown: false, gestureEnabled: false }}
                   />
 
                   <Stack.Screen

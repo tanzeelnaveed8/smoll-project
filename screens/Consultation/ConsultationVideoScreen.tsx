@@ -1,6 +1,7 @@
 import { colorPrimary } from "@/constant/constant";
 import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
+import { requestPermissions } from "@/utils/chat.v2";
 import { useRoute } from "@react-navigation/native";
 import {
   DirectCall,
@@ -9,9 +10,8 @@ import {
 } from "@sendbird/calls-react-native";
 import { IconVideoOff } from "@tabler/icons-react-native";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Platform } from "react-native";
+import { ActivityIndicator } from "react-native";
 import { Button, Div, Icon, WINDOW_HEIGHT } from "react-native-magnus";
-import Permissions, { PERMISSIONS } from "react-native-permissions";
 
 const CustomVideoCallView: React.FC<{
   call: DirectCall;
@@ -19,17 +19,19 @@ const CustomVideoCallView: React.FC<{
 }> = ({ call, onEnded }) => {
   const [isMuted, setIsMuted] = useState(false);
   const [isVideoEnabled, setIsVideoEnabled] = useState(true);
+  const [isRemoteVideoEnabled, setIsRemoteVideoEnabled] = useState(true);
 
   useEffect(() => {
-    console.log("call", call);
-
-    call.accept();
-
     const unsubscribe = call.addListener({
       onEnded: () => {
         onEnded();
       },
+      onRemoteVideoSettingsChanged: (settings) => {
+        setIsRemoteVideoEnabled(settings.isRemoteVideoEnabled);
+      },
     });
+
+    call.accept();
 
     return () => {
       unsubscribe();
@@ -62,7 +64,11 @@ const CustomVideoCallView: React.FC<{
         style={{
           flex: 1,
         }}
-      />
+      >
+        <Div justifyContent="center" alignItems="center" flex={1}>
+          {!isRemoteVideoEnabled && <IconVideoOff size={40} color="white" />}
+        </Div>
+      </DirectCallVideoView>
 
       <DirectCallVideoView
         viewType="local"
@@ -151,54 +157,20 @@ const ConsultationVideoScreen: React.FC<{ navigation: NavigationType }> = ({
   const [directCall, setDirectCall] = useState<DirectCall | null>(null);
 
   useEffect(() => {
-    (async () => {
-      if (callId) {
-        requestPermissions().then(async (hasPermissions) => {
-          if (hasPermissions) {
-            const directCall = await SendbirdCalls.getDirectCall(callId);
-            setDirectCall(directCall);
-          }
+    if (callId) {
+      requestPermissions().then(() => {
+        SendbirdCalls.getDirectCall(callId).then((call) => {
+          setDirectCall(call);
         });
-      }
-    })();
-
-    return () => {
-      SET_CALL_ID(null);
-    };
-  }, []);
+      });
+    }
+  }, [callId]);
 
   const endHandler = async () => {
     navigation.navigate("ConsultationFeedbackScreen", {
       expertId: expertId,
       caseId: caseId,
     });
-  };
-
-  const requestPermissions = async (): Promise<boolean> => {
-    const CALL_PERMISSIONS = Platform.select({
-      android: [
-        PERMISSIONS.ANDROID.CAMERA,
-        PERMISSIONS.ANDROID.RECORD_AUDIO,
-        PERMISSIONS.ANDROID.BLUETOOTH_CONNECT,
-      ],
-      ios: [PERMISSIONS.IOS.CAMERA, PERMISSIONS.IOS.MICROPHONE],
-      default: [],
-    });
-
-    const permissionStatuses = await Promise.all(
-      CALL_PERMISSIONS.map((permission) => Permissions.check(permission))
-    );
-
-    const permissionsToRequest = CALL_PERMISSIONS.filter(
-      (_, index) => permissionStatuses[index] !== "granted"
-    );
-
-    if (permissionsToRequest.length > 0) {
-      const result = await Permissions.requestMultiple(permissionsToRequest);
-      return Object.values(result).every((value) => value === "granted");
-    }
-
-    return true;
   };
 
   return (

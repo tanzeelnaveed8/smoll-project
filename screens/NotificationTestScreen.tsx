@@ -1,6 +1,7 @@
 import BackButton from "@/components/partials/BackButton";
 import {
   colorPrimary,
+  fontCooper,
   fontHauoraBold,
   fontHauoraMedium,
   fontHauoraSemiBold,
@@ -144,11 +145,18 @@ const NotificationTestScreen: React.FC<{ navigation: NavigationType }> = ({
       <Div>
         <FlatList
           style={{ height: windowHeight - 150 }}
-          data={notifications.data}
+          data={notifications?.data}
           ListEmptyComponent={() => (
             <Div h={600} justifyContent="center" alignItems="center">
-              <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold}>
-                No Notification found
+              <Text
+                fontSize={"5xl"}
+                textAlign="center"
+                fontFamily={fontCooper}
+                maxW={"80%"}
+                mx={"auto"}
+                lineHeight={36}
+              >
+                No new notifications
               </Text>
             </Div>
           )}

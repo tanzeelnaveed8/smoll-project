@@ -74,7 +74,6 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
   const { updateConsultation } = useExpertStore();
   const { pets, fetchPets } = usePetStore();
   const { cancelConsultation } = useAppointmentStore();
-  const navigationHook = useNavigation();
 
   const route = useRoute();
 

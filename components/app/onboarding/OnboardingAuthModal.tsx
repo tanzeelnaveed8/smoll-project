@@ -49,7 +49,6 @@ const OnboardingAuthModal: React.FC<Props> = (props) => {
   // old code / not in use, check SignupScreen.tsx
   const handlePhoneChange = (value: string) => {
     // Remove any non-digit characters
-    console.log("handlePhoneChange value", value);
     let cleanedValue = value.replace(/\D/g, "");
 
     // Remove country code if present and valid
@@ -60,9 +59,9 @@ const OnboardingAuthModal: React.FC<Props> = (props) => {
     }
 
     // Limit to 10 digits
-    cleanedValue = cleanedValue.slice(0, 10);
+    cleanedValue = cleanedValue.slice(0, 10).replace(/\s/g, "");
 
-    setPhone(cleanedValue);
+    setPhone(cleanedValue.trim());
   };
 
   const handleGetOtp = async () => {

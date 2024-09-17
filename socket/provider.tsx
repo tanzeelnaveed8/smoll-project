@@ -21,20 +21,6 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({
     };
   }, []);
 
-  useEffect(() => {
-    socket?.on("connect", () => {
-      console.log("Connected to socket");
-    });
-
-    socket?.on("disconnect", () => {
-      console.log("Disconnected from socket");
-    });
-
-    socket?.on("error", (error) => {
-      console.log("Error from socket", error);
-    });
-  }, [socket]);
-
   return (
     <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>
   );

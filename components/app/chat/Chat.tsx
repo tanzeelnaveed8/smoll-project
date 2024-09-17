@@ -15,6 +15,7 @@ import { Avatar, GiftedChat, IMessage } from "react-native-gifted-chat";
 import { Div, Image } from "react-native-magnus";
 import ChatBubble from "./ChatBubble";
 import ChatComposer from "./ChatComposer";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 interface Props {
   initialMessages: IMessage[];
@@ -26,6 +27,8 @@ interface Props {
 const Chat: React.FC<Props> = (props) => {
   const { play } = useSound();
   const { user } = useUserStore();
+  const navigation = useNavigation();
+  const route = useRoute();
 
   const [messages, setMessages] = useState<IMessage[]>(props.initialMessages);
 
@@ -110,6 +113,12 @@ const Chat: React.FC<Props> = (props) => {
 
       if (response?.channel) {
         setChannelUrl(response?.channel.url);
+
+        // Update the route params with the channelUrl
+        navigation.setParams({
+          ...route.params,
+          channelUrl: response?.channel.url,
+        });
       }
 
       if (!response?.messages) return;

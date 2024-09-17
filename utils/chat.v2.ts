@@ -17,9 +17,9 @@ import {
 } from "@sendbird/chat/message";
 import { IMessage } from "react-native-gifted-chat";
 import { SendbirdCalls } from "@sendbird/calls-react-native";
-import { useUserStore } from "@/store/modules/user";
 import Permissions, { PERMISSIONS } from "react-native-permissions";
 import { Platform } from "react-native";
+import PushNotificationIOS from "@react-native-community/push-notification-ios";
 
 let sb: SendbirdChatWith<GroupChannelModule[]> | null = null;
 
@@ -38,10 +38,12 @@ const initializeSendbird = async (
     });
 
     sb.groupChannel.addGroupChannelHandler("UNIQUE_HANDLER_ID", channelHandler);
+
     await sb.connect(
       userId,
       process.env.EXPO_PUBLIC_SENDBIRD_ACCESS_TOKEN as string
     );
+
     await sb.updateCurrentUserInfo({ nickname, profileUrl });
     await sb.currentUser?.updateMetaData(
       {
@@ -50,32 +52,17 @@ const initializeSendbird = async (
       true
     );
 
-    await requestPermissions();
-
-    SendbirdCalls.setLoggerLevel("info");
-    SendbirdCalls.initialize(process.env.EXPO_PUBLIC_SENDBIRD_APP_ID as string);
-
     // Authenticate the user for calls
-    await SendbirdCalls.authenticate({
+    SendbirdCalls.authenticate({
       userId,
       accessToken: process.env.EXPO_PUBLIC_SENDBIRD_ACCESS_TOKEN as string,
-    });
-
-    SendbirdCalls.setListener({
-      onRinging: async (call) => {
-        console.log("trigger");
-        const { SET_CALL_ID } = useUserStore.getState();
-
-        SET_CALL_ID(call.callId);
-
-        const directCall = await SendbirdCalls.getDirectCall(call.callId);
-
-        const unsubscribe = directCall.addListener({
-          onEnded() {
-            unsubscribe();
-          },
-        });
-      },
+    }).then(() => {
+      PushNotificationIOS.requestPermissions({
+        alert: true,
+        badge: false,
+        sound: false,
+        critical: true,
+      });
     });
   } catch (err) {
     console.log("error", err);

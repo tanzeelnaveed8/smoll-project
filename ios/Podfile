@@ -32,8 +32,6 @@ target 'smollapp' do
   pod 'Permission-Camera', :path => "#{permissions_path}/Camera"
   pod 'Permission-PhotoLibrary', :path => "#{permissions_path}/PhotoLibrary"
   pod 'Permission-Microphone', :path => "#{permissions_path}/Microphone"
-  pod 'Permission-LocationWhenInUse', :path => "#{permissions_path}/LocationWhenInUse"
-  pod 'Permission-LocationAlways', :path => "#{permissions_path}/LocationAlways"
   pod 'Permission-Notifications', :path => "#{permissions_path}/Notifications"
 
   post_install do |installer|
