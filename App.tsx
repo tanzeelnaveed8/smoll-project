@@ -295,6 +295,8 @@ const App = () => {
   useEffect(() => {
     loadFonts().then(() => setFontsLoaded(true));
 
+    // Remove this method to stop OneSignal Debugging
+    OneSignal.Debug.setLogLevel(LogLevel.Verbose);
     // OneSignal Initialization
     OneSignal.initialize(process.env.EXPO_PUBLIC_ONE_SIGNAL_APP_ID as string);
     // requestPermission will show the native iOS or Android notification permission prompt.

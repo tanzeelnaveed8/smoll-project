@@ -28,6 +28,7 @@ const NotificationTestScreen: React.FC<{ navigation: NavigationType }> = ({
   const { fetchNotifications, notifications, readAllNotification } =
     useNotificationStore();
   // const [data, setData] = useState<NotificationListDto>([]);
+
   const [page, setPage] = useState(1);
   const [nextPageId, setNextPageid] = useState(1);
   const [isLoading, setIsLoading] = useState(true);

@@ -280,12 +280,12 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
         style={{ gap: 1 }}
         mt={8}
       >
-        <IconCircleCheckFilled
+        {/* <IconCircleCheckFilled
           width={16}
           height={16}
           color={"#fff"}
           fill={"#000"}
-        />
+        /> */}
         <Text ml={4} fontSize={12} fontFamily={fontHauoraSemiBold}>
           Our service is 100% free for pet parents.
         </Text>

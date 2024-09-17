@@ -18,17 +18,15 @@ const NotificationScreen: React.FC<{ navigation: NavigationType }> = ({
         navigation.goBack();
       }}
     >
-      {true && (
-        <ScrollDiv showsVerticalScrollIndicator={false} pt={16}>
-          <Div>
-            <Text fontSize={"lg"} fontFamily={fontHauoraBold} mb={24}>
-              Recent
-            </Text>
+      <ScrollDiv showsVerticalScrollIndicator={false} pt={16}>
+        <Div>
+          <Text fontSize={"lg"} fontFamily={fontHauoraBold} mb={24}>
+            Recent
+          </Text>
 
-            <NotificationTestScreen navigation={navigation} />
-          </Div>
-        </ScrollDiv>
-      )}
+          <NotificationTestScreen navigation={navigation} />
+        </Div>
+      </ScrollDiv>
     </Layout>
   );
 };

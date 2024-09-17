@@ -334,7 +334,7 @@ const HomeScreen: React.FC<Props> = (props) => {
 
             {/* <OnboardingIcon1 width={130} height={130} /> */}
 
-            <Div style={{ transform: [{ translateX: -10 }] }}>
+            <Div style={{ transform: [{ translateX: -20 }] }}>
               <HomeScreenBoyIcon width={190} height={170} />
             </Div>
           </TouchableOpacity>
