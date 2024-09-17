@@ -3,6 +3,7 @@ import AccurateCostIcon from "@/components/icons/AccurateCostIcon";
 import AedoIcon from "@/components/icons/AedoIcon";
 import DotIcon from "@/components/icons/DotIcon";
 import InformationIcon from "@/components/icons/InformationIcon";
+import InstantConfirmationIcon from "@/components/icons/InstantConfirmationIcon";
 import RefundIcon from "@/components/icons/RefundIcon";
 import StripeIcon from "@/components/icons/StripeIcon";
 import WalletIcon from "@/components/icons/WalletIcon";
@@ -38,8 +39,9 @@ import { Div, Image, ScrollDiv, Text } from "react-native-magnus";
 
 const icons = [
   {
-    icon: <IconCalendarCheck width={32} height={32} color={"#505050"} />,
-    text: "Completly Free",
+    img: require("../../assets/images/instant-confirmation-icon.png"),
+    // icon: <InstantConfirmationIcon />,
+    text: "Instant Confirmation",
   },
   {
     icon: <RefundIcon />,
@@ -468,7 +470,8 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
         >
           {icons.map((item) => (
             <Div alignItems="center" key={item.text}>
-              {item.icon}
+              {item.icon && item.icon}
+              {item.img && <Image source={item.img} h={32} w={32} />}
               <Text mt={6} fontSize={"xs"} fontFamily={fontHauoraSemiBold}>
                 {item.text}
               </Text>
