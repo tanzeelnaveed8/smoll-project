@@ -366,3 +366,58 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
 };
 
 export default AppointmentDetailsScreen;
+
+/**
+
+<Div flexDir="row" alignItems="flex-end" mb={30}>
+                <Div>
+                  <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
+                    Minimum
+                  </Text>
+                  <Text
+                    fontSize={"5xl"}
+                    fontFamily={fontHauoraBold}
+                    lineHeight={36}
+                  >
+                    {minimumAmount}
+                    <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
+                      {" "}
+                      AED
+                    </Text>
+                  </Text>
+                </Div>
+
+                <Div w={80} h={1} ml={30} mr={10} mb={8} bg="#222" />
+
+                <Div>
+                  <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
+                    Maximum
+                  </Text>
+
+                  <Text
+                    fontSize={"5xl"}
+                    fontFamily={fontHauoraBold}
+                    lineHeight={36}
+                  >
+                    
+                    {totalSelectedAmount}
+                    <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
+                      {" "}
+                      AED
+                    </Text>
+                  </Text>
+
+                  <Div
+                    style={{
+                      marginLeft: "auto",
+                      position: "absolute",
+                      bottom: -30,
+                      left: 20,
+                    }}
+                  >
+                    <DotIcon />
+                  </Div>
+                </Div>
+              </Div>
+
+ */
