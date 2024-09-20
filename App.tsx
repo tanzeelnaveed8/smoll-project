@@ -259,22 +259,17 @@ PushNotificationIOS.requestPermissions({
   critical: true,
 });
 
-SendbirdCalls.setLoggerLevel("info");
+// SendbirdCalls.setLoggerLevel("info");
 SendbirdCalls.initialize(process.env.EXPO_PUBLIC_SENDBIRD_APP_ID as string);
 SendbirdCalls.setListener({
   onRinging: (call) => {
     const { SET_CALL_ID } = useUserStore.getState();
-    console.log("trigger video call");
-
     SET_CALL_ID(call.callId);
   },
 });
 
-console.log("trigger1");
-
 PushNotificationIOS.addEventListener("register", async (token) => {
   const _user = SendbirdCalls.currentUser;
-  console.log("_user", _user);
 
   if (_user) {
     const allToken = await sb?.getMyPushTokensByToken("", PushTokenType.APNS);
@@ -296,7 +291,6 @@ const App = () => {
     loadFonts().then(() => setFontsLoaded(true));
 
     // Remove this method to stop OneSignal Debugging
-    OneSignal.Debug.setLogLevel(LogLevel.Verbose);
     // OneSignal Initialization
     OneSignal.initialize(process.env.EXPO_PUBLIC_ONE_SIGNAL_APP_ID as string);
     // requestPermission will show the native iOS or Android notification permission prompt.
@@ -308,6 +302,9 @@ const App = () => {
       const additionalData = event.notification?.additionalData as {
         notificationType?: string;
         consultationId?: string;
+        caseId?: string;
+        partnerId?: string;
+        partnerBookingId?: string;
       };
 
       if (additionalData?.notificationType === "consultation-notification") {
@@ -317,16 +314,24 @@ const App = () => {
       }
 
       if (
-        event.notification?.additionalData?.notificationType ===
-          "quote-submitted" ||
-        event.notification?.additionalData?.notificationType === "quote-updated"
+        additionalData?.notificationType === "quote-submitted" ||
+        additionalData?.notificationType === "quote-updated"
       ) {
-        const caseId = event.notification?.additionalData?.caseId;
-        const partnerId = event.notification?.additionalData?.partnerId;
+        const caseId = additionalData.caseId;
+        const partnerId = additionalData.partnerId;
 
         rootNavigation.navigate("CaseQuoteDescriptionScreen", {
           caseId,
           id: partnerId,
+        });
+      }
+
+      if (additionalData?.notificationType === "partner-booking-notification") {
+        const partnerBookingId = additionalData.partnerBookingId;
+
+        rootNavigation.navigate("AppointmentDetailsScreen", {
+          id: partnerBookingId,
+          type: "in-clinic",
         });
       }
     });
@@ -353,8 +358,6 @@ const App = () => {
   useEffect(() => {
     if (user && user.name) {
       OneSignal.login(user.playerId);
-      console.log("trigger0");
-
       initializeSendbird(
         user.id,
         user.playerId,
@@ -371,7 +374,6 @@ const App = () => {
     // const currentRoute = rootNavigation.getCurrentRoute();
     // const channel = sendbirdData.channel;
     // const message = sendbirdData.message;
-    // console.log("trigger", "a");
     // if (channel && message) {
     //   const isCurrentChat =
     //     currentRoute?.name === "ExpertsChatScreen" &&

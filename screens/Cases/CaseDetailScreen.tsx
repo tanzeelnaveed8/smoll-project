@@ -1,9 +1,7 @@
 import Layout from "@/components/app/Layout";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import {
-  colorErrorText,
   colorPrimary,
-  colorSuccessText,
   fontHauoraBold,
   fontHauoraSemiBold,
 } from "@/constant/constant";

@@ -52,6 +52,13 @@ target 'smollapp' do
         end
       end
     end
+
+    # Add this block at the end of the post_install hook
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+        config.build_settings['NODE_BINARY'] = `which node`.strip
+      end
+    end
   end
 
   post_integrate do |installer|

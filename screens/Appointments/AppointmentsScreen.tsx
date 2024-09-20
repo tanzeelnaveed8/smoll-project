@@ -25,8 +25,6 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
   const [nextPageId, setNextPageId] = useState(1);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  console.log("appointment", appointment);
-
   useEffect(() => {
     handleFetchAppointments(undefined, true);
   }, []);

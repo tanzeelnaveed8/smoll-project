@@ -66,7 +66,6 @@ const SignupScreen: React.FC<{ navigation: NavigationType }> = ({
     // Limit to 10 digits
 
     if (phoneNumber && phoneNumber.isValid()) {
-      console.log("phoneNumber.valid", phoneNumber.isValid());
       const formattedPhone = phoneNumber.formatNational();
       cleanedValue = formattedPhone;
     }

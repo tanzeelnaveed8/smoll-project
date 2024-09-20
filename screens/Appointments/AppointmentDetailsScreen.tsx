@@ -78,13 +78,9 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
     }
   };
 
-  console.log("appointmentDetail==", appointmentDetail);
-
   const handleDeleteBooking = async () => {
     try {
       setDeleteLoading(true);
-
-      console.log("id", id);
 
       if (appointmentDetail?.type === "video") {
         await cancelConsultation(id);
