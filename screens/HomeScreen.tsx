@@ -245,7 +245,10 @@ const HomeScreen: React.FC<Props> = (props) => {
                 )}
 
                 <IconButton
-                  style={{ overflow: "visible" }}
+                  bg="bgColor"
+                  style={{
+                    overflow: "visible",
+                  }}
                   onPress={() => {
                     props.navigation.navigate("NotificationTestScreen");
 
@@ -266,6 +269,7 @@ const HomeScreen: React.FC<Props> = (props) => {
                 </IconButton>
               </Div>
               <IconButton
+                bg="bgColor"
                 onPress={() => {
                   props.navigation.navigate("SettingsMainScreen");
                 }}
@@ -336,7 +340,7 @@ const HomeScreen: React.FC<Props> = (props) => {
                   fontSize={"md"}
                   bg="#222"
                   color="#fff"
-                  rounded={20}
+                  rounded={25}
                   pb={9.48}
                   pt={7.52}
                   px={25}
@@ -406,7 +410,7 @@ const HomeScreen: React.FC<Props> = (props) => {
                 h={83}
                 disabled={item.loading}
                 onPress={() => handleOptionTabPress(item)}
-                bg="#fff"
+                bg="transparent"
                 underlayColor="#f3f3f3"
               >
                 <Div

@@ -7,9 +7,16 @@ import {
   fontHauoraSemiBold,
 } from "@/constant/constant";
 import { NavigationType } from "@/store/types";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ActivityIndicator, FlatList, TouchableOpacity } from "react-native";
-import { Button, Div, Image, Text } from "react-native-magnus";
+import {
+  Button,
+  Div,
+  DropdownRef,
+  Image,
+  Tag,
+  Text,
+} from "react-native-magnus";
 import ProfileOptionButton from "./ProfileOptionButton";
 import AddButton from "@/components/partials/AddButton";
 import { useRoute } from "@react-navigation/native";
@@ -19,6 +26,8 @@ import { UploadedFile } from "@/store/types/file";
 import { useToast } from "react-native-toast-notifications";
 import { showMessage } from "react-native-flash-message";
 import ConfirmationModal from "@/components/partials/ConfirmationModal";
+import { IconDots } from "@tabler/icons-react-native";
+import Dropdown from "@/components/partials/Dropdown";
 
 const btns = ["Basic Details", "Health History"];
 
@@ -30,18 +39,26 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
   const route = useRoute();
   const toast = useToast();
   const id = (route.params as RouteType)?.petId;
-  const { petsDetailMap, fetchPetDetails, updatePet, deleteHealthHistory } =
-    usePetStore();
+  const {
+    petsDetailMap,
+    fetchPetDetails,
+    updatePet,
+    deleteHealthHistory,
+    deletePet,
+  } = usePetStore();
   // const [healthHistoryDataState, setHealthHistoryDataState] = useState<
   //   HealthHistory[] | null
   // >(null);
 
+  const optionMenuRef = useRef<DropdownRef>(null);
   const [profileImg, setProfileImg] = useState("");
   const [loading, setLoading] = useState(false);
   const [imageLoading, setImageLoading] = useState(false);
   const [deleteHealthHistoryLoading, setDeleteHealthHistoryLoading] =
     useState("");
   const [showDeleteModal, setShowDeleteModal] = useState("");
+  const [showDeletePetModal, setShowDeletePetModal] = useState(false);
+  const [deletePetLoading, setDeletePetLoading] = useState(false);
 
   const petDetailsData = petsDetailMap.get(id);
   const healthHistoryDataState = petsDetailMap.get(id)?.healthHistory;
@@ -185,6 +202,38 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
     },
   ];
 
+  const handleMenuDropdownSelect = (value: string) => {
+    if (value === "Delete Pet") {
+      setShowDeletePetModal(true);
+    }
+
+    if (value === "Deceased") {
+      handleUpdateDeceased();
+    }
+  };
+
+  const handleUpdateDeceased = async () => {
+    if (!petDetailsData) return;
+    try {
+      const updatedValue = petDetailsData?.isDeceased ? false : true;
+      await updatePet(id, { isDeceased: updatedValue });
+      toast.show("Pet deceased status updated successfully");
+    } finally {
+      setDeletePetLoading(false);
+    }
+  };
+
+  const handleDeletePet = async () => {
+    try {
+      setDeletePetLoading(true);
+      await deletePet(id);
+      toast.show("Pet deleted successfully");
+      navigation.navigate("PetProfileListScreen");
+    } finally {
+      setDeletePetLoading(false);
+    }
+  };
+
   return (
     <Layout
       showBack
@@ -223,16 +272,30 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                 />
               </Div>
             </Div>
-            <Text fontSize={"4xl"} fontFamily={fontHauoraMedium} ml={14}>
-              {petDetailsData?.name}
-            </Text>
+            <Div ml={14}>
+              <Text fontSize={"4xl"} fontFamily={fontHauoraMedium}>
+                {petDetailsData?.name}
+              </Text>
+
+              {petDetailsData?.isDeceased && (
+                <Tag
+                  fontSize={"md"}
+                  mt={8}
+                  p={0}
+                  bg={colorErrorText}
+                  color="#fff"
+                >
+                  Deceased
+                </Tag>
+              )}
+            </Div>
           </Div>
 
-          <Div flexDir="row" style={{ gap: 24 }} position="relative" mb={20}>
+          <Div flexDir="row" position="relative" mb={20}>
             {btns.map((item) => (
               <TouchableOpacity
                 key={item}
-                style={{}}
+                style={{ marginRight: 24 }}
                 onPress={() => {
                   setActiveTab(item);
                 }}
@@ -268,6 +331,23 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                 </Button>
               </TouchableOpacity>
             ))}
+
+            <TouchableOpacity
+              style={{ marginLeft: "auto" }}
+              onPress={() => {
+                if ("current" in optionMenuRef && optionMenuRef.current) {
+                  optionMenuRef.current.open();
+                }
+              }}
+            >
+              <IconDots width={26} height={26} color={"#222"} />
+            </TouchableOpacity>
+
+            <Dropdown
+              ref={optionMenuRef}
+              onSelect={handleMenuDropdownSelect}
+              isDeceased={petDetailsData?.isDeceased ?? false}
+            />
 
             <Div
               borderBottomWidth={1}
@@ -371,6 +451,18 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
         showModal={showDeleteModal ? true : false}
         onClose={() => setShowDeleteModal("")}
         onConfirm={deleteHealthHistoryHandler}
+        confirmText="Confirm"
+        cancelText="Cancel"
+        confirmBgColor={colorErrorText}
+      />
+
+      <ConfirmationModal
+        heading="Delete Pet"
+        text="Are you sure you want to delete this pet?"
+        isLoading={deletePetLoading}
+        showModal={showDeletePetModal}
+        onClose={() => setShowDeletePetModal(false)}
+        onConfirm={handleDeletePet}
         confirmText="Confirm"
         cancelText="Cancel"
         confirmBgColor={colorErrorText}

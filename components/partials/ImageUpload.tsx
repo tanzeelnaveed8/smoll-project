@@ -390,7 +390,7 @@ const ImageUpload: React.FC<Props> = ({
           <Button
             w={w}
             h={h}
-            bg={bg ? bg : "#F4F6F8"}
+            bg={bg ? bg : "#ddd"}
             rounded={rounded ? rounded : 8}
             position="relative"
             disabled={loading}

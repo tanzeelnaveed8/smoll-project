@@ -23,12 +23,14 @@ import {
   Skeleton,
   Text,
 } from "react-native-magnus";
+import { Pet } from "@/store/types/pet";
 
 const PetProfileListScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
-  const { fetchPets, pets } = usePetStore();
+  const { fetchPets } = usePetStore();
   const [loading, setLoading] = useState(false);
+  const [pets, setPets] = useState<Pet[]>([]);
 
   useEffect(() => {
     fetchData();
@@ -37,7 +39,8 @@ const PetProfileListScreen: React.FC<{ navigation: NavigationType }> = ({
   const fetchData = async () => {
     try {
       setLoading(true);
-      await fetchPets();
+      const response = await fetchPets(true);
+      setPets(response);
     } finally {
       setLoading(false);
     }

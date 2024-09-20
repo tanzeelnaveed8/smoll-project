@@ -107,6 +107,7 @@ const theme = {
   colors: {
     primary: "#427594",
     primaryLight: "#518cb0",
+    bgColor: "#FAF8F5",
     // primaryLight: "#f10",
     darkGreyText: "#494949",
   },
@@ -251,7 +252,7 @@ const App = () => {
   useEffect(() => {
     loadFonts().then(() => setFontsLoaded(true));
 
-    // return;
+    return;
     // Remove this method to stop OneSignal Debugging
     OneSignal.Debug.setLogLevel(LogLevel.Verbose);
     // OneSignal Initialization
@@ -339,7 +340,7 @@ const App = () => {
 
   useEffect(() => {
     if (user) {
-      OneSignal.login(user.playerId);
+      // OneSignal.login(user.playerId);
     }
   }, [user]);
 
@@ -348,7 +349,7 @@ const App = () => {
     // const sendbirdUserId = "419772";
     // const sendbirdAccessToken = "d75dad4fde9a54d0518efeb8b62d9ac42d267930";
 
-    initializeSendbird(user.id, user.playerId, user.name, user.profileImg.url);
+    initializeSendbird(user.id, user.playerId, user.name, user.profileImg?.url);
   }, [user]);
 
   if (!fontsLoaded) {

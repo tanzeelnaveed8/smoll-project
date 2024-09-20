@@ -18,6 +18,7 @@ import { useRoute } from "@react-navigation/native";
 import ImageUpload from "@/components/partials/ImageUpload";
 import TextAreaField from "@/components/partials/TextAreaField";
 import { CaseStatusEnum, CreateCasePayloadDto } from "@/store/types/case.d";
+import { Pet } from "@/store/types/pet";
 
 const NoPetOptions = ({
   navigation,
@@ -70,7 +71,7 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
 }) => {
   const { createCase } = useCaseStore();
   const { updateConsultation } = useExpertStore();
-  const { pets, fetchPets } = usePetStore();
+  const { fetchPets } = usePetStore();
 
   const route = useRoute();
 
@@ -92,6 +93,7 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
   const [documents, setDocuments] = useState<UploadedFile[]>([]);
   const [description, setDescription] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [pets, setPets] = useState<Pet[]>([]);
 
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -150,7 +152,8 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
   const fetchAllPets = async () => {
     try {
       setLoading(true);
-      await fetchPets();
+      const response = await fetchPets(false);
+      setPets(response);
     } finally {
       setLoading(false);
     }

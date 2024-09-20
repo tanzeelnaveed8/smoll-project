@@ -8,12 +8,17 @@ export const usePetStore = create<PetState>((set, get) => ({
   // healthHistoryMap: new Map(),
   pets: null,
 
-  fetchPets: async () => {
-    const response = await api.get("/member/pets");
+  fetchPets: async (isDeceased?: boolean) => {
+    const response = await api.get("/member/pets", {
+      params: {
+        isDeceased,
+      },
+    });
 
     set(() => ({
       pets: response.data,
     }));
+    return response.data;
   },
 
   fetchPetBreeds: async () => {
@@ -183,5 +188,15 @@ export const usePetStore = create<PetState>((set, get) => ({
     }));
 
     return response.data;
+  },
+
+  deletePet: async (petId) => {
+    const response = await api.delete(`/member/pets/${petId}`);
+
+    const updatedPets = get().pets?.filter((pet) => pet.id !== petId);
+
+    set(() => ({
+      pets: updatedPets,
+    }));
   },
 }));

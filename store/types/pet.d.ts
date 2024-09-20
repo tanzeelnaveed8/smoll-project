@@ -25,6 +25,7 @@ export type PetDetail = {
   photos: UploadedFile[];
   healthHistory?: HealthHistory[];
   preExistingConditions: string;
+  isDeceased?: boolean;
 };
 
 export interface Pet {
@@ -54,7 +55,7 @@ export interface PetState {
   petBreeds: Nullable<PetBreeds>;
 
   fetchPetBreeds: () => Promise<void>;
-  fetchPets: () => Promise<void>;
+  fetchPets: (isDeceased?: boolean) => Promise<Pet[]>;
   fetchPetDetails: (id: string) => Promise<PetDetail>;
   addPet: (pet: PetPayloadDto) => Promise<PetDetail>;
   updatePet: (id: string, payload: Partial<PetDetail>) => Promise<PetDetail>;
@@ -73,4 +74,6 @@ export interface PetState {
     petId: string,
     healthHistoryId: string
   ) => Promise<void>;
+
+  deletePet: (petId: string) => Promise<void>;
 }

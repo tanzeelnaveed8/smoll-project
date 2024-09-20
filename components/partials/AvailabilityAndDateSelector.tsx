@@ -14,12 +14,13 @@ interface Props {
 const CalendarHeader = ({ date }: { date: string }) => {
   return (
     <Text
+      bg="#FAF8F5"
       fontFamily={fontHauoraSemiBold}
       fontSize={20}
       lineHeight={32}
       color="#222222"
     >
-      {date}
+      {date}ff
     </Text>
   );
 };
@@ -63,8 +64,8 @@ const AvailabilityAndDateSelector: React.FC<Props> = ({
   // );
 
   return (
-    <Div style={{ height: 136 }}>
-      <CalendarProvider date={selectedDate}>
+    <Div style={{ height: 136 }} position="relative">
+      <CalendarProvider date={selectedDate.toISOString()}>
         <ExpandableCalendar
           disableWeekScroll
           allowShadow={false}
@@ -73,9 +74,11 @@ const AvailabilityAndDateSelector: React.FC<Props> = ({
             borderColor: "#E0E0E0",
             paddingBottom: 16,
             paddingHorizontal: 0,
+            backgroundColor: "#FAF8F5",
           }}
+          headerStyle={{ backgroundColor: "#FAF8F5" }}
           // headerStyle={{ paddingHorizontal: 0 }}
-          columnWrapperStyle={{ padding: 0, backgroundColor: "red" }}
+
           disablePan
           hideKnob
           markedDates={{}}
@@ -98,6 +101,9 @@ const AvailabilityAndDateSelector: React.FC<Props> = ({
             </Div>
           )}
           onDayPress={(day) => handleDateSelect(day.dateString)}
+          theme={{
+            calendarBackground: "#FAF8F5", // Change the background color to red
+          }}
         />
       </CalendarProvider>
     </Div>

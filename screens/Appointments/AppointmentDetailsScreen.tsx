@@ -30,7 +30,12 @@ import {
   IconUserX,
 } from "@tabler/icons-react-native";
 import React, { useEffect, useMemo, useState } from "react";
-import { ActivityIndicator, Dimensions, TouchableOpacity } from "react-native";
+import {
+  ActivityIndicator,
+  Dimensions,
+  Linking,
+  TouchableOpacity,
+} from "react-native";
 import { showMessage } from "react-native-flash-message";
 import { Button, Div, Image, ScrollDiv, Tag, Text } from "react-native-magnus";
 
@@ -42,21 +47,6 @@ const actionBtn = [
   {
     icon: <IconUserX width={30} height={30} color={"#427594"} />,
     text: "Cancel Booking",
-  },
-];
-
-const contactBtns = [
-  {
-    icon: <CallIcon />,
-    text: "Call",
-  },
-  {
-    icon: <LocationIcon />,
-    text: "Location",
-  },
-  {
-    icon: <MessageIcon />,
-    text: "Message",
   },
 ];
 
@@ -80,9 +70,78 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [rescheduleLoading, setRescheduleLoading] = useState(false);
+  const [contactBtns, setContactBtns] = useState<
+    {
+      icon: React.ReactNode;
+      text: string;
+      link: string;
+    }[]
+  >([]);
 
   const [appointmentDetail, setAppointmentDetail] =
     useState<AppointmentDetailResponseDto | null>(null);
+
+  const selectedServicesAmount = useMemo(() => {
+    return appointmentDetail?.services.reduce((acc, service) => {
+      return acc + service.price;
+    }, 0);
+  }, [appointmentDetail]);
+
+  const allServicesAmount = useMemo(() => {
+    return appointmentDetail?.allServices.reduce((acc, service) => {
+      return acc + service.price;
+    }, 0);
+  }, [appointmentDetail]);
+
+  const bookingCharges = useMemo(() => {
+    // 20% of total amount
+    const amount = ((selectedServicesAmount ?? 0) * 20) / 100;
+    return amount;
+  }, [selectedServicesAmount]);
+
+  // const contactBtns = useMemo(() => {
+  //   return [
+  //     {
+  //       icon: <CallIcon />,
+  //       text: "Call",
+  //       link: `tel:${appointmentDetail?.partner?.phone}`,
+  //     },
+  //     // {
+  //     //   icon: <LocationIcon />,
+  //     //   text: "Location",
+  //     // },
+  //     {
+  //       icon: <MessageIcon />,
+  //       text: "Message",
+  //       link: `mailto:${appointmentDetail?.partner?.email}`,
+  //     },
+  //   ];
+  // }, [appointmentDetail]);
+
+  useEffect(() => {
+    if (!appointmentDetail) return;
+
+    setContactBtns([]);
+    const copy = [...contactBtns];
+
+    if (appointmentDetail?.partner?.phone) {
+      copy.push({
+        icon: <CallIcon />,
+        text: "Call",
+        link: `tel:${appointmentDetail?.partner?.phone}`,
+      });
+    }
+
+    if (appointmentDetail?.partner?.email) {
+      copy.push({
+        icon: <MessageIcon />,
+        text: "Message",
+        link: `mailto:${appointmentDetail?.partner?.email}`,
+      });
+    }
+
+    setContactBtns(copy);
+  }, [appointmentDetail]);
 
   useEffect(() => {
     fetchDetails();
@@ -164,353 +223,395 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
   };
 
   return (
-    <Layout
-      title="Appointment Details"
-      showBack
-      onBackPress={() => {
-        navigation.navigate("AppointmentsScreen");
-      }}
-      loading={isLoading}
-      style={{ paddingHorizontal: 0 }}
-    >
-      <ScrollDiv showsVerticalScrollIndicator={false}>
-        <Div flex={1}>
-          <Div flex={1} pt={20}>
-            <Div px={20}>
-              <Div
-                justifyContent="center"
-                alignItems="center"
-                mb={24}
-                pb={26}
-                borderBottomWidth={1}
-                borderColor="#D0D7DC"
-              >
-                {appointmentDetail?.vet?.profileImg?.url ? (
-                  <Image
-                    w={100}
-                    h={100}
-                    rounded={100}
-                    mx={"auto"}
-                    mb={8}
-                    src={appointmentDetail?.vet?.profileImg?.url}
-                  />
-                ) : (
+    <>
+      <Layout
+        title="Appointment Details"
+        showBack
+        style={{ paddingBottom: 0 }}
+        onBackPress={() => navigation.goBack()}
+      >
+        {!isLoading && (
+          <ScrollDiv showsVerticalScrollIndicator={false}>
+            <Div flex={1}>
+              <Div flex={1} pt={20}>
+                <Div flex={1}>
                   <Div
-                    mb={8}
-                    bg="#eeeeee"
-                    w={100}
-                    h={100}
-                    rounded={100}
                     justifyContent="center"
                     alignItems="center"
+                    mb={24}
+                    pb={26}
+                    borderBottomWidth={1}
+                    borderColor="#D0D7DC"
                   >
-                    <IconUser width={"60%"} height={"60%"} color={"#fff"} />
-                  </Div>
-                )}
+                    {appointmentDetail?.vet?.profileImg?.url ? (
+                      <Image
+                        w={100}
+                        h={100}
+                        rounded={100}
+                        mx={"auto"}
+                        mb={8}
+                        src={appointmentDetail?.vet?.profileImg?.url}
+                      />
+                    ) : (
+                      <Div
+                        mb={8}
+                        bg="#eeeeee"
+                        w={100}
+                        h={100}
+                        rounded={100}
+                        justifyContent="center"
+                        alignItems="center"
+                      >
+                        <IconUser width={"60%"} height={"60%"} color={"#fff"} />
+                      </Div>
+                    )}
 
-                <Text
-                  fontSize={"xl"}
-                  fontFamily={fontHauoraSemiBold}
-                  lineHeight={24}
-                  mb={4}
-                >
-                  {appointmentDetail?.vet?.name}
-                </Text>
+                    <Text
+                      fontSize={"xl"}
+                      fontFamily={fontHauoraSemiBold}
+                      lineHeight={24}
+                      mb={4}
+                    >
+                      {appointmentDetail?.vet?.name}
+                    </Text>
 
-                {appointmentDetail?.type !== "video" && (
-                  <Text fontSize={12} fontFamily={fontHauoraSemiBold}>
-                    {appointmentDetail?.partner?.name}
-                  </Text>
-                )}
+                    {appointmentDetail?.type !== "video" && (
+                      <Text fontSize={12} fontFamily={fontHauoraSemiBold}>
+                        {appointmentDetail?.partner?.name}
+                      </Text>
+                    )}
 
-                <Div>
-                  <Tag
-                    fontSize={12}
-                    fontFamily={fontHauoraSemiBold}
-                    px={8}
-                    py={6}
-                    rounded={37}
-                    borderWidth={1}
-                    borderColor="#222"
-                    mb={16}
-                    bg="transparent"
-                    mt={12}
-                  >
-                    {appointmentDetail?.type === "video"
-                      ? "Video Consultation"
-                      : "Clinic Visit"}
-                  </Tag>
-                </Div>
+                    <Div>
+                      <Tag
+                        fontSize={12}
+                        fontFamily={fontHauoraSemiBold}
+                        px={8}
+                        py={6}
+                        rounded={37}
+                        borderWidth={1}
+                        borderColor="#222"
+                        mb={16}
+                        bg="transparent"
+                        mt={12}
+                      >
+                        {appointmentDetail?.type === "video"
+                          ? "Video Consultation"
+                          : "Clinic Visit"}
+                      </Tag>
+                    </Div>
 
-                <Text fontSize={12} fontFamily={fontHauoraSemiBold} mb={8}>
-                  Appointment On
-                </Text>
+                    <Text fontSize={12} fontFamily={fontHauoraSemiBold} mb={8}>
+                      Appointment On
+                    </Text>
 
-                <Text
-                  fontSize={"xl"}
-                  fontFamily={fontHauoraSemiBold}
-                  lineHeight={24}
-                  color="primary"
-                >
-                  {appointmentDetail?.scheduledAt &&
-                    appointmentFormatedTime(appointmentDetail?.scheduledAt)}
-                </Text>
+                    <Text
+                      fontSize={"xl"}
+                      fontFamily={fontHauoraSemiBold}
+                      lineHeight={24}
+                      color="primary"
+                    >
+                      {appointmentDetail?.scheduledAt &&
+                        appointmentFormatedTime(appointmentDetail?.scheduledAt)}
+                    </Text>
 
-                {/* {appointmentDetail?.type === "video" && (
+                    {/* {appointmentDetail?.type === "video" && (
               <ButtonPrimary disabled mt={24}>
                 Join
               </ButtonPrimary>
             )} */}
-              </Div>
+                  </Div>
 
-              <Div pb={25} mb={18} borderBottomWidth={1} borderColor="#D0D7DC">
-                {appointmentDetail?.type !== "video" && (
                   <Div
-                    pb={16}
-                    mb={24}
+                    pb={25}
+                    mb={18}
                     borderBottomWidth={1}
                     borderColor="#D0D7DC"
                   >
+                    {!isLoading &&
+                      appointmentDetail &&
+                      appointmentDetail?.type
+                        .toLowerCase()
+                        .includes("clinic") && (
+                        <Div
+                          pb={16}
+                          mb={24}
+                          borderBottomWidth={1}
+                          borderColor="#D0D7DC"
+                        >
+                          <Text
+                            fontSize={12}
+                            fontFamily={fontHauoraSemiBold}
+                            color="darkGreyText"
+                            mb={8}
+                          >
+                            Clinic Location
+                          </Text>
+
+                          <Div
+                            mb={8}
+                            flexDir="row"
+                            justifyContent="space-between"
+                          >
+                            <Text
+                              fontSize={"lg"}
+                              fontFamily={fontHauoraSemiBold}
+                            >
+                              {appointmentDetail?.partner?.name ??
+                                "Euro Pet Clinic"}
+                            </Text>
+
+                            <Div
+                              flexDir="row"
+                              alignItems="center"
+                              mt={-4}
+                              pr={30}
+                              style={{ gap: 32 }}
+                            >
+                              {contactBtns.map((item, i) => (
+                                <TouchableOpacity
+                                  key={i}
+                                  onPress={() => {
+                                    Linking.openURL(item.link);
+                                  }}
+                                >
+                                  {item.icon}
+                                </TouchableOpacity>
+                              ))}
+                            </Div>
+                          </Div>
+
+                          <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
+                            {appointmentDetail?.partner?.address ?? "-"}
+                          </Text>
+                        </Div>
+                      )}
+
                     <Text
                       fontSize={12}
                       fontFamily={fontHauoraSemiBold}
                       color="darkGreyText"
                       mb={8}
                     >
-                      Clinic Location
+                      Pet
                     </Text>
 
-                    <Div mb={8} flexDir="row" justifyContent="space-between">
+                    <Div flexDir="row" alignItems="center" mb={28}>
+                      <Div>
+                        <Image
+                          w={48}
+                          h={48}
+                          rounded={48}
+                          mr={8}
+                          src={appointmentDetail?.pet.photos[0].url}
+                          // source={require("../../assets/images/dog.png")}
+                        />
+                      </Div>
+
                       <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold}>
-                        {appointmentDetail?.partner?.name ?? "Euro Pet Clinic"}
+                        {appointmentDetail?.pet.name}
                       </Text>
+                    </Div>
+
+                    <Div>
+                      {actionBtn.map((item) => (
+                        <TouchableOpacity
+                          disabled={rescheduleLoading}
+                          key={item.text}
+                          onPress={() => {
+                            if (item.text.includes("Cancel")) {
+                              setShowCancelModal(true);
+                            } else if (item.text.includes("Reschedule")) {
+                              handleRescheduleBooking();
+                            }
+                          }}
+                        >
+                          <Button
+                            bg="transparent"
+                            p={0}
+                            pointerEvents="none"
+                            flexDir="row"
+                            style={{ gap: 12 }}
+                            alignItems="center"
+                          >
+                            {/* <IconUserX width={26} height={26} color={"#427594"} /> */}
+                            {item.icon}
+                            <Text
+                              fontSize={"xl"}
+                              fontFamily={fontHauoraSemiBold}
+                              color="primary"
+                            >
+                              {item.text}
+                            </Text>
+                          </Button>
+                        </TouchableOpacity>
+                      ))}
+                    </Div>
+                  </Div>
+
+                  {appointmentDetail?.type !== "video" && (
+                    <>
+                      <Div flexDir="row" style={{ gap: 6 }} mb={20}>
+                        <IconReceipt width={20} height={20} color="#222" />
+                        <Text fontSize={12} fontFamily={fontHauoraBold} mb={2}>
+                          Approved Quotation
+                        </Text>
+                      </Div>
+
+                      <Div flexDir="row" alignItems="flex-end" mb={30}>
+                        <Div>
+                          <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
+                            Minimum
+                          </Text>
+                          <Text
+                            fontSize={"5xl"}
+                            fontFamily={fontHauoraBold}
+                            lineHeight={36}
+                          >
+                            {selectedServicesAmount}
+                            <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
+                              {" "}
+                              AED
+                            </Text>
+                          </Text>
+                        </Div>
+
+                        <Div w={80} h={1} mx={20} mb={8} bg="#222" />
+
+                        <Div>
+                          <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
+                            Maximum
+                          </Text>
+
+                          <Text
+                            fontSize={"5xl"}
+                            fontFamily={fontHauoraBold}
+                            lineHeight={36}
+                          >
+                            {allServicesAmount}
+                            <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
+                              {" "}
+                              AED
+                            </Text>
+                          </Text>
+                        </Div>
+                      </Div>
 
                       <Div
                         flexDir="row"
                         alignItems="center"
-                        mt={-4}
-                        pr={30}
-                        style={{ gap: 32 }}
+                        justifyContent="space-around"
+                        style={{ gap: 20 }}
+                        mb={20}
+                        // mb={25}
                       >
-                        {contactBtns.map((item, i) => (
-                          <TouchableOpacity key={i}>
-                            {item.icon}
-                          </TouchableOpacity>
-                        ))}
+                        <Div bg="#EFE9DB" rounded={22} px={22} py={18}>
+                          <Text
+                            mb={6}
+                            fontSize={13}
+                            fontFamily={fontHauoraMedium}
+                          >
+                            20% Advance paid
+                          </Text>
+                          <Text
+                            fontSize={"5xl"}
+                            fontFamily={fontHauoraBold}
+                            lineHeight={30}
+                          >
+                            {bookingCharges}
+                            <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
+                              {" "}
+                              AED
+                            </Text>
+                          </Text>
+                        </Div>
+
+                        <Div style={{ gap: 2 }}>
+                          <WalletIcon mb={4} width={30} height={30} />
+                          <Text
+                            fontSize={11}
+                            lineHeight={15}
+                            fontFamily={fontHauoraSemiBold}
+                            maxW={200}
+                          >
+                            Final balance to be paid at the clinic, depending on
+                            services received.
+                          </Text>
+                        </Div>
                       </Div>
-                    </Div>
+                    </>
+                  )}
+                </Div>
+              </Div>
+            </Div>
 
-                    <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
-                      {appointmentDetail?.partner?.address ?? "-"}
-                    </Text>
-                  </Div>
-                )}
+            <Div h={30} />
+          </ScrollDiv>
+        )}
 
+        {isLoading && (
+          <Div justifyContent="center" alignItems="center" h={"90%"}>
+            <ActivityIndicator size="large" color="#427594" />
+          </Div>
+        )}
+      </Layout>
+
+      {!isLoading && (
+        <Div bg="bgColor" pb={20}>
+          <Div mb={20}>
+            <SquigglyLinesIcon />
+          </Div>
+
+          <Div px={20}>
+            <Div w={"50%"} h={5} rounded={10} bg="#222" mx={"auto"} mb={30} />
+
+            <Div flexDir="row" style={{ gap: 8 }} mb={20}>
+              <IconHelpCircle width={20} height={20} color="#222" />
+              <Text fontSize={12} fontFamily={fontHauoraBold} mb={2}>
+                Help
+              </Text>
+            </Div>
+
+            <Div
+              flexDir="row"
+              justifyContent="space-between"
+              alignItems="flex-start"
+              pb={10}
+            >
+              <Div>
                 <Text
                   fontSize={12}
-                  fontFamily={fontHauoraSemiBold}
-                  color="darkGreyText"
-                  mb={8}
+                  fontFamily={fontHauoraBold}
+                  mb={3}
+                  color="#959594"
                 >
-                  Pet
+                  Call us on 08:00 ~ 19:00
                 </Text>
-
-                <Div flexDir="row" alignItems="center" mb={28}>
-                  <Div>
-                    <Image
-                      w={48}
-                      h={48}
-                      rounded={48}
-                      mr={8}
-                      src={appointmentDetail?.pet.photos[0].url}
-                      // source={require("../../assets/images/dog.png")}
-                    />
-                  </Div>
-
-                  <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold}>
-                    {appointmentDetail?.pet.name}
-                  </Text>
-                </Div>
-
-                <Div>
-                  {actionBtn.map((item) => (
-                    <TouchableOpacity
-                      disabled={rescheduleLoading}
-                      key={item.text}
-                      onPress={() => {
-                        if (item.text.includes("Cancel")) {
-                          setShowCancelModal(true);
-                        } else if (item.text.includes("Reschedule")) {
-                          handleRescheduleBooking();
-                        }
-                      }}
-                    >
-                      <Button
-                        bg="transparent"
-                        p={0}
-                        pointerEvents="none"
-                        flexDir="row"
-                        style={{ gap: 12 }}
-                        alignItems="center"
-                      >
-                        {/* <IconUserX width={26} height={26} color={"#427594"} /> */}
-                        {item.icon}
-                        <Text
-                          fontSize={"xl"}
-                          fontFamily={fontHauoraSemiBold}
-                          color="primary"
-                        >
-                          {item.text}
-                        </Text>
-                      </Button>
-                    </TouchableOpacity>
-                  ))}
-                </Div>
-              </Div>
-
-              <Div flexDir="row" style={{ gap: 6 }} mb={20}>
-                <IconReceipt width={20} height={20} color="#222" />
-                <Text fontSize={12} fontFamily={fontHauoraBold} mb={2}>
-                  Approved Quotation
+                <Text fontSize={"xl"} fontFamily={fontHauoraBold}>
+                  +971 44510090
                 </Text>
               </Div>
 
-              <Div flexDir="row" alignItems="flex-end" mb={30}>
-                <Div>
-                  <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
-                    Minimum
-                  </Text>
-                  <Text
-                    fontSize={"5xl"}
-                    fontFamily={fontHauoraBold}
-                    lineHeight={36}
-                  >
-                    {450 || "minimumAmount"}
-                    <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
-                      {" "}
-                      AED
-                    </Text>
-                  </Text>
-                </Div>
+              <Text fontSize={12} fontFamily={fontHauoraBold}>
+                or
+              </Text>
 
-                <Div w={80} h={1} mx={20} mb={8} bg="#222" />
-
-                <Div>
-                  <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
-                    Maximum
-                  </Text>
-
-                  <Text
-                    fontSize={"5xl"}
-                    fontFamily={fontHauoraBold}
-                    lineHeight={36}
-                  >
-                    {1000 || "totalSelectedAmount"}
-                    <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
-                      {" "}
-                      AED
-                    </Text>
-                  </Text>
-                </Div>
-              </Div>
-
-              <Div
-                flexDir="row"
-                alignItems="center"
-                justifyContent="space-around"
-                style={{ gap: 20 }}
-                mb={20}
-                // mb={25}
-              >
-                <Div bg="#EFE9DB" rounded={22} px={22} py={18}>
-                  <Text mb={6} fontSize={13} fontFamily={fontHauoraMedium}>
-                    20% Advance paid
-                  </Text>
-                  <Text
-                    fontSize={"5xl"}
-                    fontFamily={fontHauoraBold}
-                    lineHeight={30}
-                  >
-                    {1000 || "bookingCharges"}
-                    <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
-                      {" "}
-                      AED
-                    </Text>
-                  </Text>
-                </Div>
-
-                <Div style={{ gap: 2 }}>
-                  <WalletIcon mb={4} width={30} height={30} />
-                  <Text
-                    fontSize={11}
-                    lineHeight={15}
-                    fontFamily={fontHauoraSemiBold}
-                    maxW={200}
-                  >
-                    Final balance to be paid at the clinic, depending on
-                    services received.
-                  </Text>
-                </Div>
-              </Div>
-            </Div>
-
-            <Div mb={20}>
-              <SquigglyLinesIcon />
-            </Div>
-
-            <Div px={20}>
-              <Div w={"55%"} h={5} rounded={10} bg="#222" mx={"auto"} mb={30} />
-
-              <Div flexDir="row" style={{ gap: 8 }} mb={20}>
-                <IconHelpCircle width={20} height={20} color="#222" />
-                <Text fontSize={12} fontFamily={fontHauoraBold} mb={2}>
-                  Help
+              <Div>
+                <Text
+                  fontSize={12}
+                  fontFamily={fontHauoraBold}
+                  mb={3}
+                  color="#959594"
+                >
+                  Send us an email
                 </Text>
-              </Div>
-
-              <Div
-                flexDir="row"
-                justifyContent="space-between"
-                alignItems="flex-start"
-              >
-                <Div>
-                  <Text
-                    fontSize={12}
-                    fontFamily={fontHauoraBold}
-                    mb={3}
-                    color="#959594"
-                  >
-                    Call us on 08:00 ~ 19:00
-                  </Text>
-                  <Text fontSize={"xl"} fontFamily={fontHauoraBold}>
-                    +971 44510090
-                  </Text>
-                </Div>
-
-                <Text fontSize={12} fontFamily={fontHauoraBold}>
-                  or
+                <Text fontSize={"xl"} fontFamily={fontHauoraBold}>
+                  care@smoll.me
                 </Text>
-
-                <Div>
-                  <Text
-                    fontSize={12}
-                    fontFamily={fontHauoraBold}
-                    mb={3}
-                    color="#959594"
-                  >
-                    Send us an email
-                  </Text>
-                  <Text fontSize={"xl"} fontFamily={fontHauoraBold}>
-                    care@smoll.me
-                  </Text>
-                </Div>
               </Div>
             </Div>
           </Div>
         </Div>
-
-        <Div h={30} />
-      </ScrollDiv>
+      )}
 
       <BottomSheet
         isVisible={showCancelModal}
@@ -552,7 +653,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
           </ButtonPrimary>
         </Div>
       </BottomSheet>
-    </Layout>
+    </>
   );
 };
 

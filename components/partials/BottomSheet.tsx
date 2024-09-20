@@ -30,6 +30,7 @@ const BottomSheet: React.FC<Props> = (props) => {
     <Modal
       h={height ? height : "80%"}
       roundedTop={12}
+      bg="bgColor"
       pb={20}
       swipeDirection={["down"]}
       coverScreen={true}
