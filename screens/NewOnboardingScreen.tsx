@@ -16,38 +16,6 @@ import { Button, Div, Text, Image } from "react-native-magnus";
 import { useWindowDimensions } from "react-native";
 import { Image as RNImage } from "react-native";
 
-import OnboardingIcon1 from "@/components/icons/OnboardingIcon1";
-import OnboardingIcon2 from "@/components/icons/OnboardingIcon2";
-import OnboardingIcon3 from "@/components/icons/OnboardingIcon3";
-import OnboardingIcon4 from "@/components/icons/OnboardingIcon4";
-import OnboardingIcon5 from "@/components/icons/OnboardingIcon5";
-
-// const images = [
-//   {
-//     icon: <OnboardingIcon1 />,
-//     heading: ["Access", "to Pet", "Experts"],
-//     style: { transform: [{ scale: 1.1 }], paddingLeft: 20 },
-//   },
-//   {
-//     icon: <OnboardingIcon2 />,
-//     heading: ["Recieve &", "Compare", "Upfront Prices"],
-//   },
-//   {
-//     icon: <OnboardingIcon3 />,
-//     heading: ["Book", "appointments", "instantly"],
-//   },
-//   {
-//     icon: <OnboardingIcon4 />,
-//     heading: ["Helping You", "Navigate Pet", "Loss"],
-//     style: { transform: [{ scale: 1.1 }], paddingLeft: 50 },
-//   },
-//   {
-//     icon: <OnboardingIcon5 />,
-//     heading: ["Get your pet", "a PetID"],
-//     style: { transform: [{ scale: 1.3 }], paddingLeft: 50 },
-//   },
-// ];
-
 const images = [
   {
     img: require("./../assets/images/onboarding-screen/new/slide-1.png"),
@@ -179,7 +147,6 @@ const NewOnboardingScreen: React.FC<{ navigation: NavigationType }> = ({
           ref={flatListRef}
           style={{
             height: 0,
-            backgroundColor: "#fff",
             pointerEvents: "none",
           }}
           keyExtractor={(item, i) => `${i}`}
@@ -218,7 +185,6 @@ const NewOnboardingScreen: React.FC<{ navigation: NavigationType }> = ({
           pl={20}
           pb={30}
           pt={20}
-          bg="#fff"
         >
           {images.map((_, index) => (
             <Div

@@ -61,6 +61,8 @@ const OnboardingAuthModal: React.FC<Props> = (props) => {
     // Limit to 10 digits
     cleanedValue = cleanedValue.slice(0, 10).replace(/\s/g, "");
 
+    console.log("c", cleanedValue);
+
     setPhone(cleanedValue.trim());
   };
 

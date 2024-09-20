@@ -72,7 +72,7 @@ const SignupScreen: React.FC<{ navigation: NavigationType }> = ({
 
     // cleanedValue = cleanedValue.slice(0, 10);
 
-    setPhone(cleanedValue);
+    setPhone(cleanedValue.replace(/\s/g, ""));
   };
 
   const handleGetOtp = async () => {

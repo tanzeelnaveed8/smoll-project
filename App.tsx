@@ -1,19 +1,14 @@
 import { StripeProvider } from "@stripe/stripe-react-native";
-import {
-  Platform,
-  PushNotification,
-  SafeAreaView,
-  StyleSheet,
-} from "react-native";
+import { PushNotification, SafeAreaView, StyleSheet } from "react-native";
 import { Div, Text, ThemeProvider } from "react-native-magnus";
 
 import * as Font from "expo-font";
 import React, { useEffect, useState } from "react";
 import { fontHauora, fontHauoraSemiBold } from "./constant/constant";
 
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import AccountSetupAddressScreen from "./screens/AccountSetup/AccountSetupAddressScreen";
 import AccountSetupEmailOtpScreen from "./screens/AccountSetup/AccountSetupEmailOtpScreen";
 import AccountSetupEmailScreen from "./screens/AccountSetup/AccountSetupEmailScreen";
@@ -57,7 +52,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import FlashMessage from "react-native-flash-message";
-import { LogLevel, OneSignal } from "react-native-onesignal";
+import { OneSignal } from "react-native-onesignal";
 import CaseDetailScreen from "./screens/Cases/CaseDetailScreen";
 import RequestCallBackScreen from "./screens/Consultation/UnavailableScreen";
 import ExpertsScheduleConfirmationScreen from "./screens/Experts/ExpertsScheduleConfirmationScreen";
@@ -68,6 +63,14 @@ import SplashScreen from "./screens/SplashScreen";
 import * as rootNavigation from "./utils/root-navigation";
 import { navigationRef } from "./utils/root-navigation";
 
+import PushNotificationIOS from "@react-native-community/push-notification-ios";
+import { SendbirdCalls } from "@sendbird/calls-react-native";
+import { PushTokenType } from "@sendbird/chat";
+import {
+  IconChecklist,
+  IconMessage,
+  IconWindow,
+} from "@tabler/icons-react-native";
 import SignupScreen from "./components/app/onboarding/SignupScreen";
 import AppointmentDetailsScreen from "./screens/Appointments/AppointmentDetailsScreen";
 import AppointmentsScreen from "./screens/Appointments/AppointmentsScreen";
@@ -78,14 +81,6 @@ import PaymentDetailsScreen from "./screens/Cases/PaymentDetailsScreen";
 import UnavailableScreen from "./screens/Consultation/UnavailableScreen";
 import NewOnboardingScreen from "./screens/NewOnboardingScreen";
 import { initializeSendbird, sb } from "./utils/chat.v2";
-import {
-  IconChecklist,
-  IconMessage,
-  IconWindow,
-} from "@tabler/icons-react-native";
-import PushNotificationIOS from "@react-native-community/push-notification-ios";
-import { SendbirdCalls } from "@sendbird/calls-react-native";
-import { PushTokenType } from "@sendbird/chat";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -116,7 +111,6 @@ const theme = {
     primary: "#427594",
     primaryLight: "#518cb0",
     bgColor: "#FAF8F5",
-    // primaryLight: "#f10",
     darkGreyText: "#494949",
   },
   components: {
@@ -658,10 +652,7 @@ const App = () => {
 const styles = StyleSheet.create({
   safeAreaViewContainer: {
     flex: 1,
-    backgroundColor: "#fff",
-    // paddingBottom: 5,
-    // paddingTop: StatusBar.currentHeight,
-    // paddingBottom: 20,
+    backgroundColor: "#FAF8F5",
   },
 });
 
