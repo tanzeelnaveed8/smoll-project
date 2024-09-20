@@ -132,12 +132,12 @@ const ProfileCard: React.FC<{
         borderColor="#D0D7DC"
       >
         <Div w={68} h={62} justifyContent="flex-end" alignItems="center">
-          <Image
+          {/* <Image
             source={require("../../assets/images/pet-profile-bg.png")}
             position="absolute"
             w={"100%"}
             h={"100%"}
-          />
+          /> */}
 
           <Image
             // source={image ? "" : require("../../assets/images/dog-profile.png")}
@@ -146,10 +146,11 @@ const ProfileCard: React.FC<{
                 ? image
                 : "https://static.vecteezy.com/system/resources/thumbnails/004/141/669/small/no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-coming-soon-sign-simple-nature-silhouette-in-frame-isolated-illustration-vector.jpg"
             }
-            w={54}
-            h={54}
+            w={58}
+            h={58}
             borderWidth={1.15}
-            borderColor="#fff"
+            // borderColor="#fff"
+            borderColor="#222"
             borderRadius={7}
           />
         </Div>

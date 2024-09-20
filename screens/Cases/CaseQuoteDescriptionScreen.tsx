@@ -10,6 +10,9 @@ import { NavigationType } from "@/store/types";
 import { CaseQuotesDto } from "@/store/types/case";
 import { useRoute } from "@react-navigation/native";
 import {
+  IconAlertCircle,
+  IconAlertCircleFilled,
+  IconCircleCheck,
   IconCircleCheckFilled,
   IconInfoCircleFilled,
 } from "@tabler/icons-react-native";
@@ -17,6 +20,27 @@ import React, { useEffect, useMemo, useState } from "react";
 import { TouchableOpacity } from "react-native";
 import { Div, Image, ScrollDiv, Tag, Text } from "react-native-magnus";
 import PartnerVetStarRating from "./PartnerVetStarRating";
+import BottomSheet from "@/components/partials/BottomSheet";
+import InformationIcon from "@/components/icons/InformationIcon";
+import EssentialCheckIcon from "@/components/icons/EssentialCheckIcon";
+
+const howQuotesWork = [
+  {
+    title: "Essential",
+    text: "Must be performed and can not be deselected",
+    icon: <EssentialCheckIcon />,
+  },
+  {
+    title: "Contingent",
+    text: "Subject to an essential service and can not be deselected",
+    icon: <EssentialCheckIcon fill="#FFC433" color="#222" />,
+  },
+  {
+    title: "Recommended",
+    text: "Vet recommended up to you to decide and you can deselect it if you want",
+    icon: <EssentialCheckIcon fill="#014EF7" color="#fff" />,
+  },
+];
 
 const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
@@ -33,6 +57,8 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
   const [selectedServices, setSelectedServices] = useState<
     { id: string; label: string; price: number }[]
   >([]);
+  const [showQuotesWork, setShowQuotesWork] = useState(false);
+
   const caseQuote = casesQuotes.get(caseId);
 
   useEffect(() => {
@@ -217,17 +243,19 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
                 Upfront transparent pricing
               </Text>
 
-              <Div flexDir="row" alignItems="center" style={{ gap: 1 }}>
-                <IconInfoCircleFilled
-                  width={16}
-                  height={16}
-                  color={"#fff"}
-                  fill={"#000"}
-                />
-                <Text fontSize={11} fontFamily={fontHauoraMedium}>
-                  Understand how quotes work
-                </Text>
-              </Div>
+              <TouchableOpacity onPress={() => setShowQuotesWork(true)}>
+                <Div flexDir="row" alignItems="center" style={{ gap: 1 }}>
+                  <IconInfoCircleFilled
+                    width={16}
+                    height={16}
+                    color={"#fff"}
+                    fill={"#000"}
+                  />
+                  <Text fontSize={11} fontFamily={fontHauoraMedium}>
+                    Understand how quotes work
+                  </Text>
+                </Div>
+              </TouchableOpacity>
             </Div>
 
             {clinicQuote && (
@@ -290,6 +318,91 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
           Our service is 100% free for pet parents.
         </Text>
       </Div>
+
+      <BottomSheet
+        isVisible={showQuotesWork}
+        h={400}
+        showCloseIcon
+        closeButtonStyle={{
+          marginLeft: "auto",
+          marginBottom: 0,
+        }}
+        onCloseIconClick={() => {
+          setShowQuotesWork(false);
+        }}
+        roundedTop={24}
+      >
+        <Div flexDir="row" alignItems="flex-start" mb={22}>
+          <InformationIcon width={28} height={28} />
+          <Text fontSize={"md"} ml={8} fontFamily={fontHauoraBold}>
+            How Quotations work?
+          </Text>
+        </Div>
+
+        <Div pb={13} borderBottomColor="#D0D7DC" borderBottomWidth={1} mb={15}>
+          <Text fontSize={13} fontFamily={fontHauoraMedium} mb={10}>
+            Type of services
+          </Text>
+          <Div flexDir="row" justifyContent="space-between">
+            {howQuotesWork.map((item, i) => (
+              <Div key={i} flexDir="row">
+                {item.icon}
+
+                <Div ml={4}>
+                  <Text fontSize={12} fontFamily={fontHauoraBold} mb={3}>
+                    {item.title}
+                  </Text>
+                  <Text fontSize={10} fontFamily={fontHauoraMedium} maxW={90}>
+                    {item.text}
+                  </Text>
+                </Div>
+              </Div>
+            ))}
+          </Div>
+        </Div>
+
+        <Div>
+          <Text fontSize={13} fontFamily={fontHauoraMedium} mb={8}>
+            How Min and Max work?
+          </Text>
+
+          <Div
+            flexDir="row"
+            justifyContent="space-between"
+            style={{ columnGap: 15 }}
+          >
+            <Div maxW={140}>
+              <Text
+                fontSize={"xl"}
+                fontFamily={fontHauoraSemiBold}
+                color="darkGreyText"
+              >
+                Min
+              </Text>
+
+              <Text fontSize={10} fontFamily={fontHauoraMedium}>
+                Is the minimum amount you are expected to pay including
+                Essential and Contingent services only
+              </Text>
+            </Div>
+
+            <Div maxW={171}>
+              <Text
+                fontSize={"xl"}
+                fontFamily={fontHauoraSemiBold}
+                color="darkGreyText"
+              >
+                Min
+              </Text>
+
+              <Text fontSize={10} fontFamily={fontHauoraMedium}>
+                Is the minimum amount you are expected to pay including
+                Essential and Contingent services only
+              </Text>
+            </Div>
+          </Div>
+        </Div>
+      </BottomSheet>
     </Layout>
   );
 };

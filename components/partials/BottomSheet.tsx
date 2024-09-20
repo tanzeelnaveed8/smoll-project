@@ -1,6 +1,6 @@
 import { Modal, Div, ModalProps, Button, Text } from "react-native-magnus";
 import { IconX } from "@tabler/icons-react-native";
-import { TouchableOpacity } from "react-native";
+import { StyleProp, TouchableOpacity, ViewStyle } from "react-native";
 import { fontHauoraSemiBold } from "@/constant/constant";
 
 interface Props extends ModalProps {
@@ -10,6 +10,7 @@ interface Props extends ModalProps {
   title?: string;
   height?: string | number;
   px?: number;
+  closeButtonStyle?: StyleProp<ViewStyle>;
 }
 
 const BottomSheet: React.FC<Props> = (props) => {
@@ -21,6 +22,7 @@ const BottomSheet: React.FC<Props> = (props) => {
     barMb = 28,
     height,
     px,
+    closeButtonStyle,
     ...restProps
   } = props;
 
@@ -70,7 +72,7 @@ const BottomSheet: React.FC<Props> = (props) => {
       )}
 
       {!title && showCloseIcon ? (
-        <Div px={20}>
+        <Div px={20} mb={16} style={closeButtonStyle ? closeButtonStyle : {}}>
           <Div row justifyContent="space-between" alignItems="center">
             {showCloseIcon ? (
               <Button px={0} py={0} bg="transparent" onPress={onCloseIconClick}>
@@ -89,7 +91,7 @@ const BottomSheet: React.FC<Props> = (props) => {
         <></>
       )}
 
-      <Div mt={16} px={typeof px === "number" ? px : 20} pb={20}>
+      <Div px={typeof px === "number" ? px : 20} pb={20}>
         {children}
       </Div>
     </Modal>
