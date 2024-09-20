@@ -115,6 +115,7 @@ const theme = {
   colors: {
     primary: "#427594",
     primaryLight: "#518cb0",
+    bgColor: "#FAF8F5",
     // primaryLight: "#f10",
     darkGreyText: "#494949",
   },
@@ -290,6 +291,7 @@ const App = () => {
   useEffect(() => {
     loadFonts().then(() => setFontsLoaded(true));
 
+    // return;
     // Remove this method to stop OneSignal Debugging
     // OneSignal Initialization
     OneSignal.initialize(process.env.EXPO_PUBLIC_ONE_SIGNAL_APP_ID as string);

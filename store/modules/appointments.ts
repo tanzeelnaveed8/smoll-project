@@ -54,6 +54,8 @@ export const useAppointmentStore = create<AppointmentState>((set, get) => ({
       },
     });
 
+    console.log("fetchAppointmentDetail", response.data);
+
     set(() => ({
       appointmentDetails: new Map([
         ...get().appointmentDetails,

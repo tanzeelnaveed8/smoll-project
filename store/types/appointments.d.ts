@@ -3,12 +3,24 @@ import { Expert } from "./expert";
 import { UploadedFile } from "./file";
 import { Pet, PetDetail } from "./pet";
 
+export interface Service {
+  id: string;
+  name: string;
+  label: string;
+  price: number;
+  description: string;
+}
+
 export interface AppointmentListResponseDto {
   id: string;
   scheduledAt: string;
+  allServices: Service[];
+  services: Service[];
   partner: {
     id: string;
     name: string;
+    email: string;
+    phone: string;
     clinicImg: {
       filename: string;
       filesize: number;

@@ -7,6 +7,7 @@ import InstantConfirmationIcon from "@/components/icons/InstantConfirmationIcon"
 import RefundIcon from "@/components/icons/RefundIcon";
 import StripeIcon from "@/components/icons/StripeIcon";
 import WalletIcon from "@/components/icons/WalletIcon";
+import BottomSheet from "@/components/partials/BottomSheet";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import FlashCustomContent from "@/components/partials/FlashCustomContent";
 import {
@@ -53,6 +54,24 @@ const icons = [
   },
 ];
 
+const howPaymentWorks = [
+  {
+    question: "Is my service free?",
+    answer:
+      "Yes, we do not charge pet parents any fees, but we ask pet parents for a refundable 20% of the total quotation value in advance to confirm the appointment.",
+  },
+  {
+    question: "What’s my final bill at the clinic will be?",
+    answer:
+      "Your final bill at the vet clinic is  (Quotation Value - 20% deposit)so if your quotation was AED1000, you will pay AED200 through the smoll app and AED800 at the clinic, simple.",
+  },
+  {
+    question: "Are deposits reundable??",
+    answer:
+      "Deposits are 100% refundable if  the appointment was canceled by either the vet clinic or pet parent and no service was provided to the pet parent. It can take up to 14 working days to receive it but usually less than a week.",
+  },
+];
+
 const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
@@ -74,6 +93,8 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
   const [loading, setLoading] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
   const paymentIntentRef = useRef<string | undefined>(undefined);
+
+  const [showPaymentWork, setShowPaymentWork] = useState(false);
 
   const quote = useMemo(() => {
     return casesQuotes
@@ -426,6 +447,9 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
               flexDirection: "row",
               gap: 3,
             }}
+            onPress={() => {
+              setShowPaymentWork(true);
+            }}
           >
             <InformationIcon width={11} height={11} />
             <Text fontSize={10} mb={1} fontFamily={fontHauoraSemiBold}>
@@ -489,6 +513,46 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
           />
         </Div>
       </ScrollDiv>
+
+      <BottomSheet
+        isVisible={showPaymentWork}
+        h={400}
+        showCloseIcon
+        closeButtonStyle={{
+          marginLeft: "auto",
+          marginBottom: 0,
+        }}
+        onCloseIconClick={() => {
+          setShowPaymentWork(false);
+        }}
+        roundedTop={24}
+      >
+        <Div flexDir="row" alignItems="flex-start" mb={22}>
+          <InformationIcon width={28} height={28} />
+          <Text fontSize={"md"} ml={8} fontFamily={fontHauoraBold}>
+            How my payment work?
+          </Text>
+        </Div>
+
+        <Div>
+          {howPaymentWorks.map((item, i) => (
+            <Div
+              key={item.question}
+              borderBottomWidth={i + 1 === howPaymentWorks.length ? 0 : 1}
+              borderBottomColor="#ccc"
+              pb={i + 1 === howPaymentWorks.length ? 0 : 12}
+              mb={i + 1 === howPaymentWorks.length ? 0 : 10}
+            >
+              <Text fontSize={13} fontFamily={fontHauoraMedium} mb={2}>
+                {item.question}
+              </Text>
+              <Text fontSize={10} fontFamily={fontHauoraMedium}>
+                {item.answer}
+              </Text>
+            </Div>
+          ))}
+        </Div>
+      </BottomSheet>
     </Layout>
   );
 };

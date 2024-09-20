@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import * as ImagePicker from "expo-image-picker";
 import {
@@ -11,7 +11,14 @@ import {
   IconUser,
   IconX,
 } from "@tabler/icons-react-native";
-import { Button, Div, Image, Modal, Text } from "react-native-magnus";
+import {
+  Button,
+  Div,
+  DropdownRef,
+  Image,
+  Modal,
+  Text,
+} from "react-native-magnus";
 import {
   colorPrimary,
   fontHauoraMedium,
@@ -34,6 +41,7 @@ import {
   ViewStyle,
 } from "react-native";
 import { useToast } from "react-native-toast-notifications";
+import DocumentTypeDropdown from "./DocumentTypeDropdown";
 
 interface Props {
   isPrimary?: boolean;
@@ -90,6 +98,7 @@ const ImageUpload: React.FC<Props> = ({
   const [uploadedFileUrl, setUploadedFileUrl] = useState<null | string>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [downloadLoading, setDownloadLoading] = useState(false);
+  const optionMenuRef = useRef<DropdownRef>(null);
 
   const pickImage = async () => {
     if (disabled) return;
@@ -166,6 +175,7 @@ const ImageUpload: React.FC<Props> = ({
     try {
       const response = await DocumentPicker.pick({
         presentationStyle: "fullScreen",
+        type: [DocumentPicker.types.pdf],
       });
 
       if (response[0].type?.includes("image")) {
@@ -389,12 +399,19 @@ const ImageUpload: React.FC<Props> = ({
           <Button
             w={w}
             h={h}
-            bg={bg ? bg : "#F4F6F8"}
+            bg={bg ? bg : "#ddd"}
             rounded={rounded ? rounded : 8}
             position="relative"
             disabled={loading}
             onPress={() => {
-              document ? handleDocumentSelection() : pickImage();
+              if (document) {
+                if ("current" in optionMenuRef && optionMenuRef.current) {
+                  optionMenuRef.current.open();
+                }
+              } else {
+                pickImage();
+              }
+              // document ? handleDocumentSelection() : pickImage();
             }}
           >
             {loading && <ActivityIndicator size="large" color={colorPrimary} />}
@@ -439,13 +456,31 @@ const ImageUpload: React.FC<Props> = ({
             right={-8}
             p={0}
             onPress={() => {
-              document ? handleDocumentSelection() : pickImage();
+              if (document) {
+                if ("current" in optionMenuRef && optionMenuRef.current) {
+                  optionMenuRef.current.open();
+                }
+              } else {
+                pickImage();
+              }
+              // document ? handleDocumentSelection() : pickImage();
             }}
           >
             <IconEditCircle width={24} height={24} color={"#222"} />
           </Button>
         )}
       </Div>
+
+      <DocumentTypeDropdown
+        ref={optionMenuRef}
+        onSelect={(value) => {
+          if (value === "Browse") {
+            handleDocumentSelection();
+          } else {
+            pickImage();
+          }
+        }}
+      />
 
       <Modal
         isVisible={modalVisible}

@@ -94,8 +94,14 @@ const HomeScreen: React.FC<Props> = (props) => {
       loading: false,
       // icon: <OnboardingIcon4 width={55} height={55} />,
       icon: (
-        <Div style={{ marginLeft: -2, transform: [{ translateX: -3 }] }}>
-          <GirlIcon width={72} height={72} />
+        <Div style={{ marginLeft: -10, transform: [{ translateX: 15 }] }}>
+          {/* <GirlIcon width={72} height={72} /> */}
+          <Image
+            source={require("../assets/images/home-human-counseling.png")}
+            w={80}
+            h={80}
+            style={{ objectFit: "contain" }}
+          />
         </Div>
       ),
     },
@@ -218,7 +224,10 @@ const HomeScreen: React.FC<Props> = (props) => {
                 )}
 
                 <IconButton
-                  style={{ overflow: "visible" }}
+                  bg="bgColor"
+                  style={{
+                    overflow: "visible",
+                  }}
                   onPress={() => {
                     props.navigation.navigate("NotificationTestScreen");
 
@@ -239,6 +248,7 @@ const HomeScreen: React.FC<Props> = (props) => {
                 </IconButton>
               </Div>
               <IconButton
+                bg="bgColor"
                 onPress={() => {
                   props.navigation.navigate("SettingsMainScreen");
                 }}
@@ -301,7 +311,7 @@ const HomeScreen: React.FC<Props> = (props) => {
                 style={{
                   paddingVertical: 2,
                   flexDirection: "row",
-                  gap: 6,
+                  gap: 10,
                 }}
               >
                 <Text
@@ -309,9 +319,10 @@ const HomeScreen: React.FC<Props> = (props) => {
                   fontSize={"md"}
                   bg="#222"
                   color="#fff"
-                  rounded={20}
-                  py={7}
-                  px={20}
+                  rounded={25}
+                  pb={9.48}
+                  pt={7.52}
+                  px={25}
                 >
                   Start Now
                 </Text>
@@ -334,8 +345,14 @@ const HomeScreen: React.FC<Props> = (props) => {
 
             {/* <OnboardingIcon1 width={130} height={130} /> */}
 
-            <Div style={{ transform: [{ translateX: -20 }] }}>
-              <HomeScreenBoyIcon width={190} height={170} />
+            <Div style={{ transform: [{ translateX: -15 }] }}>
+              {/* <HomeScreenBoyIcon width={190} height={170} /> */}
+              <Image
+                source={require("../assets/images/homepage-boy-img.png")}
+                w={200}
+                h={190}
+                style={{ objectFit: "contain", aspectRatio: "1/1" }}
+              />
             </Div>
           </TouchableOpacity>
 
@@ -372,7 +389,7 @@ const HomeScreen: React.FC<Props> = (props) => {
                 h={83}
                 disabled={item.loading}
                 onPress={() => handleOptionTabPress(item)}
-                bg="#fff"
+                bg="transparent"
                 underlayColor="#f3f3f3"
               >
                 <Div
