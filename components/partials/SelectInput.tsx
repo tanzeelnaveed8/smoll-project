@@ -120,6 +120,7 @@ const SelectInput: React.FC<Props> = (props) => {
           placeholder="Search"
           bg="#EFEFEF"
           borderRadius={35}
+          mt={10}
           borderColor="#EFEFEF"
           prefix={<IconSearch color={colorTextPrimary} />}
           value={searchQuery}

@@ -54,6 +54,7 @@ const PetProfileImageScreen: React.FC<Props> = (props) => {
             isPrimary={index === 0}
             onUnSelect={(e) => handleUnselectFile(index)}
             onChange={(files) => handleImageChange(files, index)}
+            disableDownload
           />
         ))}
       </Div>

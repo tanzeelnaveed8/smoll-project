@@ -159,6 +159,7 @@ const TabNavigation = () => {
           height: 62,
           paddingBottom: 8,
           paddingTop: 2,
+          backgroundColor: "#FAF8F5",
         },
         tabBarLabelStyle: {
           fontSize: 14,

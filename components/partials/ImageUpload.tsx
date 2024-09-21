@@ -42,6 +42,7 @@ import {
 } from "react-native";
 import { useToast } from "react-native-toast-notifications";
 import DocumentTypeDropdown from "./DocumentTypeDropdown";
+import { showMessage } from "react-native-flash-message";
 
 interface Props {
   isPrimary?: boolean;
@@ -103,43 +104,55 @@ const ImageUpload: React.FC<Props> = ({
   const pickImage = async () => {
     if (disabled) return;
 
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      quality: 1,
-    });
-
-    // let result = await DocumentPicker.getDocumentAsync({
-    //   type: ["image/*", "application/pdf"],
-    // });
-
-    if (result.canceled) return;
-
-    setImage(result?.assets[0]?.uri);
-    // ImagePicker saves the taken photo to disk and returns a local URI to it
-    const localUri = result.assets[0]?.uri;
-    const filename = localUri.split("/").pop() as string;
-
-    // Infer the type of the image
-    const match = /\.(\w+)$/.exec(filename);
-    const type = match ? `image/${match[1]}` : `image`;
-
-    const file = { uri: localUri, name: filename, type } as unknown as File;
-
     try {
-      setLoading(true);
-      if (onLoading) {
-        onLoading(true);
+      // Request permission first
+      const { status } =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+      if (status !== "granted") {
+        showMessage({
+          message: "Permission to access media library was denied",
+          type: "danger",
+        });
+
+        return;
       }
 
-      const uploadedFile = await uploadFile([file]);
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+        allowsMultipleSelection: false,
+      });
 
-      setUploadedFileUrl(uploadedFile[0].url);
-      if (onChange) {
-        onChange(uploadedFile);
+      if (!result.canceled && result.assets && result.assets.length > 0) {
+        const localUri = result.assets[0].uri;
+
+        setImage(localUri);
+
+        const filename = localUri.split("/").pop() as string;
+        const match = /\.(\w+)$/.exec(filename);
+        const type = match ? `image/${match[1]}` : `image`;
+        const file = { uri: localUri, name: filename, type } as unknown as File;
+
+        setLoading(true);
+        if (onLoading) {
+          onLoading(true);
+        }
+
+        const uploadedFile = await uploadFile([file]);
+
+        setUploadedFileUrl(uploadedFile[0].url);
+        if (onChange) {
+          onChange(uploadedFile);
+        }
       }
-      if (noImage) {
-        setImage(null);
-      }
+    } catch (error) {
+      showMessage({
+        message: "An error occurred while picking the image",
+        type: "danger",
+      });
     } finally {
       setLoading(false);
       if (onLoading) {
@@ -203,14 +216,17 @@ const ImageUpload: React.FC<Props> = ({
         setImage(null);
       }
     } catch (err) {
-      console.warn(err);
+      if (!DocumentPicker.isCancel(err)) {
+        console.warn("Error selecting document:", err);
+        toast.show("Failed to select document. Please try again.");
+      }
     } finally {
       setLoading(false);
       if (onLoading) {
         onLoading(false);
       }
     }
-  }, []);
+  }, [disabled, onLoading, onChange, uploadFile]);
 
   // download file
 
@@ -474,11 +490,13 @@ const ImageUpload: React.FC<Props> = ({
       <DocumentTypeDropdown
         ref={optionMenuRef}
         onSelect={(value) => {
-          if (value === "Browse") {
-            handleDocumentSelection();
-          } else {
-            pickImage();
-          }
+          setTimeout(() => {
+            if (value === "Browse") {
+              handleDocumentSelection();
+            } else {
+              pickImage();
+            }
+          }, 500);
         }}
       />
 

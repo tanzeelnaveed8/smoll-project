@@ -146,7 +146,7 @@ const CasesQuotesListScreen: React.FC<{ navigation: NavigationType }> = ({
                   mb={12}
                 >
                   <Image
-                    source={{ uri: item.pet.photos?.[0].url }}
+                    source={{ uri: item.pet.photos?.[0]?.url }}
                     w={56}
                     h={66}
                     mr={7}

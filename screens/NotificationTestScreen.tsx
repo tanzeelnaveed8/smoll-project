@@ -105,7 +105,7 @@ const NotificationTestScreen: React.FC<{ navigation: NavigationType }> = ({
   };
 
   return (
-    <Div flex={1} px={20} bg="#fff">
+    <Div flex={1} px={20} bg="#FAF8F5">
       <Div
         top={2}
         py={10}

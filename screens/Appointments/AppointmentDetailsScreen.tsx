@@ -218,6 +218,66 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
     }
   };
 
+  const renderBottomContent = () => {
+    return (
+      <Div bg="bgColor" pb={20}>
+        <Div mb={20}>
+          <SquigglyLinesIcon />
+        </Div>
+
+        <Div px={20}>
+          <Div w={"50%"} h={5} rounded={10} bg="#222" mx={"auto"} mb={30} />
+
+          <Div flexDir="row" style={{ gap: 8 }} mb={20}>
+            <IconHelpCircle width={20} height={20} color="#222" />
+            <Text fontSize={12} fontFamily={fontHauoraBold} mb={2}>
+              Help
+            </Text>
+          </Div>
+
+          <Div
+            flexDir="row"
+            justifyContent="space-between"
+            alignItems="flex-start"
+            pb={10}
+          >
+            <Div>
+              <Text
+                fontSize={12}
+                fontFamily={fontHauoraBold}
+                mb={3}
+                color="#959594"
+              >
+                Call us on 08:00 ~ 19:00
+              </Text>
+              <Text fontSize={"xl"} fontFamily={fontHauoraBold}>
+                +971 44510090
+              </Text>
+            </Div>
+
+            <Text fontSize={12} fontFamily={fontHauoraBold}>
+              or
+            </Text>
+
+            <Div>
+              <Text
+                fontSize={12}
+                fontFamily={fontHauoraBold}
+                mb={3}
+                color="#959594"
+              >
+                Send us an email
+              </Text>
+              <Text fontSize={"xl"} fontFamily={fontHauoraBold}>
+                care@smoll.me
+              </Text>
+            </Div>
+          </Div>
+        </Div>
+      </Div>
+    );
+  };
+
   return (
     <>
       <Layout
@@ -541,6 +601,10 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
             </Div>
 
             <Div h={30} />
+
+            {!isLoading &&
+              appointmentDetail?.type === "in-clinic" &&
+              renderBottomContent()}
           </ScrollDiv>
         )}
 
@@ -551,63 +615,9 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
         )}
       </Layout>
 
-      {!isLoading && (
-        <Div bg="bgColor" pb={20}>
-          <Div mb={20}>
-            <SquigglyLinesIcon />
-          </Div>
-
-          <Div px={20}>
-            <Div w={"50%"} h={5} rounded={10} bg="#222" mx={"auto"} mb={30} />
-
-            <Div flexDir="row" style={{ gap: 8 }} mb={20}>
-              <IconHelpCircle width={20} height={20} color="#222" />
-              <Text fontSize={12} fontFamily={fontHauoraBold} mb={2}>
-                Help
-              </Text>
-            </Div>
-
-            <Div
-              flexDir="row"
-              justifyContent="space-between"
-              alignItems="flex-start"
-              pb={10}
-            >
-              <Div>
-                <Text
-                  fontSize={12}
-                  fontFamily={fontHauoraBold}
-                  mb={3}
-                  color="#959594"
-                >
-                  Call us on 08:00 ~ 19:00
-                </Text>
-                <Text fontSize={"xl"} fontFamily={fontHauoraBold}>
-                  +971 44510090
-                </Text>
-              </Div>
-
-              <Text fontSize={12} fontFamily={fontHauoraBold}>
-                or
-              </Text>
-
-              <Div>
-                <Text
-                  fontSize={12}
-                  fontFamily={fontHauoraBold}
-                  mb={3}
-                  color="#959594"
-                >
-                  Send us an email
-                </Text>
-                <Text fontSize={"xl"} fontFamily={fontHauoraBold}>
-                  care@smoll.me
-                </Text>
-              </Div>
-            </Div>
-          </Div>
-        </Div>
-      )}
+      {!isLoading &&
+        appointmentDetail?.type === "video" &&
+        renderBottomContent()}
 
       <BottomSheet
         isVisible={showCancelModal}

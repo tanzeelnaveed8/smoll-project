@@ -28,7 +28,15 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
-import { Button, Div, Icon, Image, ScrollDiv, Text } from "react-native-magnus";
+import {
+  Button,
+  Div,
+  Icon,
+  Image,
+  ScrollDiv,
+  Tag,
+  Text,
+} from "react-native-magnus";
 
 import AccountSetupModal from "@/components/app/account/AccountSetupModal";
 import OnboardingCongratsModal from "@/components/app/onboarding/OnboardingCongratsModal";
@@ -230,13 +238,6 @@ const HomeScreen: React.FC<Props> = (props) => {
                   }}
                   onPress={() => {
                     props.navigation.navigate("NotificationTestScreen");
-
-                    // props.navigation.navigate(
-                    //   "PaymentDetailsScreen",
-                    //   paymentParams
-                    // );
-
-                    // props.navigation.navigate("NewOnboardingScreen");
                   }}
                 >
                   <IconBell
@@ -314,7 +315,7 @@ const HomeScreen: React.FC<Props> = (props) => {
                   gap: 10,
                 }}
               >
-                <Text
+                <Tag
                   fontFamily={fontHauoraSemiBold}
                   fontSize={"md"}
                   bg="#222"
@@ -323,9 +324,10 @@ const HomeScreen: React.FC<Props> = (props) => {
                   pb={9.48}
                   pt={7.52}
                   px={25}
+                  pointerEvents="none"
                 >
                   Start Now
-                </Text>
+                </Tag>
                 <IconArrowRight
                   width={28}
                   height={28}

@@ -56,7 +56,7 @@ const Dropdown = forwardRef<DropdownRef, DropdownProps>((props, ref) => {
               props.onSelect("Delete Pet");
             }}
           >
-            Delete Pet
+            Delete
           </MagnusDropdown.Option>
           <MagnusDropdown.Option
             value={"Second"}

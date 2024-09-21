@@ -117,7 +117,6 @@ const SettingsMainScreen: React.FC<{ navigation: NavigationType }> = ({
   const checkPushNotificationStatus = async () => {
     const deviceState = await OneSignal.Notifications.getPermissionAsync();
 
-    console.log("deviceState", deviceState);
     setPushNotificationEnabled(deviceState ?? false);
   };
 

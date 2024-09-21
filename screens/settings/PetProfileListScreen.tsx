@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Layout from "@/components/app/Layout";
 import {
   fontCooper,
@@ -24,6 +24,7 @@ import {
   Text,
 } from "react-native-magnus";
 import { Pet } from "@/store/types/pet";
+import { useFocusEffect } from "@react-navigation/native";
 
 const PetProfileListScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
@@ -32,14 +33,18 @@ const PetProfileListScreen: React.FC<{ navigation: NavigationType }> = ({
   const [loading, setLoading] = useState(false);
   const [pets, setPets] = useState<Pet[]>([]);
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetchData();
+    }, [])
+  );
 
   const fetchData = async () => {
     try {
       setLoading(true);
-      const response = await fetchPets(true);
+      const response = await fetchPets();
+
+      console.log("response", response);
       setPets(response);
     } finally {
       setLoading(false);

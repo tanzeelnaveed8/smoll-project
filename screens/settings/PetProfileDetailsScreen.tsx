@@ -203,13 +203,15 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
   ];
 
   const handleMenuDropdownSelect = (value: string) => {
-    if (value === "Delete Pet") {
-      setShowDeletePetModal(true);
-    }
+    setTimeout(() => {
+      if (value === "Delete Pet") {
+        setShowDeletePetModal(true);
+      }
 
-    if (value === "Deceased") {
-      handleUpdateDeceased();
-    }
+      if (value === "Deceased") {
+        handleUpdateDeceased();
+      }
+    }, 500);
   };
 
   const handleUpdateDeceased = async () => {
@@ -217,7 +219,6 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
     try {
       const updatedValue = petDetailsData?.isDeceased ? false : true;
       await updatePet(id, { isDeceased: updatedValue });
-      toast.show("Pet deceased status updated successfully");
     } finally {
       setDeletePetLoading(false);
     }
@@ -227,7 +228,7 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
     try {
       setDeletePetLoading(true);
       await deletePet(id);
-      toast.show("Pet deleted successfully");
+
       navigation.navigate("PetProfileListScreen");
     } finally {
       setDeletePetLoading(false);
