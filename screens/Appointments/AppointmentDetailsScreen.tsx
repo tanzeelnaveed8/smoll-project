@@ -82,13 +82,13 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
     useState<AppointmentDetailResponseDto | null>(null);
 
   const selectedServicesAmount = useMemo(() => {
-    return appointmentDetail?.services.reduce((acc, service) => {
+    return appointmentDetail?.services?.reduce((acc, service) => {
       return acc + service.price;
     }, 0);
   }, [appointmentDetail]);
 
   const allServicesAmount = useMemo(() => {
-    return appointmentDetail?.allServices.reduce((acc, service) => {
+    return appointmentDetail?.allServices?.reduce((acc, service) => {
       return acc + service.price;
     }, 0);
   }, [appointmentDetail]);
@@ -370,11 +370,11 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                         appointmentFormatedTime(appointmentDetail?.scheduledAt)}
                     </Text>
 
-                    {/* {appointmentDetail?.type === "video" && (
-              <ButtonPrimary disabled mt={24}>
-                Join
-              </ButtonPrimary>
-            )} */}
+                    {appointmentDetail?.type === "video" && (
+                      <ButtonPrimary disabled mt={24}>
+                        Join
+                      </ButtonPrimary>
+                    )}
                   </Div>
 
                   <Div
@@ -602,9 +602,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
 
             <Div h={30} />
 
-            {!isLoading &&
-              appointmentDetail?.type === "in-clinic" &&
-              renderBottomContent()}
+            {!isLoading && renderBottomContent()}
           </ScrollDiv>
         )}
 
@@ -614,10 +612,6 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
           </Div>
         )}
       </Layout>
-
-      {!isLoading &&
-        appointmentDetail?.type === "video" &&
-        renderBottomContent()}
 
       <BottomSheet
         isVisible={showCancelModal}

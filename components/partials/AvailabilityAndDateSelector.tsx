@@ -2,13 +2,11 @@ import { CalendarProvider, ExpandableCalendar } from "react-native-calendars";
 import { Div, Text } from "react-native-magnus";
 import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react-native";
 import { fontHauoraSemiBold } from "@/constant/constant";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useState, useCallback } from "react";
 import dayjs from "dayjs";
-import { ExpertAvailability } from "@/store/types/expert";
 
 interface Props {
   onSelect?: (date: string) => void;
-  // allAvailability: ExpertAvailability[];
 }
 
 const CalendarHeader = ({ date }: { date: string }) => {
@@ -20,52 +18,31 @@ const CalendarHeader = ({ date }: { date: string }) => {
       lineHeight={32}
       color="#222222"
     >
-      {date}ff
+      {date}
     </Text>
   );
 };
 
-const AvailabilityAndDateSelector: React.FC<Props> = ({
-  onSelect,
-  // allAvailability,
-}) => {
-  const [selectedDate, setSelectedDate] = useState(new Date());
+const AvailabilityAndDateSelector: React.FC<Props> = ({ onSelect }) => {
+  const [selectedDate, setSelectedDate] = useState(
+    dayjs().format("YYYY-MM-DD")
+  );
 
-  const handleDateSelect = (date: string) => {
-    const formattedDate = dayjs(date).format("YYYY-MM-DD");
-    setSelectedDate(new Date(formattedDate));
+  const handleDateSelect = useCallback(
+    (date: string) => {
+      const formattedDate = dayjs(date).format("YYYY-MM-DD");
+      setSelectedDate(formattedDate);
 
-    if (onSelect) {
-      onSelect(formattedDate);
-    }
-  };
-
-  // const isDateEnabled = useCallback(
-  //   (date: string) => {
-  //     const enabledDays = allAvailability.map((a) => a.dayOfWeek);
-  //     const enabledDates = allAvailability.map((a) => a.date);
-
-  //     return (
-  //       enabledDates.includes(date) ||
-  //       enabledDays.includes(dayjs(date).format("ddd").toLowerCase())
-  //     );
-  //   },
-  //   [allAvailability]
-  // );
-
-  // const datesCollection = useMemo(
-  //   () =>
-  //     Array.from({ length: 180 }, (_, i) => {
-  //       // Changed 365 to 180 for 6 months
-  //       const date = dayjs().add(i, "day").format("YYYY-MM-DD");
-  //       return { [date]: { disabled: !isDateEnabled(date) } };
-  //     }).reduce((acc, cur) => ({ ...acc, ...cur }), {}),
-  //   [isDateEnabled]
-  // );
+      if (onSelect) {
+        onSelect(formattedDate);
+      }
+    },
+    [onSelect]
+  );
 
   return (
     <Div style={{ height: 136 }} position="relative">
-      <CalendarProvider date={selectedDate.toISOString()}>
+      <CalendarProvider date={selectedDate}>
         <ExpandableCalendar
           disableWeekScroll
           allowShadow={false}
@@ -77,8 +54,6 @@ const AvailabilityAndDateSelector: React.FC<Props> = ({
             backgroundColor: "#FAF8F5",
           }}
           headerStyle={{ backgroundColor: "#FAF8F5" }}
-          // headerStyle={{ paddingHorizontal: 0 }}
-
           disablePan
           hideKnob
           markedDates={{}}
@@ -86,7 +61,6 @@ const AvailabilityAndDateSelector: React.FC<Props> = ({
           animateScroll={true}
           minDate={dayjs().format("YYYY-MM-DD")}
           disableAllTouchEventsForDisabledDays
-          // monthFormat="dddd, MMM d yyyy"
           renderHeader={(date) => (
             <CalendarHeader date={dayjs(selectedDate).format("dddd, MMM D")} />
           )}
