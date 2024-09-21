@@ -16,6 +16,7 @@ const ConfirmationModal: React.FC<{
   confirmText?: string;
   cancelBgColor?: string;
   confirmBgColor?: string;
+  height?: number;
 }> = ({
   heading,
   text,
@@ -27,12 +28,13 @@ const ConfirmationModal: React.FC<{
   confirmText,
   cancelBgColor,
   confirmBgColor,
+  height,
 }) => {
   return (
     <>
       <BottomSheet
         isVisible={showModal}
-        h={330}
+        h={height ? height : 330}
         showCloseIcon
         onCloseIconClick={onClose}
         roundedTop={24}

@@ -452,8 +452,9 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
 
       <ConfirmationModal
         heading="Delete Pet"
-        text="Are you sure you want to delete this pet?"
+        text="Are you sure you want to delete this pet? Deleting it will remove all the data associated with it, even your bookings."
         isLoading={deletePetLoading}
+        height={365}
         showModal={showDeletePetModal}
         onClose={() => setShowDeletePetModal(false)}
         onConfirm={handleDeletePet}
