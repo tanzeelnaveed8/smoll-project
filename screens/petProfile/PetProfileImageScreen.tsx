@@ -28,12 +28,13 @@ const PetProfileImageScreen: React.FC<Props> = (props) => {
 
   const handleUnselectFile = (index: number) => {
     const updatedPhotos = [...props.pet.photos];
+
     updatedPhotos[index] = undefined; // Set the photo at the specified index to undefined
+
     setImages(updatedPhotos);
+
     props.setPet({ ...props.pet, photos: updatedPhotos });
   };
-
-  console.log("images", images);
 
   return (
     <Div>
@@ -52,6 +53,7 @@ const PetProfileImageScreen: React.FC<Props> = (props) => {
             key={index}
             uri={props.pet.photos[index]?.uri}
             isPrimary={index === 0}
+            singleImage
             onUnSelect={(e) => handleUnselectFile(index)}
             onChange={(files) => handleImageChange(files, index)}
             disableDownload

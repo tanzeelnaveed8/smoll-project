@@ -1,6 +1,5 @@
 import Layout from "@/components/app/Layout";
 import CallIcon from "@/components/icons/CallIcon";
-import LocationIcon from "@/components/icons/LocationIcon";
 import MessageIcon from "@/components/icons/MessageIcon";
 import SquigglyLinesIcon from "@/components/icons/SquigglyLinesIcon";
 import WalletIcon from "@/components/icons/WalletIcon";
@@ -17,19 +16,17 @@ import {
   appointmentFormatedTime,
   useAppointmentStore,
 } from "@/store/modules/appointments";
-import { useExpertStore } from "@/store/modules/expert";
-import { usePartnerStore } from "@/store/modules/partner";
 import { NavigationType } from "@/store/types";
 import { AppointmentDetailResponseDto } from "@/store/types/appointments";
 import { useRoute } from "@react-navigation/native";
 import {
-  IconCalendarClock,
   IconHelpCircle,
   IconReceipt,
   IconUser,
   IconUserX,
 } from "@tabler/icons-react-native";
-import React, { useEffect, useMemo, useState } from "react";
+import dayjs from "dayjs";
+import React, { useEffect, useMemo, useState, useCallback } from "react";
 import {
   ActivityIndicator,
   Dimensions,
@@ -99,24 +96,28 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
     return amount;
   }, [selectedServicesAmount]);
 
-  // const contactBtns = useMemo(() => {
-  //   return [
-  //     {
-  //       icon: <CallIcon />,
-  //       text: "Call",
-  //       link: `tel:${appointmentDetail?.partner?.phone}`,
-  //     },
-  //     // {
-  //     //   icon: <LocationIcon />,
-  //     //   text: "Location",
-  //     // },
-  //     {
-  //       icon: <MessageIcon />,
-  //       text: "Message",
-  //       link: `mailto:${appointmentDetail?.partner?.email}`,
-  //     },
-  //   ];
-  // }, [appointmentDetail]);
+  const [isJoinEnabled, setIsJoinEnabled] = useState(false);
+
+  const checkJoinButtonStatus = useCallback(() => {
+    if (!appointmentDetail?.scheduledAt) return false;
+    const appointmentTime = dayjs(appointmentDetail.scheduledAt);
+    const currentTime = dayjs();
+    // Enable the button 5 minutes before and up to 30 minutes after the scheduled time
+    return (
+      currentTime.isAfter(appointmentTime.subtract(30, "seconds")) &&
+      currentTime.isBefore(appointmentTime.add(30, "minute"))
+    );
+  }, [appointmentDetail?.scheduledAt]);
+
+  useEffect(() => {
+    if (appointmentDetail?.type === "video") {
+      const intervalId = setInterval(() => {
+        setIsJoinEnabled(checkJoinButtonStatus());
+      }, 3000);
+
+      return () => clearInterval(intervalId);
+    }
+  }, [appointmentDetail, checkJoinButtonStatus]);
 
   useEffect(() => {
     if (!appointmentDetail) return;
@@ -371,7 +372,18 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                     </Text>
 
                     {appointmentDetail?.type === "video" && (
-                      <ButtonPrimary disabled mt={24}>
+                      <ButtonPrimary
+                        disabled={!isJoinEnabled}
+                        mt={24}
+                        onPress={() => {
+                          navigation.navigate("ConsultationWaitingScreen", {
+                            consultationId: appointmentDetail.id,
+                            caseId: appointmentDetail.caseId,
+                            expertId: appointmentDetail.vet?.id,
+                            petName: appointmentDetail.pet?.name,
+                          });
+                        }}
+                      >
                         Join
                       </ButtonPrimary>
                     )}
@@ -458,8 +470,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                           h={48}
                           rounded={48}
                           mr={8}
-                          src={appointmentDetail?.pet.photos[0].url}
-                          // source={require("../../assets/images/dog.png")}
+                          src={appointmentDetail?.pet?.photos[0]?.url}
                         />
                       </Div>
 
@@ -489,7 +500,6 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                             style={{ gap: 12 }}
                             alignItems="center"
                           >
-                            {/* <IconUserX width={26} height={26} color={"#427594"} /> */}
                             {item.icon}
                             <Text
                               fontSize={"xl"}
@@ -602,7 +612,9 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
 
             <Div h={30} />
 
-            {!isLoading && renderBottomContent()}
+            {!isLoading &&
+              appointmentDetail?.type === "in-clinic" &&
+              renderBottomContent()}
           </ScrollDiv>
         )}
 
@@ -658,58 +670,3 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
 };
 
 export default AppointmentDetailsScreen;
-
-/**
-
-<Div flexDir="row" alignItems="flex-end" mb={30}>
-                <Div>
-                  <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
-                    Minimum
-                  </Text>
-                  <Text
-                    fontSize={"5xl"}
-                    fontFamily={fontHauoraBold}
-                    lineHeight={36}
-                  >
-                    {minimumAmount}
-                    <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
-                      {" "}
-                      AED
-                    </Text>
-                  </Text>
-                </Div>
-
-                <Div w={80} h={1} ml={30} mr={10} mb={8} bg="#222" />
-
-                <Div>
-                  <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
-                    Maximum
-                  </Text>
-
-                  <Text
-                    fontSize={"5xl"}
-                    fontFamily={fontHauoraBold}
-                    lineHeight={36}
-                  >
-                    
-                    {totalSelectedAmount}
-                    <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
-                      {" "}
-                      AED
-                    </Text>
-                  </Text>
-
-                  <Div
-                    style={{
-                      marginLeft: "auto",
-                      position: "absolute",
-                      bottom: -30,
-                      left: 20,
-                    }}
-                  >
-                    <DotIcon />
-                  </Div>
-                </Div>
-              </Div>
-
- */

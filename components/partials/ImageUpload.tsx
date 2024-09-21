@@ -66,6 +66,7 @@ interface Props {
   documentName?: string;
   onLoading?: (isLoading: boolean) => void;
   disableDownload?: boolean;
+  singleImage?: boolean;
 }
 
 const ImageUpload: React.FC<Props> = ({
@@ -90,6 +91,7 @@ const ImageUpload: React.FC<Props> = ({
   documentName,
   onLoading,
   disableDownload,
+  singleImage,
 }) => {
   const { uploadFile } = useFileStore();
   const toast = useToast();
@@ -129,7 +131,9 @@ const ImageUpload: React.FC<Props> = ({
       if (!result.canceled && result.assets && result.assets.length > 0) {
         const localUri = result.assets[0].uri;
 
-        setImage(localUri);
+        if (singleImage) {
+          setImage(localUri);
+        }
 
         const filename = localUri.split("/").pop() as string;
         const match = /\.(\w+)$/.exec(filename);
@@ -385,7 +389,6 @@ const ImageUpload: React.FC<Props> = ({
                   p={2}
                   onPress={handleDownload}
                   bg="#00000061"
-                  // disabled={downloadLoading}
                 >
                   {downloadLoading ? (
                     <ActivityIndicator
@@ -406,6 +409,7 @@ const ImageUpload: React.FC<Props> = ({
                   style={{ position: "absolute", right: 8, bottom: 8 }}
                 />
               )}
+
               {loading && (
                 <ActivityIndicator size="large" color={colorPrimary} />
               )}

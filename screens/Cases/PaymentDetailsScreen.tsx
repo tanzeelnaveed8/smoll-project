@@ -66,9 +66,9 @@ const howPaymentWorks = [
       "Your final bill at the vet clinic is  (Quotation Value - 20% deposit)so if your quotation was AED1000, you will pay AED200 through the smoll app and AED800 at the clinic, simple.",
   },
   {
-    question: "Are deposits reundable??",
+    question: "Are deposits refundable?",
     answer:
-      "Deposits are 100% refundable if  the appointment was canceled by either the vet clinic or pet parent and no service was provided to the pet parent. It can take up to 14 working days to receive it but usually less than a week.",
+      "Deposits are 100% refundable if the appointment was canceled by either the vet clinic or pet parent and no service was provided to the pet parent. It can take up to 14 working days to receive it but usually less than a week.",
   },
 ];
 
@@ -516,7 +516,7 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
 
       <BottomSheet
         isVisible={showPaymentWork}
-        h={400}
+        h={345}
         showCloseIcon
         closeButtonStyle={{
           marginLeft: "auto",
@@ -525,32 +525,40 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
         onCloseIconClick={() => {
           setShowPaymentWork(false);
         }}
-        roundedTop={24}
+        barMb={10}
+        roundedTop={40}
       >
-        <Div flexDir="row" alignItems="flex-start" mb={22}>
-          <InformationIcon width={28} height={28} />
-          <Text fontSize={"md"} ml={8} fontFamily={fontHauoraBold}>
-            How my payment work?
-          </Text>
-        </Div>
-
-        <Div>
-          {howPaymentWorks.map((item, i) => (
-            <Div
-              key={item.question}
-              borderBottomWidth={i + 1 === howPaymentWorks.length ? 0 : 1}
-              borderBottomColor="#ccc"
-              pb={i + 1 === howPaymentWorks.length ? 0 : 12}
-              mb={i + 1 === howPaymentWorks.length ? 0 : 10}
+        <Div px={10}>
+          <Div flexDir="row" alignItems="flex-start" mb={22}>
+            <InformationIcon width={28} height={28} />
+            <Text
+              fontSize={14}
+              ml={8}
+              fontFamily={fontHauoraBold}
+              style={{ position: "relative", top: 4 }}
             >
-              <Text fontSize={13} fontFamily={fontHauoraMedium} mb={2}>
-                {item.question}
-              </Text>
-              <Text fontSize={10} fontFamily={fontHauoraMedium}>
-                {item.answer}
-              </Text>
-            </Div>
-          ))}
+              How my payment work?
+            </Text>
+          </Div>
+
+          <Div ml={36}>
+            {howPaymentWorks.map((item, i) => (
+              <Div
+                key={item.question}
+                borderBottomWidth={i + 1 === howPaymentWorks.length ? 0 : 1}
+                borderBottomColor="#ccc"
+                pb={i + 1 === howPaymentWorks.length ? 0 : 12}
+                mb={i + 1 === howPaymentWorks.length ? 0 : 10}
+              >
+                <Text fontSize={13} fontFamily={fontHauoraMedium} mb={2}>
+                  {item.question}
+                </Text>
+                <Text fontSize={8} fontFamily={fontHauoraMedium} maxW={"90%"}>
+                  {item.answer}
+                </Text>
+              </Div>
+            ))}
+          </Div>
         </Div>
       </BottomSheet>
     </Layout>

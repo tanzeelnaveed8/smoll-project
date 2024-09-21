@@ -11,28 +11,10 @@ export const useNotificationStore = create<NotificationState>((set, get) => ({
       `/notifications?page=${page}&limit=${limit}`
     );
 
-    // const response = {
-    //   data: {
-    //     data: dummyNotificationList,
-    //     count: 0,
-    //     currentPage: 0,
-    //     nextPage: 2,
-    //   },
-    // };
-
-    // const data = response.data;
     const result = response.data;
 
-    let udpatedData = [];
-    if (get().notifications?.data && get().notifications?.data.length) {
-      const existing = get().notifications?.data || [];
-      udpatedData = [...existing, ...result.data];
-    } else {
-      udpatedData = result.data;
-    }
-
     set(() => ({
-      notifications: { ...response.data, data: udpatedData },
+      notifications: { ...response.data, data: result.data },
     }));
 
     return response.data;

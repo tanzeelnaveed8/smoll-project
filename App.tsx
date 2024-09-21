@@ -57,8 +57,6 @@ import CaseDetailScreen from "./screens/Cases/CaseDetailScreen";
 import RequestCallBackScreen from "./screens/Consultation/UnavailableScreen";
 import ExpertsScheduleConfirmationScreen from "./screens/Experts/ExpertsScheduleConfirmationScreen";
 import ExpertsScheduleSuccessScreen from "./screens/Experts/ExpertsScheduleSuccessScreen";
-import NotificationScreen from "./screens/NotificationScreen";
-import NotificationTestScreen from "./screens/NotificationTestScreen";
 import SplashScreen from "./screens/SplashScreen";
 import * as rootNavigation from "./utils/root-navigation";
 import { navigationRef } from "./utils/root-navigation";
@@ -81,6 +79,7 @@ import PaymentDetailsScreen from "./screens/Cases/PaymentDetailsScreen";
 import UnavailableScreen from "./screens/Consultation/UnavailableScreen";
 import NewOnboardingScreen from "./screens/NewOnboardingScreen";
 import { initializeSendbird, sb } from "./utils/chat.v2";
+import NotificationScreen from "./screens/NotificationScreen";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -286,27 +285,25 @@ const App = () => {
   useEffect(() => {
     loadFonts().then(() => setFontsLoaded(true));
 
-    // return;
-    // Remove this method to stop OneSignal Debugging
     // OneSignal Initialization
     OneSignal.initialize(process.env.EXPO_PUBLIC_ONE_SIGNAL_APP_ID as string);
-    // requestPermission will show the native iOS or Android notification permission prompt.
-    // We recommend removing the following code and instead using an In-App Message to prompt for notification permission
     OneSignal.Notifications.requestPermission(true);
-    // Method for listening for notification clicks
 
     OneSignal.Notifications.addEventListener("click", (event) => {
       const additionalData = event.notification?.additionalData as {
         notificationType?: string;
         consultationId?: string;
         caseId?: string;
+        vetId?: string;
+        petName?: string;
         partnerId?: string;
         partnerBookingId?: string;
       };
 
       if (additionalData?.notificationType === "consultation-notification") {
-        rootNavigation.navigate("ConsultationWaitingScreen", {
-          consultationId: additionalData.consultationId,
+        rootNavigation.navigate("AppointmentDetailsScreen", {
+          id: additionalData.consultationId,
+          type: "video",
         });
       }
 
@@ -468,10 +465,6 @@ const App = () => {
                   <Stack.Screen
                     name="NotificationScreen"
                     component={NotificationScreen}
-                  />
-                  <Stack.Screen
-                    name="NotificationTestScreen"
-                    component={NotificationTestScreen}
                   />
                   <Stack.Screen
                     name="PetProfileScreen"

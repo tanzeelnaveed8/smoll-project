@@ -330,75 +330,88 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
         onCloseIconClick={() => {
           setShowQuotesWork(false);
         }}
-        roundedTop={24}
+        barMb={10}
+        roundedTop={40}
       >
-        <Div flexDir="row" alignItems="flex-start" mb={22}>
-          <InformationIcon width={28} height={28} />
-          <Text fontSize={"md"} ml={8} fontFamily={fontHauoraBold}>
-            How Quotations work?
-          </Text>
-        </Div>
-
-        <Div pb={13} borderBottomColor="#D0D7DC" borderBottomWidth={1} mb={15}>
-          <Text fontSize={13} fontFamily={fontHauoraMedium} mb={10}>
-            Type of services
-          </Text>
-          <Div flexDir="row" justifyContent="space-between">
-            {howQuotesWork.map((item, i) => (
-              <Div key={i} flexDir="row">
-                {item.icon}
-
-                <Div ml={4}>
-                  <Text fontSize={12} fontFamily={fontHauoraBold} mb={3}>
-                    {item.title}
-                  </Text>
-                  <Text fontSize={10} fontFamily={fontHauoraMedium} maxW={90}>
-                    {item.text}
-                  </Text>
-                </Div>
-              </Div>
-            ))}
+        <Div px={10}>
+          <Div flexDir="row" alignItems="flex-start" mb={22}>
+            <InformationIcon width={28} height={28} />
+            <Text
+              fontSize={14}
+              ml={8}
+              fontFamily={fontHauoraBold}
+              style={{ position: "relative", top: 4 }}
+            >
+              How Quotations work?
+            </Text>
           </Div>
-        </Div>
-
-        <Div>
-          <Text fontSize={13} fontFamily={fontHauoraMedium} mb={8}>
-            How Min and Max work?
-          </Text>
 
           <Div
-            flexDir="row"
-            justifyContent="space-between"
-            style={{ columnGap: 15 }}
+            pb={13}
+            borderBottomColor="#D0D7DC"
+            borderBottomWidth={1}
+            mb={15}
           >
-            <Div maxW={140}>
-              <Text
-                fontSize={"xl"}
-                fontFamily={fontHauoraSemiBold}
-                color="darkGreyText"
-              >
-                Min
-              </Text>
+            <Text fontSize={13} fontFamily={fontHauoraMedium} mb={10}>
+              Type of services
+            </Text>
+            <Div flexDir="row" justifyContent="space-between">
+              {howQuotesWork.map((item, i) => (
+                <Div key={i} flexDir="row">
+                  {item.icon}
 
-              <Text fontSize={10} fontFamily={fontHauoraMedium}>
-                Is the minimum amount you are expected to pay including
-                Essential and Contingent services only
-              </Text>
+                  <Div ml={4}>
+                    <Text fontSize={11} fontFamily={fontHauoraBold} mb={3}>
+                      {item.title}
+                    </Text>
+                    <Text fontSize={8} fontFamily={fontHauoraMedium} maxW={90}>
+                      {item.text}
+                    </Text>
+                  </Div>
+                </Div>
+              ))}
             </Div>
+          </Div>
 
-            <Div maxW={171}>
-              <Text
-                fontSize={"xl"}
-                fontFamily={fontHauoraSemiBold}
-                color="darkGreyText"
-              >
-                Min
-              </Text>
+          <Div>
+            <Text fontSize={13} fontFamily={fontHauoraMedium} mb={8}>
+              How Min and Max work?
+            </Text>
 
-              <Text fontSize={10} fontFamily={fontHauoraMedium}>
-                Is the minimum amount you are expected to pay including
-                Essential and Contingent services only
-              </Text>
+            <Div
+              flexDir="row"
+              justifyContent="space-between"
+              style={{ columnGap: 15 }}
+            >
+              <Div maxW={140}>
+                <Text
+                  fontSize={20}
+                  fontFamily={fontHauoraSemiBold}
+                  color="darkGreyText"
+                >
+                  Min
+                </Text>
+
+                <Text fontSize={10} fontFamily={fontHauoraMedium}>
+                  Is the minimum amount you are expected to pay including
+                  Essential and Contingent services only
+                </Text>
+              </Div>
+
+              <Div maxW={171}>
+                <Text
+                  fontSize={20}
+                  fontFamily={fontHauoraSemiBold}
+                  color="darkGreyText"
+                >
+                  Max
+                </Text>
+
+                <Text fontSize={10} fontFamily={fontHauoraMedium}>
+                  Is the maximum amount you are expected to pay based on your
+                  selection and it will not exceed that amount
+                </Text>
+              </Div>
             </Div>
           </Div>
         </Div>

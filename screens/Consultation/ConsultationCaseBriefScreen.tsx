@@ -98,6 +98,10 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
   const [uploading, setUploading] = useState(false);
   const [pets, setPets] = useState<Pet[]>([]);
 
+  useEffect(() => {
+    console.log("documents", documents);
+  }, [documents]);
+
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);

@@ -59,6 +59,7 @@ const PetProfileScreen: React.FC<Props> = (props) => {
   );
 
   const isActionDisabled = useMemo(() => {
+    console.log("pet", pet.photos);
     switch (currentStep) {
       case 0:
         return !pet.name.length;
@@ -69,7 +70,10 @@ const PetProfileScreen: React.FC<Props> = (props) => {
       case 6:
         return !pet.weight;
       case 7:
-        return !pet.photos.length;
+        return (
+          !pet.photos.length ||
+          pet.photos.every((photo) => typeof photo === "undefined")
+        );
     }
 
     return false;

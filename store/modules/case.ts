@@ -58,6 +58,8 @@ export const useCaseStore = create<CasesState>((set, get) => ({
   fetchCaseQuotes: async (id: string) => {
     const response = await api.get(`/member/cases/${id}/quotes`);
 
+    console.log("res", response.data[0].services);
+
     set(() => ({
       casesQuotes: new Map([...get().casesQuotes, [id, response.data]]),
     }));

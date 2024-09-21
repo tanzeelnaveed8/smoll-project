@@ -16,6 +16,7 @@ export interface AppointmentListResponseDto {
   scheduledAt: string;
   allServices: Service[];
   services: Service[];
+  caseId: string;
   partner: {
     id: string;
     name: string;
