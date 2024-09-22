@@ -98,6 +98,7 @@ export interface ClinicServiceDto {
   description: string;
   currency: string;
   label: string;
+  type: string;
 }
 
 export interface CaseQuotesDto {

@@ -1,6 +1,7 @@
 import Layout from "@/components/app/Layout";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import {
+  fontCooper,
   fontHauoraBold,
   fontHauoraMedium,
   fontHauoraSemiBold,
@@ -12,17 +13,27 @@ import { useRoute } from "@react-navigation/native";
 import {
   IconAlertCircle,
   IconAlertCircleFilled,
+  IconArrowRight,
   IconCircleCheck,
   IconCircleCheckFilled,
   IconInfoCircleFilled,
 } from "@tabler/icons-react-native";
 import React, { useEffect, useMemo, useState } from "react";
 import { TouchableOpacity } from "react-native";
-import { Div, Image, ScrollDiv, Tag, Text } from "react-native-magnus";
+import {
+  Button,
+  Collapse,
+  Div,
+  Image,
+  ScrollDiv,
+  Tag,
+  Text,
+} from "react-native-magnus";
 import PartnerVetStarRating from "./PartnerVetStarRating";
 import BottomSheet from "@/components/partials/BottomSheet";
 import InformationIcon from "@/components/icons/InformationIcon";
 import EssentialCheckIcon from "@/components/icons/EssentialCheckIcon";
+import CollapsibleView from "./CollapsibleView";
 
 const howQuotesWork = [
   {
@@ -39,6 +50,28 @@ const howQuotesWork = [
     title: "Recommended",
     text: "Vet recommended up to you to decide and you can deselect it if you want",
     icon: <EssentialCheckIcon fill="#014EF7" color="#fff" />,
+  },
+];
+
+const serviceTypes = [
+  {
+    title: "Essential",
+    text: "Must be performed and can not be deselected",
+    icon: <EssentialCheckIcon width={13} height={14} />,
+  },
+  {
+    title: "Contingent",
+    text: "Subject to an essential service and can not be deselected",
+    icon: (
+      <EssentialCheckIcon fill="#FFC433" color="#222" width={13} height={14} />
+    ),
+  },
+  {
+    title: "Recommended",
+    text: "Vet recommended up to you to decide and you can deselect it if you want",
+    icon: (
+      <EssentialCheckIcon fill="#014EF7" color="#fff" width={13} height={14} />
+    ),
   },
 ];
 
@@ -68,6 +101,58 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
   const clinicQuote = useMemo(() => {
     return caseQuote?.find((q) => q.partner.id === id);
   }, [caseQuote]);
+
+  // const clinicQuote = useMemo(() => {
+  //   return (
+  //     caseQuote?.find((q) => q.partner.id === id) || {
+  //       id: "dummyQuoteId",
+  //       note: "Dummy note",
+  //       partner: {
+  //         id: "dummyId",
+  //         name: "Dummy Clinic",
+  //         address: "123 Dummy Street",
+  //         receptionistName: "Dummy Receptionist",
+  //         phone: "1234567890",
+  //         email: "dummy@clinic.com",
+  //         clinicImg: null, // Adjusted to match Nullable<UploadedFile>
+  //         country: "Dummy Country",
+  //         city: "Dummy City",
+  //         openingHours: "Dummy Opening Hours",
+  //         postalCode: "Dummy Postal Code",
+  //         state: "Dummy State",
+  //         createdAt: new Date(),
+  //         timeZone: "Dummy Time Zone",
+  //         specialities: [{ id: "dummySpecialityId", name: "Dummy Speciality" }],
+  //       },
+  //       services: [
+  //         {
+  //           id: "1",
+  //           label: "Essential",
+  //           name: "Service 1",
+  //           price: 100,
+  //           description: "Essential service description",
+  //           currency: "AED",
+  //         },
+  //         {
+  //           id: "2",
+  //           label: "Recommended",
+  //           name: "Service 2",
+  //           price: 200,
+  //           description: "Recommended service description",
+  //           currency: "AED",
+  //         },
+  //         {
+  //           id: "3",
+  //           label: "Contingent",
+  //           name: "Service 3",
+  //           price: 150,
+  //           description: "Contingent service description",
+  //           currency: "AED",
+  //         },
+  //       ],
+  //     }
+  //   );
+  // }, [caseQuote]);
 
   useEffect(() => {
     if (!clinicQuote) return;
@@ -139,6 +224,15 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
         Service Details
       </Text>
 
+      {/* <CollapsibleView title="Testing title">
+        <Text>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum
+          molestias ullam earum? Dolorum assumenda sequi consequatur inventore
+          id quas, reprehenderit, error dolor quaerat aliquid magnam, autem ex
+          voluptatum tempore fugiat?
+        </Text>
+      </CollapsibleView> */}
+
       <Div
         flex={1}
         py={16}
@@ -175,7 +269,21 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
 
           {!hasPartnerBooking && (
             <Div flexDir="row" alignItems="center" style={{ gap: 12 }}>
-              <Div flexDir="row" alignItems="center" style={{ gap: 5 }}>
+              {serviceTypes.map((item) => (
+                <Div
+                  key={item.title}
+                  flexDir="row"
+                  alignItems="center"
+                  style={{ gap: 4 }}
+                >
+                  {item.icon}
+
+                  <Text fontSize={9} fontFamily={fontHauoraSemiBold}>
+                    {item.title}
+                  </Text>
+                </Div>
+              ))}
+              {/* <Div flexDir="row" alignItems="center" style={{ gap: 5 }}>
                 <Image
                   source={require("../../assets/icons/disable-check.png")}
                   w={15}
@@ -196,7 +304,7 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
                 <Text fontSize={10} fontFamily={fontHauoraMedium}>
                   Optional
                 </Text>
-              </Div>
+              </Div> */}
             </Div>
           )}
         </Div>
@@ -214,6 +322,7 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
                   id={item.id}
                   servicesName={item.name}
                   type={item.label}
+                  tagType={item.type}
                   price={item.price}
                   description={item.description}
                   borderWidth={clinicQuote?.services.length === i + 1 ? 0 : 1}
@@ -227,64 +336,62 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
             ))}
           </ScrollDiv>
 
-          <Div
-            pt={15}
-            flexDir="row"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Div>
-              <Text
-                fontSize={"xl"}
-                fontFamily={fontHauoraSemiBold}
-                maxW={200}
-                mb={5}
-              >
-                Upfront transparent pricing
-              </Text>
-
-              <TouchableOpacity onPress={() => setShowQuotesWork(true)}>
-                <Div flexDir="row" alignItems="center" style={{ gap: 1 }}>
-                  <IconInfoCircleFilled
-                    width={16}
-                    height={16}
-                    color={"#fff"}
-                    fill={"#000"}
-                  />
-                  <Text fontSize={11} fontFamily={fontHauoraMedium}>
-                    Understand how quotes work
-                  </Text>
-                </Div>
-              </TouchableOpacity>
-            </Div>
-
-            {clinicQuote && (
-              <Div>
-                <Div flexDir="row" alignItems="flex-end">
+          <Div>
+            <Div
+              pt={15}
+              flexDir="row"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Div flexDir="row" alignItems="flex-end" mb={8}>
+                <Div>
                   <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
-                    Max{"  "}
+                    Minimum
                   </Text>
-                  <Text fontSize={"3xl"} fontFamily={fontHauoraBold} mb={-2}>
-                    AED {getTotalQuote()}
+                  <Text
+                    fontSize={"5xl"}
+                    fontFamily={fontHauoraBold}
+                    lineHeight={36}
+                  >
+                    {getMinQuote(clinicQuote)}
+                    <Text fontSize={15} fontFamily={fontHauoraMedium}>
+                      {" "}
+                      AED
+                    </Text>
                   </Text>
                 </Div>
 
-                <Div flexDir="row" alignItems="flex-end">
+                <Div w={80} h={1} mx={20} mb={8} bg="#222" />
+
+                <Div>
                   <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
-                    Min{"  "}
+                    Maximum
                   </Text>
-                  <Text fontSize={"lg"} fontFamily={fontHauoraMedium}>
-                    AED {getMinQuote(clinicQuote)}
+
+                  <Text
+                    fontSize={"5xl"}
+                    fontFamily={fontHauoraBold}
+                    lineHeight={36}
+                  >
+                    {getTotalQuote()}
+                    <Text fontSize={15} fontFamily={fontHauoraMedium}>
+                      {" "}
+                      AED
+                    </Text>
                   </Text>
                 </Div>
               </Div>
-            )}
+            </Div>
+
+            <Text fontSize={20} fontFamily={fontCooper} mb={10}>
+              Upfront transparent pricing
+            </Text>
           </Div>
         </Div>
       </Div>
       {/* </ScrollDiv> */}
 
-      <ButtonPrimary
+      {/* <ButtonPrimary
         onPress={() => {
           if (hasPartnerBooking) {
             navigation.goBack();
@@ -299,8 +406,38 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
         }}
       >
         {hasPartnerBooking ? "Go Back" : "Make an Appointment"}
-      </ButtonPrimary>
+      </ButtonPrimary> */}
 
+      <Button
+        bg="transparent"
+        borderWidth={2}
+        // alignItems="flex-end"
+        rounded={30}
+        borderColor="#222"
+        py={16}
+        w={"100%"}
+        onPress={() => {
+          navigation.navigate("PartnerVetScreen", {
+            partnerId: clinicQuote?.partner?.id,
+            partnerName: clinicQuote?.partner?.name,
+            caseId,
+            selectedServices,
+          });
+        }}
+      >
+        <Text color="#222" fontSize={20} fontFamily={fontHauoraSemiBold}>
+          {hasPartnerBooking ? "Go Back" : "Proceed"}
+        </Text>
+
+        {!hasPartnerBooking && (
+          <IconArrowRight
+            width={30}
+            height={30}
+            color={"#222"}
+            style={{ marginBottom: -5, marginLeft: 7 }}
+          />
+        )}
+      </Button>
       <Div
         flexDir="row"
         alignItems="center"
@@ -314,9 +451,19 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
           color={"#fff"}
           fill={"#000"}
         /> */}
-        <Text ml={4} fontSize={12} fontFamily={fontHauoraSemiBold}>
-          Our service is 100% free for pet parents.
-        </Text>
+        <TouchableOpacity onPress={() => setShowQuotesWork(true)}>
+          <Div flexDir="row" alignItems="center" style={{ gap: 1 }}>
+            <IconInfoCircleFilled
+              width={16}
+              height={16}
+              color={"#fff"}
+              fill={"#000"}
+            />
+            <Text fontSize={12} fontFamily={fontHauoraMedium}>
+              Understand how quotes work
+            </Text>
+          </Div>
+        </TouchableOpacity>
       </Div>
 
       <BottomSheet
@@ -419,6 +566,7 @@ const ProposalDetailCard: React.FC<{
   onSelect: () => void;
   borderWidth?: number;
   hasPartnerBooking?: boolean;
+  tagType: string;
 }> = ({
   id,
   servicesName,
@@ -429,6 +577,7 @@ const ProposalDetailCard: React.FC<{
   selectedServices,
   borderWidth,
   hasPartnerBooking,
+  tagType,
 }) => {
   const [typeStyles, setTypeStyles] = useState({
     bg: "#E7F3F7",
@@ -447,96 +596,54 @@ const ProposalDetailCard: React.FC<{
 
   return (
     <Div pb={16} borderBottomWidth={borderWidth} borderColor="#D0D7DC">
-      <TouchableOpacity
-        onPress={onSelect}
+      <Div
         style={{
-          pointerEvents: type === "Recommended" ? "auto" : "none",
+          // pointerEvents: type === "Recommended" ? "auto" : "none",
           flexDirection: "row",
         }}
-        disabled={hasPartnerBooking}
       >
-        {!hasPartnerBooking &&
-          (selectedServices.find((item) => item.id === id) ? (
-            <Image
-              mr={10}
-              mt={2}
-              source={
-                type === "Recommended"
-                  ? require("../../assets/icons/check.png")
-                  : require("../../assets/icons/disable-check.png")
-              }
-              w={20}
-              h={20}
-            />
-          ) : (
-            <Div
-              mr={10}
-              mt={2}
-              w={20}
-              h={20}
-              rounded={100}
-              borderWidth={2}
-              borderColor="#D0D7DC"
-            />
-          ))}
-
-        <Div flex={1}>
-          <Div flexDir="row" alignItems="flex-start" mb={8} w={"100%"}>
-            <Div
-              flexDir="row"
-              alignItems="center"
-              flexWrap="wrap"
-              style={{ gap: 4 }}
-              w={"70%"}
-            >
-              <Text
-                fontSize={"lg"}
-                fontFamily={fontHauoraSemiBold}
-                mr={4}
-                maxW={
-                  type === "Recommended"
-                    ? 120
-                    : type === "Contingent" || type === "Contigent"
-                    ? 145
-                    : 160
-                }
-              >
-                {servicesName}
-              </Text>
-
-              <Tag
-                fontSize={11}
-                fontFamily={fontHauoraSemiBold}
-                color={typeStyles.color}
-                bg={typeStyles.bg}
-                rounded={40}
+        <TouchableOpacity
+          onPress={onSelect}
+          disabled={hasPartnerBooking}
+          style={{
+            pointerEvents: type === "Recommended" ? "auto" : "none",
+          }}
+        >
+          {!hasPartnerBooking &&
+            (selectedServices.find((item) => item.id === id) ? (
+              <Image
+                mr={10}
                 mt={2}
-                py={3}
-                px={8}
-              >
-                {type}
-              </Tag>
-            </Div>
+                source={
+                  type === "Recommended"
+                    ? require("../../assets/icons/check.png")
+                    : require("../../assets/icons/disable-check.png")
+                }
+                w={20}
+                h={20}
+              />
+            ) : (
+              <Div
+                mr={10}
+                mt={2}
+                w={20}
+                h={20}
+                rounded={100}
+                borderWidth={2}
+                borderColor="#D0D7DC"
+              />
+            ))}
+        </TouchableOpacity>
 
-            <Div
-              flexDir="row"
-              alignItems="center"
-              style={{ gap: 12 }}
-              ml={"auto"}
-            >
-              <Div>
-                <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold}>
-                  AED {price}
-                </Text>
-              </Div>
-            </Div>
-          </Div>
-
-          <Text fontSize={13} fontFamily={fontHauoraMedium} maxW={"90%"}>
-            {description}
-          </Text>
-        </Div>
-      </TouchableOpacity>
+        <CollapsibleView
+          type={type}
+          servicesName={servicesName}
+          price={price}
+          description={description}
+          key={id}
+          tagType={tagType}
+        />
+      </Div>
     </Div>
   );
 };
