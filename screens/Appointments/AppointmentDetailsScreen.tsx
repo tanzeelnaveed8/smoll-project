@@ -82,13 +82,13 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
     useState<AppointmentDetailResponseDto | null>(null);
 
   const selectedServicesAmount = useMemo(() => {
-    return appointmentDetail?.services.reduce((acc, service) => {
+    return appointmentDetail?.services?.reduce((acc, service) => {
       return acc + service.price;
     }, 0);
   }, [appointmentDetail]);
 
   const allServicesAmount = useMemo(() => {
-    return appointmentDetail?.allServices.reduce((acc, service) => {
+    return appointmentDetail?.allServices?.reduce((acc, service) => {
       return acc + service.price;
     }, 0);
   }, [appointmentDetail]);
@@ -556,13 +556,17 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
       </Layout>
 
       {!isLoading && (
-        <Div bg="bgColor" pb={20}>
-          <Div mb={20}>
-            <SquigglyLinesIcon />
-          </Div>
+        <Div bg="bgColor" pt={55} pb={20}>
+          <Image
+            position="absolute"
+            top={0}
+            source={require("../../assets/images/appointment-details-bg.png")}
+            w={"100%"}
+            h={50}
+          />
 
           <Div px={20}>
-            <Div w={"50%"} h={5} rounded={10} bg="#222" mx={"auto"} mb={30} />
+            {/* <Div w={"50%"} h={5} rounded={10} bg="#222" mx={"auto"} mb={30} /> */}
 
             <Div flexDir="row" style={{ gap: 8 }} mb={20}>
               <IconHelpCircle width={20} height={20} color="#222" />

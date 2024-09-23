@@ -252,6 +252,7 @@ const App = () => {
   useEffect(() => {
     loadFonts().then(() => setFontsLoaded(true));
 
+    return;
     // Remove this method to stop OneSignal Debugging
     OneSignal.Debug.setLogLevel(LogLevel.Verbose);
     // OneSignal Initialization
@@ -339,7 +340,7 @@ const App = () => {
 
   useEffect(() => {
     if (user) {
-      OneSignal.login(user.playerId);
+      // OneSignal.login(user.playerId);
     }
   }, [user]);
 
@@ -381,6 +382,7 @@ const App = () => {
                   }}
                 >
                   <Stack.Screen name="SplashScreen" component={SplashScreen} />
+
                   <Stack.Screen
                     name="OnboardingScreen"
                     component={OnboardingScreen}
