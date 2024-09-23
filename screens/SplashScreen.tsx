@@ -35,7 +35,7 @@ const SplashScreen: React.FC<{ navigation: NavigationType }> = ({
   }, []);
 
   return (
-    <Div bg="#fff" flex={1} justifyContent="center" alignItems="center">
+    <Div bg="#FAF8F5" flex={1} justifyContent="center" alignItems="center">
       <Image source={require("../assets/logo.png")} w={220} h={60} />
     </Div>
   );
