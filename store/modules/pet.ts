@@ -15,6 +15,8 @@ export const usePetStore = create<PetState>((set, get) => ({
       },
     });
 
+    console.log("respose fetchPets", response.data);
+
     set(() => ({
       pets: response.data,
     }));

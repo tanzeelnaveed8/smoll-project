@@ -1,12 +1,19 @@
 import React from "react";
 import { Path, Svg } from "react-native-svg";
 
-const EssentialCheckIcon: React.FC<{ fill?: string; color?: string }> = ({
-  fill,
-  color,
-}) => {
+const EssentialCheckIcon: React.FC<{
+  fill?: string;
+  color?: string;
+  width?: number;
+  height?: number;
+}> = ({ fill, color, width, height }) => {
   return (
-    <Svg width="16" height="17" viewBox="0 0 16 17" fill="none">
+    <Svg
+      width={width ? width : "16"}
+      height={height ? height : "17"}
+      viewBox="0 0 16 17"
+      fill="none"
+    >
       <Path
         d="M7.936 0.4375C9.50559 0.4375 11.0399 0.902938 12.345 1.77496C13.6501 2.64698 14.6673 3.88641 15.2679 5.33652C15.8686 6.78664 16.0257 8.3823 15.7195 9.92174C15.4133 11.4612 14.6575 12.8752 13.5476 13.9851C12.4377 15.095 11.0237 15.8508 9.48424 16.157C7.9448 16.4632 6.34914 16.3061 4.89902 15.7054C3.44891 15.1048 2.20948 14.0876 1.33746 12.7825C0.465438 11.4774 0 9.94309 0 8.3735C0 6.26874 0.836112 4.25019 2.3244 2.7619C3.81269 1.27361 5.83124 0.4375 7.936 0.4375Z"
         fill={fill ? fill : "#E6E6E6"}
