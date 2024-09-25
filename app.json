@@ -8,6 +8,7 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "jsEngine": "hermes",
+    "entryPoint": "./App.js",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",

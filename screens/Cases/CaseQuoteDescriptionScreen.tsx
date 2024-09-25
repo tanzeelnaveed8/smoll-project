@@ -201,7 +201,8 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
 
   const getMinQuote = (caseQuotes: CaseQuotesDto) => {
     let q = 0;
-    caseQuotes.services.forEach((service) => {
+
+    caseQuotes?.services?.forEach((service) => {
       if (service.label !== "Recommended") {
         q += service.price;
       }
