@@ -221,13 +221,17 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
 
   const renderBottomContent = () => {
     return (
-      <Div bg="bgColor" pb={20}>
-        <Div mb={20}>
-          <SquigglyLinesIcon />
-        </Div>
+      <Div bg="bgColor" pt={60} pb={20}>
+        <Image
+          position="absolute"
+          top={0}
+          source={require("../../assets/images/appointment-details-bg.png")}
+          w={"100%"}
+          h={50}
+        />
 
         <Div px={20}>
-          <Div w={"50%"} h={5} rounded={10} bg="#222" mx={"auto"} mb={30} />
+          {/* <Div w={"50%"} h={5} rounded={10} bg="#222" mx={"auto"} mb={30} /> */}
 
           <Div flexDir="row" style={{ gap: 8 }} mb={20}>
             <IconHelpCircle width={20} height={20} color="#222" />
@@ -570,7 +574,14 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                         mb={20}
                         // mb={25}
                       >
-                        <Div bg="#EFE9DB" rounded={22} px={22} py={18}>
+                        <Div
+                          bg="#EFE9DB"
+                          rounded={22}
+                          px={22}
+                          py={18}
+                          flex={1}
+                          maxW={"50%"}
+                        >
                           <Text
                             mb={6}
                             fontSize={13}
@@ -597,7 +608,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                             fontSize={11}
                             lineHeight={15}
                             fontFamily={fontHauoraSemiBold}
-                            maxW={200}
+                            maxW={180}
                           >
                             Final balance to be paid at the clinic, depending on
                             services received.
@@ -611,10 +622,6 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
             </Div>
 
             <Div h={30} />
-
-            {!isLoading &&
-              appointmentDetail?.type === "in-clinic" &&
-              renderBottomContent()}
           </ScrollDiv>
         )}
 
@@ -624,6 +631,10 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
           </Div>
         )}
       </Layout>
+
+      {!isLoading &&
+        appointmentDetail?.type === "in-clinic" &&
+        renderBottomContent()}
 
       <BottomSheet
         isVisible={showCancelModal}

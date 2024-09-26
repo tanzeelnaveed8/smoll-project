@@ -102,58 +102,6 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
     return caseQuote?.find((q) => q.partner.id === id);
   }, [caseQuote]);
 
-  // const clinicQuote = useMemo(() => {
-  //   return (
-  //     caseQuote?.find((q) => q.partner.id === id) || {
-  //       id: "dummyQuoteId",
-  //       note: "Dummy note",
-  //       partner: {
-  //         id: "dummyId",
-  //         name: "Dummy Clinic",
-  //         address: "123 Dummy Street",
-  //         receptionistName: "Dummy Receptionist",
-  //         phone: "1234567890",
-  //         email: "dummy@clinic.com",
-  //         clinicImg: null, // Adjusted to match Nullable<UploadedFile>
-  //         country: "Dummy Country",
-  //         city: "Dummy City",
-  //         openingHours: "Dummy Opening Hours",
-  //         postalCode: "Dummy Postal Code",
-  //         state: "Dummy State",
-  //         createdAt: new Date(),
-  //         timeZone: "Dummy Time Zone",
-  //         specialities: [{ id: "dummySpecialityId", name: "Dummy Speciality" }],
-  //       },
-  //       services: [
-  //         {
-  //           id: "1",
-  //           label: "Essential",
-  //           name: "Service 1",
-  //           price: 100,
-  //           description: "Essential service description",
-  //           currency: "AED",
-  //         },
-  //         {
-  //           id: "2",
-  //           label: "Recommended",
-  //           name: "Service 2",
-  //           price: 200,
-  //           description: "Recommended service description",
-  //           currency: "AED",
-  //         },
-  //         {
-  //           id: "3",
-  //           label: "Contingent",
-  //           name: "Service 3",
-  //           price: 150,
-  //           description: "Contingent service description",
-  //           currency: "AED",
-  //         },
-  //       ],
-  //     }
-  //   );
-  // }, [caseQuote]);
-
   useEffect(() => {
     if (!clinicQuote) return;
     const servicesData = clinicQuote.services.map((item) => {
@@ -418,12 +366,16 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
         py={16}
         w={"100%"}
         onPress={() => {
-          navigation.navigate("PartnerVetScreen", {
-            partnerId: clinicQuote?.partner?.id,
-            partnerName: clinicQuote?.partner?.name,
-            caseId,
-            selectedServices,
-          });
+          if (hasPartnerBooking) {
+            navigation.goBack();
+          } else {
+            navigation.navigate("PartnerVetScreen", {
+              partnerId: clinicQuote?.partner?.id,
+              partnerName: clinicQuote?.partner?.name,
+              caseId,
+              selectedServices,
+            });
+          }
         }}
       >
         <Text color="#222" fontSize={20} fontFamily={fontHauoraSemiBold}>
@@ -612,7 +564,6 @@ const ProposalDetailCard: React.FC<{
     <Div pb={16} borderBottomWidth={borderWidth} borderColor="#D0D7DC">
       <Div
         style={{
-          // pointerEvents: type === "Recommended" ? "auto" : "none",
           flexDirection: "row",
         }}
       >
@@ -621,32 +572,17 @@ const ProposalDetailCard: React.FC<{
           disabled={hasPartnerBooking}
           style={{
             pointerEvents: type === "Recommended" ? "auto" : "none",
+            marginTop: 6,
+            marginRight: 8,
           }}
         >
-          {!hasPartnerBooking &&
-            (selectedServices.find((item) => item.id === id) ? (
-              <Image
-                mr={10}
-                mt={2}
-                source={
-                  type === "Recommended"
-                    ? require("../../assets/icons/check.png")
-                    : require("../../assets/icons/disable-check.png")
-                }
-                w={20}
-                h={20}
-              />
-            ) : (
-              <Div
-                mr={10}
-                mt={2}
-                w={20}
-                h={20}
-                rounded={100}
-                borderWidth={2}
-                borderColor="#D0D7DC"
-              />
-            ))}
+          {type === "Essential" && <EssentialCheckIcon />}
+          {type === "Recommended" && (
+            <EssentialCheckIcon fill="#014EF7" color="#fff" />
+          )}
+          {(type === "Contingent" || type === "Contigent") && (
+            <EssentialCheckIcon fill="#FFC433" color="#222" />
+          )}
         </TouchableOpacity>
 
         <CollapsibleView
