@@ -98,3 +98,11 @@ export const getCaseStatusColor = (
       return colorPrimary;
   }
 };
+
+export const hasAvailabilityDateTimePassed = (
+  date: string,
+  time: string
+): boolean => {
+  const dateTime = dayjs(`${date}T${time}`);
+  return dateTime.isBefore(dayjs());
+};

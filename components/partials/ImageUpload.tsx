@@ -134,11 +134,7 @@ const ImageUpload: React.FC<Props> = ({
       }
     }
 
-    console.log("match", match, "type", type);
-
     const file = { uri: localUri, name: filename, type } as unknown as File;
-
-    console.log("file", file);
 
     try {
       setLoading(true);

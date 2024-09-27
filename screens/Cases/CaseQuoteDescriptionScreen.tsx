@@ -417,12 +417,16 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
         py={16}
         w={"100%"}
         onPress={() => {
-          navigation.navigate("PartnerVetScreen", {
-            partnerId: clinicQuote?.partner?.id,
-            partnerName: clinicQuote?.partner?.name,
-            caseId,
-            selectedServices,
-          });
+          if (hasPartnerBooking) {
+            navigation.goBack();
+          } else {
+            navigation.navigate("PartnerVetScreen", {
+              partnerId: clinicQuote?.partner?.id,
+              partnerName: clinicQuote?.partner?.name,
+              caseId,
+              selectedServices,
+            });
+          }
         }}
       >
         <Text color="#222" fontSize={20} fontFamily={fontHauoraSemiBold}>
