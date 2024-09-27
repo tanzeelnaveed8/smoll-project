@@ -20,7 +20,7 @@ const CalendarHeader = ({ date }: { date: string }) => {
       lineHeight={32}
       color="#222222"
     >
-      {date}ff
+      {date}
     </Text>
   );
 };

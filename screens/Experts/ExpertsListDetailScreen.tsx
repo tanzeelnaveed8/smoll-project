@@ -100,6 +100,10 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
 
   const handleDateSelect = async (date: string) => {
     try {
+      if (selectedDate !== date) {
+        setSelectedTime(null);
+      }
+
       setAvailabilityLoading(true);
       setSelectedDate(date);
 
