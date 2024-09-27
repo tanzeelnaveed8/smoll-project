@@ -221,21 +221,19 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
 
   const renderBottomContent = () => {
     return (
-      <Div bg="bgColor" pt={60} pb={20}>
+      <Div bg="bgColor" pb={20}>
         <Image
-          position="absolute"
-          top={0}
           source={require("../../assets/images/appointment-details-bg.png")}
           w={"100%"}
           h={50}
         />
 
-        <Div px={20}>
+        <Div px={20} mt={20}>
           {/* <Div w={"50%"} h={5} rounded={10} bg="#222" mx={"auto"} mb={30} /> */}
 
-          <Div flexDir="row" style={{ gap: 8 }} mb={20}>
+          <Div flexDir="row" style={{ gap: 8 }} mb={10}>
             <IconHelpCircle width={20} height={20} color="#222" />
-            <Text fontSize={12} fontFamily={fontHauoraBold} mb={2}>
+            <Text fontSize={12} fontFamily={fontHauoraBold} mt={2}>
               Help
             </Text>
           </Div>
@@ -621,7 +619,11 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
               </Div>
             </Div>
 
-            <Div h={30} />
+            <Div h={10} />
+
+            {!isLoading &&
+              appointmentDetail?.type === "in-clinic" &&
+              renderBottomContent()}
           </ScrollDiv>
         )}
 
@@ -631,10 +633,6 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
           </Div>
         )}
       </Layout>
-
-      {!isLoading &&
-        appointmentDetail?.type === "in-clinic" &&
-        renderBottomContent()}
 
       <BottomSheet
         isVisible={showCancelModal}
