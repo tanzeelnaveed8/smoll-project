@@ -214,7 +214,7 @@ const HealthHistoryModal = (props: PropTypes) => {
               color="#494949"
               mb={16}
             >
-              (JPG/JPEG/PNG/PDF) Max size 8 MB{" "}
+              (Image, Video, Doc)
             </Text>
           </Div>
 

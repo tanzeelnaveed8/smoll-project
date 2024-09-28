@@ -301,7 +301,7 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
           color="darkGreyText"
           mb={16}
         >
-          (JPG/JPEG/PNG/PDF/MP4) Max size 8 MB
+          (Image, Video, Doc)
         </Text>
 
         {/* <Div flexDir="row" style={{ gap: 12 }} overflow="scroll" > */}
