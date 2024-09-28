@@ -19,7 +19,7 @@ import {
   IconInfoCircleFilled,
 } from "@tabler/icons-react-native";
 import React, { useEffect, useMemo, useState } from "react";
-import { TouchableOpacity } from "react-native";
+import { Platform, TouchableOpacity } from "react-native";
 import {
   Button,
   Collapse,
@@ -616,7 +616,7 @@ const ProposalDetailCard: React.FC<{
           disabled={hasPartnerBooking}
           style={{
             pointerEvents: type === "Recommended" ? "auto" : "none",
-            marginTop: 6,
+            marginTop: Platform.OS === 'ios' ? 3 : 6,
             marginRight: 8,
           }}
         >

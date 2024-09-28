@@ -250,14 +250,14 @@ const HomeScreen: React.FC<Props> = (props) => {
                     overflow: "visible",
                   }}
                   onPress={() => {
-                    // props.navigation.navigate("NotificationTestScreen");
+                    props.navigation.navigate("NotificationTestScreen");
 
                     // props.navigation.navigate(
                     //   "PaymentDetailsScreen",
                     //   paymentParams
                     // );
 
-                    props.navigation.navigate("CaseQuoteDescriptionScreen");
+                    // props.navigation.navigate("CaseQuoteDescriptionScreen");
                   }}
                 >
                   <IconBell
