@@ -7,6 +7,7 @@ import { usePartnerStore } from "@/store/modules/partner";
 import { NavigationType } from "@/store/types";
 import { ExpertAvailability } from "@/store/types/expert";
 import { PartnerVetDetails } from "@/store/types/partner";
+import { hasAvailabilityDateTimePassed } from "@/utils/helpers";
 import { useRoute } from "@react-navigation/native";
 import dayjs from "dayjs";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -81,6 +82,10 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
 
   const handleDateSelect = async (date: string) => {
     try {
+      if (selectedDate !== date) {
+        setSelectedTime(null);
+      }
+
       setAvailabilityLoading(true);
       setSelectedDate(date);
 
@@ -240,6 +245,11 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
                         {a.intervals.map((intr, index) => {
                           const time = formatTime(a, intr);
 
+                          const isDisabled = hasAvailabilityDateTimePassed(
+                            selectedDate ?? dayjs().format("YYYY-MM-DD"),
+                            intr.from
+                          );
+
                           return (
                             <Button
                               key={`${index}:${a.dayOfWeek ?? a.date}:${time}`}
@@ -271,6 +281,7 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
                                   }:${time}`,
                                 });
                               }}
+                              disabled={isDisabled}
                             >
                               {time}
                             </Button>

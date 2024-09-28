@@ -137,7 +137,18 @@ const ImageUpload: React.FC<Props> = ({
 
         const filename = localUri.split("/").pop() as string;
         const match = /\.(\w+)$/.exec(filename);
-        const type = match ? `image/${match[1]}` : `image`;
+        let type = "application/octet-stream"; // Default type
+
+        if (match) {
+          const ext = match[1].toLowerCase();
+          if (ext === "jpg" || ext === "jpeg" || ext === "png") {
+            type = `image/${ext}`;
+          } else if (ext === "mp4" || ext === "mov") {
+            type = `video/${ext}`;
+          } else if (ext === "mp3" || ext === "wav") {
+            type = `audio/${ext}`;
+          }
+        }
         const file = { uri: localUri, name: filename, type } as unknown as File;
 
         setLoading(true);
@@ -192,7 +203,7 @@ const ImageUpload: React.FC<Props> = ({
     try {
       const response = await DocumentPicker.pick({
         presentationStyle: "fullScreen",
-        type: [DocumentPicker.types.pdf],
+        type: [DocumentPicker.types.pdf, DocumentPicker.types.video],
       });
 
       if (response[0].type?.includes("image")) {

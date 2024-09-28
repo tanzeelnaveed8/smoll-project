@@ -425,6 +425,7 @@ const App = () => {
                   }}
                 >
                   <Stack.Screen name="SplashScreen" component={SplashScreen} />
+
                   <Stack.Screen
                     name="OnboardingScreen"
                     component={OnboardingScreen}

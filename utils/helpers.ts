@@ -98,3 +98,20 @@ export const getCaseStatusColor = (
       return colorPrimary;
   }
 };
+
+export const hasAvailabilityDateTimePassed = (
+  date: string,
+  time: string
+): boolean => {
+  const dateTime = dayjs(`${date}T${time}Z`);
+  const timeOnly = dateTime.format("HH:mm");
+  const currentTimeOnly = dayjs().format("HH:mm");
+
+  // If it's not today, it hasn't passed
+  if (dayjs(date).date() !== dayjs().date()) {
+    return false;
+  }
+
+  // For today, compare times
+  return currentTimeOnly > timeOnly;
+};
