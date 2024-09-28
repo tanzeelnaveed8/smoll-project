@@ -19,7 +19,7 @@ import {
   IconInfoCircleFilled,
 } from "@tabler/icons-react-native";
 import React, { useEffect, useMemo, useState } from "react";
-import { TouchableOpacity } from "react-native";
+import { Platform, TouchableOpacity } from "react-native";
 import {
   Button,
   Collapse,
@@ -560,6 +560,8 @@ const ProposalDetailCard: React.FC<{
     }
   }, [type]);
 
+  console.log("type", type);
+
   return (
     <Div pb={16} borderBottomWidth={borderWidth} borderColor="#D0D7DC">
       <Div
@@ -572,13 +574,25 @@ const ProposalDetailCard: React.FC<{
           disabled={hasPartnerBooking}
           style={{
             pointerEvents: type === "Recommended" ? "auto" : "none",
-            marginTop: 6,
+            marginTop: Platform.OS === "ios" ? 3 : 6,
             marginRight: 8,
           }}
         >
           {type === "Essential" && <EssentialCheckIcon />}
           {type === "Recommended" && (
-            <EssentialCheckIcon fill="#014EF7" color="#fff" />
+            <>
+              {selectedServices.find((item) => item.id === id) ? (
+                <EssentialCheckIcon fill="#014EF7" color="#fff" />
+              ) : (
+                <Div
+                  w={16}
+                  h={17}
+                  rounded={100}
+                  borderWidth={1.5}
+                  borderColor="#014EF7"
+                />
+              )}
+            </>
           )}
           {(type === "Contingent" || type === "Contigent") && (
             <EssentialCheckIcon fill="#FFC433" color="#222" />

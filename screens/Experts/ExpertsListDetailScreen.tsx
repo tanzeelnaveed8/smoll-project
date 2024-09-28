@@ -6,6 +6,7 @@ import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import DoctorCard from "@/components/partials/DoctorCard";
 import {
   colorPrimary,
+  fontCooper,
   fontHauoraMedium,
   fontHauoraSemiBold,
 } from "@/constant/constant";
@@ -199,9 +200,10 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
 
         <Div maxW={350} mb={8}>
           <Text
-            fontSize={"xl"}
+            fontSize={"2xl"}
             fontWeight="bold"
-            fontFamily={fontHauoraSemiBold}
+            // fontFamily={fontHauoraSemiBold}
+            fontFamily={fontCooper}
             mb={4}
             color="#368526"
           >
@@ -213,7 +215,7 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
             fontSize={"lg"}
             fontFamily={fontHauoraMedium}
           >
-            You can easily get a consultation if your doctor is online.{" "}
+            You can easily get a consultation if an expert is online.{" "}
           </Text>
         </Div>
 
