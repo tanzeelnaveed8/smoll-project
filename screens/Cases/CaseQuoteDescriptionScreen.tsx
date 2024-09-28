@@ -574,7 +574,7 @@ const ProposalDetailCard: React.FC<{
           disabled={hasPartnerBooking}
           style={{
             pointerEvents: type === "Recommended" ? "auto" : "none",
-            marginTop: Platform.OS === "ios" ? 3 : 6,
+            marginTop: Platform.OS === "ios" ? 4 : 6,
             marginRight: 8,
           }}
         >

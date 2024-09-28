@@ -254,7 +254,7 @@ PushNotificationIOS.requestPermissions({
   critical: true,
 });
 
-// SendbirdCalls.setLoggerLevel("info");
+SendbirdCalls.setLoggerLevel("info");
 SendbirdCalls.initialize(process.env.EXPO_PUBLIC_SENDBIRD_APP_ID as string);
 SendbirdCalls.setListener({
   onRinging: (call) => {

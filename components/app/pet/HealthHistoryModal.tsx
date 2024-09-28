@@ -45,7 +45,6 @@ const HealthHistoryModal = (props: PropTypes) => {
 
   useEffect(() => {
     if (!props.healthHistoryId) {
-      console.log("runing initialState");
       setForm(initialState);
       return;
     }
