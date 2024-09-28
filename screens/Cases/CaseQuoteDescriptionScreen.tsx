@@ -132,6 +132,7 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
   //           price: 100,
   //           description: "Essential service description",
   //           currency: "AED",
+  //           type: "testing",
   //         },
   //         {
   //           id: "2",
@@ -140,6 +141,7 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
   //           price: 200,
   //           description: "Recommended service description",
   //           currency: "AED",
+  //           type: "testing",
   //         },
   //         {
   //           id: "3",
@@ -148,6 +150,7 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
   //           price: 150,
   //           description: "Contingent service description",
   //           currency: "AED",
+  //           type: "testing",
   //         },
   //       ],
   //     }
