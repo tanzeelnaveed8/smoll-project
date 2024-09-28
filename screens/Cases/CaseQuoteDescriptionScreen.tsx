@@ -132,7 +132,7 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
   //           price: 100,
   //           description: "Essential service description",
   //           currency: "AED",
-  //           type: "testing",
+  //           type: "description",
   //         },
   //         {
   //           id: "2",
@@ -141,7 +141,7 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
   //           price: 200,
   //           description: "Recommended service description",
   //           currency: "AED",
-  //           type: "testing",
+  //           type: "description",
   //         },
   //         {
   //           id: "3",
@@ -150,7 +150,7 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
   //           price: 150,
   //           description: "Contingent service description",
   //           currency: "AED",
-  //           type: "testing",
+  //           type: "description",
   //         },
   //       ],
   //     }
@@ -601,6 +601,8 @@ const ProposalDetailCard: React.FC<{
     }
   }, [type]);
 
+  console.log("type", type);
+
   return (
     <Div pb={16} borderBottomWidth={borderWidth} borderColor="#D0D7DC">
       <Div
@@ -614,9 +616,11 @@ const ProposalDetailCard: React.FC<{
           disabled={hasPartnerBooking}
           style={{
             pointerEvents: type === "Recommended" ? "auto" : "none",
+            marginTop: 6,
+            marginRight: 8,
           }}
         >
-          {!hasPartnerBooking &&
+          {/* {!hasPartnerBooking &&
             (selectedServices.find((item) => item.id === id) ? (
               <Image
                 mr={10}
@@ -639,7 +643,28 @@ const ProposalDetailCard: React.FC<{
                 borderWidth={2}
                 borderColor="#D0D7DC"
               />
-            ))}
+            ))} */}
+
+          {type === "Essential" && <EssentialCheckIcon />}
+          {type === "Recommended" && (
+            <>
+              {selectedServices.find((item) => item.id === id) ? (
+                <EssentialCheckIcon fill="#014EF7" color="#fff" />
+              ) : (
+                // <EssentialCheckIcon fill="#f10" color="#fff" />
+                <Div
+                  w={16}
+                  h={17}
+                  rounded={100}
+                  borderWidth={1.5}
+                  borderColor="#014EF7"
+                />
+              )}
+            </>
+          )}
+          {(type === "Contingent" || type === "Contigent") && (
+            <EssentialCheckIcon fill="#FFC433" color="#222" />
+          )}
         </TouchableOpacity>
 
         <CollapsibleView
