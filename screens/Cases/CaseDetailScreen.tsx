@@ -112,9 +112,11 @@ const CaseDetailScreen: React.FC<{
         )}
 
         <ReadonlyItem
+          borderWidth={3}
           field="Created At"
           value={dayjs(caseDetail?.createdAt).format("DD MMM YYYY")}
           mb={12}
+          pb={28}
         />
 
         <Text
@@ -122,7 +124,7 @@ const CaseDetailScreen: React.FC<{
           fontSize="xl"
           lineHeight={24}
           mb={24}
-          mt={32}
+          mt={26}
         >
           Expert Details
         </Text>
@@ -165,14 +167,20 @@ const CaseDetailScreen: React.FC<{
           mb={12}
         />
 
-        <ReadonlyItem field="Note" value={caseDetail?.vetNote ?? "-"} mb={12} />
+        <ReadonlyItem
+          borderWidth={3}
+          field="Note"
+          value={caseDetail?.vetNote ?? "-"}
+          mb={12}
+          pb={26}
+        />
 
         <Text
           fontFamily={fontHauoraBold}
           fontSize="xl"
           lineHeight={24}
           mb={24}
-          mt={32}
+          mt={26}
         >
           Pet Details
         </Text>
@@ -230,16 +238,25 @@ const ReadonlyItem = ({
   field,
   value,
   mb,
+  borderWidth,
+  pb,
 }: {
   field: string;
   value: string | React.ReactNode;
   mb?: number;
+  borderWidth?: number;
+  pb?: number;
 }) => {
   return (
-    <Div pb={16} borderBottomWidth={1} borderColor="#E0E0E0" mb={mb ? mb : 0}>
+    <Div
+      pb={pb || 16}
+      borderBottomWidth={borderWidth || 0}
+      borderColor="#E0E0E0"
+      mb={mb ? mb : 0}
+    >
       <Text
         fontFamily={fontHauoraBold}
-        fontSize={"l"}
+        fontSize={"xl"}
         // lineHeight={16}
         color="darkGreyText"
       >

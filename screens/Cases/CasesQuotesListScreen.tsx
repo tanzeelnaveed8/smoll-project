@@ -83,14 +83,14 @@ const CasesQuotesListScreen: React.FC<{ navigation: NavigationType }> = ({
         loading={isLoading}
       >
         <Div mb={24}>
-          {/* <Text
-            fontSize={"2xl"}
+          <Text
+            fontSize={"4xl"}
             fontWeight="bold"
             mb={20}
-            fontFamily={fontHauoraSemiBold}
+            fontFamily={fontCooper}
           >
             Quotations
-          </Text> */}
+          </Text>
 
           {!isLoading && cases && cases.length > 0 && (
             <Text fontSize={"lg"} mt={10} fontFamily={fontHauoraSemiBold}>
@@ -170,14 +170,6 @@ const CasesQuotesListScreen: React.FC<{ navigation: NavigationType }> = ({
                         <Text fontFamily={fontHauoraSemiBold} fontSize={"xl"}>
                           {item.pet.name}
                         </Text>
-
-                        <Text
-                          fontFamily={fontHauoraMedium}
-                          fontSize={"lg"}
-                          color="#2F6E20"
-                        >
-                          {item.requestCount} Quotations
-                        </Text>
                       </Div>
 
                       {item.status === CaseStatusEnum.OPEN_ESCALATED && (
@@ -231,6 +223,14 @@ const CasesQuotesListScreen: React.FC<{ navigation: NavigationType }> = ({
                     </Text>
                   </TouchableOpacity>
 
+                  <Text
+                    fontFamily={fontHauoraMedium}
+                    fontSize={"lg"}
+                    color="#2F6E20"
+                  >
+                    {item.requestCount} Quotations
+                  </Text>
+
                   {Boolean(item.requestCount) && (
                     <Button
                       fontSize={"lg"}
@@ -245,7 +245,7 @@ const CasesQuotesListScreen: React.FC<{ navigation: NavigationType }> = ({
                         });
                       }}
                     >
-                      View Requests
+                      View
                     </Button>
                   )}
                 </Div>
