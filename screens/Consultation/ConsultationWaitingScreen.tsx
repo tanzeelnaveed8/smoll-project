@@ -15,7 +15,6 @@ import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
 import { FindOneConsultationResDto } from "@/store/types/expert";
 import { useRoute } from "@react-navigation/native";
-import { DirectCall, SendbirdCalls } from "@sendbird/calls-react-native";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, Platform, TouchableOpacity } from "react-native";
 import { hideMessage, showMessage } from "react-native-flash-message";

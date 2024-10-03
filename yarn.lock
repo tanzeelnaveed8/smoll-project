@@ -2149,16 +2149,6 @@
     component-type "^1.2.1"
     join-component "^1.1.0"
 
-"@sendbird/calls-react-native@^1.1.2":
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/@sendbird/calls-react-native/-/calls-react-native-1.1.2.tgz#26926e015c01433c44714ebc3a0c49bdb463c186"
-  integrity sha512-6tRqbiWJwmp4i1txqe3vyUu3cMtqSf4kMOLpUXt9Cfz0Dp1DVDE92IIu3SisQxAfNGkw+gBfrojWvgn8CFiBFw==
-
-"@sendbird/chat@^4.14.2":
-  version "4.14.2"
-  resolved "https://registry.yarnpkg.com/@sendbird/chat/-/chat-4.14.2.tgz#36ff2e15c564d2176f8ca679b281f6c09bc4c9c6"
-  integrity sha512-3GRevE0mC4lci+KgzMApTPVAqYSMbxzIjnlXoyQA167FvKfa54wAzbdGpwrhbp41Py/mrbU4SJgQDJO8eIQufg==
-
 "@sideway/address@^4.1.5":
   version "4.1.5"
   resolved "https://registry.yarnpkg.com/@sideway/address/-/address-4.1.5.tgz#4bc149a0076623ced99ca8208ba780d65a99b9d5"
@@ -8086,6 +8076,11 @@ yocto-queue@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
+
+zego-zim-react-native@^2.17.1:
+  version "2.17.1"
+  resolved "https://registry.yarnpkg.com/zego-zim-react-native/-/zego-zim-react-native-2.17.1.tgz#81563eef96126f322d9592c560595c032446a6ac"
+  integrity sha512-Lt6sBHc4NHirexoMV3Q/DUTTzNtpgexfjhKOxUQdQVQRYUvoj2lXt1O3Pi1GNlvXJSNhdTl3CBAAkqWsm5A0sA==
 
 zustand@^4.5.4:
   version "4.5.5"

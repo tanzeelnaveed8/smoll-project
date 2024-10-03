@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import api from "@/utils/api";
 import { UserState } from "../types/user";
-import { DirectCall } from "@sendbird/calls-react-native";
 
 export const useUserStore = create<UserState>((set, get) => ({
   user: null,

@@ -1066,6 +1066,9 @@ PODS:
     - React (< 1.0.0, >= 0.13.0)
   - react-native-safe-area-context (4.10.5):
     - React-Core
+  - react-native-zego-zim (2.17.1):
+    - React
+    - ZIM (= 2.17.1)
   - React-nativeconfig (0.74.3)
   - React-NativeModulesApple (0.74.3):
     - glog
@@ -1417,12 +1420,6 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - sendbird-calls-react-native (1.1.2):
-    - React-Core
-    - SendBirdCalls (= 1.10.18)
-  - SendBirdCalls (1.10.18):
-    - SendBirdWebRTC (~> 1.8.1)
-  - SendBirdWebRTC (1.8.1)
   - SocketRocket (0.7.0)
   - Stripe (23.28.3):
     - StripeApplePay (= 23.28.3)
@@ -1461,6 +1458,7 @@ PODS:
   - StripeUICore (23.28.3):
     - StripeCore (= 23.28.3)
   - Yoga (0.0.0)
+  - ZIM (2.17.1)
 
 DEPENDENCIES:
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
@@ -1517,6 +1515,7 @@ DEPENDENCIES:
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-onesignal (from `../node_modules/react-native-onesignal`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - react-native-zego-zim (from `../node_modules/zego-zim-react-native`)
   - React-nativeconfig (from `../node_modules/react-native/ReactCommon`)
   - React-NativeModulesApple (from `../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
@@ -1550,15 +1549,12 @@ DEPENDENCIES:
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
-  - "sendbird-calls-react-native (from `../node_modules/@sendbird/calls-react-native`)"
   - "stripe-react-native (from `../node_modules/@stripe/stripe-react-native`)"
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
   trunk:
     - OneSignalXCFramework
-    - SendBirdCalls
-    - SendBirdWebRTC
     - SocketRocket
     - Stripe
     - StripeApplePay
@@ -1568,6 +1564,7 @@ SPEC REPOS:
     - StripePaymentSheet
     - StripePaymentsUI
     - StripeUICore
+    - ZIM
 
 EXTERNAL SOURCES:
   boost:
@@ -1673,6 +1670,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-onesignal"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-zego-zim:
+    :path: "../node_modules/zego-zim-react-native"
   React-nativeconfig:
     :path: "../node_modules/react-native/ReactCommon"
   React-NativeModulesApple:
@@ -1739,8 +1738,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-svg"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
-  sendbird-calls-react-native:
-    :path: "../node_modules/@sendbird/calls-react-native"
   stripe-react-native:
     :path: "../node_modules/@stripe/stripe-react-native"
   Yoga:
@@ -1799,6 +1796,7 @@ SPEC CHECKSUMS:
   react-native-netinfo: 27f287f2d191693f3b9d01a4273137fcf91c3b5d
   react-native-onesignal: b2ccb145f06433f23c834be17a5f6522308e80f0
   react-native-safe-area-context: a240ad4b683349e48b1d51fed1611138d1bdad97
+  react-native-zego-zim: b3ef974fd795374cb6b45cc3864ded6b082746e8
   React-nativeconfig: fa5de9d8f4dbd5917358f8ad3ad1e08762f01dcb
   React-NativeModulesApple: 585d1b78e0597de364d259cb56007052d0bda5e5
   React-perflogger: 7bb9ba49435ff66b666e7966ee10082508a203e8
@@ -1832,9 +1830,6 @@ SPEC CHECKSUMS:
   RNScreens: b32a9ff15bea7fcdbe5dff6477bc503f792b1208
   RNSVG: 5da7a24f31968ec74f0b091e3440080f347e279b
   RNVectorIcons: 2a2f79274248390b80684ea3c4400bd374a15c90
-  sendbird-calls-react-native: 3d8567491c1847df62f209896113efa3b6492730
-  SendBirdCalls: 653e17821fbd0326a08eab8b777c95f7092e4e95
-  SendBirdWebRTC: 441cc06f611871544ca7774c76e057708c01027f
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
   Stripe: cdf416cf2efe286f532a6306de0fcaa0ecc8c71a
   stripe-react-native: 55fbdae947bc2698d55193947fd17872d0eab786
@@ -1846,6 +1841,7 @@ SPEC CHECKSUMS:
   StripePaymentsUI: c24f990b03a68a7f6fe704b15dd487e7bb6b603e
   StripeUICore: f2d514e900c37436dc5427fdf2c29d68ab1c2935
   Yoga: 04f1db30bb810187397fa4c37dd1868a27af229c
+  ZIM: f3ac70a6ddf0e2b70f2a2de29048ab67ce2875f6
 
 PODFILE CHECKSUM: e019bad38649b5414ce32cf3324fb8f52e8eb5a9
 

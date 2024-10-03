@@ -1,5 +1,5 @@
 import { StripeProvider } from "@stripe/stripe-react-native";
-import { PushNotification, SafeAreaView, StyleSheet } from "react-native";
+import { SafeAreaView, StyleSheet } from "react-native";
 import { Div, Text, ThemeProvider } from "react-native-magnus";
 
 import * as Font from "expo-font";
@@ -62,8 +62,6 @@ import * as rootNavigation from "./utils/root-navigation";
 import { navigationRef } from "./utils/root-navigation";
 
 import PushNotificationIOS from "@react-native-community/push-notification-ios";
-import { SendbirdCalls } from "@sendbird/calls-react-native";
-import { PushTokenType } from "@sendbird/chat";
 import {
   IconChecklist,
   IconMessage,
@@ -78,8 +76,8 @@ import CasesQuotesListScreen from "./screens/Cases/CasesQuotesListScreen";
 import PaymentDetailsScreen from "./screens/Cases/PaymentDetailsScreen";
 import UnavailableScreen from "./screens/Consultation/UnavailableScreen";
 import NewOnboardingScreen from "./screens/NewOnboardingScreen";
-import { initializeSendbird, sb } from "./utils/chat.v2";
 import NotificationScreen from "./screens/NotificationScreen";
+import { initializeChat } from "./utils/chat.v2";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -254,29 +252,9 @@ PushNotificationIOS.requestPermissions({
   critical: true,
 });
 
-SendbirdCalls.setLoggerLevel("info");
-SendbirdCalls.initialize(process.env.EXPO_PUBLIC_SENDBIRD_APP_ID as string);
-SendbirdCalls.setListener({
-  onRinging: (call) => {
-    const { SET_CALL_ID } = useUserStore.getState();
-    SET_CALL_ID(call.callId);
-  },
-});
+// PushNotificationIOS.addEventListener("register", async (token) => {
 
-PushNotificationIOS.addEventListener("register", async (token) => {
-  const _user = SendbirdCalls.currentUser;
-
-  if (_user) {
-    const allToken = await sb?.getMyPushTokensByToken("", PushTokenType.APNS);
-
-    for (const t of allToken?.deviceTokens ?? []) {
-      await SendbirdCalls.unregisterPushToken(t);
-    }
-
-    SendbirdCalls.registerPushToken(token, true);
-    sb?.registerAPNSPushTokenForCurrentUser(token);
-  }
-});
+// });
 
 const App = () => {
   const { user } = useUserStore();
@@ -352,52 +330,18 @@ const App = () => {
   useEffect(() => {
     if (user && user.name) {
       OneSignal.login(user.playerId);
-      initializeSendbird(
-        user.id,
-        user.playerId,
-        user.name,
-        user.profileImg?.url ?? ""
-      );
+      initializeChat(user.id, user.name, user?.profileImg?.url ?? "");
     }
   }, [user]);
 
-  const handlePushNotification = (notification: PushNotification) => {
-    // const data = notification.getData();
-    // // @ts-expect-error
-    // const sendbirdData = data.sendbird;
-    // const currentRoute = rootNavigation.getCurrentRoute();
-    // const channel = sendbirdData.channel;
-    // const message = sendbirdData.message;
-    // if (channel && message) {
-    //   const isCurrentChat =
-    //     currentRoute?.name === "ExpertsChatScreen" &&
-    //     currentRoute?.params?.channelUrl === channel.url;
-    //   if (!isCurrentChat) {
-    //     // Show notification only if not in the current chat screen
-    //     if (Platform.OS === "ios") {
-    //       // Ensure we have a valid identifier
-    //       const identifier = data.id || `${Date.now()}`;
-    //       // Show the notification
-    //       PushNotificationIOS.addNotificationRequest({
-    //         id: identifier,
-    //         title: "New Message",
-    //         body: "You have a new message",
-    //         userInfo: data,
-    //       });
-    //       // PushNotificationIOS.addNotificationRequest({
-    //       //   id: message.messageId,
-    //       //   body: message.message,
-    //       //   title: `New message from ${channel.name}`,
-    //       //   userInfo: { channelUrl: channel.url },
-    //       // });
-    //     }
-    //   }
-    // }
-    // notification.finish(PushNotificationIOS.FetchResult.NoData);
-  };
-
   if (!fontsLoaded) {
-    return <Text>Loading...</Text>; // Or any other loading component
+    return (
+      <SafeAreaView style={styles.safeAreaViewContainer}>
+        <ThemeProvider theme={theme}>
+          <Text>Loading...</Text>
+        </ThemeProvider>
+      </SafeAreaView>
+    );
   }
 
   return (

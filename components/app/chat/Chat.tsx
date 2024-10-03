@@ -1,21 +1,32 @@
 import { colorPrimary } from "@/constant/constant";
 import { useSound } from "@/functions/useSound";
 import { useUserStore } from "@/store/modules/user";
-import { SendBirdExtendedBaseMessage } from "@/store/types";
-import {
-  channelHandler,
-  connectGroupChannel,
-  sb,
-  sendMessage,
-} from "@/utils/chat.v2";
-import { BaseMessage, GroupChannel } from "@sendbird/chat/lib/__definition";
-import { useEffect, useRef, useState } from "react";
+import { getMessages, sendMessage, zim } from "@/utils/chat.v2";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { useEffect, useState } from "react";
 import { ActivityIndicator } from "react-native";
 import { Avatar, GiftedChat, IMessage } from "react-native-gifted-chat";
-import { Div, Image } from "react-native-magnus";
+import { Div } from "react-native-magnus";
+import {
+  ZIMAudioMessage,
+  ZIMConversationType,
+  ZIMEventHandler,
+  ZIMFileMessage,
+  ZIMImageMessage,
+  ZIMMessage,
+  ZIMMessageQueryConfig,
+  ZIMMessageType,
+  ZIMTextMessage,
+  ZIMVideoMessage,
+} from "zego-zim-react-native";
 import ChatBubble from "./ChatBubble";
 import ChatComposer from "./ChatComposer";
-import { useNavigation, useRoute } from "@react-navigation/native";
+
+interface Attachment {
+  fileName: string;
+  url: string;
+  type: string; // e.g., 'image', 'video', 'audio', 'file'
+}
 
 interface Props {
   initialMessages: IMessage[];
@@ -38,28 +49,49 @@ const Chat: React.FC<Props> = (props) => {
   const [channelUrl, setChannelUrl] = useState<string | null>(null);
   const [isSending, setIsSending] = useState(false);
   const [showLoadEarlierBtn, setShowLoadEarlierBtn] = useState(true);
+  const [hasMoreMessages, setHasMoreMessages] = useState(true);
+  const [lastMessageTimestamp, setLastMessageTimestamp] = useState<
+    number | null
+  >(null);
 
   useEffect(() => {
     fetchMessages();
   }, [props.recipientId]);
 
-  const handleTranformSendbirdMessage = (data: BaseMessage[]) => {
+  const transformMessages = (data: ZIMMessage[]) => {
     const transformedMessages = data.map((msg) => {
-      const extendedMsg = msg as SendBirdExtendedBaseMessage;
-
       const obj: IMessage = {
-        _id: extendedMsg.messageId,
-        text: extendedMsg.message,
-        createdAt: extendedMsg.createdAt,
-        // Add authentication to the image URL
-        // @ts-expect-error - has url in it but due to wrong type it is not showing.
-        image: extendedMsg.url ? `${extendedMsg.url}` : undefined,
+        _id: msg.messageID,
+        text: "",
+        createdAt: new Date(msg.timestamp),
         user: {
-          _id: extendedMsg.sender?.userId,
-          name: extendedMsg.sender?.nickname,
-          avatar: extendedMsg.sender?.profileUrl,
+          _id: msg.senderUserID,
+          name: undefined,
+          avatar: undefined,
         },
       };
+
+      switch (msg.type) {
+        case ZIMMessageType.Text:
+          obj.text = (msg as ZIMTextMessage).message;
+          break;
+        case ZIMMessageType.Image:
+          obj.image = (msg as ZIMImageMessage).fileDownloadUrl;
+          break;
+        case ZIMMessageType.Audio:
+          obj.audio = (msg as ZIMAudioMessage).fileDownloadUrl;
+          break;
+        case ZIMMessageType.Video:
+          obj.video = (msg as ZIMVideoMessage).fileDownloadUrl;
+          break;
+        case ZIMMessageType.File:
+          // Handle other file types as attachments
+          const fileMessage = msg as ZIMFileMessage;
+          obj.text = `[ATTACHMENT]|${fileMessage.extendedData}|${fileMessage.fileDownloadUrl}`;
+          break;
+        default:
+          obj.text = "Unsupported message type";
+      }
 
       return obj;
     });
@@ -68,33 +100,28 @@ const Chat: React.FC<Props> = (props) => {
   };
 
   useEffect(() => {
-    channelHandler.onMessageReceived = (channel, message) => {
-      const transformedMessage = handleTranformSendbirdMessage([message]);
-      setMessages((prevMessages) => [...transformedMessage, ...prevMessages]);
+    const eventHandler: Partial<ZIMEventHandler> = {
+      receivePeerMessage: (zim, { messageList, fromConversationID }) => {
+        const transformedMessages = transformMessages(messageList);
 
-      play("message");
+        setMessages((prevMessages) => [
+          ...transformedMessages,
+          ...prevMessages,
+        ]);
+
+        play("messageReceived", 100);
+      },
+    };
+
+    zim.on("receivePeerMessage", eventHandler.receivePeerMessage!);
+
+    return () => {
+      zim.off("receivePeerMessage");
     };
   }, []);
 
-  useEffect(() => {
-    const handleTypingStatusUpdated = (channel: GroupChannel) => {
-      if (channel.url === channelUrl) {
-        const typingMembers = channel.getTypingUsers();
-
-        const isRecipientTyping = typingMembers.some(
-          (member) => member.userId === props.recipientId
-        );
-
-        setIsTyping(isRecipientTyping);
-      }
-    };
-
-    channelHandler.onTypingStatusUpdated = handleTypingStatusUpdated;
-  }, [channelUrl, props.recipientId]);
-
   // fetch messages
   const fetchMessages = async (isLoadingEarlier = false) => {
-    // const waqarExpertId = "123456";
     if (!user) return;
 
     try {
@@ -104,33 +131,39 @@ const Chat: React.FC<Props> = (props) => {
         setIsLoadingEarlier(true);
       }
 
-      const groupName = `${props.recipientId}-${user?.id}`;
-      const response = await connectGroupChannel(
-        user.id, // customer/client id
-        props.recipientId, // provider/vet/expert id
-        groupName
-      );
+      const config: ZIMMessageQueryConfig = {
+        count: 20,
+        reverse: true,
+      };
 
-      if (response?.channel) {
-        setChannelUrl(response?.channel.url);
-
-        // Update the route params with the channelUrl
-        navigation.setParams({
-          ...route.params,
-          channelUrl: response?.channel.url,
-        });
+      if (lastMessageTimestamp) {
+        config.nextMessage = { timestamp: lastMessageTimestamp } as ZIMMessage;
       }
 
-      if (!response?.messages) return;
-
-      const transformedMessages = handleTranformSendbirdMessage(
-        response.messages
+      const messageList = await getMessages(
+        props.recipientId,
+        ZIMConversationType.Peer,
+        config
       );
-      if (transformedMessages.length === 0) {
-        setShowLoadEarlierBtn(false);
+
+      if (messageList.length === 0) {
+        setHasMoreMessages(false);
+      } else {
+        setLastMessageTimestamp(messageList[messageList.length - 1].timestamp);
       }
 
-      setMessages(transformedMessages);
+      const transformedMessages = transformMessages(messageList);
+
+      if (isLoadingEarlier) {
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          ...transformedMessages,
+        ]);
+      } else {
+        setMessages(transformedMessages);
+      }
+    } catch (error) {
+      console.error("Error fetching messages:", error);
     } finally {
       setIsLoading(false);
       setIsLoadingEarlier(false);
@@ -138,48 +171,21 @@ const Chat: React.FC<Props> = (props) => {
   };
 
   const handleLoadEarlier = async () => {
-    if (isLoadingEarlier || !channelUrl || !sb) return;
-
-    setIsLoadingEarlier(true);
-
-    try {
-      const channel = await sb.groupChannel.getChannel(channelUrl);
-      const oldestMessage = messages[messages.length - 1];
-      const previousMessages = await channel.getMessagesByTimestamp(
-        +oldestMessage.createdAt,
-        {
-          nextResultSize: 0,
-          prevResultSize: 20, // Number of messages to fetch
-          includeMetaArray: true,
-          includeReactions: true,
-        }
-      );
-
-      if (previousMessages.length === 0) {
-        setShowLoadEarlierBtn(false);
-      }
-
-      const transformedMessages =
-        handleTranformSendbirdMessage(previousMessages);
-      setMessages((prevMessages) => [...prevMessages, ...transformedMessages]);
-    } finally {
-      setIsLoadingEarlier(false);
-    }
+    if (isLoadingEarlier || !hasMoreMessages) return;
+    await fetchMessages(true);
   };
 
   const handleSend = async (newMessages: IMessage[] = []) => {
-    if (!channelUrl) return;
-
     try {
       if (newMessages[0].image) {
         setIsSending(true);
       }
 
-      const response = await sendMessage(channelUrl, newMessages);
+      const response = await sendMessage(props.recipientId, newMessages);
 
       if (!response) return;
 
-      const transformedMessages = handleTranformSendbirdMessage(response);
+      const transformedMessages = transformMessages(response);
       setMessages((prevMessages) => [...transformedMessages, ...prevMessages]);
     } finally {
       setIsSending(false);
@@ -247,7 +253,7 @@ const Chat: React.FC<Props> = (props) => {
       onSend={(messages) => handleSend(messages)}
       onLoadEarlier={handleLoadEarlier}
       isLoadingEarlier={isLoadingEarlier}
-      loadEarlier={messages.length > 0 && showLoadEarlierBtn}
+      loadEarlier={hasMoreMessages}
       isTyping={isTyping}
       user={{
         _id: user!.id,

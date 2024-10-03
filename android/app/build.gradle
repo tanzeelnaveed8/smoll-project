@@ -180,7 +180,6 @@ dependencies {
     } else {
         implementation jscFlavor
     }
-    implementation 'com.sendbird.sdk:sendbird-calls:1.11.10'
 }
 
 apply from: new File(["node", "--print", "require.resolve('@react-native-community/cli-platform-android/package.json', { paths: [require.resolve('react-native/package.json')] })"].execute(null, rootDir).text.trim(), "../native_modules.gradle");

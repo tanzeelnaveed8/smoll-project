@@ -1,71 +1,44 @@
-import SendbirdChat from "@sendbird/chat";
-import {
-  GroupChannel,
-  GroupChannelCreateParams,
-  GroupChannelModule,
-} from "@sendbird/chat/groupChannel";
-import {
-  SendableMessage,
-  SendbirdChatWith,
-} from "@sendbird/chat/lib/__definition";
-import { GroupChannelHandler } from "@sendbird/chat/groupChannel";
-import {
-  FileMessageCreateParams,
-  MessageTypeFilter,
-  PreviousMessageListQueryParams,
-  UserMessageCreateParams,
-} from "@sendbird/chat/message";
 import { IMessage } from "react-native-gifted-chat";
-import { SendbirdCalls } from "@sendbird/calls-react-native";
 import Permissions, { PERMISSIONS } from "react-native-permissions";
 import { Platform } from "react-native";
-import PushNotificationIOS from "@react-native-community/push-notification-ios";
+import ZIM, {
+  ZIMConversationType,
+  ZIMMediaMessageBase,
+  ZIMMessage,
+  ZIMMessageBase,
+  ZIMMessagePriority,
+  ZIMMessageType,
+  ZIMMessageQueryConfig,
+} from "zego-zim-react-native";
+import * as FileSystem from "expo-file-system";
+import { Audio } from "expo-av";
 
-let sb: SendbirdChatWith<GroupChannelModule[]> | null = null;
+let zim: ZIM;
 
-const channelHandler = new GroupChannelHandler();
-
-const initializeSendbird = async (
-  userId: string,
-  playerId: string,
-  nickname: string,
-  profileUrl: string
+const initializeChat = async (
+  userID: string,
+  userName: string,
+  userAvatar: string
 ) => {
   try {
-    sb = SendbirdChat.init({
-      appId: process.env.EXPO_PUBLIC_SENDBIRD_APP_ID as string,
-      modules: [new GroupChannelModule()],
+    ZIM.create({
+      appID: Number(process.env.EXPO_PUBLIC_ZIM_APP_ID),
+      appSign: process.env.EXPO_PUBLIC_ZIM_APP_SIGN as string,
     });
 
-    sb.groupChannel.addGroupChannelHandler("UNIQUE_HANDLER_ID", channelHandler);
+    zim = ZIM.getInstance();
 
-    await sb.connect(
-      userId,
-      process.env.EXPO_PUBLIC_SENDBIRD_ACCESS_TOKEN as string
-    );
-
-    await sb.updateCurrentUserInfo({ nickname, profileUrl });
-    await sb.currentUser?.updateMetaData(
-      {
-        playerId: playerId,
-      },
-      true
-    );
-
-    // Authenticate the user for calls
-    SendbirdCalls.authenticate({
-      userId,
-      accessToken: process.env.EXPO_PUBLIC_SENDBIRD_ACCESS_TOKEN as string,
-    }).then(() => {
-      PushNotificationIOS.requestPermissions({
-        alert: true,
-        badge: false,
-        sound: false,
-        critical: true,
-      });
+    await zim.login(userID, {
+      userName,
+      token: "",
+      isOfflineLogin: false,
     });
-  } catch (err) {
-    console.log("error", err);
+
+    await zim.updateUserAvatarUrl(userAvatar);
+
+    console.log("ZIM SDK initialized successfully");
+  } catch (error) {
+    console.error("Failed to initialize ZIM SDK:", error);
   }
 };
 
@@ -97,139 +70,176 @@ const requestPermissions = async (): Promise<boolean> => {
 };
 
 const sendTypingStatus = async (channelUrl: string, isTyping: boolean) => {
-  if (!sb) return;
-
-  const channel: GroupChannel = await sb.groupChannel.getChannel(channelUrl);
-
-  if (isTyping) {
-    channel.startTyping();
-  } else {
-    channel.endTyping();
-  }
-};
-
-// Function to retrieve messages from a group channel
-const getChannelMessages = async (channelUrl: string) => {
-  try {
-    if (!sb) return;
-
-    const channel: GroupChannel = await sb.groupChannel.getChannel(channelUrl);
-
-    const params: PreviousMessageListQueryParams = {
-      limit: 20,
-      reverse: false,
-      messageTypeFilter: MessageTypeFilter.ALL,
-      includeReactions: true,
-    };
-    const query = channel.createPreviousMessageListQuery(params);
-    const messages = await query.load();
-
-    console.log("messages", messages);
-
-    return messages;
-  } catch (error) {
-    console.error("Error retrieving messages:", error);
-  }
-};
-
-// Function to create a group channel
-const connectGroupChannel = async (
-  userId: string,
-  expertId: string,
-  groupName: string
-) => {
-  const params: GroupChannelCreateParams = {
-    invitedUserIds: [userId, expertId],
-    name: groupName,
-    coverUrl: "https://example.com/cover.jpg", // Or use .coverImage to upload a cover image file
-    isDistinct: true,
-  };
-
-  try {
-    if (!sb) return;
-
-    const channel: GroupChannel = await sb.groupChannel.createChannel(params);
-
-    // Retrieve messages from the newly created channel
-    const messages = await getChannelMessages(channel.url);
-    return { channel, messages };
-  } catch (error) {
-    console.error("Error creating group channel:", error);
-  }
+  // if (!sb) return;
+  // const channel: GroupChannel = await sb.groupChannel.getChannel(channelUrl);
+  // if (isTyping) {
+  //   channel.startTyping();
+  // } else {
+  //   channel.endTyping();
+  // }
 };
 
 // Function to send messages to a group channel
-const sendMessage = async (channelUrl: string, messages: IMessage[]) => {
-  try {
-    if (!sb) return;
+const sendMessage = async (toUserId: string, messages: IMessage[]) => {
+  if (!zim) {
+    console.error("ZIM instance not initialized");
+    return;
+  }
 
-    const channel: GroupChannel = await sb.groupChannel.getChannel(channelUrl);
-    const sentMessages: SendableMessage[] = []; // Array to collect sent messages
+  console.log("message", messages);
 
-    const messagePromises = messages.map((message) => {
-      if (message.image) {
-        // Handle image message
-        const params: FileMessageCreateParams = {
-          file: {
-            uri: message.image,
-            name: message.image.split("/").pop() || "default.jpg", // Ensure name is always a string
-            type: "image/jpeg", // Adjust the MIME type as needed
-          },
-          fileName: message.image.split("/").pop() || "default.jpg", // Ensure fileName is always a string
-          customType: "image",
-        };
+  const sentMessages: ZIMMessage[] = [];
 
-        return new Promise((resolve, reject) => {
-          channel
-            .sendFileMessage(params)
-            .onSucceeded((msg) => {
-              console.log("Image message sent successfully:", msg);
+  const messagePromises = messages.map(async (message) => {
+    if (message.image) {
+      const mediaMessage: ZIMMediaMessageBase = {
+        type: ZIMMessageType.Image,
+        fileLocalPath: message.image.replace("file://", ""),
+      };
+      return sendMediaMessage(zim, mediaMessage, toUserId);
+    } else if (message.video) {
+      const mediaMessage: ZIMMediaMessageBase = {
+        type: ZIMMessageType.Video,
+        fileLocalPath: message.video.replace("file://", ""),
+      };
+      return sendMediaMessage(zim, mediaMessage, toUserId);
+    } else if (message.audio) {
+      const audioPath = message.audio.replace("file://", "");
+      const fileExists = await checkFileExists(audioPath);
 
-              sentMessages.push(msg); // Collect sent message
-              resolve(msg);
-            })
-            .onFailed((error) => {
-              console.error("Error sending image message:", error);
-              reject(error);
-            });
-        });
-      } else if (message.text) {
-        // Handle text message
-        const params: UserMessageCreateParams = {
-          message: message.text,
-          customType: "text",
-        };
-
-        return new Promise((resolve, reject) => {
-          channel
-            .sendUserMessage(params)
-            .onSucceeded((msg) => {
-              console.log("Text message sent successfully:", msg);
-              sentMessages.push(msg); // Collect sent message
-              resolve(msg);
-            })
-            .onFailed((error) => {
-              console.error("Error sending text message:", error);
-              reject(error);
-            });
-        });
+      if (!fileExists) {
+        console.error("Audio file does not exist:", audioPath);
+        return;
       }
-      // Add similar handling for video and audio if needed
-      return Promise.resolve(); // Return a resolved promise for non-handled message types
-    });
 
-    await Promise.all(messagePromises); // Wait for all messages to be sent
-    return sentMessages; // Return the array of sent messages
+      const { sound } = await Audio.Sound.createAsync({ uri: message.audio });
+      const status = await sound.getStatusAsync();
+      const durationMillis = status.isLoaded ? status.durationMillis : 0;
+
+      console.log("dur", durationMillis);
+
+      const mediaMessage: ZIMMediaMessageBase = {
+        type: ZIMMessageType.Audio,
+        fileLocalPath: audioPath,
+        audioDuration: durationMillis ? Math.round(durationMillis / 1000) : 0, // Convert to seconds
+      };
+
+      return sendMediaMessage(zim, mediaMessage, toUserId);
+    } else if (message.text) {
+      const textMessage: ZIMMessageBase = {
+        type: ZIMMessageType.Text,
+        message: message.text,
+      };
+      return sendTextMessage(zim, textMessage, toUserId);
+    }
+  });
+
+  const results = await Promise.all(messagePromises);
+
+  results.forEach((result) => {
+    if (result) {
+      sentMessages.push(result);
+    }
+  });
+
+  return sentMessages;
+};
+
+// Add this helper function to check if a file exists
+const checkFileExists = async (filePath: string): Promise<boolean> => {
+  try {
+    const { exists } = await FileSystem.getInfoAsync(filePath);
+    return exists;
   } catch (error) {
-    console.error("Error sending message:", error);
+    console.error("Error checking file existence:", error);
+    return false;
+  }
+};
+
+const sendTextMessage = async (
+  zim: ZIM,
+  message: ZIMMessageBase,
+  toUserId: string
+) => {
+  const config = { priority: ZIMMessagePriority.Low };
+
+  try {
+    const result = await zim.sendMessage(
+      message,
+      toUserId,
+      ZIMConversationType.Peer,
+      config
+    );
+
+    console.log("Text message sent successfully:", result.message);
+    return result.message;
+  } catch (error) {
+    console.error("Error sending text message:", error);
+  }
+};
+
+const sendMediaMessage = async (
+  zim: ZIM,
+  message: ZIMMediaMessageBase,
+  toUserId: string
+) => {
+  const config = { priority: ZIMMessagePriority.Low };
+
+  // const notification: ZIMMessageSendNotification = {
+  //   onMediaUploadingProgress: (
+  //     message: any,
+  //     currentFileSize: number,
+  //     totalFileSize: number
+  //   ) => {
+  //     console.log(
+  //       `Upload progress: ${(currentFileSize / totalFileSize) * 100}%`
+  //     );
+  //   },
+  // };
+
+  try {
+    const result = await zim.sendMediaMessage(
+      message,
+      toUserId,
+      ZIMConversationType.Peer,
+      config
+      // notification
+    );
+
+    console.log("Media message sent successfully:", result.message);
+    return result.message;
+  } catch (error) {
+    console.error("Error sending media message:", error);
+  }
+};
+
+export const getMessages = async (
+  conversationID: string,
+  conversationType: ZIMConversationType,
+  config: ZIMMessageQueryConfig
+): Promise<ZIMMessage[]> => {
+  if (!zim) {
+    console.error("ZIM instance not initialized");
+    return [];
+  }
+
+  try {
+    const result = await zim.queryHistoryMessage(
+      conversationID,
+      conversationType,
+      config
+    );
+
+    return result.messageList;
+  } catch (error) {
+    console.error("Error fetching messages:", error);
+    return [];
   }
 };
 
 export {
-  sb,
-  channelHandler,
-  initializeSendbird,
-  connectGroupChannel,
+  zim,
+  initializeChat,
   sendMessage,
   sendTypingStatus,
   requestPermissions,

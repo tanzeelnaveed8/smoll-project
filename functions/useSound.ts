@@ -1,39 +1,61 @@
 import { Audio } from "expo-av";
 import { useEffect, useRef } from "react";
 
+// Define a type for the available sound types
+type SoundType = "message" | "messageReceived";
+
+// Create a mapping of sound types to their file paths
+const soundFiles: Record<SoundType, any> = {
+  message: require("@/assets/audio/message.mp3"),
+  messageReceived: require("@/assets/audio/message-received.mp3"),
+};
+
 export const useSound = () => {
-  const soundRef = useRef<Audio.Sound | null>(null);
+  // Change to store multiple sounds
+  const soundsRef = useRef<Record<SoundType, Audio.Sound | null>>({
+    message: null,
+    messageReceived: null,
+  });
 
   useEffect(() => {
-    loadSound();
+    loadSounds();
     return () => {
-      unload();
+      unloadSounds();
     };
   }, []);
 
-  const loadSound = async () => {
+  // Load all sounds
+  const loadSounds = async () => {
     try {
-      const { sound } = await Audio.Sound.createAsync(
-        require("@/assets/audio/message.mp3")
-      );
-      soundRef.current = sound;
+      for (const [type, file] of Object.entries(soundFiles)) {
+        const { sound } = await Audio.Sound.createAsync(file);
+        soundsRef.current[type as SoundType] = sound;
+      }
     } catch (error) {
-      console.error("Error loading sound", error);
+      console.error("Error loading sounds", error);
     }
   };
 
-  const unload = async () => {
-    if (soundRef.current) {
-      await soundRef.current.unloadAsync();
+  // Unload all sounds
+  const unloadSounds = async () => {
+    for (const sound of Object.values(soundsRef.current)) {
+      if (sound) {
+        await sound.unloadAsync();
+      }
     }
   };
 
-  const play = async (type: "message") => {
-    if (soundRef.current) {
+  // Play a specific sound type
+  const play = async (type: SoundType, volume: number = 0.5) => {
+    const sound = soundsRef.current[type];
+
+    if (sound) {
       try {
-        await soundRef.current.replayAsync();
+        await sound.replayAsync({
+          volume,
+        });
       } catch (error) {
-        console.error("Error playing sound", error);
+        console.error(`Error playing ${type} sound`, error);
       }
     }
   };
