@@ -78,6 +78,8 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
   const [appointmentDetail, setAppointmentDetail] =
     useState<AppointmentDetailResponseDto | null>(null);
 
+  console.log("appointmentDetail", appointmentDetail);
+
   const selectedServicesAmount = useMemo(() => {
     return appointmentDetail?.services?.reduce((acc, service) => {
       return acc + service.price;
@@ -138,6 +140,14 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
         icon: <MessageIcon />,
         text: "Message",
         link: `mailto:${appointmentDetail?.partner?.email}`,
+      });
+    }
+
+    if (appointmentDetail?.partner?.address) {
+      copy.push({
+        icon: <LocationIcon />,
+        text: "Location",
+        link: `https://www.google.com/maps/search/?api=1&query=${appointmentDetail?.partner?.address}`,
       });
     }
 
@@ -253,9 +263,15 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
               >
                 Call us on 08:00 ~ 19:00
               </Text>
-              <Text fontSize={"xl"} fontFamily={fontHauoraBold}>
-                +971 44510090
-              </Text>
+              <TouchableOpacity
+                onPress={() => {
+                  Linking.openURL("tel:+97144510090");
+                }}
+              >
+                <Text fontSize={"xl"} fontFamily={fontHauoraBold}>
+                  +971 44510090
+                </Text>
+              </TouchableOpacity>
             </Div>
 
             <Text fontSize={12} fontFamily={fontHauoraBold}>
@@ -263,17 +279,23 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
             </Text>
 
             <Div>
-              <Text
-                fontSize={12}
-                fontFamily={fontHauoraBold}
-                mb={3}
-                color="#959594"
+              <TouchableOpacity
+                onPress={() => {
+                  Linking.openURL("mailto:care@smoll.me");
+                }}
               >
-                Send us an email
-              </Text>
-              <Text fontSize={"xl"} fontFamily={fontHauoraBold}>
-                care@smoll.me
-              </Text>
+                <Text
+                  fontSize={12}
+                  fontFamily={fontHauoraBold}
+                  mb={3}
+                  color="#959594"
+                >
+                  Send us an email
+                </Text>
+                <Text fontSize={"xl"} fontFamily={fontHauoraBold}>
+                  care@smoll.me
+                </Text>
+              </TouchableOpacity>
             </Div>
           </Div>
         </Div>
