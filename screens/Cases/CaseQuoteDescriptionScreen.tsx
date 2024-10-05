@@ -367,7 +367,7 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
         w={"100%"}
         onPress={() => {
           if (hasPartnerBooking) {
-            navigation.goBack();
+            navigation.navigate("AppointmentsScreen");
           } else {
             navigation.navigate("PartnerVetScreen", {
               partnerId: clinicQuote?.partner?.id,

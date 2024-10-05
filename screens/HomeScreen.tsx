@@ -186,9 +186,10 @@ const HomeScreen: React.FC<Props> = (props) => {
   const handleOptionTabPress = async (item: OptionTab) => {
     if (item.value === "counselling") {
       showMessage({
-        message: "🚀 Coming Soon! 🎉",
-        description: "Get ready for some pawsome counselling! 🐾",
-        type: "info",
+        message: "Coming Soon!",
+        // description: "Get ready for some pawsome counselling! 🐾",
+        backgroundColor: "#222",
+        color: "#fff",
       });
     } else if (item.value === "petProfileScreen") {
       props.navigation.navigate("PetProfileListScreen", {
@@ -230,6 +231,8 @@ const HomeScreen: React.FC<Props> = (props) => {
                     {notifications?.count}
                   </Text>
                 )}
+
+                <Text style={styles.notificationCount}>3</Text>
 
                 <IconButton
                   bg="bgColor"

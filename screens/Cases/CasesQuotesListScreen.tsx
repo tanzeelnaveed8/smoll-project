@@ -81,14 +81,16 @@ const CasesQuotesListScreen: React.FC<{ navigation: NavigationType }> = ({
         loading={isLoading}
       >
         <Div mb={24}>
-          <Text
-            fontSize={"4xl"}
-            fontWeight="bold"
-            mb={20}
-            fontFamily={fontCooper}
-          >
-            Quotations
-          </Text>
+          {cases && cases.length > 0 && (
+            <Text
+              fontSize={"4xl"}
+              fontWeight="bold"
+              mb={20}
+              fontFamily={fontCooper}
+            >
+              Quotations
+            </Text>
+          )}
 
           {!isLoading && cases && cases.length > 0 && (
             <Text fontSize={"lg"} mt={10} fontFamily={fontHauoraSemiBold}>
@@ -147,10 +149,10 @@ const CasesQuotesListScreen: React.FC<{ navigation: NavigationType }> = ({
                 >
                   <Image
                     source={{ uri: item.pet.photos?.[0]?.url }}
-                    w={56}
-                    h={66}
+                    w={58}
+                    h={58}
                     mr={7}
-                    // rounded={100}
+                    rounded={100}
                   />
                   <Div flex={1}>
                     <Div
@@ -203,7 +205,7 @@ const CasesQuotesListScreen: React.FC<{ navigation: NavigationType }> = ({
 
                 <Div
                   py={8}
-                  borderTopWidth={1}
+                  // borderTopWidth={1}
                   borderBottomWidth={1}
                   borderColor="#D0D7DC"
                   flexDir="row"

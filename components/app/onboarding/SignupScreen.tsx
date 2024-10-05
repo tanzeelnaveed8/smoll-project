@@ -158,7 +158,9 @@ const SignupScreen: React.FC<{ navigation: NavigationType }> = ({
             <InputField
               onChangeText={handlePhoneChange}
               placeholder={
-                country.value ? "Enter Phone number" : "Select a country first"
+                country.value
+                  ? `${country.value} 05XXXXXXX`
+                  : "Select a country first"
               }
               marginBottom={32}
               borderColor="#222222"
