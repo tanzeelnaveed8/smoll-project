@@ -227,12 +227,16 @@ const HomeScreen: React.FC<Props> = (props) => {
             <Div flexDir="row" alignItems="center" style={{ gap: 8 }}>
               <Div position="relative">
                 {notifications && notifications.count > 0 && (
-                  <Text style={styles.notificationCount}>
-                    {notifications?.count}
-                  </Text>
+                  <Div
+                    w={20}
+                    h={20}
+                    rounded={100}
+                    bg="#F44336"
+                    style={styles.notificationCount}
+                  >
+                    <Text color="#fff">{notifications?.count}</Text>
+                  </Div>
                 )}
-
-                <Text style={styles.notificationCount}>3</Text>
 
                 <IconButton
                   bg="bgColor"
@@ -508,16 +512,11 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: -4,
     right: -1,
-    backgroundColor: "#F44336",
-    borderRadius: 12,
     justifyContent: "center",
     alignContent: "center",
     alignItems: "center",
-    color: "#FFFFFF",
     zIndex: 10,
     textAlign: "center",
-    width: 20,
-    height: 20,
     fontSize: 12,
     fontWeight: "bold",
   },

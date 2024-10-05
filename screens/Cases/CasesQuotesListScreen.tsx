@@ -1,5 +1,4 @@
 import Layout from "@/components/app/Layout";
-import TabNavigationBar from "@/components/app/TabNavigationBar";
 import {
   colorPrimary,
   fontCooper,
