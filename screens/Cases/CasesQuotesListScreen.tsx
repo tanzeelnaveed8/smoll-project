@@ -83,14 +83,16 @@ const CasesQuotesListScreen: React.FC<{ navigation: NavigationType }> = ({
         loading={isLoading}
       >
         <Div mb={24}>
-          <Text
-            fontSize={"4xl"}
-            fontWeight="bold"
-            mb={20}
-            fontFamily={fontCooper}
-          >
-            Quotations
-          </Text>
+          {cases.length > 0 && (
+            <Text
+              fontSize={"4xl"}
+              fontWeight="bold"
+              mb={20}
+              fontFamily={fontCooper}
+            >
+              Quotations
+            </Text>
+          )}
 
           {!isLoading && cases && cases.length > 0 && (
             <Text fontSize={"lg"} mt={10} fontFamily={fontHauoraSemiBold}>

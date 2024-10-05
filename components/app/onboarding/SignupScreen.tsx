@@ -160,7 +160,7 @@ const SignupScreen: React.FC<{ navigation: NavigationType }> = ({
               onChangeText={handlePhoneChange}
               placeholder={
                 country.value
-                  ? `${country.value} 798326XXXX`
+                  ? `${country.value} 05XXXXXXX`
                   : "Select a country first"
               }
               marginBottom={32}

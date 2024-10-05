@@ -254,12 +254,12 @@ const HomeScreen: React.FC<Props> = (props) => {
                   }}
                   onPress={() => {
                     props.navigation.navigate("NotificationTestScreen");
+                    // props.navigation.navigate("SignupScreen");
 
                     // props.navigation.navigate(
                     //   "PaymentDetailsScreen",
                     //   paymentParams
                     // );
-
                     // props.navigation.navigate("CaseQuoteDescriptionScreen");
                   }}
                 >
