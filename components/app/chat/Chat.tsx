@@ -109,7 +109,7 @@ const Chat: React.FC<Props> = (props) => {
           ...prevMessages,
         ]);
 
-        play("messageReceived", 100);
+        play("messageReceived");
       },
     };
 

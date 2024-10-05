@@ -86,8 +86,6 @@ const sendMessage = async (toUserId: string, messages: IMessage[]) => {
     return;
   }
 
-  console.log("message", messages);
-
   const sentMessages: ZIMMessage[] = [];
 
   const messagePromises = messages.map(async (message) => {
@@ -115,8 +113,6 @@ const sendMessage = async (toUserId: string, messages: IMessage[]) => {
       const { sound } = await Audio.Sound.createAsync({ uri: message.audio });
       const status = await sound.getStatusAsync();
       const durationMillis = status.isLoaded ? status.durationMillis : 0;
-
-      console.log("dur", durationMillis);
 
       const mediaMessage: ZIMMediaMessageBase = {
         type: ZIMMessageType.Audio,
@@ -237,10 +233,16 @@ export const getMessages = async (
   }
 };
 
+const logout = () => {
+  zim.logout();
+  zim.destroy();
+};
+
 export {
   zim,
   initializeChat,
   sendMessage,
   sendTypingStatus,
   requestPermissions,
+  logout,
 };

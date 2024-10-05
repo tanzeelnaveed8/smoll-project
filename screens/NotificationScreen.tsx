@@ -44,7 +44,7 @@ const NotificationScreen: React.FC<{ navigation: NavigationType }> = ({
         setIsLoading(true);
       }
 
-      const fetchedData = await fetchNotifications(page, 50);
+      const fetchedData = await fetchNotifications(page, 0.5);
       setNextPageid(fetchedData.nextPage);
     } finally {
       setIsLoading(false);

@@ -16,6 +16,7 @@ import { BubbleProps, IMessage } from "react-native-gifted-chat";
 import { Div, Text } from "react-native-magnus";
 import { Audio } from "expo-av";
 import { useState, useEffect } from "react";
+import { Alert } from "react-native";
 
 interface Props extends BubbleProps<IMessage> {}
 
@@ -59,6 +60,7 @@ const ChatBubble: React.FC<Props> = (props) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [duration, setDuration] = useState<number | null>(null);
   const [currentTime, setCurrentTime] = useState<number | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   const position =
     props.currentMessage?.user._id.toString().toLowerCase() ===
@@ -91,32 +93,43 @@ const ChatBubble: React.FC<Props> = (props) => {
     if (!props.currentMessage?.audio) return;
 
     (async () => {
-      // Load the audio
-      const { sound: newSound } = await Audio.Sound.createAsync(
-        { uri: props.currentMessage?.audio || "" },
-        { shouldPlay: false }
-      );
-      setSound(newSound);
-
-      const status = await newSound.getStatusAsync();
-
-      if (status.isLoaded) {
-        setDuration(status.durationMillis ?? 0);
-        setCurrentTime(status.durationMillis ?? 0);
-      }
-
-      newSound.setOnPlaybackStatusUpdate((status) => {
-        if (status.isLoaded) {
-          if (status.didJustFinish) {
-            setIsPlaying(false);
-            setCurrentTime(status.durationMillis ?? 0);
-          } else {
-            setCurrentTime(
-              status.durationMillis! - (status.positionMillis ?? 0)
-            );
+      try {
+        // Load the audio
+        const { sound: newSound } = await Audio.Sound.createAsync(
+          { uri: props.currentMessage?.audio || "" },
+          { shouldPlay: false, volume: 1 },
+          (status) => {
+            if (status.error) {
+              console.error("Error loading audio:", status.error);
+              setLoadError("Failed to load audio. The file may be damaged.");
+            }
           }
+        );
+        setSound(newSound);
+
+        const status = await newSound.getStatusAsync();
+
+        if (status.isLoaded) {
+          setDuration(status.durationMillis ?? 0);
+          setCurrentTime(status.durationMillis ?? 0);
         }
-      });
+
+        newSound.setOnPlaybackStatusUpdate((status) => {
+          if (status.isLoaded) {
+            if (status.didJustFinish) {
+              setIsPlaying(false);
+              setCurrentTime(status.durationMillis ?? 0);
+            } else {
+              setCurrentTime(
+                status.durationMillis! - (status.positionMillis ?? 0)
+              );
+            }
+          }
+        });
+      } catch (error) {
+        console.error("Error loading audio:", error);
+        setLoadError("Failed to load audio. Please try again.");
+      }
     })();
   }, [props.currentMessage]);
 
@@ -190,6 +203,25 @@ const ChatBubble: React.FC<Props> = (props) => {
         .toString()
         .padStart(2, "0")}`;
     };
+
+    if (loadError) {
+      return (
+        <Div
+          alignItems="center"
+          bg={position === "left" ? "#E0E0E0" : "#333"}
+          p={8}
+          pr={12}
+          rounded={8}
+          mb={2}
+          flexDir="row"
+          minW={"fit-content"}
+        >
+          <Text fontSize={12} color={position === "left" ? "#666" : "#CCC"}>
+            {loadError}
+          </Text>
+        </Div>
+      );
+    }
 
     return (
       <TouchableOpacity onPress={handlePlayPause}>

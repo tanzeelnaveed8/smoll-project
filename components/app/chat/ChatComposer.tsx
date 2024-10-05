@@ -136,7 +136,7 @@ const ChatComposer: React.FC<Props> = (props) => {
       setImage(null);
     }
 
-    play("message", 100);
+    play("message");
   };
 
   const handleTyping = () => {
@@ -163,7 +163,7 @@ const ChatComposer: React.FC<Props> = (props) => {
 
   const startRecording = async () => {
     try {
-      play("message", 100);
+      play("message");
 
       await Audio.requestPermissionsAsync();
       await Audio.setAudioModeAsync({
@@ -210,8 +210,6 @@ const ChatComposer: React.FC<Props> = (props) => {
       console.error("Failed to pause recording", err);
     }
   };
-
-  const processRecording = async () => {};
 
   const continueRecording = async () => {
     if (!recording) return;
@@ -367,7 +365,6 @@ const ChatComposer: React.FC<Props> = (props) => {
                       disabled={props.isSending}
                       disableUnderlayColor={true}
                       onPress={async () => {
-                        await processRecording();
                         handleOnSend(undefined, true);
                       }}
                     >

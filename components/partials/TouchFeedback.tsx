@@ -8,7 +8,7 @@ const TouchFeedback: React.FC<Props> = ({ children, onPress, ...props }) => {
     <TouchableOpacity
       {...props}
       onPress={(e) => {
-        Vibration.vibrate(100);
+        Vibration.vibrate(0.5);
 
         if (onPress) {
           onPress(e);

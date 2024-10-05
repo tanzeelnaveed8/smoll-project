@@ -46,7 +46,7 @@ export const useSound = () => {
   };
 
   // Play a specific sound type
-  const play = async (type: SoundType, volume: number = 0.5) => {
+  const play = async (type: SoundType, volume: number = 0.4) => {
     const sound = soundsRef.current[type];
 
     if (sound) {

@@ -3,6 +3,7 @@ import ConfirmationModal from "@/components/partials/ConfirmationModal";
 import SettingButton from "@/components/partials/SettingButton";
 import { colorErrorText, fontHauora } from "@/constant/constant";
 import { NavigationType } from "@/store/types";
+import { logout } from "@/utils/chat.v2";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   IconBell,
@@ -142,6 +143,7 @@ const SettingsMainScreen: React.FC<{ navigation: NavigationType }> = ({
     AsyncStorage.removeItem("hideAccountSetupBtn");
 
     navigation.navigate("NewOnboardingScreen");
+    logout();
   };
 
   return (
