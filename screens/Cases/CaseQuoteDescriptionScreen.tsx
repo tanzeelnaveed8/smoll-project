@@ -379,7 +379,7 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
         }}
       >
         <Text color="#222" fontSize={20} fontFamily={fontHauoraSemiBold}>
-          {hasPartnerBooking ? "Go Back" : "Proceed"}
+          {hasPartnerBooking ? "Appointments" : "Proceed"}
         </Text>
 
         {!hasPartnerBooking && (
