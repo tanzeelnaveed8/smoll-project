@@ -149,10 +149,10 @@ const CasesQuotesListScreen: React.FC<{ navigation: NavigationType }> = ({
                 >
                   <Image
                     source={{ uri: item.pet.photos?.[0].url }}
-                    w={56}
-                    h={66}
+                    w={58}
+                    h={58}
                     mr={7}
-                    // rounded={100}
+                    rounded={100}
                   />
                   <Div flex={1}>
                     <Div
@@ -205,7 +205,7 @@ const CasesQuotesListScreen: React.FC<{ navigation: NavigationType }> = ({
 
                 <Div
                   py={8}
-                  borderTopWidth={1}
+                  // borderTopWidth={1}
                   borderBottomWidth={1}
                   borderColor="#D0D7DC"
                   flexDir="row"

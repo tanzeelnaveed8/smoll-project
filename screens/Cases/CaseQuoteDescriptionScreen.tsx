@@ -421,7 +421,7 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
         w={"100%"}
         onPress={() => {
           if (hasPartnerBooking) {
-            navigation.goBack();
+            navigation.navigate("AppointmentsScreen");
           } else {
             navigation.navigate("PartnerVetScreen", {
               partnerId: clinicQuote?.partner?.id,
@@ -616,7 +616,7 @@ const ProposalDetailCard: React.FC<{
           disabled={hasPartnerBooking}
           style={{
             pointerEvents: type === "Recommended" ? "auto" : "none",
-            marginTop: Platform.OS === 'ios' ? 3 : 6,
+            marginTop: Platform.OS === "ios" ? 3 : 6,
             marginRight: 8,
           }}
         >

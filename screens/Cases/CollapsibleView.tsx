@@ -23,9 +23,6 @@ const CollapsibleView: React.FC<{
   const [show, setShow] = useState(false);
   const [applyStyle, setApplyStyle] = useState(false);
 
-  console.log("applyStyle", applyStyle);
-  console.log("contentHeight", contentHeight);
-
   const contentRef = useRef<View>(null);
 
   useEffect(() => {
