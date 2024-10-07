@@ -1,183 +1,428 @@
-import { colorPrimary } from "@/constant/constant";
+import React, { useEffect, useState, useCallback, useRef } from "react";
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  findNodeHandle,
+  ActivityIndicator,
+} from "react-native";
+import { useRoute } from "@react-navigation/native";
 import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
 import { requestPermissions } from "@/utils/chat.v2";
-import { useRoute } from "@react-navigation/native";
-
+import { Button, Div, Icon, Text } from "react-native-magnus";
+import ZegoExpressEngine, {
+  ZegoAudioSourceType,
+  ZegoRoomConfig,
+  ZegoRoomState,
+  ZegoScenario,
+  ZegoUpdateType,
+  ZegoVideoMirrorMode,
+  ZegoVideoSourceType,
+  ZegoViewMode,
+} from "zego-express-engine-reactnative";
+import { ZegoTextureView } from "zego-express-engine-reactnative";
 import { IconVideoOff } from "@tabler/icons-react-native";
-import React, { useEffect, useState } from "react";
-import { ActivityIndicator } from "react-native";
-import { Button, Div, Icon, Text, WINDOW_HEIGHT } from "react-native-magnus";
+import { ZegoRemoteDeviceState } from "zego-express-engine-reactnative";
+import { useIsFocused } from "@react-navigation/native";
 
-// const CustomVideoCallView: React.FC<{
-//   call: DirectCall;
-//   onEnded: () => void;
-// }> = ({ call, onEnded }) => {
-//   const [isMuted, setIsMuted] = useState(false);
-//   const [isVideoEnabled, setIsVideoEnabled] = useState(true);
-//   const [isRemoteVideoEnabled, setIsRemoteVideoEnabled] = useState(true);
-
-//   useEffect(() => {
-//     const unsubscribe = call.addListener({
-//       onEnded: () => {
-//         onEnded();
-//       },
-//       onRemoteVideoSettingsChanged: (settings) => {
-//         setIsRemoteVideoEnabled(settings.isRemoteVideoEnabled);
-//       },
-//     });
-
-//     call.accept();
-
-//     return () => {
-//       unsubscribe();
-//     };
-//   }, [call, onEnded]);
-
-//   const toggleMute = () => {
-//     if (isMuted) {
-//       call.unmuteMicrophone();
-//     } else {
-//       call.muteMicrophone();
-//     }
-//     setIsMuted(!isMuted);
-//   };
-
-//   const toggleVideo = () => {
-//     if (isVideoEnabled) {
-//       call.stopVideo();
-//     } else {
-//       call.startVideo();
-//     }
-//     setIsVideoEnabled(!isVideoEnabled);
-//   };
-
-//   return (
-//     <Div flex={1}>
-//       <DirectCallVideoView
-//         viewType="remote"
-//         callId={call.callId}
-//         style={{
-//           flex: 1,
-//         }}
-//       >
-//         <Div justifyContent="center" alignItems="center" flex={1}>
-//           {!isRemoteVideoEnabled && <IconVideoOff size={40} color="white" />}
-//         </Div>
-//       </DirectCallVideoView>
-
-//       <DirectCallVideoView
-//         viewType="local"
-//         callId={call.callId}
-//         style={{
-//           position: "absolute",
-//           width: 100,
-//           height: 150,
-//           top: 20,
-//           right: 20,
-//           zIndex: 1,
-//         }}
-//       >
-//         <Div justifyContent="center" alignItems="center" flex={1}>
-//           {!isVideoEnabled && <IconVideoOff size={40} color="white" />}
-//         </Div>
-//       </DirectCallVideoView>
-
-//       <Div position="absolute" w="100%" alignItems="center" bottom={20}>
-//         <Div
-//           w={"80%"}
-//           justifyContent="space-between"
-//           flexDir="row"
-//           bg="rgba(0,0,0,0.5)"
-//           p={10}
-//           px={20}
-//           rounded={30}
-//         >
-//           <Button
-//             bg={isMuted ? "gray500" : "blue500"}
-//             h={50}
-//             w={50}
-//             rounded="circle"
-//             onPress={toggleMute}
-//           >
-//             <Icon
-//               name={isMuted ? "mic-off" : "mic"}
-//               color="white"
-//               fontFamily="Feather"
-//               fontSize={20}
-//             />
-//           </Button>
-//           <Button
-//             bg={isVideoEnabled ? "blue500" : "gray500"}
-//             h={50}
-//             w={50}
-//             rounded="circle"
-//             onPress={toggleVideo}
-//           >
-//             <Icon
-//               name={isVideoEnabled ? "video" : "video-off"}
-//               color="white"
-//               fontFamily="Feather"
-//               fontSize={20}
-//             />
-//           </Button>
-//           <Button
-//             bg="red500"
-//             h={50}
-//             w={50}
-//             rounded="circle"
-//             onPress={() => call.end()}
-//           >
-//             <Icon
-//               name="phone-off"
-//               color="white"
-//               fontFamily="Feather"
-//               fontSize={20}
-//             />
-//           </Button>
-//         </Div>
-//       </Div>
-//     </Div>
-//   );
-// };
+let zg: ZegoExpressEngine | null = null;
+let isInRoom = false; // Add this line to track room status
 
 const ConsultationVideoScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
   const route = useRoute();
-  const { callId, SET_CALL_ID } = useUserStore();
+  const { user } = useUserStore();
+  const [localStream, setLocalStream] = useState<string | null>(null);
+  const [remoteStream, setRemoteStream] = useState<string | null>(null);
+  const localViewRef = useRef(null);
+  const remoteViewRef = useRef(null);
+
+  const [isMuted, setIsMuted] = useState(false);
+  const [isVideoEnabled, setIsVideoEnabled] = useState(true);
+  const [isRemoteVideoEnabled, setIsRemoteVideoEnabled] = useState(true);
+  const [isRemoteAudioEnabled, setIsRemoteAudioEnabled] = useState(true);
+  const [isRemoteStreamLoading, setIsRemoteStreamLoading] = useState(true);
 
   const expertId = (route.params as Record<string, string>)?.expertId;
   const caseId = (route.params as Record<string, string>)?.caseId;
 
-  const [directCall, setDirectCall] = useState<null>(null);
+  const isFocused = useIsFocused();
 
-  const endHandler = async () => {
+  // Update event listener setup
+  const eventHandler = {
+    roomStateUpdate: (
+      roomID: string,
+      state: ZegoRoomState,
+      errorCode: number,
+      extendedData: string
+    ) => {
+      if (state === ZegoRoomState.Disconnected) {
+        leaveRoom();
+      }
+    },
+    roomStreamUpdate: (
+      roomID: string,
+      updateType: ZegoUpdateType,
+      streamList: any[]
+    ) => {
+      if (updateType === ZegoUpdateType.Add) {
+        const remoteStream = streamList[0];
+        setRemoteStream(remoteStream.streamID);
+        startRemoteStream(remoteStream.streamID);
+      } else if (updateType === ZegoUpdateType.Delete) {
+        setRemoteStream(null);
+        endHandler();
+      }
+    },
+    remoteCameraStateUpdate: (
+      streamID: string,
+      state: ZegoRemoteDeviceState
+    ) => {
+      console.log("testing CAMER");
+      setIsRemoteVideoEnabled(state === ZegoRemoteDeviceState.Open);
+    },
+    remoteMicStateUpdate: (streamID: string, state: ZegoRemoteDeviceState) => {
+      setIsRemoteAudioEnabled(state === ZegoRemoteDeviceState.Open);
+    },
+  };
+
+  useEffect(() => {
+    const initializeZEGO = async () => {
+      await requestPermissions();
+
+      const appID = process.env.EXPO_PUBLIC_ZIM_APP_ID as string;
+      const appSign = process.env.EXPO_PUBLIC_ZIM_APP_SIGN as string;
+
+      await ZegoExpressEngine.createEngineWithProfile({
+        appID: parseInt(appID),
+        appSign,
+        scenario: ZegoScenario.StandardVideoCall,
+      });
+
+      ZegoExpressEngine.instance().setVideoSource(
+        ZegoVideoSourceType.Camera,
+        undefined
+      );
+      ZegoExpressEngine.instance().setAudioSource(
+        ZegoAudioSourceType.Microphone,
+        undefined
+      );
+
+      ZegoExpressEngine.instance().on(
+        "roomStateUpdate",
+        eventHandler.roomStateUpdate
+      );
+      ZegoExpressEngine.instance().on(
+        "roomStreamUpdate",
+        eventHandler.roomStreamUpdate
+      );
+      ZegoExpressEngine.instance().on(
+        "remoteCameraStateUpdate",
+        eventHandler.remoteCameraStateUpdate
+      );
+      ZegoExpressEngine.instance().on(
+        "remoteMicStateUpdate",
+        eventHandler.remoteMicStateUpdate
+      );
+
+      joinRoom();
+    };
+
+    initializeZEGO();
+
+    return () => {
+      ZegoExpressEngine.destroyEngine();
+
+      leaveRoom();
+    };
+  }, []);
+
+  const toggleMute = () => {
+    ZegoExpressEngine.instance().mutePublishStreamAudio(!isMuted, undefined);
+    setIsMuted(!isMuted);
+  };
+
+  const toggleVideo = () => {
+    const _isVideoEnabled = !isVideoEnabled;
+
+    ZegoExpressEngine.instance().mutePublishStreamVideo(
+      !_isVideoEnabled,
+      undefined
+    );
+
+    setIsVideoEnabled(_isVideoEnabled);
+
+    if (_isVideoEnabled) {
+      startPreview();
+    } else {
+      ZegoExpressEngine.instance().stopPreview(undefined);
+    }
+  };
+
+  const startPreview = useCallback(() => {
+    if (localViewRef.current) {
+      const localViewHandle = findNodeHandle(localViewRef.current);
+
+      if (localViewHandle) {
+        ZegoExpressEngine.instance().startPreview(
+          {
+            reactTag: localViewHandle,
+            viewMode: ZegoViewMode.AspectFill,
+            backgroundColor: 0x000000,
+          },
+          undefined
+        );
+      }
+    }
+  }, []);
+
+  const startPublishingStream = useCallback(
+    (stream?: string) => {
+      if (stream ?? localStream) {
+        ZegoExpressEngine.instance().startPublishingStream(
+          stream ?? localStream ?? "",
+          undefined,
+          undefined
+        );
+      }
+    },
+    [localStream]
+  );
+
+  const startRemoteStream = useCallback(async (streamID: string) => {
+    if (remoteViewRef.current) {
+      const remoteViewHandle = findNodeHandle(remoteViewRef.current);
+
+      await ZegoExpressEngine.instance().startPlayingStream(
+        streamID,
+        {
+          reactTag: remoteViewHandle as number,
+          viewMode: ZegoViewMode.AspectFit,
+          backgroundColor: 0x000000,
+        },
+        undefined
+      );
+
+      setIsRemoteStreamLoading(false);
+    }
+  }, []);
+
+  const joinRoom = useCallback(async () => {
+    if (!user || !user.id) {
+      console.error("User or user ID is missing");
+      return;
+    }
+
+    if (isInRoom) {
+      console.log("Already in a room, skipping join");
+      return;
+    }
+
+    try {
+      let roomConfig = new ZegoRoomConfig(0, true, "");
+
+      const result = await ZegoExpressEngine.instance().loginRoom(
+        expertId,
+        { userID: user.id, userName: user.name || "User" },
+        roomConfig
+      );
+
+      if (result.errorCode !== 0) {
+        throw new Error(`Failed to join room: ${result.errorCode}`);
+      }
+
+      isInRoom = true;
+
+      const localStreamID = new Date().getTime().toString();
+
+      setLocalStream(localStreamID);
+
+      if (remoteStream) {
+        startRemoteStream(remoteStream);
+      }
+      // Start publishing your own stream
+      startPublishingStream(localStreamID);
+
+      startPreview();
+      console.log("Stream published successfully");
+    } catch (error) {
+      console.error("Error in joinRoom:", error);
+    }
+  }, [user, expertId, startRemoteStream]);
+
+  const leaveRoom = useCallback(async () => {
+    if (!isInRoom) {
+      console.log("Not in a room, skipping leave");
+      return;
+    }
+
+    if (localStream) {
+      await ZegoExpressEngine.instance().stopPreview(undefined);
+      await ZegoExpressEngine.instance().stopPublishingStream(undefined);
+    }
+
+    await ZegoExpressEngine.instance().logoutRoom(expertId);
+
+    isInRoom = false; // Reset room status after leaving
+  }, [localStream, expertId]);
+
+  const endHandler = useCallback(async () => {
+    await leaveRoom();
     navigation.navigate("ConsultationFeedbackScreen", {
       expertId: expertId,
       caseId: caseId,
     });
-  };
+  }, [leaveRoom, navigation, expertId, caseId]);
 
   return (
-    <Div flex={1}>
-      {directCall ? (
-        <Text>Testing</Text>
-      ) : (
-        // <CustomVideoCallView
-        //   call={directCall}
-        //   onEnded={() => {
-        //     setDirectCall(null);
-        //     SET_CALL_ID(null);
-        //     endHandler();
-        //   }}
-        // />
-        <Div flex={1} justifyContent="center" minH={WINDOW_HEIGHT / 1.4}>
-          <ActivityIndicator size="large" color={colorPrimary} />
+    <Div flex={1} bg="#000">
+      <Div style={styles.localView}>
+        <ZegoTextureView
+          ref={localViewRef}
+          style={[
+            styles.videoView,
+            { display: isVideoEnabled ? "flex" : "none" },
+          ]}
+        />
+        {!isVideoEnabled && (
+          <Div
+            justifyContent="center"
+            alignItems="center"
+            w="100%"
+            h="100%"
+            flex={1}
+            bg="#000"
+          >
+            <IconVideoOff size={40} color="white" />
+          </Div>
+        )}
+      </Div>
+
+      <Div style={styles.remoteView}>
+        <ZegoTextureView
+          ref={remoteViewRef}
+          style={[
+            styles.videoView,
+            {
+              display:
+                isRemoteStreamLoading || !isRemoteVideoEnabled
+                  ? "none"
+                  : "flex",
+            },
+          ]}
+        />
+
+        {(isRemoteStreamLoading || !isRemoteVideoEnabled) && (
+          <Div
+            justifyContent="center"
+            alignItems="center"
+            flex={1}
+            w="100%"
+            h="100%"
+            bg="#000"
+          >
+            {isRemoteStreamLoading ? (
+              <ActivityIndicator size="large" color="#fff" />
+            ) : (
+              <IconVideoOff size={40} color="white" />
+            )}
+          </Div>
+        )}
+
+        <Div position="absolute" top={10} left={10}>
+          <Icon
+            name={isRemoteAudioEnabled ? "mic" : "mic-off"}
+            color="white"
+            fontFamily="Feather"
+            fontSize={20}
+          />
         </Div>
-      )}
+      </Div>
+
+      <Div position="absolute" w="100%" alignItems="center" bottom={20}>
+        <Div
+          w={"80%"}
+          justifyContent="space-between"
+          flexDir="row"
+          bg="rgba(0,0,0,0.5)"
+          p={10}
+          px={20}
+          rounded={30}
+        >
+          <Button
+            bg={isMuted ? "gray500" : "blue500"}
+            h={50}
+            w={50}
+            rounded="circle"
+            onPress={toggleMute}
+          >
+            <Icon
+              name={isMuted ? "mic-off" : "mic"}
+              color="white"
+              fontFamily="Feather"
+              fontSize={20}
+            />
+          </Button>
+          <Button
+            bg={isVideoEnabled ? "blue500" : "gray500"}
+            h={50}
+            w={50}
+            rounded="circle"
+            onPress={toggleVideo}
+          >
+            <Icon
+              name={isVideoEnabled ? "video" : "video-off"}
+              color="white"
+              fontFamily="Feather"
+              fontSize={20}
+            />
+          </Button>
+          <Button
+            bg="red500"
+            h={50}
+            w={50}
+            rounded="circle"
+            onPress={endHandler}
+          >
+            <Icon
+              name="phone-off"
+              color="white"
+              fontFamily="Feather"
+              fontSize={20}
+            />
+          </Button>
+        </Div>
+      </Div>
     </Div>
   );
 };
+
+const styles = StyleSheet.create({
+  localView: {
+    position: "absolute",
+    top: 20,
+    right: 20,
+    width: 100,
+    height: 150,
+    zIndex: 1,
+  },
+  remoteView: {
+    flex: 1,
+  },
+  videoView: {
+    width: "100%",
+    height: "100%",
+  },
+  endCallButton: {
+    position: "absolute",
+    bottom: 20,
+    alignSelf: "center",
+    backgroundColor: "red",
+    padding: 10,
+    borderRadius: 5,
+  },
+});
 
 export default ConsultationVideoScreen;

@@ -26,8 +26,9 @@ export const useAuthStore = create<AuthState>((set) => ({
   async verifyOtp(payload) {
     const res = await api.post("/member/auth/verify-otp", payload);
     const token = res.data.accessToken;
-    console.log("verifyOtp", res.data.accessToken);
+    const zegoToken = res.data.zegoToken;
 
     await AsyncStorage.setItem("accessToken", token);
+    await AsyncStorage.setItem("zegoToken", zegoToken);
   },
 }));

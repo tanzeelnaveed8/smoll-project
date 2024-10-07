@@ -78,6 +78,9 @@ import UnavailableScreen from "./screens/Consultation/UnavailableScreen";
 import NewOnboardingScreen from "./screens/NewOnboardingScreen";
 import NotificationScreen from "./screens/NotificationScreen";
 import { initializeChat } from "./utils/chat.v2";
+import ZegoExpressEngine, {
+  ZegoScenario,
+} from "zego-express-engine-reactnative";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);

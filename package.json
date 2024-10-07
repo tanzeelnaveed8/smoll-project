@@ -60,6 +60,7 @@
     "rn-fetch-blob": "^0.12.0",
     "socket.io-client": "^4.7.5",
     "usehooks-ts": "^3.1.0",
+    "zego-express-engine-reactnative": "^3.16.5",
     "zego-zim-react-native": "^2.17.1",
     "zustand": "^4.5.4"
   },

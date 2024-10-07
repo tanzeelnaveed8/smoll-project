@@ -8077,6 +8077,11 @@ yocto-queue@^0.1.0:
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
 
+zego-express-engine-reactnative@^3.16.5:
+  version "3.16.5"
+  resolved "https://registry.yarnpkg.com/zego-express-engine-reactnative/-/zego-express-engine-reactnative-3.16.5.tgz#620baf2a77f4c183f6a7070e41326f46b23fe51b"
+  integrity sha512-uGlMGrDewabICY6Nf+agUldqBLi/8zAiHHw+zUQ/t9JEqGZ03gbbu6EgXpl1dnffUTKkc4UvSxjLd56LmdiKTg==
+
 zego-zim-react-native@^2.17.1:
   version "2.17.1"
   resolved "https://registry.yarnpkg.com/zego-zim-react-native/-/zego-zim-react-native-2.17.1.tgz#81563eef96126f322d9592c560595c032446a6ac"
