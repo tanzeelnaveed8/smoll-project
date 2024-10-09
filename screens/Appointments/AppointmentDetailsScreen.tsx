@@ -78,8 +78,6 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
   const [appointmentDetail, setAppointmentDetail] =
     useState<AppointmentDetailResponseDto | null>(null);
 
-  console.log("appointmentDetail", appointmentDetail);
-
   const selectedServicesAmount = useMemo(() => {
     return appointmentDetail?.services?.reduce((acc, service) => {
       return acc + service.price;
@@ -125,12 +123,12 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
     if (!appointmentDetail) return;
 
     setContactBtns([]);
-    const copy = [...contactBtns];
+    const copy = [];
 
     if (appointmentDetail?.partner?.phone) {
       copy.push({
         icon: <CallIcon />,
-        text: "Call",
+        text: "Contact",
         link: `tel:${appointmentDetail?.partner?.phone}`,
       });
     }
@@ -138,7 +136,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
     if (appointmentDetail?.partner?.email) {
       copy.push({
         icon: <MessageIcon />,
-        text: "Message",
+        text: "Email",
         link: `mailto:${appointmentDetail?.partner?.email}`,
       });
     }
@@ -358,7 +356,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
 
                     {appointmentDetail?.type !== "video" && (
                       <Text fontSize={12} fontFamily={fontHauoraSemiBold}>
-                        {appointmentDetail?.partner?.name}
+                        {appointmentDetail?.vet?.designation ?? "-"}
                       </Text>
                     )}
 
@@ -436,28 +434,37 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                             color="darkGreyText"
                             mb={8}
                           >
-                            Clinic Location
+                            Clinic Information
                           </Text>
 
-                          <Div
-                            mb={8}
-                            flexDir="row"
-                            justifyContent="space-between"
-                          >
-                            <Text
-                              fontSize={"lg"}
-                              fontFamily={fontHauoraSemiBold}
+                          <Div flexDir="row" alignItems="flex-start">
+                            <Div
+                              w={"50%"}
+                              mb={8}
+                              justifyContent="space-between"
                             >
-                              {appointmentDetail?.partner?.name ??
-                                "Euro Pet Clinic"}
-                            </Text>
+                              <Text
+                                fontSize={"lg"}
+                                mb={8}
+                                fontFamily={fontHauoraSemiBold}
+                              >
+                                {appointmentDetail?.partner?.name ?? "-"}
+                              </Text>
+
+                              <Text
+                                fontSize={"md"}
+                                fontFamily={fontHauoraMedium}
+                              >
+                                {appointmentDetail?.partner?.address ?? "-"}
+                              </Text>
+                            </Div>
 
                             <Div
+                              w={"50%"}
                               flexDir="row"
-                              alignItems="center"
                               mt={-4}
                               pr={30}
-                              style={{ gap: 32 }}
+                              style={{ gap: 20 }}
                             >
                               {contactBtns.map((item, i) => (
                                 <TouchableOpacity
@@ -466,15 +473,23 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                                     Linking.openURL(item.link);
                                   }}
                                 >
-                                  {item.icon}
+                                  <Div
+                                    style={{ gap: 8, height: 50 }}
+                                    justifyContent="space-between"
+                                    alignItems="center"
+                                  >
+                                    {item.icon}
+                                    <Text
+                                      fontSize={"sm"}
+                                      fontFamily={fontHauoraSemiBold}
+                                    >
+                                      {item.text}
+                                    </Text>
+                                  </Div>
                                 </TouchableOpacity>
                               ))}
                             </Div>
                           </Div>
-
-                          <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
-                            {appointmentDetail?.partner?.address ?? "-"}
-                          </Text>
                         </Div>
                       )}
 
@@ -547,37 +562,17 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                         </Text>
                       </Div>
 
-                      <Div flexDir="row" alignItems="flex-end" mb={30}>
+                      <Div flexDir="row" alignItems="flex-end" mb={20}>
                         <Div>
                           <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
-                            Minimum
+                            Final Amount
                           </Text>
                           <Text
                             fontSize={"5xl"}
                             fontFamily={fontHauoraBold}
                             lineHeight={36}
                           >
-                            {selectedServicesAmount}
-                            <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
-                              {" "}
-                              AED
-                            </Text>
-                          </Text>
-                        </Div>
-
-                        <Div w={80} h={1} mx={20} mb={8} bg="#222" />
-
-                        <Div>
-                          <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
-                            Maximum
-                          </Text>
-
-                          <Text
-                            fontSize={"5xl"}
-                            fontFamily={fontHauoraBold}
-                            lineHeight={36}
-                          >
-                            {allServicesAmount}
+                            {selectedServicesAmount?.toFixed(2)}
                             <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
                               {" "}
                               AED
@@ -592,7 +587,6 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                         justifyContent="space-around"
                         style={{ gap: 20 }}
                         mb={20}
-                        // mb={25}
                       >
                         <Div
                           bg="#EFE9DB"
@@ -614,7 +608,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                             fontFamily={fontHauoraBold}
                             lineHeight={30}
                           >
-                            {bookingCharges}
+                            {bookingCharges?.toFixed(2)}
                             <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
                               {" "}
                               AED

@@ -25,6 +25,7 @@ import { ZegoTextureView } from "zego-express-engine-reactnative";
 import { IconVideoOff } from "@tabler/icons-react-native";
 import { ZegoRemoteDeviceState } from "zego-express-engine-reactnative";
 import { useIsFocused } from "@react-navigation/native";
+import { useUIStore } from "@/store/modules/ui";
 
 let zg: ZegoExpressEngine | null = null;
 let isInRoom = false; // Add this line to track room status
@@ -44,11 +45,14 @@ const ConsultationVideoScreen: React.FC<{ navigation: NavigationType }> = ({
   const [isRemoteVideoEnabled, setIsRemoteVideoEnabled] = useState(true);
   const [isRemoteAudioEnabled, setIsRemoteAudioEnabled] = useState(true);
   const [isRemoteStreamLoading, setIsRemoteStreamLoading] = useState(true);
+  const [isFrontCamera, setIsFrontCamera] = useState(true);
 
   const expertId = (route.params as Record<string, string>)?.expertId;
   const caseId = (route.params as Record<string, string>)?.caseId;
 
   const isFocused = useIsFocused();
+
+  const setBackgroundColor = useUIStore((state) => state.setBackgroundColor);
 
   // Update event listener setup
   const eventHandler = {
@@ -87,6 +91,14 @@ const ConsultationVideoScreen: React.FC<{ navigation: NavigationType }> = ({
       setIsRemoteAudioEnabled(state === ZegoRemoteDeviceState.Open);
     },
   };
+
+  useEffect(() => {
+    if (isFocused) {
+      setBackgroundColor("#000");
+    } else {
+      setBackgroundColor("#FAF8F5");
+    }
+  }, [isFocused]);
 
   useEffect(() => {
     const initializeZEGO = async () => {
@@ -276,6 +288,11 @@ const ConsultationVideoScreen: React.FC<{ navigation: NavigationType }> = ({
     });
   }, [leaveRoom, navigation, expertId, caseId]);
 
+  const switchCamera = useCallback(() => {
+    ZegoExpressEngine.instance().useFrontCamera(!isFrontCamera, undefined);
+    setIsFrontCamera(!isFrontCamera);
+  }, [isFrontCamera]);
+
   return (
     <Div flex={1} bg="#000">
       <Div style={styles.localView}>
@@ -374,6 +391,20 @@ const ConsultationVideoScreen: React.FC<{ navigation: NavigationType }> = ({
           >
             <Icon
               name={isVideoEnabled ? "video" : "video-off"}
+              color="white"
+              fontFamily="Feather"
+              fontSize={20}
+            />
+          </Button>
+          <Button
+            bg="blue500"
+            h={50}
+            w={50}
+            rounded="circle"
+            onPress={switchCamera}
+          >
+            <Icon
+              name="refresh-cw"
               color="white"
               fontFamily="Feather"
               fontSize={20}

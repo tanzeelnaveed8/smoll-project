@@ -63,7 +63,7 @@ const PetProfileListScreen: React.FC<{ navigation: NavigationType }> = ({
       <ScrollDiv style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
         <Div flex={1} pt={20}>
           <Text fontSize={"6xl"} mb={20} fontFamily={fontHeading}>
-            Add your lovely pets
+            Add your pets
           </Text>
 
           <Div mb={18}>

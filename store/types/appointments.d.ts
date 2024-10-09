@@ -35,6 +35,7 @@ export interface AppointmentListResponseDto {
   vet: {
     id: string;
     name: string;
+    designation: string;
     profileImg: {
       filename: string;
       filesize: number;

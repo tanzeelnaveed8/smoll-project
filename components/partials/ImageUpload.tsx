@@ -32,6 +32,7 @@ import RNFetchBlob from "rn-fetch-blob";
 
 import {
   ActivityIndicator,
+  Alert,
   Linking,
   PermissionsAndroid,
   Platform,
@@ -112,11 +113,18 @@ const ImageUpload: React.FC<Props> = ({
         await ImagePicker.requestMediaLibraryPermissionsAsync();
 
       if (status !== "granted") {
-        showMessage({
-          message: "Permission to access media library was denied",
-          type: "danger",
-        });
-
+        // If permission is denied, show an alert and ask to open settings
+        Alert.alert(
+          "Permission Required",
+          "We need access to your media library to upload images. Please open settings and grant permission",
+          [
+            { text: "Cancel", style: "cancel" },
+            {
+              text: "Open Settings",
+              onPress: () => Linking.openSettings(),
+            },
+          ]
+        );
         return;
       }
 

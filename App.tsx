@@ -81,6 +81,8 @@ import { initializeChat } from "./utils/chat.v2";
 import ZegoExpressEngine, {
   ZegoScenario,
 } from "zego-express-engine-reactnative";
+import { useUIStore } from "@/store/modules/ui";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -262,6 +264,7 @@ PushNotificationIOS.requestPermissions({
 const App = () => {
   const { user } = useUserStore();
   const [fontsLoaded, setFontsLoaded] = useState(false);
+  const { backgroundColor } = useUIStore();
 
   useEffect(() => {
     loadFonts().then(() => setFontsLoaded(true));
@@ -348,253 +351,262 @@ const App = () => {
   }
 
   return (
-    <SafeAreaView style={styles.safeAreaViewContainer}>
-      <ThemeProvider theme={theme}>
-        <NavigationContainer ref={navigationRef}>
-          <ToastProvider
-            placement="bottom"
-            textStyle={{
-              textTransform: "capitalize",
-            }}
-            duration={2500}
-          >
-            <SocketProvider>
-              <StripeProvider
-                publishableKey={
-                  process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
-                }
-                merchantIdentifier="merchant.identifier" // required for Apple Pay
-              >
-                <Stack.Navigator
-                  initialRouteName="SplashScreen"
-                  screenOptions={{
-                    headerShown: false,
-                  }}
+    <ThemeProvider theme={theme}>
+      <SafeAreaProvider>
+        <SafeAreaView
+          style={[styles.safeAreaViewContainer, { backgroundColor }]}
+        >
+          <NavigationContainer ref={navigationRef}>
+            <ToastProvider
+              placement="bottom"
+              textStyle={{
+                textTransform: "capitalize",
+              }}
+              duration={2500}
+            >
+              <SocketProvider>
+                <StripeProvider
+                  publishableKey={
+                    process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
+                  }
+                  merchantIdentifier="merchant.identifier" // required for Apple Pay
                 >
-                  <Stack.Screen name="SplashScreen" component={SplashScreen} />
-
-                  <Stack.Screen
-                    name="OnboardingScreen"
-                    component={OnboardingScreen}
-                    options={{
-                      gestureEnabled: false,
+                  <Stack.Navigator
+                    initialRouteName="SplashScreen"
+                    screenOptions={{
+                      headerShown: false,
                     }}
-                  />
-                  <Stack.Screen
-                    name="NewOnboardingScreen"
-                    component={NewOnboardingScreen}
-                  />
-                  <Stack.Screen name="SignupScreen" component={SignupScreen} />
+                  >
+                    <Stack.Screen
+                      name="SplashScreen"
+                      component={SplashScreen}
+                    />
 
-                  <Stack.Screen
-                    name="AccountSetupAddressScreen"
-                    component={AccountSetupAddressScreen}
-                  />
-                  <Stack.Screen
-                    name="AccountSetupEmailScreen"
-                    component={AccountSetupEmailScreen}
-                  />
-                  <Stack.Screen
-                    name="AccountSetupEmailOtpScreen"
-                    component={AccountSetupEmailOtpScreen}
-                  />
-                  {/* <Stack.Screen
-                    name="HomeScreen"
-                    component={HomeScreen}
-                    options={{ headerShown: false }}
-                  /> */}
+                    <Stack.Screen
+                      name="OnboardingScreen"
+                      component={OnboardingScreen}
+                      options={{
+                        gestureEnabled: false,
+                      }}
+                    />
+                    <Stack.Screen
+                      name="NewOnboardingScreen"
+                      component={NewOnboardingScreen}
+                    />
+                    <Stack.Screen
+                      name="SignupScreen"
+                      component={SignupScreen}
+                    />
 
-                  <Stack.Screen
-                    name="HomeScreen"
-                    component={TabNavigation}
-                    options={{ headerShown: false, gestureEnabled: false }}
-                  />
+                    <Stack.Screen
+                      name="AccountSetupAddressScreen"
+                      component={AccountSetupAddressScreen}
+                    />
+                    <Stack.Screen
+                      name="AccountSetupEmailScreen"
+                      component={AccountSetupEmailScreen}
+                    />
+                    <Stack.Screen
+                      name="AccountSetupEmailOtpScreen"
+                      component={AccountSetupEmailOtpScreen}
+                    />
+                    {/* <Stack.Screen
+                      name="HomeScreen"
+                      component={HomeScreen}
+                      options={{ headerShown: false }}
+                    /> */}
 
-                  <Stack.Screen
-                    name="NotificationScreen"
-                    component={NotificationScreen}
-                  />
-                  <Stack.Screen
-                    name="PetProfileScreen"
-                    component={PetProfileScreen}
-                  />
-                  <Stack.Screen
-                    name="PetProfileMedicalHistoryScreen"
-                    component={PetProfileMedicalHistoryScreen}
-                  />
-                  <Stack.Screen
-                    name="PetProfileCongratulationsScreen"
-                    component={PetProfileCongratulationsScreen}
-                  />
-                  <Stack.Screen
-                    name="CounsellingRequestScreen"
-                    component={CounsellingRequestScreen}
-                  />
-                  <Stack.Screen
-                    name="CounsellingInboxScreen"
-                    component={CounsellingInboxScreen}
-                  />
-                  <Stack.Screen
-                    name="CounsellingChatScreen"
-                    component={CounsellingChatScreen}
-                  />
-                  <Stack.Screen
-                    name="ExpertsListScreen"
-                    component={ExpertsListScreen}
-                  />
-                  <Stack.Screen
-                    name="ExpertsListDetailScreen"
-                    component={ExpertsListDetailScreen}
-                  />
-                  <Stack.Screen
-                    name="ExpertsInboxScreen"
-                    component={ExpertsInboxScreen}
-                  />
-                  <Stack.Screen
-                    name="ExpertsChatScreen"
-                    component={ExpertsChatScreen}
-                  />
-                  <Stack.Screen
-                    name="ConsultationCaseBriefScreen"
-                    component={ConsultationCaseBriefScreen}
-                    options={{
-                      gestureEnabled: false,
-                    }}
-                  />
-                  <Stack.Screen
-                    name="ConsultationWaitingScreen"
-                    component={ConsultationWaitingScreen}
-                    options={{
-                      gestureEnabled: false,
-                    }}
-                  />
-                  <Stack.Screen
-                    name="UnavailableScreen"
-                    component={UnavailableScreen}
-                  />
-                  <Stack.Screen
-                    name="ConsultationVideoScreen"
-                    component={ConsultationVideoScreen}
-                    options={{
-                      gestureEnabled: false,
-                    }}
-                  />
-                  <Stack.Screen
-                    name="RequestCallBackScreen"
-                    component={RequestCallBackScreen}
-                  />
+                    <Stack.Screen
+                      name="HomeScreen"
+                      component={TabNavigation}
+                      options={{ headerShown: false, gestureEnabled: false }}
+                    />
 
-                  <Stack.Screen
-                    name="ExpertsScheduleConfirmationScreen"
-                    component={ExpertsScheduleConfirmationScreen}
-                  />
-                  <Stack.Screen
-                    name="ExpertsScheduleSuccessScreen"
-                    component={ExpertsScheduleSuccessScreen}
-                    options={{
-                      gestureEnabled: false,
-                    }}
-                  />
+                    <Stack.Screen
+                      name="NotificationScreen"
+                      component={NotificationScreen}
+                    />
+                    <Stack.Screen
+                      name="PetProfileScreen"
+                      component={PetProfileScreen}
+                    />
+                    <Stack.Screen
+                      name="PetProfileMedicalHistoryScreen"
+                      component={PetProfileMedicalHistoryScreen}
+                    />
+                    <Stack.Screen
+                      name="PetProfileCongratulationsScreen"
+                      component={PetProfileCongratulationsScreen}
+                    />
+                    <Stack.Screen
+                      name="CounsellingRequestScreen"
+                      component={CounsellingRequestScreen}
+                    />
+                    <Stack.Screen
+                      name="CounsellingInboxScreen"
+                      component={CounsellingInboxScreen}
+                    />
+                    <Stack.Screen
+                      name="CounsellingChatScreen"
+                      component={CounsellingChatScreen}
+                    />
+                    <Stack.Screen
+                      name="ExpertsListScreen"
+                      component={ExpertsListScreen}
+                    />
+                    <Stack.Screen
+                      name="ExpertsListDetailScreen"
+                      component={ExpertsListDetailScreen}
+                    />
+                    <Stack.Screen
+                      name="ExpertsInboxScreen"
+                      component={ExpertsInboxScreen}
+                    />
+                    <Stack.Screen
+                      name="ExpertsChatScreen"
+                      component={ExpertsChatScreen}
+                    />
+                    <Stack.Screen
+                      name="ConsultationCaseBriefScreen"
+                      component={ConsultationCaseBriefScreen}
+                      options={{
+                        gestureEnabled: false,
+                      }}
+                    />
+                    <Stack.Screen
+                      name="ConsultationWaitingScreen"
+                      component={ConsultationWaitingScreen}
+                      options={{
+                        gestureEnabled: false,
+                      }}
+                    />
+                    <Stack.Screen
+                      name="UnavailableScreen"
+                      component={UnavailableScreen}
+                    />
+                    <Stack.Screen
+                      name="ConsultationVideoScreen"
+                      component={ConsultationVideoScreen}
+                      options={{
+                        gestureEnabled: false,
+                      }}
+                    />
+                    <Stack.Screen
+                      name="RequestCallBackScreen"
+                      component={RequestCallBackScreen}
+                    />
 
-                  <Stack.Screen
-                    name="CasesQuotesListScreen"
-                    component={CasesQuotesListScreen}
-                  />
+                    <Stack.Screen
+                      name="ExpertsScheduleConfirmationScreen"
+                      component={ExpertsScheduleConfirmationScreen}
+                    />
+                    <Stack.Screen
+                      name="ExpertsScheduleSuccessScreen"
+                      component={ExpertsScheduleSuccessScreen}
+                      options={{
+                        gestureEnabled: false,
+                      }}
+                    />
 
-                  <Stack.Screen
-                    name="CaseDetailScreen"
-                    component={CaseDetailScreen}
-                  />
+                    <Stack.Screen
+                      name="CasesQuotesListScreen"
+                      component={CasesQuotesListScreen}
+                    />
 
-                  <Stack.Screen
-                    name="CaseQuotesScreen"
-                    component={CaseQuotesScreen}
-                  />
-                  <Stack.Screen
-                    name="CaseQuoteDescriptionScreen"
-                    component={CaseQuoteDescriptionScreen}
-                  />
+                    <Stack.Screen
+                      name="CaseDetailScreen"
+                      component={CaseDetailScreen}
+                    />
 
-                  <Stack.Screen
-                    name="PartnerVetScreen"
-                    component={PartnerVetScreen}
-                  />
-                  <Stack.Screen
-                    name="SlotBookingScreen"
-                    component={SlotBookingScreen}
-                  />
-                  <Stack.Screen
-                    name="PartnerVetDetailScreen"
-                    component={PartnerVetDetailScreen}
-                  />
-                  <Stack.Screen
-                    name="PartnerVetConfirmationScreen"
-                    component={PartnerVetConfirmationScreen}
-                  />
-                  <Stack.Screen
-                    name="PartnerVetSuccessfullScreen"
-                    component={PartnerVetSuccessfullScreen}
-                  />
-                  <Stack.Screen
-                    name="SettingPersonalInfoScreen"
-                    component={SettingPersonalInfoScreen}
-                  />
-                  <Stack.Screen
-                    name="EditInfoScreen"
-                    component={EditInfoScreen}
-                  />
-                  <Stack.Screen
-                    name="PetEditInfoScreen"
-                    component={PetEditInfoScreen}
-                  />
-                  <Stack.Screen
-                    name="ConsultationFeedbackScreen"
-                    component={ConsultationFeedbackScreen}
-                    options={{
-                      gestureEnabled: false,
-                    }}
-                  />
-                  <Stack.Screen
-                    name="PetProfileListScreen"
-                    component={PetProfileListScreen}
-                  />
-                  <Stack.Screen
-                    name="PetProfileDetailsScreen"
-                    component={PetProfileDetailsScreen}
-                  />
-                  <Stack.Screen
-                    name="SettingsMainScreen"
-                    component={SettingsMainScreen}
-                  />
-                  {/* Appointments Screens */}
-                  <Stack.Screen
-                    name="AppointmentsScreen"
-                    component={AppointmentsScreen}
-                  />
-                  <Stack.Screen
-                    name="AppointmentDetailsScreen"
-                    component={AppointmentDetailsScreen}
-                  />
+                    <Stack.Screen
+                      name="CaseQuotesScreen"
+                      component={CaseQuotesScreen}
+                    />
+                    <Stack.Screen
+                      name="CaseQuoteDescriptionScreen"
+                      component={CaseQuoteDescriptionScreen}
+                    />
 
-                  <Stack.Screen
-                    name="PaymentDetailsScreen"
-                    component={PaymentDetailsScreen}
-                  />
-                </Stack.Navigator>
-              </StripeProvider>
-            </SocketProvider>
-            <FlashMessage position="top" />
-          </ToastProvider>
-        </NavigationContainer>
-      </ThemeProvider>
-    </SafeAreaView>
+                    <Stack.Screen
+                      name="PartnerVetScreen"
+                      component={PartnerVetScreen}
+                    />
+                    <Stack.Screen
+                      name="SlotBookingScreen"
+                      component={SlotBookingScreen}
+                    />
+                    <Stack.Screen
+                      name="PartnerVetDetailScreen"
+                      component={PartnerVetDetailScreen}
+                    />
+                    <Stack.Screen
+                      name="PartnerVetConfirmationScreen"
+                      component={PartnerVetConfirmationScreen}
+                    />
+                    <Stack.Screen
+                      name="PartnerVetSuccessfullScreen"
+                      component={PartnerVetSuccessfullScreen}
+                    />
+                    <Stack.Screen
+                      name="SettingPersonalInfoScreen"
+                      component={SettingPersonalInfoScreen}
+                    />
+                    <Stack.Screen
+                      name="EditInfoScreen"
+                      component={EditInfoScreen}
+                    />
+                    <Stack.Screen
+                      name="PetEditInfoScreen"
+                      component={PetEditInfoScreen}
+                    />
+                    <Stack.Screen
+                      name="ConsultationFeedbackScreen"
+                      component={ConsultationFeedbackScreen}
+                      options={{
+                        gestureEnabled: false,
+                      }}
+                    />
+                    <Stack.Screen
+                      name="PetProfileListScreen"
+                      component={PetProfileListScreen}
+                    />
+                    <Stack.Screen
+                      name="PetProfileDetailsScreen"
+                      component={PetProfileDetailsScreen}
+                    />
+                    <Stack.Screen
+                      name="SettingsMainScreen"
+                      component={SettingsMainScreen}
+                    />
+                    {/* Appointments Screens */}
+                    <Stack.Screen
+                      name="AppointmentsScreen"
+                      component={AppointmentsScreen}
+                    />
+                    <Stack.Screen
+                      name="AppointmentDetailsScreen"
+                      component={AppointmentDetailsScreen}
+                    />
+
+                    <Stack.Screen
+                      name="PaymentDetailsScreen"
+                      component={PaymentDetailsScreen}
+                    />
+                  </Stack.Navigator>
+                </StripeProvider>
+              </SocketProvider>
+              <FlashMessage position="top" />
+            </ToastProvider>
+          </NavigationContainer>
+        </SafeAreaView>
+      </SafeAreaProvider>
+    </ThemeProvider>
   );
 };
 
 const styles = StyleSheet.create({
   safeAreaViewContainer: {
     flex: 1,
-    backgroundColor: "#FAF8F5",
   },
 });
 
