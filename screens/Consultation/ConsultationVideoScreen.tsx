@@ -26,6 +26,11 @@ import { IconVideoOff } from "@tabler/icons-react-native";
 import { ZegoRemoteDeviceState } from "zego-express-engine-reactnative";
 import { useIsFocused } from "@react-navigation/native";
 import { useUIStore } from "@/store/modules/ui";
+import {
+  activateKeepAwake,
+  activateKeepAwakeAsync,
+  deactivateKeepAwake,
+} from "expo-keep-awake";
 
 let zg: ZegoExpressEngine | null = null;
 let isInRoom = false; // Add this line to track room status
@@ -95,9 +100,16 @@ const ConsultationVideoScreen: React.FC<{ navigation: NavigationType }> = ({
   useEffect(() => {
     if (isFocused) {
       setBackgroundColor("#000");
+      activateKeepAwakeAsync();
     } else {
       setBackgroundColor("#FAF8F5");
+      deactivateKeepAwake();
     }
+
+    return () => {
+      deactivateKeepAwake();
+      setBackgroundColor("#FAF8F5");
+    };
   }, [isFocused]);
 
   useEffect(() => {

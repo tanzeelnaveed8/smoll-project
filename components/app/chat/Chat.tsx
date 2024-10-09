@@ -2,7 +2,11 @@ import { colorPrimary } from "@/constant/constant";
 import { useSound } from "@/functions/useSound";
 import { useUserStore } from "@/store/modules/user";
 import { getMessages, sendMessage, zim } from "@/utils/chat.v2";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import {
+  useIsFocused,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import { ActivityIndicator } from "react-native";
 import { Avatar, GiftedChat, IMessage } from "react-native-gifted-chat";
@@ -21,6 +25,7 @@ import {
 } from "zego-zim-react-native";
 import ChatBubble from "./ChatBubble";
 import ChatComposer from "./ChatComposer";
+import { activateKeepAwakeAsync, deactivateKeepAwake } from "expo-keep-awake";
 
 interface Attachment {
   fileName: string;
@@ -54,9 +59,19 @@ const Chat: React.FC<Props> = (props) => {
     number | null
   >(null);
 
+  const isFocused = useIsFocused();
+
   useEffect(() => {
     fetchMessages();
   }, [props.recipientId]);
+
+  useEffect(() => {
+    if (isFocused) {
+      activateKeepAwakeAsync();
+    } else {
+      deactivateKeepAwake();
+    }
+  }, [isFocused]);
 
   const transformMessages = (data: ZIMMessage[]) => {
     const transformedMessages = data.map((msg) => {
