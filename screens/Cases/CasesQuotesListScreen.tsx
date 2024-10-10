@@ -83,7 +83,7 @@ const CasesQuotesListScreen: React.FC<{ navigation: NavigationType }> = ({
         loading={isLoading}
       >
         <Div mb={24}>
-          {cases.length > 0 && (
+          {cases && cases.length > 0 && (
             <Text
               fontSize={"4xl"}
               fontWeight="bold"

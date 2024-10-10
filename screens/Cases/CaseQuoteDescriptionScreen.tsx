@@ -34,6 +34,7 @@ import BottomSheet from "@/components/partials/BottomSheet";
 import InformationIcon from "@/components/icons/InformationIcon";
 import EssentialCheckIcon from "@/components/icons/EssentialCheckIcon";
 import CollapsibleView from "./CollapsibleView";
+import CaseQuoteDescriptionModalIcon from "@/components/icons/CaseQuoteDescriptionModalIcon";
 
 const howQuotesWork = [
   {
@@ -493,7 +494,9 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
           </Text>
         </Div>
 
-        <Div pb={13} borderBottomColor="#D0D7DC" borderBottomWidth={1} mb={15}>
+        <CaseQuoteDescriptionModalIcon />
+
+        {/* <Div pb={13} borderBottomColor="#D0D7DC" borderBottomWidth={1} mb={15}>
           <Text fontSize={13} fontFamily={fontHauoraMedium} mb={10}>
             Type of services
           </Text>
@@ -555,7 +558,7 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
               </Text>
             </Div>
           </Div>
-        </Div>
+        </Div> */}
       </BottomSheet>
     </Layout>
   );
