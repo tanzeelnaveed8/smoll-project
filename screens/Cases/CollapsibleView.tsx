@@ -7,6 +7,7 @@ import {
   TouchableWithoutFeedback,
   Animated,
   TouchableOpacity,
+  Dimensions,
 } from "react-native";
 import { Div, Tag, Text } from "react-native-magnus";
 
@@ -56,27 +57,18 @@ const CollapsibleView: React.FC<{
     setCollapsed(!collapsed);
   };
 
+  const screenWidth = Dimensions?.get("screen").width;
+
   return (
     <Div flex={1}>
       <TouchableOpacity onPress={toggleCollapse}>
         <Div flexDir="row" alignItems="flex-start" flex={1}>
-          <Div
-            flexDir="row"
-            // alignItems="flex-end"
-            flexWrap="wrap"
-            style={{ gap: 4 }}
-          >
+          <Div flexDir="row" flexWrap="wrap" style={{ gap: 4 }}>
             <Text
               fontSize={"lg"}
               fontFamily={fontHauoraSemiBold}
               mr={0}
-              maxW={
-                type === "Recommended"
-                  ? 120
-                  : type === "Contingent" || type === "Contigent"
-                  ? 145
-                  : 160
-              }
+              maxW={screenWidth > 390 ? 150 : 110}
             >
               {servicesName}
             </Text>
@@ -149,7 +141,7 @@ const CollapsibleView: React.FC<{
             event.persist(); // Retain the event object
           }}
         >
-          <Text>{description}</Text>
+          <Text>{description ?? "-"}</Text>
         </View>
       </Animated.View>
     </Div>

@@ -28,6 +28,7 @@ interface OptionType {
   iconFontSize?: number;
   icon: any;
   link?: string;
+  disabled?: boolean;
 }
 
 interface GroupType {
@@ -94,6 +95,7 @@ const options: GroupType[] = [
         id: 1,
         title: "Payment",
         icon: IconCreditCard,
+        disabled: true,
       },
       {
         id: 3,
@@ -166,7 +168,6 @@ const SettingsMainScreen: React.FC<{ navigation: NavigationType }> = ({
           { text: "Settings", onPress: () => Linking.openSettings() },
         ]
       );
-      // setPushNotificationEnabled(false);
     }
   };
 
@@ -201,6 +202,7 @@ const SettingsMainScreen: React.FC<{ navigation: NavigationType }> = ({
                   description={option?.description}
                   toggleBtn={option?.toggleBtn}
                   Icon={option.icon}
+                  disabled={option?.disabled}
                   onPress={() => {
                     if (option.title === "Push Notification") {
                       handlePushNotificationToggle(!pushNotificationEnabled);

@@ -148,7 +148,7 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
     );
   };
 
-  const getMinQuote = (caseQuotes: CaseQuotesDto) => {
+  const getMinQuote = (caseQuotes?: CaseQuotesDto) => {
     let q = 0;
 
     caseQuotes?.services?.forEach((service) => {
@@ -174,15 +174,6 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
         Service Details
       </Text>
 
-      {/* <CollapsibleView title="Testing title">
-        <Text>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum
-          molestias ullam earum? Dolorum assumenda sequi consequatur inventore
-          id quas, reprehenderit, error dolor quaerat aliquid magnam, autem ex
-          voluptatum tempore fugiat?
-        </Text>
-      </CollapsibleView> */}
-
       <Div
         flex={1}
         py={16}
@@ -196,13 +187,14 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
           {clinicQuote?.partner?.name}
         </Text>
 
-        <PartnerVetStarRating rating={4} color="" />
+        {/* <PartnerVetStarRating rating={4} color="" /> */}
 
         <Text
           fontSize={"md"}
           color="darkGreyText"
           fontFamily={fontHauoraSemiBold}
           mb={20}
+          maxW={250}
         >
           {clinicQuote?.partner?.address}
         </Text>
@@ -233,28 +225,6 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
                   </Text>
                 </Div>
               ))}
-              {/* <Div flexDir="row" alignItems="center" style={{ gap: 5 }}>
-                <Image
-                  source={require("../../assets/icons/disable-check.png")}
-                  w={15}
-                  h={15}
-                />
-
-                <Text fontSize={10} fontFamily={fontHauoraMedium}>
-                  Mandatory
-                </Text>
-              </Div>
-
-              <Div flexDir="row" alignItems="center" style={{ gap: 5 }}>
-                <Image
-                  source={require("../../assets/icons/check.png")}
-                  w={15}
-                  h={15}
-                />
-                <Text fontSize={10} fontFamily={fontHauoraMedium}>
-                  Optional
-                </Text>
-              </Div> */}
             </Div>
           )}
         </Div>
@@ -493,8 +463,6 @@ const ProposalDetailCard: React.FC<{
       setTypeStyles({ bg: "#FFC400", color: "#222" });
     }
   }, [type]);
-
-  console.log("type", type);
 
   return (
     <Div pb={16} borderBottomWidth={borderWidth} borderColor="#D0D7DC">

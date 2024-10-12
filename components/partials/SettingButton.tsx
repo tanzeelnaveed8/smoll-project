@@ -12,6 +12,7 @@ type PropsType = {
   Icon: ReactElement;
   onPress?: () => void;
   toggleValue?: boolean;
+  disabled?: boolean;
 };
 
 const SettingButton: React.FC<PropsType> = (props) => {
@@ -23,9 +24,10 @@ const SettingButton: React.FC<PropsType> = (props) => {
     title,
     onPress,
     toggleValue,
+    disabled,
   } = props;
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity onPress={onPress} disabled={disabled}>
       <Div
         w="full"
         py={16}
@@ -34,6 +36,7 @@ const SettingButton: React.FC<PropsType> = (props) => {
         alignItems="center"
         borderBottomWidth={1}
         borderBottomColor="#E0E0E0"
+        opacity={disabled ? 0.5 : 1}
       >
         <Div flexDir="row" alignItems="flex-start">
           <Icon color="#222222" size={32} strokeWidth={1.5} />

@@ -130,20 +130,36 @@ const CaseQuotesScreen: React.FC<{ navigation: NavigationType }> = ({
                       });
                     }}
                   >
-                    <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold}>
-                      {item.partner.name}
-                    </Text>
+                    <Div flexDir="row" justifyContent="space-between">
+                      <Div maxW={"70%"}>
+                        <Text
+                          fontSize={"xl"}
+                          mb={4}
+                          fontFamily={fontHauoraSemiBold}
+                        >
+                          {item.partner.name}
+                        </Text>
 
-                    <PartnerVetStarRating rating={4} color="" />
+                        {/* <PartnerVetStarRating rating={4} color="" /> */}
 
-                    <Text
-                      fontSize={"md"}
-                      color="darkGreyText"
-                      fontFamily={fontHauoraSemiBold}
-                      mb={20}
-                    >
-                      {item.partner.address}
-                    </Text>
+                        <Text
+                          fontSize={"md"}
+                          color="darkGreyText"
+                          fontFamily={fontHauoraSemiBold}
+                          mb={20}
+                        >
+                          {item.partner.address}
+                        </Text>
+                      </Div>
+
+                      <Image
+                        source={{ uri: item.partner?.clinicImg?.url }}
+                        w={80}
+                        h={80}
+                        rounded={100}
+                        bg="#fefefe"
+                      />
+                    </Div>
 
                     <Div flexDir="row" alignItems="flex-end">
                       <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
