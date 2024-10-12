@@ -34,6 +34,7 @@ import BottomSheet from "@/components/partials/BottomSheet";
 import InformationIcon from "@/components/icons/InformationIcon";
 import EssentialCheckIcon from "@/components/icons/EssentialCheckIcon";
 import CollapsibleView from "./CollapsibleView";
+import CaseQuoteDescriptionModalIcon from "@/components/icons/CaseQuoteDescriptionModalIcon";
 
 const howQuotesWork = [
   {
@@ -445,76 +446,9 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
               How Quotations work?
             </Text>
           </Div>
-
-          <Div
-            pb={13}
-            borderBottomColor="#D0D7DC"
-            borderBottomWidth={1}
-            mb={15}
-          >
-            <Text fontSize={13} fontFamily={fontHauoraMedium} mb={10}>
-              Type of services
-            </Text>
-            <Div flexDir="row" justifyContent="space-between">
-              {howQuotesWork.map((item, i) => (
-                <Div key={i} flexDir="row">
-                  {item.icon}
-
-                  <Div ml={4}>
-                    <Text fontSize={11} fontFamily={fontHauoraBold} mb={3}>
-                      {item.title}
-                    </Text>
-                    <Text fontSize={8} fontFamily={fontHauoraMedium} maxW={90}>
-                      {item.text}
-                    </Text>
-                  </Div>
-                </Div>
-              ))}
-            </Div>
-          </Div>
-
-          <Div>
-            <Text fontSize={13} fontFamily={fontHauoraMedium} mb={8}>
-              How Min and Max work?
-            </Text>
-
-            <Div
-              flexDir="row"
-              justifyContent="space-between"
-              style={{ columnGap: 15 }}
-            >
-              <Div maxW={140}>
-                <Text
-                  fontSize={20}
-                  fontFamily={fontHauoraSemiBold}
-                  color="darkGreyText"
-                >
-                  Min
-                </Text>
-
-                <Text fontSize={10} fontFamily={fontHauoraMedium}>
-                  Is the minimum amount you are expected to pay including
-                  Essential and Contingent services only
-                </Text>
-              </Div>
-
-              <Div maxW={171}>
-                <Text
-                  fontSize={20}
-                  fontFamily={fontHauoraSemiBold}
-                  color="darkGreyText"
-                >
-                  Max
-                </Text>
-
-                <Text fontSize={10} fontFamily={fontHauoraMedium}>
-                  Is the maximum amount you are expected to pay based on your
-                  selection and it will not exceed that amount
-                </Text>
-              </Div>
-            </Div>
-          </Div>
         </Div>
+
+        <CaseQuoteDescriptionModalIcon />
       </BottomSheet>
     </Layout>
   );
