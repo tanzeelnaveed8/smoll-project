@@ -5,6 +5,7 @@ import { colorErrorText, fontHauora } from "@/constant/constant";
 import { NavigationType } from "@/store/types";
 import { logout } from "@/utils/chat.v2";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 import {
   IconBell,
   IconCreditCard,
@@ -13,10 +14,11 @@ import {
   IconUserCircle,
   IconWritingSign,
 } from "@tabler/icons-react-native";
-import React, { useState, useEffect } from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import React, { useState, useEffect, useCallback } from "react";
+import { Alert, Linking, StyleSheet, TouchableOpacity } from "react-native";
 import { Div, ScrollDiv, Text } from "react-native-magnus";
 import { OneSignal } from "react-native-onesignal";
+import { AppState, AppStateStatus } from "react-native";
 
 interface OptionType {
   id: number;
@@ -61,7 +63,7 @@ const options: GroupType[] = [
         id: 4,
         title: "Push Notification",
         icon: IconBell,
-        description: "Enable push notifications to receive important messages.",
+        description: "Toggle push notifications to receive important messages.",
         toggleBtn: true,
         link: "",
       },
@@ -111,21 +113,44 @@ const SettingsMainScreen: React.FC<{ navigation: NavigationType }> = ({
   const [pushNotificationEnabled, setPushNotificationEnabled] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
-  useEffect(() => {
-    checkPushNotificationStatus();
+  const checkPushNotificationStatus = useCallback(async () => {
+    console.log("Checking push notification status");
+    const deviceState = await OneSignal.Notifications.getPermissionAsync();
+    console.log("deviceState", deviceState);
+    setPushNotificationEnabled(deviceState ?? false);
   }, []);
 
-  const checkPushNotificationStatus = async () => {
-    const deviceState = await OneSignal.Notifications.getPermissionAsync();
+  useEffect(() => {
+    const subscription = AppState.addEventListener(
+      "change",
+      handleAppStateChange
+    );
 
-    setPushNotificationEnabled(deviceState ?? false);
-  };
+    // Check status on initial mount
+    checkPushNotificationStatus();
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
+  const handleAppStateChange = useCallback(
+    (nextAppState: AppStateStatus) => {
+      if (nextAppState === "active") {
+        console.log("App has come to the foreground!");
+        checkPushNotificationStatus();
+      }
+    },
+    [checkPushNotificationStatus]
+  );
 
   const handlePushNotificationToggle = async (newValue: boolean) => {
     if (newValue) {
       const deviceState = await OneSignal.Notifications.getPermissionAsync();
+
       if (!deviceState) {
-        const status = await OneSignal.Notifications.requestPermission(false);
+        const status = await OneSignal.Notifications.requestPermission(true);
+
         setPushNotificationEnabled(status);
       } else {
         setPushNotificationEnabled(true);
@@ -133,7 +158,15 @@ const SettingsMainScreen: React.FC<{ navigation: NavigationType }> = ({
     } else {
       // For turning off, we can't revoke permissions programmatically
       // So we'll just update the UI state
-      setPushNotificationEnabled(false);
+      Alert.alert(
+        "Push Notifications",
+        "Please go to your device settings to turn off push notifications.\n\nNote: This will disable all push notifications from the app, even the chat notifications.",
+        [
+          { text: "Cancel", style: "cancel" },
+          { text: "Settings", onPress: () => Linking.openSettings() },
+        ]
+      );
+      // setPushNotificationEnabled(false);
     }
   };
 

@@ -45,6 +45,7 @@ const ExpertsListScreen: React.FC<{ navigation: NavigationType }> = ({
     >
       <FlatList
         data={experts}
+        showsVerticalScrollIndicator={false}
         ListHeaderComponent={
           <Text
             fontSize="xl"

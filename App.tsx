@@ -282,6 +282,8 @@ const App = () => {
         petName?: string;
         partnerId?: string;
         partnerBookingId?: string;
+        expertId?: string;
+        expertName?: string;
       };
 
       if (additionalData?.notificationType === "consultation-notification") {
@@ -312,12 +314,47 @@ const App = () => {
           type: "in-clinic",
         });
       }
+
+      if (additionalData.notificationType === "chat") {
+        rootNavigation.navigate("ExpertsChatScreen", {
+          expertId: additionalData.expertId,
+          expertName: additionalData.expertName,
+        });
+      }
+
+      if (additionalData.notificationType === "vet-consultation-reminder") {
+        rootNavigation.navigate("ConsultationWaitingScreen", {
+          consultationId: additionalData.consultationId,
+          petName: additionalData.petName,
+        });
+      }
     });
 
     // Method for listening for notifications received
     OneSignal.Notifications.addEventListener(
       "foregroundWillDisplay",
       (event) => {
+        const additionalData = event.notification?.additionalData as {
+          expertId?: string;
+        };
+        const expertId = (
+          rootNavigation.getCurrentRoute()?.params as Record<string, string>
+        )?.expertId;
+
+        console.log(
+          "expertId",
+          expertId,
+          additionalData?.expertId,
+          rootNavigation.getCurrentRoute()?.name
+        );
+
+        if (
+          rootNavigation.getCurrentRoute()?.name === "ExpertsChatScreen" &&
+          additionalData?.expertId === expertId
+        ) {
+          return;
+        }
+
         event.notification.display();
       }
     );
@@ -336,7 +373,12 @@ const App = () => {
   useEffect(() => {
     if (user && user.name) {
       OneSignal.login(user.playerId);
-      initializeChat(user.id, user.name, user?.profileImg?.url ?? "");
+      initializeChat(
+        user.id,
+        user.playerId,
+        user.name,
+        user?.profileImg?.url ?? ""
+      );
     }
   }, [user]);
 
@@ -369,7 +411,7 @@ const App = () => {
                   publishableKey={
                     process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
                   }
-                  merchantIdentifier="merchant.identifier" // required for Apple Pay
+                  merchantIdentifier="merchant.me.smoll.smollapp" // required for Apple Pay
                 >
                   <Stack.Navigator
                     initialRouteName="SplashScreen"

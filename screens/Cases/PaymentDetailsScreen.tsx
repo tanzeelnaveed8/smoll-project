@@ -143,11 +143,14 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
 
       paymentIntentRef.current = paymentIntent;
 
-      const { error, paymentOption } = await initPaymentSheet({
+      const { error } = await initPaymentSheet({
         customerEphemeralKeySecret: ephemeralKey,
-        paymentIntentClientSecret: paymentIntentClientSecret, // Remove 'as any' cast
+        paymentIntentClientSecret: paymentIntentClientSecret,
         merchantDisplayName: "Smoll",
         customerId: user!.stripeCustomerId,
+        applePay: {
+          merchantCountryCode: "AE",
+        },
         defaultBillingDetails: {
           name: user?.name,
         },

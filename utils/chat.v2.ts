@@ -17,6 +17,7 @@ let zim: ZIM;
 
 const initializeChat = async (
   userID: string,
+  playerId: string,
   userName: string,
   userAvatar: string
 ) => {
@@ -35,6 +36,11 @@ const initializeChat = async (
     });
 
     await zim.updateUserAvatarUrl(userAvatar);
+    await zim.updateUserExtendedData(
+      JSON.stringify({
+        playerId,
+      })
+    );
 
     console.log("ZIM SDK initialized successfully");
   } catch (error) {
