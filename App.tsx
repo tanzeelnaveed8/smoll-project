@@ -1,5 +1,5 @@
 import { StripeProvider } from "@stripe/stripe-react-native";
-import { SafeAreaView, StyleSheet } from "react-native";
+import { Platform, SafeAreaView, StyleSheet } from "react-native";
 import { Div, Text, ThemeProvider } from "react-native-magnus";
 
 import * as Font from "expo-font";
@@ -250,17 +250,6 @@ const TabNavigation = () => {
   );
 };
 
-PushNotificationIOS.requestPermissions({
-  alert: true,
-  badge: false,
-  sound: false,
-  critical: true,
-});
-
-// PushNotificationIOS.addEventListener("register", async (token) => {
-
-// });
-
 const App = () => {
   const { user } = useUserStore();
   const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -269,6 +258,14 @@ const App = () => {
   useEffect(() => {
     loadFonts().then(() => setFontsLoaded(true));
 
+    if (Platform.OS === "ios") {
+      PushNotificationIOS.requestPermissions({
+        alert: true,
+        badge: false,
+        sound: false,
+        critical: true,
+      });
+    }
     // OneSignal Initialization
     OneSignal.initialize(process.env.EXPO_PUBLIC_ONE_SIGNAL_APP_ID as string);
     OneSignal.Notifications.requestPermission(true);
