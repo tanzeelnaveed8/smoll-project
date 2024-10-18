@@ -263,11 +263,12 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
               </Text>
               <TouchableOpacity
                 onPress={() => {
-                  Linking.openURL("tel:+97144510090");
+                  Linking.openURL("https://wa.me/+971585598910");
+                  // Linking.openURL("tel:+97144510090");
                 }}
               >
                 <Text fontSize={"xl"} fontFamily={fontHauoraBold}>
-                  +971 44510090
+                  +971 58 559 8910
                 </Text>
               </TouchableOpacity>
             </Div>
