@@ -139,6 +139,15 @@ const ImageUpload: React.FC<Props> = ({
       if (!result.canceled && result.assets && result.assets.length > 0) {
         const localUri = result.assets[0].uri;
 
+        const fileSize = result.assets[0].fileSize;
+        const maxFileSize = 36 * 1024 * 1024; // 36MB in bytes
+
+        if (fileSize && fileSize > maxFileSize) {
+          toast.show("File size exceeds 36MB. Please select a smaller file.");
+          return;
+        }
+        console.log("image upload result", result);
+
         if (singleImage) {
           setImage(localUri);
         }
@@ -214,6 +223,14 @@ const ImageUpload: React.FC<Props> = ({
         type: [DocumentPicker.types.pdf, DocumentPicker.types.video],
       });
 
+      const fileSize = response[0].size;
+      const maxFileSize = 36 * 1024 * 1024; // 36MB in bytes
+
+      if (fileSize && fileSize > maxFileSize) {
+        toast.show("File size exceeds 36MB. Please select a smaller file.");
+        return;
+      }
+
       if (response[0].type?.includes("image")) {
         setImage(response[0].uri);
       }
@@ -222,6 +239,8 @@ const ImageUpload: React.FC<Props> = ({
       if (onLoading) {
         onLoading(true);
       }
+
+      console.log("image upload document response", response);
 
       const file = {
         uri: response[0].uri,
