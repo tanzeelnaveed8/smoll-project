@@ -12,6 +12,7 @@ import ZIM, {
 } from "zego-zim-react-native";
 import * as FileSystem from "expo-file-system";
 import { Audio } from "expo-av";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 let zim: ZIM;
 
@@ -21,10 +22,12 @@ const initializeChat = async (
   userName: string,
   userAvatar: string
 ) => {
+  const envs = JSON.parse((await AsyncStorage.getItem("envs")) as string);
+
   try {
     ZIM.create({
-      appID: Number(process.env.EXPO_PUBLIC_ZIM_APP_ID),
-      appSign: process.env.EXPO_PUBLIC_ZIM_APP_SIGN as string,
+      appID: Number(envs.ZEGO_APP_ID),
+      appSign: envs.ZEGO_APP_SIGN as string,
     });
 
     zim = ZIM.getInstance();

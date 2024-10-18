@@ -21,22 +21,23 @@ import { AxiosError } from "axios";
 
 const faqData = [
   {
-    question: "Should I arrive exactly on time?",
+    question: "How do I join the online consultation?",
     answer:
-      "Please arrive 10 minutes earlier to fill up any information needed.",
+      "You'll receive a push notificaiton, Click on it to join the video call. Or you can also go to appointments tab on the app.",
   },
   {
-    question: "Who should I talk to at clinic?",
-    answer: "Speak to the front desk and say that you have ‘smoll appointment’",
-  },
-  {
-    question: "What things should I bring with me?",
-    answer: "Hard copy of pet passport/health records if available.",
-  },
-  {
-    question: "Anything I should consider?",
+    question: "What should I prepare before the consultation?",
     answer:
-      "If your pet is not vaccinated, large pet, or have anxiety against other pets, please inform the clinic from desk as soon as you arive",
+      "Have your pet nearby, any relevant medical records or photos ready, and a list of questions or concerns you want to discuss.",
+  },
+  {
+    question: "What if I have technical issues?",
+    answer:
+      "Test your camera and microphone beforehand. If you encounter problems during the call, there will be a support contact provided in your confirmation email.",
+  },
+  {
+    question: "How long will the consultation last?",
+    answer: "Typically, online consultations last 15-30 minutes.",
   },
 ];
 

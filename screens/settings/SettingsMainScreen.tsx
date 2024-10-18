@@ -10,6 +10,7 @@ import {
   IconBell,
   IconCreditCard,
   IconGavel,
+  IconHelp,
   IconPaw,
   IconUserCircle,
   IconWritingSign,
@@ -29,6 +30,7 @@ interface OptionType {
   icon: any;
   link?: string;
   disabled?: boolean;
+  externalLink?: boolean;
 }
 
 interface GroupType {
@@ -98,9 +100,18 @@ const options: GroupType[] = [
         disabled: true,
       },
       {
-        id: 3,
+        id: 2,
         title: "Legal",
         icon: IconGavel,
+        externalLink: true,
+        link: "https://smoll.me/terms-and-conditions",
+      },
+      {
+        id: 3,
+        title: "Help",
+        icon: IconHelp,
+        externalLink: true,
+        link: "https://smoll.me/help",
       },
     ],
   },
@@ -204,7 +215,9 @@ const SettingsMainScreen: React.FC<{ navigation: NavigationType }> = ({
                   Icon={option.icon}
                   disabled={option?.disabled}
                   onPress={() => {
-                    if (option.title === "Push Notification") {
+                    if (option.externalLink) {
+                      Linking.openURL(option.link as string);
+                    } else if (option.title === "Push Notification") {
                       handlePushNotificationToggle(!pushNotificationEnabled);
                     } else if (option.link) {
                       navigation.navigate(option.link);

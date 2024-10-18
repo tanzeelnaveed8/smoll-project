@@ -1,5 +1,10 @@
 import { StripeProvider } from "@stripe/stripe-react-native";
-import { Platform, SafeAreaView, StyleSheet } from "react-native";
+import {
+  ActivityIndicator,
+  Platform,
+  SafeAreaView,
+  StyleSheet,
+} from "react-native";
 import { Div, Text, ThemeProvider } from "react-native-magnus";
 
 import * as Font from "expo-font";
@@ -83,6 +88,7 @@ import ZegoExpressEngine, {
 } from "zego-express-engine-reactnative";
 import { useUIStore } from "@/store/modules/ui";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -254,109 +260,110 @@ const App = () => {
   const { user } = useUserStore();
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const { backgroundColor } = useUIStore();
+  const [envs, setEnvs] = useState<{
+    ONESIGNAL_APP_ID: string;
+    STRIPE_PUBLISHABLE_KEY: string;
+    ZEGO_APP_ID: string;
+    ZEGO_APP_SIGN: string;
+    ZEGO_SERVER_SECRET: string;
+  } | null>(null);
 
   useEffect(() => {
-    loadFonts().then(() => setFontsLoaded(true));
+    (async () => {
+      loadFonts().then(() => setFontsLoaded(true));
 
-    if (Platform.OS === "ios") {
-      PushNotificationIOS.requestPermissions({
-        alert: true,
-        badge: false,
-        sound: false,
-        critical: true,
-      });
-    }
-
-    // return;
-    // OneSignal Initialization
-    OneSignal.initialize(process.env.EXPO_PUBLIC_ONE_SIGNAL_APP_ID as string);
-    OneSignal.Notifications.requestPermission(true);
-
-    OneSignal.Notifications.addEventListener("click", (event) => {
-      const additionalData = event.notification?.additionalData as {
-        notificationType?: string;
-        consultationId?: string;
-        caseId?: string;
-        vetId?: string;
-        petName?: string;
-        partnerId?: string;
-        partnerBookingId?: string;
-        expertId?: string;
-        expertName?: string;
-      };
-
-      if (additionalData?.notificationType === "consultation-notification") {
-        rootNavigation.navigate("AppointmentDetailsScreen", {
-          id: additionalData.consultationId,
-          type: "video",
+      if (Platform.OS === "ios") {
+        PushNotificationIOS.requestPermissions({
+          alert: true,
+          badge: false,
+          sound: false,
+          critical: true,
         });
       }
+      // OneSignal Initialization
+      OneSignal.Notifications.requestPermission(true);
 
-      if (
-        additionalData?.notificationType === "quote-submitted" ||
-        additionalData?.notificationType === "quote-updated"
-      ) {
-        const caseId = additionalData.caseId;
-        const partnerId = additionalData.partnerId;
-
-        rootNavigation.navigate("CaseQuoteDescriptionScreen", {
-          caseId,
-          id: partnerId,
-        });
-      }
-
-      if (additionalData?.notificationType === "partner-booking-notification") {
-        const partnerBookingId = additionalData.partnerBookingId;
-
-        rootNavigation.navigate("AppointmentDetailsScreen", {
-          id: partnerBookingId,
-          type: "in-clinic",
-        });
-      }
-
-      if (additionalData.notificationType === "chat") {
-        rootNavigation.navigate("ExpertsChatScreen", {
-          expertId: additionalData.expertId,
-          expertName: additionalData.expertName,
-        });
-      }
-
-      if (additionalData.notificationType === "vet-consultation-reminder") {
-        rootNavigation.navigate("ConsultationWaitingScreen", {
-          consultationId: additionalData.consultationId,
-          petName: additionalData.petName,
-        });
-      }
-    });
-
-    // Method for listening for notifications received
-    OneSignal.Notifications.addEventListener(
-      "foregroundWillDisplay",
-      (event) => {
+      OneSignal.Notifications.addEventListener("click", (event) => {
         const additionalData = event.notification?.additionalData as {
+          notificationType?: string;
+          consultationId?: string;
+          caseId?: string;
+          vetId?: string;
+          petName?: string;
+          partnerId?: string;
+          partnerBookingId?: string;
           expertId?: string;
+          expertName?: string;
         };
-        const expertId = (
-          rootNavigation.getCurrentRoute()?.params as Record<string, string>
-        )?.expertId;
 
-        console.log(
-          "expertId",
-          expertId,
-          additionalData?.expertId,
-          rootNavigation.getCurrentRoute()?.name
-        );
-
-        if (
-          rootNavigation.getCurrentRoute()?.name === "ExpertsChatScreen" &&
-          additionalData?.expertId === expertId
-        ) {
-          return;
+        if (additionalData?.notificationType === "consultation-notification") {
+          rootNavigation.navigate("AppointmentDetailsScreen", {
+            id: additionalData.consultationId,
+            type: "video",
+          });
         }
 
-        event.notification.display();
-      }
-    );
+        if (
+          additionalData?.notificationType === "quote-submitted" ||
+          additionalData?.notificationType === "quote-updated"
+        ) {
+          const caseId = additionalData.caseId;
+          const partnerId = additionalData.partnerId;
+
+          rootNavigation.navigate("CaseQuoteDescriptionScreen", {
+            caseId,
+            id: partnerId,
+          });
+        }
+
+        if (
+          additionalData?.notificationType === "partner-booking-notification"
+        ) {
+          const partnerBookingId = additionalData.partnerBookingId;
+
+          rootNavigation.navigate("AppointmentDetailsScreen", {
+            id: partnerBookingId,
+            type: "in-clinic",
+          });
+        }
+
+        if (additionalData.notificationType === "chat") {
+          rootNavigation.navigate("ExpertsChatScreen", {
+            expertId: additionalData.expertId,
+            expertName: additionalData.expertName,
+          });
+        }
+
+        if (additionalData.notificationType === "vet-consultation-reminder") {
+          rootNavigation.navigate("ConsultationWaitingScreen", {
+            consultationId: additionalData.consultationId,
+            petName: additionalData.petName,
+          });
+        }
+      });
+
+      // Method for listening for notifications received
+      OneSignal.Notifications.addEventListener(
+        "foregroundWillDisplay",
+        (event) => {
+          const additionalData = event.notification?.additionalData as {
+            expertId?: string;
+          };
+          const expertId = (
+            rootNavigation.getCurrentRoute()?.params as Record<string, string>
+          )?.expertId;
+
+          if (
+            rootNavigation.getCurrentRoute()?.name === "ExpertsChatScreen" &&
+            additionalData?.expertId === expertId
+          ) {
+            return;
+          }
+
+          event.notification.display();
+        }
+      );
+    })();
 
     return () => {
       OneSignal.Notifications.removeEventListener("click", () => {});
@@ -370,22 +377,37 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    if (user && user.name) {
-      OneSignal.login(user.playerId);
-      initializeChat(
-        user.id,
-        user.playerId,
-        user.name,
-        user?.profileImg?.url ?? ""
-      );
-    }
+    (async () => {
+      if (user && user.name) {
+        try {
+          const storedEnvs = await AsyncStorage.getItem("envs");
+          if (storedEnvs) {
+            const parsedEnvs = JSON.parse(storedEnvs);
+            setEnvs(parsedEnvs);
+          }
+        } catch (error) {
+          console.error("Error loading envs from AsyncStorage:", error);
+        }
+
+        OneSignal.initialize(envs?.ONESIGNAL_APP_ID as string);
+        OneSignal.login(user.playerId);
+        initializeChat(
+          user.id,
+          user.playerId,
+          user.name,
+          user?.profileImg?.url ?? ""
+        );
+      }
+    })();
   }, [user]);
 
   if (!fontsLoaded) {
     return (
       <SafeAreaView style={styles.safeAreaViewContainer}>
         <ThemeProvider theme={theme}>
-          <Text>Loading...</Text>
+          <Div flex={1} justifyContent="center" alignItems="center">
+            <ActivityIndicator size="large" color={theme.colors.primary} />
+          </Div>
         </ThemeProvider>
       </SafeAreaView>
     );
@@ -407,9 +429,7 @@ const App = () => {
             >
               <SocketProvider>
                 <StripeProvider
-                  publishableKey={
-                    process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
-                  }
+                  publishableKey={envs?.STRIPE_PUBLISHABLE_KEY ?? ""}
                   merchantIdentifier="merchant.me.smoll.smollapp" // required for Apple Pay
                 >
                   <Stack.Navigator

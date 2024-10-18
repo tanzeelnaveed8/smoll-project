@@ -41,6 +41,7 @@ export interface UserState {
   UPDATE_PET_COUNT: (increment: number) => void;
   SET_CALL_ID: (callId: string | null) => void;
 
+  fetchEnvs: () => Promise<void>;
   findUser: (skipErr?: boolean) => Promise<User>;
   updateUser: (payload: UpdateUserPayloadDto) => Promise<User>;
   sendVerificationEmail: () => Promise<void>;

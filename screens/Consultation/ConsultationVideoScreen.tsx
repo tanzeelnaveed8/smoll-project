@@ -31,6 +31,7 @@ import {
   activateKeepAwakeAsync,
   deactivateKeepAwake,
 } from "expo-keep-awake";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 let zg: ZegoExpressEngine | null = null;
 let isInRoom = false; // Add this line to track room status
@@ -115,9 +116,10 @@ const ConsultationVideoScreen: React.FC<{ navigation: NavigationType }> = ({
   useEffect(() => {
     const initializeZEGO = async () => {
       await requestPermissions();
+      const envs = JSON.parse((await AsyncStorage.getItem("envs")) as string);
 
-      const appID = process.env.EXPO_PUBLIC_ZIM_APP_ID as string;
-      const appSign = process.env.EXPO_PUBLIC_ZIM_APP_SIGN as string;
+      const appID = envs.ZEGO_APP_ID as string;
+      const appSign = envs.ZEGO_APP_SIGN as string;
 
       await ZegoExpressEngine.createEngineWithProfile({
         appID: parseInt(appID),

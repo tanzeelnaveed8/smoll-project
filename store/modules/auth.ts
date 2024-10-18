@@ -12,7 +12,6 @@ export const useAuthStore = create<AuthState>((set) => ({
       await api.post("/member/auth/login", payload);
     } catch (err) {
       const error = err as AxiosError;
-      console.log(api.defaults.baseURL, error.code, error.status);
       if (error.response?.status === 404) {
         exist = false;
       }
@@ -27,8 +26,10 @@ export const useAuthStore = create<AuthState>((set) => ({
     const res = await api.post("/member/auth/verify-otp", payload);
     const token = res.data.accessToken;
     const zegoToken = res.data.zegoToken;
+    const envs = res.data.envs as Record<string, string>;
 
     await AsyncStorage.setItem("accessToken", token);
     await AsyncStorage.setItem("zegoToken", zegoToken);
+    await AsyncStorage.setItem("envs", JSON.stringify(envs));
   },
 }));

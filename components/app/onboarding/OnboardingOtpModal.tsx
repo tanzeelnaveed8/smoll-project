@@ -10,7 +10,6 @@ import { AxiosError } from "axios";
 
 import InputField from "@/components/partials/InputField";
 import React, { useRef, useState, useEffect } from "react";
-import { View } from "react-native-animatable";
 import { Button, Div, Text } from "react-native-magnus";
 import Toast from "react-native-toast-notifications";
 import ToastContainer from "react-native-toast-notifications/lib/typescript/toast-container";

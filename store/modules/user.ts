@@ -25,6 +25,11 @@ export const useUserStore = create<UserState>((set, get) => ({
     }
   },
 
+  fetchEnvs: async () => {
+    const res = await api.get("/envs");
+    return res.data;
+  },
+
   /** Actions */
   async findUser(skipErr) {
     const res = await api.get("/members/me" + (skipErr ? "?skiperr" : ""));

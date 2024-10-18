@@ -237,8 +237,6 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
         />
 
         <Div px={20} mt={20}>
-          {/* <Div w={"50%"} h={5} rounded={10} bg="#222" mx={"auto"} mb={30} /> */}
-
           <Div flexDir="row" style={{ gap: 8 }} mb={10}>
             <IconHelpCircle width={20} height={20} color="#222" />
             <Text fontSize={12} fontFamily={fontHauoraBold} mt={2}>
