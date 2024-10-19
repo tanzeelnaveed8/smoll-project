@@ -371,6 +371,7 @@ const App = () => {
 
   useEffect(() => {
     if (user && user.name) {
+      // return;
       OneSignal.login(user.playerId);
       initializeChat(
         user.id,

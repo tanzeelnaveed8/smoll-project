@@ -68,7 +68,7 @@ const CollapsibleView: React.FC<{
               fontSize={"lg"}
               fontFamily={fontHauoraSemiBold}
               mr={0}
-              maxW={screenWidth > 390 ? 150 : 110}
+              maxW={screenWidth > 390 ? 140 : 110}
             >
               {servicesName}
             </Text>
