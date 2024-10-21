@@ -313,6 +313,18 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
         {!isLoading && (
           <ScrollDiv showsVerticalScrollIndicator={false}>
             <Div flex={1}>
+              <Div
+                alignSelf="center"
+                bg="#EFE9DB"
+                px={25}
+                py={7}
+                rounded={20}
+                mb={20}
+              >
+                <Text fontFamily={fontHauoraMedium} fontSize={"md"}>
+                  Case ID {` ${appointmentDetail?.id}`}
+                </Text>
+              </Div>
               <Div flex={1} pt={20}>
                 <Div flex={1}>
                   <Div
@@ -556,14 +568,14 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
 
                   {appointmentDetail?.type !== "video" && (
                     <>
-                      <Div flexDir="row" style={{ gap: 6 }} mb={20}>
+                      <Div pl={22} flexDir="row" style={{ gap: 6 }} mb={20}>
                         <IconReceipt width={20} height={20} color="#222" />
                         <Text fontSize={12} fontFamily={fontHauoraBold} mb={2}>
                           Approved Quotation
                         </Text>
                       </Div>
 
-                      <Div flexDir="row" alignItems="flex-end" mb={20}>
+                      <Div pl={22} flexDir="row" alignItems="flex-end" mb={20}>
                         <Div>
                           <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
                             Final Amount
