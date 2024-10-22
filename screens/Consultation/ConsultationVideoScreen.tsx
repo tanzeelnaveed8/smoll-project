@@ -90,7 +90,6 @@ const ConsultationVideoScreen: React.FC<{ navigation: NavigationType }> = ({
       streamID: string,
       state: ZegoRemoteDeviceState
     ) => {
-      console.log("testing CAMER");
       setIsRemoteVideoEnabled(state === ZegoRemoteDeviceState.Open);
     },
     remoteMicStateUpdate: (streamID: string, state: ZegoRemoteDeviceState) => {
@@ -225,7 +224,7 @@ const ConsultationVideoScreen: React.FC<{ navigation: NavigationType }> = ({
         streamID,
         {
           reactTag: remoteViewHandle as number,
-          viewMode: ZegoViewMode.AspectFit,
+          viewMode: ZegoViewMode.AspectFill,
           backgroundColor: 0x000000,
         },
         undefined
@@ -309,28 +308,6 @@ const ConsultationVideoScreen: React.FC<{ navigation: NavigationType }> = ({
 
   return (
     <Div flex={1} bg="#000">
-      <Div style={styles.localView}>
-        <ZegoTextureView
-          ref={localViewRef}
-          style={[
-            styles.videoView,
-            { display: isVideoEnabled ? "flex" : "none" },
-          ]}
-        />
-        {!isVideoEnabled && (
-          <Div
-            justifyContent="center"
-            alignItems="center"
-            w="100%"
-            h="100%"
-            flex={1}
-            bg="#000"
-          >
-            <IconVideoOff size={40} color="white" />
-          </Div>
-        )}
-      </Div>
-
       <Div style={styles.remoteView}>
         <ZegoTextureView
           ref={remoteViewRef}
@@ -370,6 +347,28 @@ const ConsultationVideoScreen: React.FC<{ navigation: NavigationType }> = ({
             fontSize={20}
           />
         </Div>
+      </Div>
+
+      <Div style={styles.localView}>
+        <ZegoTextureView
+          ref={localViewRef}
+          style={[
+            styles.videoView,
+            { display: isVideoEnabled ? "flex" : "none" },
+          ]}
+        />
+        {!isVideoEnabled && (
+          <Div
+            justifyContent="center"
+            alignItems="center"
+            w="100%"
+            h="100%"
+            flex={1}
+            bg="#000"
+          >
+            <IconVideoOff size={40} color="white" />
+          </Div>
+        )}
       </Div>
 
       <Div position="absolute" w="100%" alignItems="center" bottom={20}>
@@ -446,15 +445,15 @@ const ConsultationVideoScreen: React.FC<{ navigation: NavigationType }> = ({
 
 const styles = StyleSheet.create({
   localView: {
+    flex: 1,
+  },
+  remoteView: {
     position: "absolute",
     top: 20,
     right: 20,
-    width: 100,
+    width: 230,
     height: 150,
     zIndex: 1,
-  },
-  remoteView: {
-    flex: 1,
   },
   videoView: {
     width: "100%",

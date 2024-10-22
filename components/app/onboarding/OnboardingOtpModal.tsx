@@ -85,11 +85,13 @@ const OnboardingOtpModal: React.FC<Props> = (props) => {
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
+
     if (resendOtpWating > 0) {
       timer = setInterval(() => {
         setResendOtpWating((prev) => prev - 1);
       }, 1000);
     }
+
     return () => clearInterval(timer);
   }, [resendOtpWating]);
 

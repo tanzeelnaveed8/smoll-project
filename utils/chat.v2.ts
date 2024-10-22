@@ -17,6 +17,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 let zim: ZIM;
 
 const initializeChat = async (
+  appID: string,
+  appSign: string,
   userID: string,
   playerId: string,
   userName: string,
@@ -26,8 +28,8 @@ const initializeChat = async (
 
   try {
     ZIM.create({
-      appID: Number(envs.ZEGO_APP_ID),
-      appSign: envs.ZEGO_APP_SIGN as string,
+      appID: Number(appID),
+      appSign: appSign as string,
     });
 
     zim = ZIM.getInstance();
