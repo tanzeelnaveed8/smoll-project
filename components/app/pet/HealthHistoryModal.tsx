@@ -245,24 +245,27 @@ const HealthHistoryModal = (props: PropTypes) => {
               />
 
               {form.documents.map((item, i) => (
-                <ImageUpload
-                  key={i}
-                  plusIcon={false}
-                  w={139}
-                  h={150}
-                  disabled
-                  showDownloadBtn
-                  openImageOnTab
-                  mr={12}
-                  docType={item.mimetype}
-                  documentName={item.filename}
-                  onUnSelect={handleUnSelectDocument}
-                  uri={item?.url || ""}
+                <>
+                  <ImageUpload
+                    key={i}
+                    plusIcon={false}
+                    w={139}
+                    h={150}
+                    disabled
+                    showDownloadBtn
+                    openImageOnTab
+                    // mr={12}
+                    docType={item.mimetype}
+                    documentName={item.filename}
+                    onUnSelect={handleUnSelectDocument}
+                    uri={item?.url || ""}
 
-                  // onChange={(file) => {
-                  //   handleFormChange("documents", file);
-                  // }}
-                />
+                    // onChange={(file) => {
+                    //   handleFormChange("documents", file);
+                    // }}
+                  />
+                  <Div w={12}></Div>
+                </>
               ))}
             </ScrollDiv>
           </Div>

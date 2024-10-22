@@ -334,6 +334,7 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
         // alignItems="flex-end"
         rounded={30}
         borderColor="#222"
+        disabled={getMinQuote(clinicQuote) < 1}
         py={16}
         w={"100%"}
         onPress={() => {
