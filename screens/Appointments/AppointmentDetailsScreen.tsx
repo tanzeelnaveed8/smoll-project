@@ -79,20 +79,15 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
     useState<AppointmentDetailResponseDto | null>(null);
 
   const selectedServicesAmount = useMemo(() => {
-    return appointmentDetail?.services?.reduce((acc, service) => {
-      return acc + service.price;
-    }, 0);
-  }, [appointmentDetail]);
-
-  const allServicesAmount = useMemo(() => {
-    return appointmentDetail?.allServices?.reduce((acc, service) => {
-      return acc + service.price;
-    }, 0);
+    return (
+      appointmentDetail?.services?.reduce((acc, service) => {
+        return acc + service.price;
+      }, 0) ?? 0
+    );
   }, [appointmentDetail]);
 
   const bookingCharges = useMemo(() => {
-    // 20% of total amount
-    const amount = ((selectedServicesAmount ?? 0) * 20) / 100;
+    const amount = (selectedServicesAmount ?? 0) * 0.229 + 1;
     return amount;
   }, [selectedServicesAmount]);
 
@@ -320,7 +315,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                 mb={20}
               >
                 <Text fontFamily={fontHauoraMedium} fontSize={"md"}>
-                  Case ID {` ${appointmentDetail?.id}`}
+                  {appointmentDetail?.caseId}
                 </Text>
               </Div>
               <Div flex={1} pt={20}>
@@ -583,7 +578,9 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                             fontFamily={fontHauoraBold}
                             lineHeight={36}
                           >
-                            {selectedServicesAmount?.toFixed(2)}
+                            {(selectedServicesAmount - bookingCharges).toFixed(
+                              2
+                            )}
                             <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
                               {" "}
                               AED

@@ -318,6 +318,8 @@ const ConsultationVideoScreen: React.FC<{ navigation: NavigationType }> = ({
                 isRemoteStreamLoading || !isRemoteVideoEnabled
                   ? "none"
                   : "flex",
+              borderRadius: 12,
+              overflow: "hidden",
             },
           ]}
         />
@@ -454,6 +456,7 @@ const styles = StyleSheet.create({
     width: 230,
     height: 150,
     zIndex: 1,
+    borderRadius: 12,
   },
   videoView: {
     width: "100%",

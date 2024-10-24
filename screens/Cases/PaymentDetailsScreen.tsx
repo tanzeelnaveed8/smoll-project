@@ -60,12 +60,12 @@ const howPaymentWorks = [
   {
     question: "Is my service free?",
     answer:
-      "Yes, we do not charge pet parents any fees, but we ask pet parents for a refundable 20% of the total quotation value in advance to confirm the appointment.",
+      "Yes, we do not charge pet parents any fees, but we ask pet parents for a refundable platform fee of the quotation value in advance to confirm the appointment.",
   },
   {
     question: "What’s my final bill at the clinic will be?",
     answer:
-      "Your final bill at the vet clinic is  (Quotation Value - 20% deposit)so if your quotation was AED1000, you will pay AED200 through the smoll app and AED800 at the clinic, simple.",
+      "Your final bill at the vet clinic is  (Quotation Value - Platform Fee)so if your quotation was AED1000, you will pay AED200 through the smoll app and AED800 at the clinic, simple.",
   },
   {
     question: "Are deposits refundable?",
@@ -111,12 +111,6 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
     }, 0);
   }, [quote]);
 
-  const minimumAmount = useMemo(() => {
-    return quote?.services.reduce((acc, cur) => {
-      return acc + (cur.label.toLowerCase() !== "recommended" ? cur.price : 0);
-    }, 0);
-  }, [quote]);
-
   const totalAmount = useMemo(() => {
     return quote?.services.reduce((acc, cur) => {
       return acc + cur.price;
@@ -124,8 +118,7 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
   }, [quote]);
 
   const bookingCharges = useMemo(() => {
-    // 20% of total amount
-    const amount = ((totalSelectedAmount ?? 0) * 20) / 100;
+    const amount = totalSelectedAmount * 0.229 + 1;
     return amount;
   }, [totalAmount]);
 
@@ -335,7 +328,7 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                 fontFamily={fontHauoraSemiBold}
                 color="#afafaf"
               >
-                Case {caseId}
+                {caseId}
               </Text>
             </Div>
 
@@ -392,8 +385,7 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                       fontFamily={fontHauoraBold}
                       lineHeight={36}
                     >
-                      {/* {totalSelectedAmount} */}
-                      {totalSelectedAmount}
+                      {(totalSelectedAmount - bookingCharges).toFixed(2)}
                       <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
                         {" "}
                         AED
@@ -423,14 +415,14 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
               >
                 <Div bg="#EFE9DB" rounded={22} px={22} py={18}>
                   <Text mb={5} fontSize={13} fontFamily={fontHauoraMedium}>
-                    20% Advance due now
+                    Platform Fee
                   </Text>
                   <Text
                     fontSize={"5xl"}
                     fontFamily={fontHauoraBold}
                     lineHeight={30}
                   >
-                    {bookingCharges}
+                    {bookingCharges.toFixed(2)}
                     <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
                       {" "}
                       AED
