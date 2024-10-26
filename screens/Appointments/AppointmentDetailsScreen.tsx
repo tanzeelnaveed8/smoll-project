@@ -20,6 +20,7 @@ import { NavigationType } from "@/store/types";
 import { AppointmentDetailResponseDto } from "@/store/types/appointments";
 import { useRoute } from "@react-navigation/native";
 import {
+  IconCalendarClock,
   IconHelpCircle,
   IconReceipt,
   IconUser,
@@ -37,17 +38,15 @@ import { showMessage } from "react-native-flash-message";
 import { Button, Div, Image, ScrollDiv, Tag, Text } from "react-native-magnus";
 
 const actionBtn = [
-  // {
-  //   icon: <IconCalendarClock width={30} height={30} color={"#427594"} />,
-  //   text: "Reschedule Booking",
-  // },
+  {
+    icon: <IconCalendarClock width={30} height={30} color={"#427594"} />,
+    text: "Reschedule",
+  },
   {
     icon: <IconUserX width={30} height={30} color={"#427594"} />,
-    text: "Cancel Booking",
+    text: "Cancel",
   },
 ];
-
-const windowWidth = Dimensions.get("window").width;
 
 const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
@@ -56,7 +55,6 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
   const id = (route.params as { id: string })?.id;
   const type = (route.params as { type: string })?.type;
 
-  const [showCancelModal, setShowCancelModal] = useState(false);
   const {
     fetchAppointmentDetail,
     cancelAppointment,
@@ -74,6 +72,8 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
       link: string;
     }[]
   >([]);
+  const [showRescheduleModal, setShowRescheduleModal] = useState(false);
+  const [showCancelModal, setShowCancelModal] = useState(false);
 
   const [appointmentDetail, setAppointmentDetail] =
     useState<AppointmentDetailResponseDto | null>(null);
@@ -187,36 +187,24 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
 
   const handleRescheduleBooking = async () => {
     if (!appointmentDetail) return;
+
     try {
       setRescheduleLoading(true);
 
-      showMessage({
-        renderCustomContent: () => (
-          <FlashCustomContent loader message="Rescheduling..." />
-        ),
-        message: "",
-        type: "info",
-        autoHide: false,
-      });
-
       await rescheduleAppointment(id);
 
-      showMessage({
-        renderCustomContent: () => (
-          <FlashCustomContent message="Please select a different timing." />
-        ),
-        message: "",
-        type: "success",
-        autoHide: true,
+      console.log("bookingId: AppointmentDetailsScreen", id);
+
+      navigation.navigate("PartnerVetScreen", {
+        bookingId: id,
+        partnerId: appointmentDetail.partner.id,
+        partnerName: appointmentDetail.partner.name,
+        caseId: appointmentDetail.caseId,
+        selectedServices: appointmentDetail.services,
+        backTo: "HomeScreen",
       });
 
-      // navigation.navigate("PartnerVetDetailScreen", {
-      //   vetId: appointmentDetail.vet.id,
-      //   partnerId: appointmentDetail.partner.id,
-      //   caseId: appointmentDetail.case.id,
-      //   selectedServices: appointmentDetail.services,
-      //   backTo: "HomeScreen",
-      // });
+      setShowRescheduleModal(false);
     } finally {
       setRescheduleLoading(false);
     }
@@ -524,46 +512,64 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                       </Text>
                     </Div>
 
-                    <Div>
-                      {actionBtn.map((item) => (
-                        <TouchableOpacity
-                          disabled={rescheduleLoading}
-                          key={item.text}
-                          onPress={() => {
-                            if (item.text.includes("Cancel")) {
-                              setShowCancelModal(true);
-                            } else if (item.text.includes("Reschedule")) {
-                              handleRescheduleBooking();
-                            }
-                          }}
-                        >
-                          <Button
-                            bg="transparent"
-                            p={0}
-                            pointerEvents="none"
-                            flexDir="row"
-                            style={{ gap: 12 }}
-                            alignItems="center"
+                    <Div
+                      style={{
+                        flexDirection: "row",
+                        flexWrap: "wrap",
+                        gap: 14,
+                      }}
+                    >
+                      {actionBtn.map((item) => {
+                        if (appointmentDetail?.type === "video") {
+                          return null;
+                        }
+
+                        return (
+                          <TouchableOpacity
+                            disabled={rescheduleLoading}
+                            key={item.text}
+                            onPress={() => {
+                              if (item.text.includes("Cancel")) {
+                                setShowCancelModal(true);
+                              } else if (item.text.includes("Reschedule")) {
+                                setShowRescheduleModal(true);
+                              }
+                            }}
                           >
-                            {item.icon}
-                            <Text
-                              fontSize={"xl"}
-                              fontFamily={fontHauoraSemiBold}
-                              color="primary"
+                            <Button
+                              bg="transparent"
+                              p={0}
+                              pointerEvents="none"
+                              flexDir="row"
+                              style={{ gap: 8 }}
+                              alignItems="center"
                             >
-                              {item.text}
-                            </Text>
-                          </Button>
-                        </TouchableOpacity>
-                      ))}
+                              {item.icon}
+                              <Text
+                                fontSize={"xl"}
+                                fontFamily={fontHauoraSemiBold}
+                                color="primary"
+                              >
+                                {item.text}
+                              </Text>
+                            </Button>
+                          </TouchableOpacity>
+                        );
+                      })}
                     </Div>
                   </Div>
 
                   {appointmentDetail?.type !== "video" && (
                     <>
-                      <Div pl={22} flexDir="row" style={{ gap: 6 }} mb={20}>
+                      <Div
+                        pl={2}
+                        flexDir="row"
+                        alignItems="center"
+                        style={{ gap: 6 }}
+                        mb={20}
+                      >
                         <IconReceipt width={20} height={20} color="#222" />
-                        <Text fontSize={12} fontFamily={fontHauoraBold} mb={2}>
+                        <Text fontSize={12} fontFamily={fontHauoraBold}>
                           Approved Quotation
                         </Text>
                       </Div>
@@ -571,7 +577,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                       <Div pl={22} flexDir="row" alignItems="flex-end" mb={20}>
                         <Div>
                           <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
-                            Final Amount
+                            Balance to be paid
                           </Text>
                           <Text
                             fontSize={"5xl"}
@@ -609,7 +615,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                             fontSize={13}
                             fontFamily={fontHauoraMedium}
                           >
-                            20% Advance paid
+                            You have paid
                           </Text>
                           <Text
                             fontSize={"5xl"}
@@ -695,6 +701,46 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
             disabled={deleteLoading}
           >
             Keep it Booked
+          </ButtonPrimary>
+        </Div>
+      </BottomSheet>
+
+      <BottomSheet
+        isVisible={showRescheduleModal}
+        h={340}
+        showCloseIcon
+        onCloseIconClick={() => {
+          setShowRescheduleModal(false);
+        }}
+        roundedTop={24}
+      >
+        <Div>
+          <Text fontSize={"6xl"} mb={8} fontFamily={fontHeading}>
+            Reschedule Booking
+          </Text>
+
+          <Text fontSize={"md"} fontFamily={fontHauoraMedium} mb={16}>
+            Are you sure you want to reschedule your appointment?
+          </Text>
+
+          <ButtonPrimary
+            bgColor="danger"
+            mb={12}
+            onPress={handleRescheduleBooking}
+            loading={rescheduleLoading}
+            disabled={rescheduleLoading}
+          >
+            Yes, Reschedule
+          </ButtonPrimary>
+
+          <ButtonPrimary
+            bgColor="primary"
+            onPress={() => {
+              setShowRescheduleModal(false);
+            }}
+            disabled={rescheduleLoading}
+          >
+            Cancel
           </ButtonPrimary>
         </Div>
       </BottomSheet>

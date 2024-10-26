@@ -5,7 +5,7 @@ import { colorPrimary, fontHauora } from "@/constant/constant";
 import { useAuthStore } from "@/store/modules/auth";
 import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
-import { getAxiosErrMsg } from "@/utils/helpers";
+import { getAxiosErrMsg, getUserTimezoneOffset } from "@/utils/helpers";
 import { AxiosError } from "axios";
 
 import InputField from "@/components/partials/InputField";
@@ -17,9 +17,11 @@ import OnboardingUserModal from "./OnboardingUserModal";
 import {
   ActivityIndicator,
   Keyboard,
+  Linking,
   TouchableWithoutFeedback,
 } from "react-native";
 import { OneSignal } from "react-native-onesignal";
+import dayjs from "dayjs";
 
 interface Props {
   navigation: NavigationType;
@@ -57,6 +59,10 @@ const OnboardingOtpModal: React.FC<Props> = (props) => {
 
       if (playerId) {
         await updateUser({ playerId });
+      }
+
+      if (!user.timeZone) {
+        await updateUser({ timeZone: getUserTimezoneOffset() });
       }
 
       if (!user?.name) {
@@ -198,6 +204,7 @@ const OnboardingOtpModal: React.FC<Props> = (props) => {
                 py={0}
                 fontSize={16}
                 fontFamily={fontHauora}
+                onPress={() => Linking.openURL("https://smoll.me/help")}
               >
                 Get help
               </Button>

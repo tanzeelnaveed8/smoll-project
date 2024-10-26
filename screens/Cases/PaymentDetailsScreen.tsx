@@ -85,6 +85,7 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
     scheduleAt,
     selectedServices,
     vetId,
+    partnerName,
     paymentIntentId,
   } = route.params as PaymentPageRoute;
 
@@ -259,6 +260,7 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
         bookingId: id,
         vetId,
         partnerId,
+        partnerName,
         caseId,
         scheduleAt,
         selectedServices,

@@ -43,7 +43,8 @@ export const usePartnerStore = create<PartnerState>((set, get) => ({
     caseId,
     date,
     services,
-    paymentIntentId
+    paymentIntentId,
+    bookingId
   ) => {
     const res = await api.post(
       `/member/partners/${partnerId}/vets/${id}/book`,
@@ -52,6 +53,7 @@ export const usePartnerStore = create<PartnerState>((set, get) => ({
         caseId,
         services,
         paymentIntentId,
+        bookingId,
       }
     );
 

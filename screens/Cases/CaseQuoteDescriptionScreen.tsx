@@ -1,5 +1,8 @@
 import Layout from "@/components/app/Layout";
-import ButtonPrimary from "@/components/partials/ButtonPrimary";
+import CaseQuoteDescriptionModalIcon from "@/components/icons/CaseQuoteDescriptionModalIcon";
+import EssentialCheckIcon from "@/components/icons/EssentialCheckIcon";
+import InformationIcon from "@/components/icons/InformationIcon";
+import BottomSheet from "@/components/partials/BottomSheet";
 import {
   fontCooper,
   fontHauoraBold,
@@ -11,48 +14,13 @@ import { NavigationType } from "@/store/types";
 import { CaseQuotesDto } from "@/store/types/case";
 import { useRoute } from "@react-navigation/native";
 import {
-  IconAlertCircle,
-  IconAlertCircleFilled,
   IconArrowRight,
-  IconCircleCheck,
-  IconCircleCheckFilled,
   IconInfoCircleFilled,
 } from "@tabler/icons-react-native";
 import React, { useEffect, useMemo, useState } from "react";
 import { Platform, TouchableOpacity } from "react-native";
-import {
-  Button,
-  Collapse,
-  Div,
-  Image,
-  ScrollDiv,
-  Tag,
-  Text,
-} from "react-native-magnus";
-import PartnerVetStarRating from "./PartnerVetStarRating";
-import BottomSheet from "@/components/partials/BottomSheet";
-import InformationIcon from "@/components/icons/InformationIcon";
-import EssentialCheckIcon from "@/components/icons/EssentialCheckIcon";
+import { Button, Div, ScrollDiv, Text } from "react-native-magnus";
 import CollapsibleView from "./CollapsibleView";
-import CaseQuoteDescriptionModalIcon from "@/components/icons/CaseQuoteDescriptionModalIcon";
-
-const howQuotesWork = [
-  {
-    title: "Essential",
-    text: "Must be performed and can not be deselected",
-    icon: <EssentialCheckIcon />,
-  },
-  {
-    title: "Contingent",
-    text: "Subject to an essential service and can not be deselected",
-    icon: <EssentialCheckIcon fill="#FFC433" color="#222" />,
-  },
-  {
-    title: "Recommended",
-    text: "Vet recommended up to you to decide and you can deselect it if you want",
-    icon: <EssentialCheckIcon fill="#014EF7" color="#fff" />,
-  },
-];
 
 const serviceTypes = [
   {

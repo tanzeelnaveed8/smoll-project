@@ -1,11 +1,10 @@
-import { StripeProvider } from "@stripe/stripe-react-native";
 import {
   ActivityIndicator,
   Platform,
   SafeAreaView,
   StyleSheet,
 } from "react-native";
-import { Div, Text, ThemeProvider } from "react-native-magnus";
+import { Div, ThemeProvider } from "react-native-magnus";
 
 import * as Font from "expo-font";
 import React, { useEffect, useState } from "react";
@@ -66,12 +65,15 @@ import SplashScreen from "./screens/SplashScreen";
 import * as rootNavigation from "./utils/root-navigation";
 import { navigationRef } from "./utils/root-navigation";
 
+import { useUIStore } from "@/store/modules/ui";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import PushNotificationIOS from "@react-native-community/push-notification-ios";
 import {
   IconChecklist,
   IconMessage,
   IconWindow,
 } from "@tabler/icons-react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import SignupScreen from "./components/app/onboarding/SignupScreen";
 import AppointmentDetailsScreen from "./screens/Appointments/AppointmentDetailsScreen";
 import AppointmentsScreen from "./screens/Appointments/AppointmentsScreen";
@@ -83,12 +85,6 @@ import UnavailableScreen from "./screens/Consultation/UnavailableScreen";
 import NewOnboardingScreen from "./screens/NewOnboardingScreen";
 import NotificationScreen from "./screens/NotificationScreen";
 import { initializeChat } from "./utils/chat.v2";
-import ZegoExpressEngine, {
-  ZegoScenario,
-} from "zego-express-engine-reactnative";
-import { useUIStore } from "@/store/modules/ui";
-import { SafeAreaProvider } from "react-native-safe-area-context";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -327,14 +323,14 @@ const App = () => {
           });
         }
 
-        if (additionalData.notificationType === "chat") {
+        if (additionalData?.notificationType === "chat") {
           rootNavigation.navigate("ExpertsChatScreen", {
             expertId: additionalData.expertId,
             expertName: additionalData.expertName,
           });
         }
 
-        if (additionalData.notificationType === "vet-consultation-reminder") {
+        if (additionalData?.notificationType === "vet-consultation-reminder") {
           rootNavigation.navigate("ConsultationWaitingScreen", {
             consultationId: additionalData.consultationId,
             petName: additionalData.petName,

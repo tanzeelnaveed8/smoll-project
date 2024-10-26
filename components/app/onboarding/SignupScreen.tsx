@@ -15,6 +15,7 @@ import { getAxiosErrMsg } from "@/utils/helpers";
 import { AxiosError } from "axios";
 import {
   Keyboard,
+  Linking,
   Platform,
   TouchableOpacity,
   TouchableWithoutFeedback,
@@ -199,8 +200,16 @@ const SignupScreen: React.FC<{ navigation: NavigationType }> = ({
               maxW={306}
               mx={"auto"}
             >
-              By singing up, I agree to Smoll <Text>Terms & Conditions</Text>{" "}
-              and <Text>Privacy Policy</Text>
+              By signing up, I agree to Smoll{" "}
+              <TouchableOpacity
+                onPress={() =>
+                  Linking.openURL("https://smoll.me/terms-and-conditions")
+                }
+              >
+                <Text lineHeight={24}>
+                  Terms & Conditions and Privacy Policy
+                </Text>
+              </TouchableOpacity>
             </Text>
           </Div>
         </Div>

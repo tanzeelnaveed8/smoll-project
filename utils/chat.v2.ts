@@ -46,8 +46,6 @@ const initializeChat = async (
         playerId,
       })
     );
-
-    console.log("ZIM SDK initialized successfully");
   } catch (error) {
     console.error("Failed to initialize ZIM SDK:", error);
   }

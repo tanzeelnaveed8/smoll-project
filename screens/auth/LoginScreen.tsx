@@ -4,7 +4,7 @@ import InputField from "@/components/partials/InputField";
 import { fontHauora } from "@/constant/constant";
 import { NavigationType } from "@/store/types";
 import React from "react";
-import { StyleSheet } from "react-native";
+import { Linking, StyleSheet, TouchableOpacity } from "react-native";
 import { Button, Div, Input, Text } from "react-native-magnus";
 
 const LoginScreen: React.FC<{ navigation: NavigationType }> = ({
@@ -65,9 +65,14 @@ const LoginScreen: React.FC<{ navigation: NavigationType }> = ({
           mx={"auto"}
           lineHeight={24}
         >
-          By singing up, I agree to Smoll{" "}
-          <Text lineHeight={24}>Terms & Conditions</Text> and{" "}
-          <Text lineHeight={24}>Privacy Policy</Text>
+          By signing up, I agree to Smoll{" "}
+          <TouchableOpacity
+            onPress={() =>
+              Linking.openURL("https://smoll.me/terms-and-conditions")
+            }
+          >
+            <Text lineHeight={24}>Terms & Conditions and Privacy Policy</Text>
+          </TouchableOpacity>
         </Text>
       </Div>
     </Layout>
