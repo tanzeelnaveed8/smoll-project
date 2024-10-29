@@ -36,7 +36,7 @@ const btns = [
 const PartnerVetSuccessfullScreen: React.FC<Props> = ({ navigation }) => {
   const route = useRoute();
 
-  const { cancelAppointment, rescheduleAppointment } = useAppointmentStore();
+  const { cancelAppointment } = useAppointmentStore();
   const [rescheduleLoading, setRescheduleLoading] = useState(false);
   const [showRescheduleModal, setShowRescheduleModal] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
@@ -89,8 +89,6 @@ const PartnerVetSuccessfullScreen: React.FC<Props> = ({ navigation }) => {
     try {
       setRescheduleLoading(true);
 
-      await rescheduleAppointment(bookingId);
-
       navigation.navigate("PartnerVetScreen", {
         bookingId,
         vetId,
@@ -99,6 +97,7 @@ const PartnerVetSuccessfullScreen: React.FC<Props> = ({ navigation }) => {
         backTo: "HomeScreen",
         caseId,
         selectedServices,
+        isReschedule: true,
       });
 
       setShowRescheduleModal(false);

@@ -24,6 +24,7 @@ const PartnerVetScreen: React.FC<{ navigation: NavigationType }> = ({
     }
   )?.selectedServices;
   const backTo = (route.params as Record<string, string>)?.backTo;
+  const isReschedule = (route.params as Record<string, boolean>)?.isReschedule;
 
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -97,8 +98,6 @@ const PartnerVetScreen: React.FC<{ navigation: NavigationType }> = ({
             verified
             nextAvailable=""
             onCheckAvailability={() => {
-              console.log("bookingId: PartnerVetScreen", bookingId);
-
               navigation.navigate("PartnerVetDetailScreen", {
                 bookingId,
                 vetId: item.id,
@@ -106,6 +105,7 @@ const PartnerVetScreen: React.FC<{ navigation: NavigationType }> = ({
                 partnerName,
                 caseId,
                 selectedServices,
+                isReschedule,
               });
             }}
           />

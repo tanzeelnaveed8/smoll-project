@@ -44,7 +44,7 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
       selectedServices: { id: string; label: string; price: number }[];
     }
   )?.selectedServices;
-
+  const isReschedule = (route.params as Record<string, boolean>)?.isReschedule;
   const [availability, setAvailability] = useState<ExpertAvailability[]>([]);
   const [selectedDate, setSelectedDate] = useState<string>();
   const [selectedTime, setSelectedTime] = useState<{
@@ -133,8 +133,6 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
       .utc()
       .format();
 
-    console.log("bookingId: PartnerVetDetailScreen", bookingId);
-
     navigation.navigate("PartnerVetConfirmationScreen", {
       from: "PartnerVetDetailScreen",
       bookingId,
@@ -146,6 +144,7 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
       caseId,
       scheduleAt,
       selectedServices,
+      isReschedule,
     });
   };
 

@@ -51,7 +51,7 @@ const ExpertsInboxScreen: React.FC<Props> = (props) => {
   return (
     <Layout
       showBack
-      title="Inbox"
+      title="Chats"
       loading={loading}
       onBackPress={() => props.navigation.navigate("Home")}
     >

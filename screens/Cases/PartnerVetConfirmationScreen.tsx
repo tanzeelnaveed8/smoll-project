@@ -6,9 +6,9 @@ import {
   fontHauoraMedium,
   fontHauoraSemiBold,
 } from "@/constant/constant";
+import { useAppointmentStore } from "@/store/modules/appointments";
 import { useCaseStore } from "@/store/modules/case";
 import { usePartnerStore } from "@/store/modules/partner";
-import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
 import { ExpertAvailability } from "@/store/types/expert";
 import { useRoute } from "@react-navigation/native";
@@ -42,13 +42,14 @@ const PartnerVetConfirmationScreen: React.FC<{
   navigation: NavigationType;
 }> = ({ navigation }) => {
   const route = useRoute();
+
+  const { rescheduleAppointment } = useAppointmentStore();
   const { partnerVetDetails, bookPartnerVet } = usePartnerStore();
   const { casesQuotes } = useCaseStore();
 
   const bookingId = (route.params as Record<string, string | undefined>)
     ?.bookingId;
 
-  console.log("bookingId", bookingId);
   const partnerId = (route.params as Record<string, string>)?.partnerId;
   const partnerName = (route.params as Record<string, string>)?.partnerName;
   const caseId = (route.params as Record<string, string>)?.caseId;
@@ -63,6 +64,7 @@ const PartnerVetConfirmationScreen: React.FC<{
   )?.selectedServices;
   const paymentIntentId = (route.params as Record<string, string>)
     ?.paymentIntentId;
+  const isReschedule = (route.params as Record<string, boolean>)?.isReschedule;
 
   const [actionLoading, setActionLoading] = useState(false);
 
@@ -108,6 +110,8 @@ const PartnerVetConfirmationScreen: React.FC<{
       const updatedServices = selectedServices.map((item) => {
         return { id: item.id, label: item.label };
       });
+
+      await rescheduleAppointment(bookingId);
 
       const { id } = await bookPartnerVet(
         vetId,
@@ -284,8 +288,6 @@ const PartnerVetConfirmationScreen: React.FC<{
           loading={actionLoading}
           disabled={actionLoading}
           onPress={() => {
-            console.log("bookingId: PartnerVetConfirmationScreen", bookingId);
-
             if (bookingId) {
               handleBook();
             } else {
@@ -320,12 +322,7 @@ const ReadonlyItem = ({
 }) => {
   return (
     <Div pb={16} borderBottomWidth={1} borderColor="#E0E0E0" mb={mb ? mb : 0}>
-      <Text
-        fontFamily={fontHauoraBold}
-        // fontSize={"l"}
-        // lineHeight={16}
-        color="darkGreyText"
-      >
+      <Text fontFamily={fontHauoraBold} color="darkGreyText">
         {field}
       </Text>
 
