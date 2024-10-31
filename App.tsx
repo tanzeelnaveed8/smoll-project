@@ -267,7 +267,7 @@ const App = () => {
       });
     }
 
-    // return;
+    return;
     // OneSignal Initialization
     OneSignal.initialize(process.env.EXPO_PUBLIC_ONE_SIGNAL_APP_ID as string);
     OneSignal.Notifications.requestPermission(true);
@@ -371,7 +371,7 @@ const App = () => {
 
   useEffect(() => {
     if (user && user.name) {
-      // return;
+      return;
       OneSignal.login(user.playerId);
       initializeChat(
         user.id,

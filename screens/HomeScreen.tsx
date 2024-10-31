@@ -205,6 +205,15 @@ const HomeScreen: React.FC<Props> = (props) => {
     setShowAccountSetupButton(false);
   };
 
+  // const handleLogout = async () => {
+  //   await AsyncStorage.setItem("accessToken", "");
+  //   AsyncStorage.removeItem("hideAccountSetupBtn");
+  // };
+
+  // useEffect(() => {
+  // handleLogout();
+  // }, []);
+
   return (
     <>
       <Layout

@@ -578,7 +578,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                       <Div pl={22} flexDir="row" alignItems="flex-end" mb={20}>
                         <Div>
                           <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
-                            Final Amount
+                            Balance to be paid
                           </Text>
                           <Text
                             fontSize={"5xl"}
@@ -614,7 +614,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                             fontSize={13}
                             fontFamily={fontHauoraMedium}
                           >
-                            20% Advance paid
+                            You have paid
                           </Text>
                           <Text
                             fontSize={"5xl"}

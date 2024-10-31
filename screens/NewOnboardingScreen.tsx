@@ -19,31 +19,31 @@ import { Image as RNImage } from "react-native";
 const images = [
   {
     img: require("./../assets/images/onboarding-screen/new/slide-1.png"),
-    heading: ["Access", "to Pet", "Experts"],
+    heading: ["Talk to Pet", "Experts at", "No Cost"],
     width: 260,
     height: 260,
   },
   {
     img: require("./../assets/images/onboarding-screen/new/slide-2.png"),
-    heading: ["Book", "appointments", "instantly"],
+    heading: ["Receive &", "Compare", "Upfront Prices"],
     width: 250,
     height: 300,
   },
   {
     img: require("./../assets/images/onboarding-screen/new/slide-3.png"),
-    heading: ["Helping You", "Navigate Pet", "Loss"],
+    heading: ["Book", "appointments", "instantly"],
     width: 380,
     height: 350,
   },
   {
     img: require("./../assets/images/onboarding-screen/new/slide-4.png"),
-    heading: ["Get your pet", "a PetID"],
+    heading: ["Helping You", "Navigate Pet", "Loss"],
     width: 300,
     height: 350,
   },
   {
     img: require("./../assets/images/onboarding-screen/new/slide-5.png"),
-    heading: ["Recieve &", "Compare", "Upfront Prices"],
+    heading: ["Get your pet", "a PetID"],
     width: 400,
     height: 380,
   },
