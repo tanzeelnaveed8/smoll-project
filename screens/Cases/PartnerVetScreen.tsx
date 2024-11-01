@@ -14,6 +14,7 @@ const PartnerVetScreen: React.FC<{ navigation: NavigationType }> = ({
   const route = useRoute();
   const { partnerVets, fetchPartnerVets } = usePartnerStore();
 
+  const bookingId = (route.params as Record<string, string>)?.bookingId;
   const caseId = (route.params as Record<string, string>)?.caseId;
   const partnerId = (route.params as Record<string, string>)?.partnerId;
   const partnerName = (route.params as Record<string, string>)?.partnerName;
@@ -22,6 +23,8 @@ const PartnerVetScreen: React.FC<{ navigation: NavigationType }> = ({
       selectedServices: { id: string; label: string; price: number }[];
     }
   )?.selectedServices;
+  const backTo = (route.params as Record<string, string>)?.backTo;
+  const isReschedule = (route.params as Record<string, boolean>)?.isReschedule;
 
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -57,7 +60,11 @@ const PartnerVetScreen: React.FC<{ navigation: NavigationType }> = ({
       showBack
       title={partnerName}
       onBackPress={() => {
-        navigation.goBack();
+        if (backTo) {
+          navigation.navigate(backTo);
+        } else {
+          navigation.goBack();
+        }
       }}
       loading={isLoading}
     >
@@ -92,10 +99,13 @@ const PartnerVetScreen: React.FC<{ navigation: NavigationType }> = ({
             nextAvailable=""
             onCheckAvailability={() => {
               navigation.navigate("PartnerVetDetailScreen", {
+                bookingId,
                 vetId: item.id,
                 partnerId: partnerId,
+                partnerName,
                 caseId,
                 selectedServices,
+                isReschedule,
               });
             }}
           />

@@ -21,10 +21,12 @@ import { useCaseStore } from "@/store/modules/case";
 import { usePartnerStore } from "@/store/modules/partner";
 import { useUserStore } from "@/store/modules/user";
 import { NavigationType, PaymentPageRoute } from "@/store/types";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRoute } from "@react-navigation/native";
 import {
   initPaymentSheet,
   presentPaymentSheet,
+  StripeProvider,
 } from "@stripe/stripe-react-native";
 import { SetupParams } from "@stripe/stripe-react-native/lib/typescript/src/types/PaymentSheet";
 import {
@@ -58,12 +60,12 @@ const howPaymentWorks = [
   {
     question: "Is my service free?",
     answer:
-      "Yes, we do not charge pet parents any fees, but we ask pet parents for a refundable 20% of the total quotation value in advance to confirm the appointment.",
+      "Yes, we do not charge pet parents any fees, but we ask pet parents for a refundable platform fee of the quotation value in advance to confirm the appointment.",
   },
   {
     question: "What’s my final bill at the clinic will be?",
     answer:
-      "Your final bill at the vet clinic is  (Quotation Value - 20% deposit)so if your quotation was AED1000, you will pay AED200 through the smoll app and AED800 at the clinic, simple.",
+      "Your final bill at the vet clinic is  (Quotation Value - Platform Fee)so if your quotation was AED1000, you will pay AED200 through the smoll app and AED800 at the clinic, simple.",
   },
   {
     question: "Are deposits refundable?",
@@ -83,6 +85,7 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
     scheduleAt,
     selectedServices,
     vetId,
+    partnerName,
     paymentIntentId,
   } = route.params as PaymentPageRoute;
 
@@ -95,6 +98,7 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
   const paymentIntentRef = useRef<string | undefined>(undefined);
 
   const [showPaymentWork, setShowPaymentWork] = useState(false);
+  const [envs, setEnvs] = useState<any>(null);
 
   const quote = useMemo(() => {
     return casesQuotes
@@ -108,12 +112,6 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
     }, 0);
   }, [quote]);
 
-  const minimumAmount = useMemo(() => {
-    return quote?.services.reduce((acc, cur) => {
-      return acc + (cur.label.toLowerCase() !== "recommended" ? cur.price : 0);
-    }, 0);
-  }, [quote]);
-
   const totalAmount = useMemo(() => {
     return quote?.services.reduce((acc, cur) => {
       return acc + cur.price;
@@ -121,8 +119,7 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
   }, [quote]);
 
   const bookingCharges = useMemo(() => {
-    // 20% of total amount
-    const amount = ((totalSelectedAmount ?? 0) * 20) / 100;
+    const amount = totalSelectedAmount * 0.229 + 1;
     return amount;
   }, [totalAmount]);
 
@@ -132,6 +129,10 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
 
   const initStripe = async () => {
     setLoading(true);
+
+    setEnvs(JSON.parse((await AsyncStorage.getItem("envs")) as string));
+
+    await new Promise((resolve) => setTimeout(resolve, 500));
 
     try {
       const { ephemeralKey, paymentIntent, paymentIntentClientSecret } =
@@ -259,6 +260,7 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
         bookingId: id,
         vetId,
         partnerId,
+        partnerName,
         caseId,
         scheduleAt,
         selectedServices,
@@ -288,17 +290,21 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
   };
 
   return (
-    <Layout
-      showBack
-      backBtnText=""
-      onBackPress={() => {
-        navigation.goBack();
-      }}
-      loading={loading}
+    <StripeProvider
+      publishableKey={envs?.STRIPE_PUBLISHABLE_KEY ?? ""}
+      merchantIdentifier="merchant.me.smoll.smollapp" // required for Apple Pay
     >
-      <ScrollDiv flex={1} showsVerticalScrollIndicator={false}>
-        <Div flex={1} pt={10} mb={25}>
-          {/* <Div
+      <Layout
+        showBack
+        backBtnText=""
+        onBackPress={() => {
+          navigation.goBack();
+        }}
+        loading={loading}
+      >
+        <ScrollDiv flex={1} showsVerticalScrollIndicator={false}>
+          <Div flex={1} pt={10} mb={25}>
+            {/* <Div
           flexDir="row"
           justifyContent="space-between"
           alignItems="center"
@@ -309,262 +315,247 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
           </Text>
         </Div> */}
 
-          <Div
-            flexDir="row"
-            justifyContent="space-between"
-            alignItems="flex-end"
-            mb={40}
-          >
-            <Text fontSize={"2xl"} fontFamily={fontHauoraSemiBold}>
-              Payment Details
+            <Div
+              flexDir="row"
+              justifyContent="space-between"
+              alignItems="flex-end"
+              mb={40}
+            >
+              <Text fontSize={"2xl"} fontFamily={fontHauoraSemiBold}>
+                Payment Details
+              </Text>
+
+              <Text
+                fontSize={"lg"}
+                fontFamily={fontHauoraSemiBold}
+                color="#afafaf"
+              >
+                {caseId}
+              </Text>
+            </Div>
+
+            <Text fontSize={"2xl"} color="#000">
+              Your final bill at
             </Text>
 
             <Text
-              fontSize={"lg"}
-              fontFamily={fontHauoraSemiBold}
-              color="#afafaf"
+              fontSize={"6xl"}
+              fontFamily={fontCooper}
+              mb={30}
+              lineHeight={40}
             >
-              Case {caseId}
+              {clinicName}
             </Text>
-          </Div>
 
-          <Text fontSize={"2xl"} color="#000">
-            Your final bill at
-          </Text>
+            <Div
+              borderWidth={2}
+              rounded={25}
+              borderColor="#ccc"
+              px={16}
+              pb={14}
+              pt={16}
+              mb={10}
+            >
+              <Div px={2}>
+                <Div flexDir="row" alignItems="flex-end" mb={30}>
+                  {/* <Div w={80} h={1} ml={30} mr={10} mb={8} bg="#222" /> */}
 
-          <Text
-            fontSize={"6xl"}
-            fontFamily={fontCooper}
-            mb={30}
-            lineHeight={40}
-          >
-            {clinicName}
-          </Text>
-
-          <Div
-            borderWidth={2}
-            rounded={25}
-            borderColor="#ccc"
-            px={16}
-            pb={14}
-            pt={16}
-            mb={10}
-          >
-            <Div px={20} mb={15}>
-              <Div flexDir="row" alignItems="flex-end" mb={30}>
-                {/* <Div>
-                  <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
-                    Minimum
-                  </Text>
-                  <Text
-                    fontSize={"5xl"}
-                    fontFamily={fontHauoraBold}
-                    lineHeight={36}
-                  >
-                    {minimumAmount}
-                    <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
-                      {" "}
-                      AED
+                  <Div bg="#EFE9DB" rounded={22} px={22} py={18}>
+                    <Text mb={5} fontSize={13} fontFamily={fontHauoraMedium}>
+                      Due now
                     </Text>
-                  </Text>
-                </Div> */}
-
-                {/* <Div w={80} h={1} ml={30} mr={10} mb={8} bg="#222" /> */}
-
-                <Div>
-                  <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
-                    Final Maximum
-                  </Text>
-
-                  <Text
-                    fontSize={"5xl"}
-                    fontFamily={fontHauoraBold}
-                    lineHeight={36}
-                  >
-                    {/* {totalSelectedAmount} */}
-                    {totalSelectedAmount}
-                    <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
-                      {" "}
-                      AED
+                    <Text
+                      fontSize={"5xl"}
+                      fontFamily={fontHauoraBold}
+                      lineHeight={30}
+                    >
+                      {bookingCharges.toFixed(2)}
+                      <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
+                        {" "}
+                        AED
+                      </Text>
                     </Text>
-                  </Text>
+                  </Div>
 
                   <Div
                     style={{
                       marginLeft: "auto",
                       position: "absolute",
-                      bottom: -30,
-                      left: 8,
+                      bottom: -33,
+                      left: 25,
                     }}
                   >
                     <DotIcon />
                   </Div>
                 </Div>
               </Div>
-            </Div>
 
-            <Div
-              flexDir="row"
-              alignItems="center"
-              justifyContent="space-around"
-              style={{ gap: 20 }}
-              // mb={25}
-            >
-              <Div bg="#EFE9DB" rounded={22} px={22} py={18}>
-                <Text mb={5} fontSize={13} fontFamily={fontHauoraMedium}>
-                  20% Advance due now
-                </Text>
-                <Text
-                  fontSize={"5xl"}
-                  fontFamily={fontHauoraBold}
-                  lineHeight={30}
-                >
-                  {bookingCharges}
-                  <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
-                    {" "}
-                    AED
-                  </Text>
-                </Text>
-              </Div>
-
-              <Div style={{ gap: 2 }}>
-                <WalletIcon mb={4} width={30} height={30} />
-                <Text
-                  fontSize={11}
-                  lineHeight={15}
-                  fontFamily={fontHauoraSemiBold}
-                  maxW={130}
-                >
-                  Final balance to be paid at the clinic, depending on services
-                  received.
-                </Text>
-              </Div>
-            </Div>
-          </Div>
-
-          <TouchableOpacity
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-              marginBottom: 14,
-              flexDirection: "row",
-              gap: 3,
-            }}
-            onPress={() => {
-              setShowPaymentWork(true);
-            }}
-          >
-            <InformationIcon width={11} height={11} />
-            <Text fontSize={10} mb={1} fontFamily={fontHauoraSemiBold}>
-              Understand how payment work
-            </Text>
-          </TouchableOpacity>
-
-          <ButtonPrimary
-            mb={10}
-            onPress={openPaymentSheet}
-            loading={actionLoading}
-            disabled={actionLoading}
-            fontFamily={fontHauoraSemiBold}
-            bg="#0000FF"
-            maxW={278}
-            mx={"auto"}
-            py={16}
-            fontSize={"xl"}
-          >
-            Confirm Appointment
-          </ButtonPrimary>
-
-          <Text
-            fontSize={12}
-            fontFamily={fontHauoraBold}
-            textAlign="center"
-            maxW={"70%"}
-            mx={"auto"}
-          >
-            You’ll recieve appointment confirmation after payment is successful
-          </Text>
-        </Div>
-
-        <Div
-          flexDir="row"
-          justifyContent="center"
-          alignItems="flex-end"
-          style={{ gap: 40 }}
-          mb={30}
-        >
-          {icons.map((item) => (
-            <Div alignItems="center" key={item.text}>
-              {item.icon && item.icon}
-              {item.img && <Image source={item.img} h={32} w={32} />}
-              <Text mt={6} fontSize={"xs"} fontFamily={fontHauoraSemiBold}>
-                {item.text}
-              </Text>
-            </Div>
-          ))}
-        </Div>
-
-        <Div justifyContent="center" alignItems="center">
-          <StripeIcon />
-
-          <Image
-            source={require("@/assets/images/payment-service.png")}
-            h={80}
-            mt={5}
-            w={"72%"}
-            style={{ objectFit: "contain" }}
-          />
-        </Div>
-      </ScrollDiv>
-
-      <BottomSheet
-        isVisible={showPaymentWork}
-        h={345}
-        showCloseIcon
-        closeButtonStyle={{
-          marginLeft: "auto",
-          marginBottom: 0,
-        }}
-        onCloseIconClick={() => {
-          setShowPaymentWork(false);
-        }}
-        barMb={10}
-        roundedTop={40}
-      >
-        <Div px={10}>
-          <Div flexDir="row" alignItems="flex-start" mb={22}>
-            <InformationIcon width={28} height={28} />
-            <Text
-              fontSize={14}
-              ml={8}
-              fontFamily={fontHauoraBold}
-              style={{ position: "relative", top: 4 }}
-            >
-              How my payment work?
-            </Text>
-          </Div>
-
-          <Div ml={36}>
-            {howPaymentWorks.map((item, i) => (
               <Div
-                key={item.question}
-                borderBottomWidth={i + 1 === howPaymentWorks.length ? 0 : 1}
-                borderBottomColor="#ccc"
-                pb={i + 1 === howPaymentWorks.length ? 0 : 12}
-                mb={i + 1 === howPaymentWorks.length ? 0 : 10}
+                flexDir="row"
+                alignItems="center"
+                justifyContent="space-around"
+                style={{ gap: 20 }}
+                pl={15}
+                // mb={25}
               >
-                <Text fontSize={13} fontFamily={fontHauoraMedium} mb={2}>
-                  {item.question}
-                </Text>
-                <Text fontSize={8} fontFamily={fontHauoraMedium} maxW={"90%"}>
-                  {item.answer}
+                <Div>
+                  <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
+                    To pay at clinic
+                  </Text>
+
+                  <Text
+                    fontSize={"5xl"}
+                    fontFamily={fontHauoraBold}
+                    lineHeight={36}
+                  >
+                    {(totalSelectedAmount - bookingCharges).toFixed(2)}
+                    <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
+                      {" "}
+                      AED
+                    </Text>
+                  </Text>
+                </Div>
+
+                <Div style={{ gap: 2 }}>
+                  <WalletIcon mb={4} width={30} height={30} />
+                  <Text
+                    fontSize={11}
+                    lineHeight={15}
+                    fontFamily={fontHauoraSemiBold}
+                    maxW={130}
+                  >
+                    Final balance to be paid at the clinic, depending on
+                    services received.
+                  </Text>
+                </Div>
+              </Div>
+            </Div>
+
+            <TouchableOpacity
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                marginBottom: 14,
+                flexDirection: "row",
+                gap: 3,
+              }}
+              onPress={() => {
+                setShowPaymentWork(true);
+              }}
+            >
+              <InformationIcon width={11} height={11} />
+              <Text fontSize={10} mb={1} fontFamily={fontHauoraSemiBold}>
+                Understand how payment work
+              </Text>
+            </TouchableOpacity>
+
+            <ButtonPrimary
+              mb={10}
+              onPress={openPaymentSheet}
+              loading={actionLoading}
+              disabled={actionLoading}
+              fontFamily={fontHauoraSemiBold}
+              bg="#0000FF"
+              maxW={278}
+              mx={"auto"}
+              py={16}
+              fontSize={"xl"}
+            >
+              Confirm Appointment
+            </ButtonPrimary>
+
+            <Text
+              fontSize={12}
+              fontFamily={fontHauoraBold}
+              textAlign="center"
+              maxW={"70%"}
+              mx={"auto"}
+            >
+              You’ll recieve appointment confirmation after payment is
+              successful
+            </Text>
+          </Div>
+
+          <Div
+            flexDir="row"
+            justifyContent="center"
+            alignItems="flex-end"
+            style={{ gap: 40 }}
+            mb={30}
+          >
+            {icons.map((item) => (
+              <Div alignItems="center" key={item.text}>
+                {item.icon && item.icon}
+                {item.img && <Image source={item.img} h={32} w={32} />}
+                <Text mt={6} fontSize={"xs"} fontFamily={fontHauoraSemiBold}>
+                  {item.text}
                 </Text>
               </Div>
             ))}
           </Div>
-        </Div>
-      </BottomSheet>
-    </Layout>
+
+          <Div justifyContent="center" alignItems="center">
+            <StripeIcon />
+
+            <Image
+              source={require("@/assets/images/payment-service.png")}
+              h={80}
+              mt={5}
+              w={"72%"}
+              style={{ objectFit: "contain" }}
+            />
+          </Div>
+        </ScrollDiv>
+
+        <BottomSheet
+          isVisible={showPaymentWork}
+          h={345}
+          showCloseIcon
+          closeButtonStyle={{
+            marginLeft: "auto",
+            marginBottom: 0,
+          }}
+          onCloseIconClick={() => {
+            setShowPaymentWork(false);
+          }}
+          barMb={10}
+          roundedTop={40}
+        >
+          <Div px={10}>
+            <Div flexDir="row" alignItems="flex-start" mb={22}>
+              <InformationIcon width={28} height={28} />
+              <Text
+                fontSize={14}
+                ml={8}
+                fontFamily={fontHauoraBold}
+                style={{ position: "relative", top: 4 }}
+              >
+                How my payment work?
+              </Text>
+            </Div>
+
+            <Div ml={36}>
+              {howPaymentWorks.map((item, i) => (
+                <Div
+                  key={item.question}
+                  borderBottomWidth={i + 1 === howPaymentWorks.length ? 0 : 1}
+                  borderBottomColor="#ccc"
+                  pb={i + 1 === howPaymentWorks.length ? 0 : 12}
+                  mb={i + 1 === howPaymentWorks.length ? 0 : 10}
+                >
+                  <Text fontSize={13} fontFamily={fontHauoraMedium} mb={2}>
+                    {item.question}
+                  </Text>
+                  <Text fontSize={8} fontFamily={fontHauoraMedium} maxW={"90%"}>
+                    {item.answer}
+                  </Text>
+                </Div>
+              ))}
+            </Div>
+          </Div>
+        </BottomSheet>
+      </Layout>
+    </StripeProvider>
   );
 };
 

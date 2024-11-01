@@ -10,8 +10,9 @@ import {
   useAppointmentStore,
 } from "@/store/modules/appointments";
 import { NavigationType } from "@/store/types";
+import { useFocusEffect } from "@react-navigation/native";
 import { IconChevronRight, IconUser } from "@tabler/icons-react-native";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { RefreshControl, TouchableOpacity } from "react-native";
 import { FlatList } from "react-native-bidirectional-infinite-scroll";
 
@@ -25,9 +26,11 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
   const [nextPageId, setNextPageId] = useState(1);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  useEffect(() => {
-    handleFetchAppointments(undefined, true);
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      handleFetchAppointments(undefined, true);
+    }, [])
+  );
 
   const handleFetchAppointments = async (
     isRefresh?: boolean,
@@ -42,6 +45,8 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
 
       const response = await fetchAppointments(1, reset);
 
+      console.log("response", response);
+
       setNextPageId(response.nextPage);
     } finally {
       setIsLoading(false);
@@ -54,8 +59,8 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
 
     return new Promise<void>(async (resolve) => {
       try {
-        const fetchedData = await fetchAppointments(nextPageId); // commented-out for now
-        setNextPageId(fetchedData.nextPage); /// commented-out for now
+        const fetchedData = await fetchAppointments(nextPageId);
+        setNextPageId(fetchedData.nextPage);
       } finally {
         resolve();
       }
@@ -110,6 +115,7 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
                 onRefresh={() => handleFetchAppointments(true)}
               />
             }
+            showsVerticalScrollIndicator={false}
             data={appointment}
             renderItem={({ item, index }) => (
               <AppointmentCard
@@ -126,10 +132,20 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
                 }
                 alert={""}
                 onPress={() => {
-                  navigation.navigate("AppointmentDetailsScreen", {
-                    id: item.id,
-                    type: item.type,
-                  });
+                  if (!item.scheduledAt && item.type === "in-clinic") {
+                    navigation.navigate("PartnerVetScreen", {
+                      bookingId: item.id,
+                      caseId: item.caseId,
+                      partnerId: item.partner?.id,
+                      partnerName: item.partner?.name,
+                      selectedServices: item.services,
+                    });
+                  } else {
+                    navigation.navigate("AppointmentDetailsScreen", {
+                      id: item.id,
+                      type: item.type,
+                    });
+                  }
                 }}
               />
             )}
@@ -247,15 +263,26 @@ const AppointmentCard: React.FC<{
             Pet: {props.pet}
           </Text>
 
-          <Text
-            fontSize={"xl"}
-            fontFamily={fontHauoraSemiBold}
-            lineHeight={24}
-            color="primary"
-          >
-            {/* Thu, 8 Aug - 3: 00PM */}
-            {appointmentFormatedTime(props.scheduledTime)}
-          </Text>
+          {props.scheduledTime ? (
+            <Text
+              fontSize={"xl"}
+              fontFamily={fontHauoraSemiBold}
+              lineHeight={24}
+              color="primary"
+            >
+              {appointmentFormatedTime(props.scheduledTime)}
+            </Text>
+          ) : (
+            <Tag
+              fontSize={12}
+              fontFamily={fontHauoraSemiBold}
+              px={8}
+              py={6}
+              rounded={37}
+            >
+              Pending reschedule
+            </Tag>
+          )}
         </Div>
 
         <IconChevronRight

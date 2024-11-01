@@ -14,11 +14,10 @@ export const useAppointmentStore = create<AppointmentState>((set, get) => ({
     const response = await api.get("/members/appointments", {
       params: {
         page: page,
-        limit: 10,
+        limit: 20,
       },
     });
 
-    // const existingAppointment = get().appointment || [];
     const data = response.data.data;
 
     const updatedData = get().appointment || [];

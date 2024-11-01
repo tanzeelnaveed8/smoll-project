@@ -6,9 +6,9 @@ import {
   fontHauoraMedium,
   fontHauoraSemiBold,
 } from "@/constant/constant";
+import { useAppointmentStore } from "@/store/modules/appointments";
 import { useCaseStore } from "@/store/modules/case";
 import { usePartnerStore } from "@/store/modules/partner";
-import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
 import { ExpertAvailability } from "@/store/types/expert";
 import { useRoute } from "@react-navigation/native";
@@ -42,10 +42,16 @@ const PartnerVetConfirmationScreen: React.FC<{
   navigation: NavigationType;
 }> = ({ navigation }) => {
   const route = useRoute();
-  const { partnerVetDetails } = usePartnerStore();
+
+  const { rescheduleAppointment } = useAppointmentStore();
+  const { partnerVetDetails, bookPartnerVet } = usePartnerStore();
   const { casesQuotes } = useCaseStore();
 
+  const bookingId = (route.params as Record<string, string | undefined>)
+    ?.bookingId;
+
   const partnerId = (route.params as Record<string, string>)?.partnerId;
+  const partnerName = (route.params as Record<string, string>)?.partnerName;
   const caseId = (route.params as Record<string, string>)?.caseId;
   const vetId = (route.params as Record<string, string>)?.vetId;
   const selectedDate = (route.params as Record<string, string>)?.selectedDate;
@@ -58,6 +64,9 @@ const PartnerVetConfirmationScreen: React.FC<{
   )?.selectedServices;
   const paymentIntentId = (route.params as Record<string, string>)
     ?.paymentIntentId;
+  const isReschedule = (route.params as Record<string, boolean>)?.isReschedule;
+
+  const [actionLoading, setActionLoading] = useState(false);
 
   const quote = useMemo(() => {
     return casesQuotes
@@ -89,6 +98,43 @@ const PartnerVetConfirmationScreen: React.FC<{
 
     return `${fromTime} - ${toTime}`;
   }, [parsedSelectedDate, parsedSelectedTime]);
+
+  const handleBook = async () => {
+    if (!partnerId || !vetId || !caseId || !scheduleAt || !bookingId) {
+      return;
+    }
+
+    try {
+      setActionLoading(true);
+
+      const updatedServices = selectedServices.map((item) => {
+        return { id: item.id, label: item.label };
+      });
+
+      await rescheduleAppointment(bookingId);
+
+      const { id } = await bookPartnerVet(
+        vetId,
+        partnerId,
+        caseId,
+        scheduleAt,
+        updatedServices,
+        undefined,
+        bookingId
+      );
+
+      navigation.navigate("PartnerVetSuccessfullScreen", {
+        bookingId: id,
+        vetId,
+        partnerId,
+        caseId,
+        scheduleAt,
+        selectedServices,
+      });
+    } finally {
+      setActionLoading(false);
+    }
+  };
 
   return (
     <Layout
@@ -239,17 +285,24 @@ const PartnerVetConfirmationScreen: React.FC<{
 
       <Div mt={20}>
         <ButtonPrimary
-          onPress={() =>
-            navigation.navigate("PaymentDetailsScreen", {
-              caseId,
-              clinicName: partner?.name,
-              partnerId,
-              scheduleAt,
-              selectedServices,
-              vetId,
-              paymentIntentId,
-            })
-          }
+          loading={actionLoading}
+          disabled={actionLoading}
+          onPress={() => {
+            if (bookingId) {
+              handleBook();
+            } else {
+              navigation.navigate("PaymentDetailsScreen", {
+                caseId,
+                clinicName: partner?.name,
+                partnerId,
+                partnerName,
+                scheduleAt,
+                selectedServices,
+                vetId,
+                paymentIntentId,
+              });
+            }
+          }}
         >
           Continue
         </ButtonPrimary>
@@ -269,12 +322,7 @@ const ReadonlyItem = ({
 }) => {
   return (
     <Div pb={16} borderBottomWidth={1} borderColor="#E0E0E0" mb={mb ? mb : 0}>
-      <Text
-        fontFamily={fontHauoraBold}
-        // fontSize={"l"}
-        // lineHeight={16}
-        color="darkGreyText"
-      >
+      <Text fontFamily={fontHauoraBold} color="darkGreyText">
         {field}
       </Text>
 

@@ -21,7 +21,6 @@ const ExpertsChatScreen: React.FC<Props> = (props) => {
   useEffect(() => {
     try {
       setLoading(true);
-      console.log("expertId", expertId, expertName);
       const expertDetail = expertDetailMap.get(expertId);
       if (!expertDetail) {
         fetchExpertDetail(expertId);

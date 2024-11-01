@@ -35,6 +35,7 @@ export interface State {
     caseId: string,
     date: string,
     services: { id: string; label: string }[],
-    paymentIntentId?: string
+    paymentIntentId?: string,
+    bookingId?: string
   ) => Promise<{ id: string }>;
 }

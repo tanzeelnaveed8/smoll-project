@@ -5,12 +5,11 @@ import { colorPrimary, fontHauora } from "@/constant/constant";
 import { useAuthStore } from "@/store/modules/auth";
 import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
-import { getAxiosErrMsg } from "@/utils/helpers";
+import { getAxiosErrMsg, getUserTimezoneOffset } from "@/utils/helpers";
 import { AxiosError } from "axios";
 
 import InputField from "@/components/partials/InputField";
 import React, { useRef, useState, useEffect } from "react";
-import { View } from "react-native-animatable";
 import { Button, Div, Text } from "react-native-magnus";
 import Toast from "react-native-toast-notifications";
 import ToastContainer from "react-native-toast-notifications/lib/typescript/toast-container";
@@ -18,9 +17,11 @@ import OnboardingUserModal from "./OnboardingUserModal";
 import {
   ActivityIndicator,
   Keyboard,
+  Linking,
   TouchableWithoutFeedback,
 } from "react-native";
 import { OneSignal } from "react-native-onesignal";
+import dayjs from "dayjs";
 
 interface Props {
   navigation: NavigationType;
@@ -60,6 +61,10 @@ const OnboardingOtpModal: React.FC<Props> = (props) => {
         await updateUser({ playerId });
       }
 
+      if (!user.timeZone) {
+        await updateUser({ timeZone: getUserTimezoneOffset() });
+      }
+
       if (!user?.name) {
         setShowNameModal(true);
       } else {
@@ -86,11 +91,13 @@ const OnboardingOtpModal: React.FC<Props> = (props) => {
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
+
     if (resendOtpWating > 0) {
       timer = setInterval(() => {
         setResendOtpWating((prev) => prev - 1);
       }, 1000);
     }
+
     return () => clearInterval(timer);
   }, [resendOtpWating]);
 
@@ -197,6 +204,7 @@ const OnboardingOtpModal: React.FC<Props> = (props) => {
                 py={0}
                 fontSize={16}
                 fontFamily={fontHauora}
+                onPress={() => Linking.openURL("https://smoll.me/help")}
               >
                 Get help
               </Button>

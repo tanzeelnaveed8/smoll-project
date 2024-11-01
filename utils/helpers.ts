@@ -115,3 +115,16 @@ export const hasAvailabilityDateTimePassed = (
   // For today, compare times
   return currentTimeOnly > timeOnly;
 };
+
+export const getUserTimezoneOffset = () => {
+  const date = new Date();
+  const timezoneOffset = -date.getTimezoneOffset();
+  const hours = Math.floor(Math.abs(timezoneOffset) / 60);
+  const minutes = Math.abs(timezoneOffset) % 60;
+  const sign = timezoneOffset >= 0 ? "+" : "-";
+  const gmtOffset = `GMT${sign}${hours.toString().padStart(2, "0")}:${minutes
+    .toString()
+    .padStart(2, "0")}`;
+
+  return gmtOffset;
+};

@@ -6,7 +6,6 @@ import { fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
 import { usePartnerStore } from "@/store/modules/partner";
 import { NavigationType } from "@/store/types";
 import { ExpertAvailability } from "@/store/types/expert";
-import { PartnerVetDetails } from "@/store/types/partner";
 import { hasAvailabilityDateTimePassed } from "@/utils/helpers";
 import { useRoute } from "@react-navigation/native";
 import dayjs from "dayjs";
@@ -33,8 +32,11 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
     fetchPartnerVetAvailability,
   } = usePartnerStore();
 
+  const bookingId = (route.params as Record<string, string | undefined>)
+    ?.bookingId;
   const caseId = (route.params as Record<string, string>)?.caseId;
   const partnerId = (route.params as Record<string, string>)?.partnerId;
+  const partnerName = (route.params as Record<string, string>)?.partnerName;
   const vetId = (route.params as Record<string, string>)?.vetId;
   const backTo = (route.params as Record<string, string>)?.backTo;
   const selectedServices = (
@@ -42,7 +44,7 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
       selectedServices: { id: string; label: string; price: number }[];
     }
   )?.selectedServices;
-
+  const isReschedule = (route.params as Record<string, boolean>)?.isReschedule;
   const [availability, setAvailability] = useState<ExpertAvailability[]>([]);
   const [selectedDate, setSelectedDate] = useState<string>();
   const [selectedTime, setSelectedTime] = useState<{
@@ -55,8 +57,6 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [availabilityLoading, setAvailabilityLoading] = useState(false);
   const [isRequesting, setIsRequesting] = useState(false);
-
-  console.log("availability", availability);
 
   const partnerDetails = useMemo(() => {
     return partnerVetDetails.get(vetId);
@@ -135,17 +135,18 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
 
     navigation.navigate("PartnerVetConfirmationScreen", {
       from: "PartnerVetDetailScreen",
+      bookingId,
       vetId,
       partnerId,
+      partnerName,
       selectedTime: JSON.stringify(selectedTime?.value),
       selectedDate,
       caseId,
       scheduleAt,
       selectedServices,
+      isReschedule,
     });
   };
-
-  console.log("a", availability);
 
   return (
     <Layout

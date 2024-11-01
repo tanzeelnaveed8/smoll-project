@@ -282,7 +282,7 @@ const HomeScreen: React.FC<Props> = (props) => {
 
           <Div mb={16}>
             <Text fontSize={"5xl"} fontFamily={fontHeading}>
-              Hi, {user?.name}
+              Hi{user?.name ? `, ${user?.name}` : ""}
             </Text>
             <Text fontSize={"lg"}>How can we help you today?</Text>
           </Div>

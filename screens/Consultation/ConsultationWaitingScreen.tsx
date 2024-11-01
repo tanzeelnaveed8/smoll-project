@@ -105,11 +105,11 @@ const ConsultationWaitingScreen: React.FC<{ navigation: NavigationType }> = ({
 
   return (
     <Layout title="Waiting Room" loading={loading || !consultation}>
-      <Div flex={1} mt={72} alignItems="center" w={252} mx={"auto"}>
+      <Div flex={1} mt={72} alignItems="center" w={280} mx={"auto"}>
         <Image
-          w={84}
-          h={84}
-          rounded={84}
+          w={130}
+          h={130}
+          rounded={130}
           source={{
             uri:
               consultation?.vet.profileImg?.url ??
@@ -134,10 +134,19 @@ const ConsultationWaitingScreen: React.FC<{ navigation: NavigationType }> = ({
         </Div>
 
         <Text fontSize={"xl"} fontFamily={fontHauoraMedium} textAlign="center">
-          Hang on, {consultation?.vet.name} is checking {petName.trim()}'s case
+          Hang on, {consultation?.vet.name} will take a look at {petName.trim()}
+          's case shortly
         </Text>
       </Div>
 
+      <Div mb={22}>
+        <Text fontSize={"lg"} fontFamily={fontHauoraMedium} textAlign="center">
+          Taking longer than expected?
+        </Text>
+        <Text fontSize={"lg"} fontFamily={fontHauoraMedium} textAlign="center">
+          Cancel and book a confirmed call instead!
+        </Text>
+      </Div>
       <TouchableOpacity
         style={{
           margin: "auto",
@@ -153,14 +162,14 @@ const ConsultationWaitingScreen: React.FC<{ navigation: NavigationType }> = ({
       </TouchableOpacity>
 
       <ConfirmationModal
-        heading="Cancel Consultation?"
-        text="Are you sure you want to cancel the consultation?"
+        heading="Cancel Call?"
+        text="Are you sure you want to cancel the Call?"
         isLoading={false}
         showModal={showCancelConsultationModal}
         onClose={() => setShowCancelConsultationModal(false)}
         onConfirm={handleCancelConsultation}
-        confirmText="Confirm"
-        cancelText="Cancel"
+        confirmText="Yes"
+        cancelText="No"
         confirmBgColor={colorErrorText}
         cancelBgColor="#222"
       />

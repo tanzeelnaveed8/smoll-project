@@ -13,6 +13,7 @@ export type PaymentPageRoute = {
   selectedServices: { id: string; label: string; price: number }[];
   vetId: string;
   partnerId: string;
+  partnerName: string;
   scheduleAt: string;
   paymentIntentId: string;
 };
