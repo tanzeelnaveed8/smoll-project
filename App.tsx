@@ -85,6 +85,16 @@ import UnavailableScreen from "./screens/Consultation/UnavailableScreen";
 import NewOnboardingScreen from "./screens/NewOnboardingScreen";
 import NotificationScreen from "./screens/NotificationScreen";
 import { initializeChat } from "./utils/chat.v2";
+import * as Sentry from "@sentry/react-native";
+
+Sentry.init({
+  dsn: "https://1aa3acd14e6689e79b378e98faec3062@o4508215987732480.ingest.us.sentry.io/4508216019255296",
+
+  // uncomment the line below to enable Spotlight (https://spotlightjs.com)
+  // enableSpotlight: __DEV__,
+  tracesSampleRate: 1.0,
+  profilesSampleRate: 1.0,
+});
 
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
@@ -377,6 +387,12 @@ const App = () => {
   useEffect(() => {
     (async () => {
       if (user && user.name) {
+        Sentry.setUser({
+          id: user.id,
+          name: user.name,
+          email: `${user.email}`,
+        });
+
         const storedEnvs = await AsyncStorage.getItem("envs");
 
         if (storedEnvs) {
@@ -658,4 +674,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+export default Sentry.wrap(App);

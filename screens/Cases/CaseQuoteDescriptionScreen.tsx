@@ -21,6 +21,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Platform, TouchableOpacity } from "react-native";
 import { Button, Div, ScrollDiv, Text } from "react-native-magnus";
 import CollapsibleView from "./CollapsibleView";
+import QuoteDescriptionInfoIcon from "@/components/icons/QuoteDescriptionInfoIcon";
 
 const serviceTypes = [
   {
@@ -346,13 +347,14 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
         /> */}
         <TouchableOpacity onPress={() => setShowQuotesWork(true)}>
           <Div flexDir="row" alignItems="center" style={{ gap: 1 }}>
-            <IconInfoCircleFilled
+            {/* <IconInfoCircleFilled
               width={16}
               height={16}
               color={"#fff"}
               fill={"#000"}
-            />
-            <Text fontSize={12} fontFamily={fontHauoraMedium}>
+            /> */}
+            <QuoteDescriptionInfoIcon />
+            <Text ml={3} fontSize={12} mt={-1} fontFamily={fontHauoraMedium}>
               Understand how quotes work
             </Text>
           </Div>

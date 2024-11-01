@@ -58,6 +58,7 @@ import HomeScreenBoyIcon from "@/components/icons/HomeScreenBoyIcon";
 import ClockIcon from "@/components/icons/ClockIcon";
 import GirlIcon from "@/components/icons/GirlIcon";
 import DogIcon from "@/components/icons/DogIcon";
+import * as Sentry from "@sentry/react-native";
 
 interface Props {
   navigation: NavigationType;
