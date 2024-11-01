@@ -24,8 +24,6 @@ const initializeChat = async (
   userName: string,
   userAvatar: string
 ) => {
-  const envs = JSON.parse((await AsyncStorage.getItem("envs")) as string);
-
   try {
     ZIM.create({
       appID: Number(appID),

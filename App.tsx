@@ -88,10 +88,10 @@ import { initializeChat } from "./utils/chat.v2";
 import * as Sentry from "@sentry/react-native";
 
 Sentry.init({
-  dsn: "https://1aa3acd14e6689e79b378e98faec3062@o4508215987732480.ingest.us.sentry.io/4508216019255296",
-
+  dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
   // uncomment the line below to enable Spotlight (https://spotlightjs.com)
   // enableSpotlight: __DEV__,
+  enabled: !__DEV__,
   tracesSampleRate: 1.0,
   profilesSampleRate: 1.0,
 });

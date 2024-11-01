@@ -38,6 +38,7 @@ const ConsultationWaitingScreen: React.FC<{ navigation: NavigationType }> = ({
   const [cancelLoading, setCancelLoading] = useState(false);
   const [showCancelConsultationModal, setShowCancelConsultationModal] =
     useState(false);
+  const [showCancelMessage, setShowCancelMessage] = useState(false);
 
   useEffect(() => {
     findConsultation();
@@ -72,6 +73,14 @@ const ConsultationWaitingScreen: React.FC<{ navigation: NavigationType }> = ({
     };
   }, []);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowCancelMessage(true);
+    }, 90000); // 90 seconds
+
+    return () => clearTimeout(timer);
+  }, []);
+
   const findConsultation = async () => {
     try {
       setLoading(true);
@@ -86,15 +95,6 @@ const ConsultationWaitingScreen: React.FC<{ navigation: NavigationType }> = ({
 
   const handleCancelConsultation = async () => {
     setCancelLoading(true);
-
-    showMessage({
-      renderCustomContent: () => (
-        <FlashCustomContent loader message="Cancelling..." />
-      ),
-      message: "",
-      type: "info",
-      autoHide: false,
-    });
 
     await cancelConsultation(consultationId);
     navigation.navigate("ExpertsListScreen");
@@ -139,14 +139,24 @@ const ConsultationWaitingScreen: React.FC<{ navigation: NavigationType }> = ({
         </Text>
       </Div>
 
-      <Div mb={22}>
-        <Text fontSize={"lg"} fontFamily={fontHauoraMedium} textAlign="center">
-          Taking longer than expected?
-        </Text>
-        <Text fontSize={"lg"} fontFamily={fontHauoraMedium} textAlign="center">
-          Cancel and book a confirmed call instead!
-        </Text>
-      </Div>
+      {showCancelMessage && (
+        <Div mb={26}>
+          <Text
+            fontSize={"lg"}
+            fontFamily={fontHauoraMedium}
+            textAlign="center"
+          >
+            Taking longer than expected?
+          </Text>
+          <Text
+            fontSize={"lg"}
+            fontFamily={fontHauoraMedium}
+            textAlign="center"
+          >
+            Cancel and book a confirmed call instead!
+          </Text>
+        </Div>
+      )}
       <TouchableOpacity
         style={{
           margin: "auto",
@@ -164,7 +174,7 @@ const ConsultationWaitingScreen: React.FC<{ navigation: NavigationType }> = ({
       <ConfirmationModal
         heading="Cancel Call?"
         text="Are you sure you want to cancel the Call?"
-        isLoading={false}
+        isLoading={cancelLoading}
         showModal={showCancelConsultationModal}
         onClose={() => setShowCancelConsultationModal(false)}
         onConfirm={handleCancelConsultation}

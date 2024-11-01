@@ -1400,6 +1400,29 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - RNSentry (6.1.0):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-hermes
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Sentry/HybridSDK (= 8.38.0)
+    - Yoga
   - RNSVG (15.6.0):
     - React-Core
   - RNVectorIcons (10.1.0):
@@ -1423,6 +1446,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - Sentry/HybridSDK (8.38.0)
   - SocketRocket (0.7.0)
   - Stripe (23.28.3):
     - StripeApplePay (= 23.28.3)
@@ -1554,6 +1578,7 @@ DEPENDENCIES:
   - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - "RNSentry (from `../node_modules/@sentry/react-native`)"
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - "stripe-react-native (from `../node_modules/@stripe/stripe-react-native`)"
@@ -1562,6 +1587,7 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - OneSignalXCFramework
+    - Sentry
     - SocketRocket
     - Stripe
     - StripeApplePay
@@ -1744,6 +1770,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNSentry:
+    :path: "../node_modules/@sentry/react-native"
   RNSVG:
     :path: "../node_modules/react-native-svg"
   RNVectorIcons:
@@ -1839,8 +1867,10 @@ SPEC CHECKSUMS:
   RNPermissions: f1b49dd05fa9b83993cd05a9ee115247944d8f1a
   RNReanimated: 9ed0e560d784729b12ff79920677a1117d4b13ec
   RNScreens: b32a9ff15bea7fcdbe5dff6477bc503f792b1208
+  RNSentry: 9752b085f3cb1a806ac3cd2766149e438658686e
   RNSVG: 5da7a24f31968ec74f0b091e3440080f347e279b
   RNVectorIcons: 2a2f79274248390b80684ea3c4400bd374a15c90
+  Sentry: 205813e7e758b53df157cedb8c55b31a14300645
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
   Stripe: cdf416cf2efe286f532a6306de0fcaa0ecc8c71a
   stripe-react-native: 55fbdae947bc2698d55193947fd17872d0eab786
