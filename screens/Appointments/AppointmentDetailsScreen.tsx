@@ -20,6 +20,7 @@ import { NavigationType } from "@/store/types";
 import { AppointmentDetailResponseDto } from "@/store/types/appointments";
 import { useRoute } from "@react-navigation/native";
 import {
+  IconArrowRight,
   IconCalendarClock,
   IconHelpCircle,
   IconReceipt,
@@ -510,7 +511,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                         flexDirection: "row",
                         flexWrap: "wrap",
                         gap: 14,
-                        justifyContent: "space-between",
+                        // justifyContent: "space-between",
                       }}
                     >
                       {actionBtn.map((item) => {
@@ -519,37 +520,44 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                         }
 
                         return (
-                          <TouchableOpacity
-                            disabled={rescheduleLoading}
+                          <Div
+                            mx={item.text === "Cancel" ? "auto" : 0}
                             key={item.text}
-                            onPress={() => {
-                              if (item.text.includes("Cancel")) {
-                                setShowCancelModal(true);
-                              } else if (item.text.includes("Reschedule")) {
-                                setShowRescheduleModal(true);
-                              }
-                            }}
                           >
-                            <Button
-                              bg="transparent"
-                              p={0}
-                              pointerEvents="none"
-                              flexDir="row"
-                              style={{ gap: 8 }}
-                              alignItems="center"
-                            >
-                              {item.icon}
-                              <Text
-                                fontSize={"xl"}
-                                fontFamily={fontHauoraSemiBold}
-                                color={
-                                  item.text === "Cancel" ? "#8F9498" : "primary"
+                            <TouchableOpacity
+                              disabled={rescheduleLoading}
+                              key={item.text}
+                              onPress={() => {
+                                if (item.text.includes("Cancel")) {
+                                  setShowCancelModal(true);
+                                } else if (item.text.includes("Reschedule")) {
+                                  setShowRescheduleModal(true);
                                 }
+                              }}
+                            >
+                              <Button
+                                bg="transparent"
+                                p={0}
+                                pointerEvents="none"
+                                flexDir="row"
+                                style={{ gap: 8 }}
+                                alignItems="center"
                               >
-                                {item.text}
-                              </Text>
-                            </Button>
-                          </TouchableOpacity>
+                                {item.icon}
+                                <Text
+                                  fontSize={"xl"}
+                                  fontFamily={fontHauoraSemiBold}
+                                  color={
+                                    item.text === "Cancel"
+                                      ? "#8F9498"
+                                      : "primary"
+                                  }
+                                >
+                                  {item.text}
+                                </Text>
+                              </Button>
+                            </TouchableOpacity>
+                          </Div>
                         );
                       })}
                     </Div>
@@ -578,28 +586,42 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                           <Text fontSize={12} fontFamily={fontHauoraBold}>
                             Approved Quotation
                           </Text>
+                          <IconArrowRight
+                            width={15}
+                            height={16}
+                            color="#222"
+                            style={{ marginTop: 3 }}
+                          />
                         </Div>
                       </TouchableOpacity>
 
-                      <Div pl={22} flexDir="row" alignItems="flex-end" mb={20}>
-                        <Div>
+                      <Div
+                        bg="#EFE9DB"
+                        rounded={22}
+                        px={22}
+                        py={18}
+                        flex={1}
+                        maxW={"50%"}
+                        mb={20}
+                      >
+                        <Text
+                          mb={6}
+                          fontSize={13}
+                          fontFamily={fontHauoraMedium}
+                        >
+                          You have paid
+                        </Text>
+                        <Text
+                          fontSize={"5xl"}
+                          fontFamily={fontHauoraBold}
+                          lineHeight={30}
+                        >
+                          {bookingCharges?.toFixed(2)}
                           <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
-                            Balance to be paid
+                            {" "}
+                            AED
                           </Text>
-                          <Text
-                            fontSize={"5xl"}
-                            fontFamily={fontHauoraBold}
-                            lineHeight={36}
-                          >
-                            {(selectedServicesAmount - bookingCharges).toFixed(
-                              2
-                            )}
-                            <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
-                              {" "}
-                              AED
-                            </Text>
-                          </Text>
-                        </Div>
+                        </Text>
                       </Div>
 
                       <Div
@@ -607,34 +629,34 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                         alignItems="center"
                         justifyContent="space-around"
                         style={{ gap: 20 }}
-                        mb={20}
                       >
                         <Div
-                          bg="#EFE9DB"
-                          rounded={22}
-                          px={22}
-                          py={18}
-                          flex={1}
-                          maxW={"50%"}
+                          pl={16}
+                          flexDir="row"
+                          alignItems="flex-end"
+                          mb={20}
                         >
-                          <Text
-                            mb={6}
-                            fontSize={13}
-                            fontFamily={fontHauoraMedium}
-                          >
-                            You have paid
-                          </Text>
-                          <Text
-                            fontSize={"5xl"}
-                            fontFamily={fontHauoraBold}
-                            lineHeight={30}
-                          >
-                            {bookingCharges?.toFixed(2)}
+                          <Div>
                             <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
-                              {" "}
-                              AED
+                              To be paid at clinic
                             </Text>
-                          </Text>
+                            <Text
+                              fontSize={"5xl"}
+                              fontFamily={fontHauoraBold}
+                              lineHeight={36}
+                            >
+                              {(
+                                selectedServicesAmount - bookingCharges
+                              ).toFixed(2)}
+                              <Text
+                                fontSize={"md"}
+                                fontFamily={fontHauoraMedium}
+                              >
+                                {" "}
+                                AED
+                              </Text>
+                            </Text>
+                          </Div>
                         </Div>
 
                         <Div style={{ gap: 2 }}>
