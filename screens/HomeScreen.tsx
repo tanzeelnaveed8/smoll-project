@@ -212,7 +212,7 @@ const HomeScreen: React.FC<Props> = (props) => {
   // };
 
   // useEffect(() => {
-  // handleLogout();
+  //   handleLogout();
   // }, []);
 
   return (

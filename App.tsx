@@ -287,7 +287,7 @@ const App = () => {
         });
       }
 
-      return;
+      // return;
       // OneSignal Initialization
       OneSignal.Notifications.requestPermission(true);
 
@@ -399,7 +399,7 @@ const App = () => {
           const parsedEnvs = JSON.parse(storedEnvs);
           setEnvs(parsedEnvs);
 
-          return;
+          // return;
           OneSignal.initialize(parsedEnvs?.ONESIGNAL_APP_ID as string);
           OneSignal.login(user.playerId);
           initializeChat(
