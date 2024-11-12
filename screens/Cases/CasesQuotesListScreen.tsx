@@ -68,7 +68,7 @@ const CasesQuotesListScreen: React.FC<{ navigation: NavigationType }> = ({
   return (
     <>
       <Layout
-        showBack
+        // showBack
         onBackPress={() => {
           if (comingFrom) {
             navigation.navigate("HomeScreen");
