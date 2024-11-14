@@ -106,6 +106,7 @@ const SignupScreen: React.FC<{ navigation: NavigationType }> = ({
         value: c.code,
         flag: c.flag,
       }));
+      console.log("_codes", _codes);
       setCodes(_codes);
     })();
   }, []);

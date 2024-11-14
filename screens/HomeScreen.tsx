@@ -364,7 +364,7 @@ const HomeScreen: React.FC<Props> = (props) => {
 
             {/* <OnboardingIcon1 width={130} height={130} /> */}
 
-            <Div style={{ transform: [{ translateX: -15 }] }}>
+            <Div style={{ transform: [{ translateX: -40 }] }}>
               {/* <HomeScreenBoyIcon width={190} height={170} /> */}
               <Image
                 source={require("../assets/images/homepage-boy-img.png")}

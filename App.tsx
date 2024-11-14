@@ -2,6 +2,7 @@ import {
   ActivityIndicator,
   Platform,
   SafeAreaView,
+  StatusBar,
   StyleSheet,
 } from "react-native";
 import { Div, ThemeProvider } from "react-native-magnus";
@@ -287,90 +288,95 @@ const App = () => {
         });
       }
 
-      // return;
-      // OneSignal Initialization
-      OneSignal.Notifications.requestPermission(true);
+      // Ensure OneSignal is initialized before adding event listeners
+      if (envs) {
+        OneSignal.Notifications.requestPermission(true);
 
-      OneSignal.Notifications.addEventListener("click", (event) => {
-        const additionalData = event.notification?.additionalData as {
-          notificationType?: string;
-          consultationId?: string;
-          caseId?: string;
-          vetId?: string;
-          petName?: string;
-          partnerId?: string;
-          partnerBookingId?: string;
-          expertId?: string;
-          expertName?: string;
-        };
-
-        if (additionalData?.notificationType === "consultation-notification") {
-          rootNavigation.navigate("AppointmentDetailsScreen", {
-            id: additionalData.consultationId,
-            type: "video",
-          });
-        }
-
-        if (
-          additionalData?.notificationType === "quote-submitted" ||
-          additionalData?.notificationType === "quote-updated"
-        ) {
-          const caseId = additionalData.caseId;
-          const partnerId = additionalData.partnerId;
-
-          rootNavigation.navigate("CaseQuoteDescriptionScreen", {
-            caseId,
-            id: partnerId,
-          });
-        }
-
-        if (
-          additionalData?.notificationType === "partner-booking-notification"
-        ) {
-          const partnerBookingId = additionalData.partnerBookingId;
-
-          rootNavigation.navigate("AppointmentDetailsScreen", {
-            id: partnerBookingId,
-            type: "in-clinic",
-          });
-        }
-
-        if (additionalData?.notificationType === "chat") {
-          rootNavigation.navigate("ExpertsChatScreen", {
-            expertId: additionalData.expertId,
-            expertName: additionalData.expertName,
-          });
-        }
-
-        if (additionalData?.notificationType === "vet-consultation-reminder") {
-          rootNavigation.navigate("ConsultationWaitingScreen", {
-            consultationId: additionalData.consultationId,
-            petName: additionalData.petName,
-          });
-        }
-      });
-
-      // Method for listening for notifications received
-      OneSignal.Notifications.addEventListener(
-        "foregroundWillDisplay",
-        (event) => {
+        OneSignal.Notifications.addEventListener("click", (event) => {
           const additionalData = event.notification?.additionalData as {
+            notificationType?: string;
+            consultationId?: string;
+            caseId?: string;
+            vetId?: string;
+            petName?: string;
+            partnerId?: string;
+            partnerBookingId?: string;
             expertId?: string;
+            expertName?: string;
           };
-          const expertId = (
-            rootNavigation.getCurrentRoute()?.params as Record<string, string>
-          )?.expertId;
 
           if (
-            rootNavigation.getCurrentRoute()?.name === "ExpertsChatScreen" &&
-            additionalData?.expertId === expertId
+            additionalData?.notificationType === "consultation-notification"
           ) {
-            return;
+            rootNavigation.navigate("AppointmentDetailsScreen", {
+              id: additionalData.consultationId,
+              type: "video",
+            });
           }
 
-          event.notification.display();
-        }
-      );
+          if (
+            additionalData?.notificationType === "quote-submitted" ||
+            additionalData?.notificationType === "quote-updated"
+          ) {
+            const caseId = additionalData.caseId;
+            const partnerId = additionalData.partnerId;
+
+            rootNavigation.navigate("CaseQuoteDescriptionScreen", {
+              caseId,
+              id: partnerId,
+            });
+          }
+
+          if (
+            additionalData?.notificationType === "partner-booking-notification"
+          ) {
+            const partnerBookingId = additionalData.partnerBookingId;
+
+            rootNavigation.navigate("AppointmentDetailsScreen", {
+              id: partnerBookingId,
+              type: "in-clinic",
+            });
+          }
+
+          if (additionalData?.notificationType === "chat") {
+            rootNavigation.navigate("ExpertsChatScreen", {
+              expertId: additionalData.expertId,
+              expertName: additionalData.expertName,
+            });
+          }
+
+          if (
+            additionalData?.notificationType === "vet-consultation-reminder"
+          ) {
+            rootNavigation.navigate("ConsultationWaitingScreen", {
+              consultationId: additionalData.consultationId,
+              petName: additionalData.petName,
+            });
+          }
+        });
+
+        // Method for listening for notifications received
+        OneSignal.Notifications.addEventListener(
+          "foregroundWillDisplay",
+          (event) => {
+            const additionalData = event.notification?.additionalData as {
+              expertId?: string;
+            };
+            const expertId = (
+              rootNavigation.getCurrentRoute()?.params as Record<string, string>
+            )?.expertId;
+
+            if (
+              rootNavigation.getCurrentRoute()?.name === "ExpertsChatScreen" &&
+              additionalData?.expertId === expertId
+            ) {
+              return;
+            }
+
+            event.notification.display();
+          }
+        );
+      }
     })();
 
     return () => {
@@ -382,7 +388,7 @@ const App = () => {
       PushNotificationIOS.removeEventListener("register");
       PushNotificationIOS.removeEventListener("notification");
     };
-  }, []);
+  }, [envs]);
 
   useEffect(() => {
     (async () => {
@@ -399,7 +405,7 @@ const App = () => {
           const parsedEnvs = JSON.parse(storedEnvs);
           setEnvs(parsedEnvs);
 
-          // return;
+          // Ensure OneSignal is initialized before any other OneSignal methods
           OneSignal.initialize(parsedEnvs?.ONESIGNAL_APP_ID as string);
           OneSignal.login(user.playerId);
           initializeChat(
@@ -433,6 +439,7 @@ const App = () => {
         <SafeAreaView
           style={[styles.safeAreaViewContainer, { backgroundColor }]}
         >
+          <StatusBar barStyle="dark-content" />
           <NavigationContainer ref={navigationRef}>
             <ToastProvider
               placement="bottom"
@@ -446,6 +453,7 @@ const App = () => {
                   initialRouteName="SplashScreen"
                   screenOptions={{
                     headerShown: false,
+                    statusBarColor: "#FAF8F5",
                   }}
                 >
                   <Stack.Screen name="SplashScreen" component={SplashScreen} />

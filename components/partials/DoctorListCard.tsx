@@ -69,7 +69,12 @@ const DoctorListCard: React.FC<PropTypes> = (props) => {
           py={8}
           px={12}
           suffix={
-            <IconChevronRight color="#FFFFFF" size={24} strokeWidth={1.5} />
+            <IconChevronRight
+              color="#FFFFFF"
+              size={24}
+              strokeWidth={1.5}
+              style={{ marginBottom: -2 }}
+            />
           }
           lineHeight={24}
           onPress={onCheckAvailability}

@@ -22,6 +22,7 @@ import {
 } from "react-native";
 import { OneSignal } from "react-native-onesignal";
 import dayjs from "dayjs";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface Props {
   navigation: NavigationType;
@@ -53,12 +54,21 @@ const OnboardingOtpModal: React.FC<Props> = (props) => {
 
       await verifyOtp({ phone: props.phone, otp: _otp ?? otp });
       const user = await findUser();
+      console.log("user===", user);
 
-      // Update the playerId everytime the user login
-      const playerId = await OneSignal.User.pushSubscription.getIdAsync();
+      const storedEnvs = await AsyncStorage.getItem("envs");
 
-      if (playerId) {
-        await updateUser({ playerId });
+      if (storedEnvs) {
+        const parsedEnvs = JSON.parse(storedEnvs);
+        // Ensure OneSignal is initialized before any other OneSignal methods
+        OneSignal.initialize(parsedEnvs?.ONESIGNAL_APP_ID as string);
+        // Update the playerId everytime the user login
+        const playerId = await OneSignal.User.pushSubscription.getIdAsync();
+
+        console.log("Initializing OneSignal");
+        if (playerId) {
+          await updateUser({ playerId });
+        }
       }
 
       if (!user.timeZone) {

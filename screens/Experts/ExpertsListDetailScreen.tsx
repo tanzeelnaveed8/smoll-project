@@ -17,7 +17,7 @@ import { hasAvailabilityDateTimePassed } from "@/utils/helpers";
 import { useFocusEffect, useRoute } from "@react-navigation/native";
 import dayjs from "dayjs";
 import { useCallback, useState } from "react";
-import { RefreshControl } from "react-native";
+import { Dimensions, RefreshControl } from "react-native";
 import { Button, Div, ScrollDiv, Skeleton, Text } from "react-native-magnus";
 
 const dayOfWeekMap: { [key: string]: number } = {
@@ -29,6 +29,8 @@ const dayOfWeekMap: { [key: string]: number } = {
   fri: 5,
   sat: 6,
 };
+
+const windowWidth = Dimensions.get("window").width;
 
 const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
@@ -163,6 +165,24 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
     } finally {
       setIsActionLoading(false);
     }
+  };
+
+  const TimeBtnText: React.FC<{ time: string }> = ({ time }) => {
+    const font = windowWidth > 390 ? 15 : 14;
+
+    return (
+      <Div flexDir="row" w={"100%"} justifyContent="center" flexWrap="wrap">
+        <Text fontFamily={fontHauoraMedium} lineHeight={20} fontSize={font}>
+          {time.split(" - ")[0]}
+        </Text>
+        <Text fontFamily={fontHauoraMedium} lineHeight={20} fontSize={font}>
+          -
+        </Text>
+        <Text fontFamily={fontHauoraMedium} lineHeight={20} fontSize={font}>
+          {time.split(" - ")[1]}
+        </Text>
+      </Div>
+    );
   };
 
   return (
@@ -332,10 +352,8 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
                           return (
                             <Button
                               key={`${index}:${a.dayOfWeek ?? a.date}:${time}`}
-                              fontFamily={fontHauoraMedium}
-                              lineHeight={20}
-                              fontSize={15}
                               w={170}
+                              maxW={"50%"}
                               p={10}
                               borderWidth={1}
                               color={
@@ -362,7 +380,8 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
                               }}
                               disabled={isDisabled}
                             >
-                              {time}
+                              <TimeBtnText time={time} />
+                              {/* {time} */}
                             </Button>
                           );
                         })}
