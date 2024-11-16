@@ -167,18 +167,36 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
     }
   };
 
-  const TimeBtnText: React.FC<{ time: string }> = ({ time }) => {
+  const TimeBtnText: React.FC<{ time: string; color: string }> = ({
+    time,
+    color,
+  }) => {
     const font = windowWidth > 390 ? 15 : 14;
 
     return (
       <Div flexDir="row" w={"100%"} justifyContent="center" flexWrap="wrap">
-        <Text fontFamily={fontHauoraMedium} lineHeight={20} fontSize={font}>
+        <Text
+          color={color}
+          fontFamily={fontHauoraMedium}
+          lineHeight={20}
+          fontSize={font}
+        >
           {time.split(" - ")[0]}
         </Text>
-        <Text fontFamily={fontHauoraMedium} lineHeight={20} fontSize={font}>
+        <Text
+          color={color}
+          fontFamily={fontHauoraMedium}
+          lineHeight={20}
+          fontSize={font}
+        >
           -
         </Text>
-        <Text fontFamily={fontHauoraMedium} lineHeight={20} fontSize={font}>
+        <Text
+          color={color}
+          fontFamily={fontHauoraMedium}
+          lineHeight={20}
+          fontSize={font}
+        >
           {time.split(" - ")[1]}
         </Text>
       </Div>
@@ -356,12 +374,6 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
                               maxW={"50%"}
                               p={10}
                               borderWidth={1}
-                              color={
-                                selectedTime?.label ===
-                                `${index}:${a.dayOfWeek ?? a.date}:${time}`
-                                  ? "#fff"
-                                  : "#494949"
-                              }
                               borderColor="#E0E0E0"
                               rounded={8}
                               bg={
@@ -380,7 +392,15 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
                               }}
                               disabled={isDisabled}
                             >
-                              <TimeBtnText time={time} />
+                              <TimeBtnText
+                                time={time}
+                                color={
+                                  selectedTime?.label ===
+                                  `${index}:${a.dayOfWeek ?? a.date}:${time}`
+                                    ? "#fff"
+                                    : "#494949"
+                                }
+                              />
                               {/* {time} */}
                             </Button>
                           );

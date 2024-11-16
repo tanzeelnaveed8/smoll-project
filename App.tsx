@@ -265,6 +265,7 @@ const TabNavigation = () => {
 
 const App = () => {
   const { user } = useUserStore();
+
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const { backgroundColor } = useUIStore();
   const [envs, setEnvs] = useState<{

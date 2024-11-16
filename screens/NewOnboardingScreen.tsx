@@ -61,9 +61,10 @@ const NewOnboardingScreen: React.FC<{ navigation: NavigationType }> = ({
 
   useEffect(() => {
     // Preload images
+    return;
     images.forEach((image) => {
-      const resolvedImage: ImageResolvedAssetSource =
-        RNImage.resolveAssetSource(image.img);
+      const resolvedImage = RNImage.resolveAssetSource(image.img);
+      console.log(resolvedImage.uri); // Log the URI to debug
       resolvedImage.uri && RNImage.prefetch(resolvedImage.uri);
     });
   }, []);
