@@ -52,11 +52,11 @@ const SignupScreen: React.FC<{ navigation: NavigationType }> = ({
   const [codes, setCodes] = useState<
     { label: string; value: string; flag: string }[]
   >([
-    {
-      flag: "https://flagcdn.com/w320/in.png",
-      label: "(+91) India",
-      value: "+91",
-    },
+    // {
+    //   flag: "https://flagcdn.com/w320/in.png",
+    //   label: "(+91) India",
+    //   value: "+91",
+    // },
     {
       flag: "https://flagcdn.com/w320/ae.png",
       label: "(+971) United Arab Emirates",
