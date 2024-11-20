@@ -15,7 +15,7 @@ const ExpertsInboxScreen: React.FC<Props> = (props) => {
     useExpertStore();
 
   const [loading, setLoading] = useState(false);
-  const [actionLoading, setActionLoading] = useState(false);
+  const [actionLoading, setActionLoading] = useState("");
 
   useEffect(() => {
     fetchAllExperts();
@@ -35,7 +35,7 @@ const ExpertsInboxScreen: React.FC<Props> = (props) => {
       const expertDetail = expertDetailMap.get(expertId);
 
       if (!expertDetail) {
-        setActionLoading(true);
+        setActionLoading(expertId);
         await fetchExpertDetail(expertId);
       }
 
@@ -44,7 +44,7 @@ const ExpertsInboxScreen: React.FC<Props> = (props) => {
         expertName: expertName,
       });
     } finally {
-      setActionLoading(false);
+      setActionLoading("");
     }
   };
 
@@ -69,6 +69,7 @@ const ExpertsInboxScreen: React.FC<Props> = (props) => {
             subtitle={expert.designation}
             loading={actionLoading}
             image={expert.profileImg?.url ?? "https://via.placeholder.com/150"}
+            expertId={expert.id}
           />
         ))}
       </Div>

@@ -9,12 +9,16 @@ interface Props {
   title: string;
   subtitle: string;
   image: string;
-  loading?: boolean;
+  loading?: string;
+  expertId: string;
 }
 
 const ChatInboxItem: React.FC<Props> = (props) => {
   return (
-    <TouchableOpacity disabled={props.loading} onPress={props.onPress}>
+    <TouchableOpacity
+      disabled={props.loading ? true : false}
+      onPress={props.onPress}
+    >
       <Button
         bg="transparent"
         p={0}
@@ -37,7 +41,7 @@ const ChatInboxItem: React.FC<Props> = (props) => {
           </Div>
 
           <Div ml="auto">
-            {props.loading ? (
+            {props.loading === props.expertId ? (
               <ActivityIndicator size="small" color={colorPrimary} />
             ) : (
               <IconChevronRight width={24} height={24} color={"#222222"} />

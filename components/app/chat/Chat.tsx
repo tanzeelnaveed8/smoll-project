@@ -8,7 +8,7 @@ import {
   useRoute,
 } from "@react-navigation/native";
 import { useEffect, useState } from "react";
-import { ActivityIndicator } from "react-native";
+import { ActivityIndicator, Platform } from "react-native";
 import { Avatar, GiftedChat, IMessage } from "react-native-gifted-chat";
 import { Div } from "react-native-magnus";
 import {
@@ -224,7 +224,8 @@ const Chat: React.FC<Props> = (props) => {
       justifyContent="center"
       alignItems="center"
       style={{
-        transform: [{ scaleY: -1 }],
+        transform:
+          Platform.OS !== "android" ? [{ scaleY: -1 }] : [{ rotate: "180deg" }],
       }}
     >
       <ChatBubble

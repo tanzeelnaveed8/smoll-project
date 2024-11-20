@@ -49,7 +49,20 @@ const SignupScreen: React.FC<{ navigation: NavigationType }> = ({
     value: "",
   });
   const [phone, setPhone] = useState("");
-  const [codes, setCodes] = useState<{ label: string; value: string }[]>([]);
+  const [codes, setCodes] = useState<
+    { label: string; value: string; flag: string }[]
+  >([
+    {
+      flag: "https://flagcdn.com/w320/in.png",
+      label: "(+91) India",
+      value: "+91",
+    },
+    {
+      flag: "https://flagcdn.com/w320/ae.png",
+      label: "(+971) United Arab Emirates",
+      value: "+971",
+    },
+  ]);
 
   const handlePhoneChange = (value: string) => {
     const phoneNumber = parsePhoneNumber(value);
@@ -106,6 +119,7 @@ const SignupScreen: React.FC<{ navigation: NavigationType }> = ({
         value: c.code,
         flag: c.flag,
       }));
+      console.log("_codes", _codes);
       setCodes(_codes);
     })();
   }, []);

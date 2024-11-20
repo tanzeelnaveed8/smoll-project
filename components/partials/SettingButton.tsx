@@ -2,7 +2,7 @@ import { ReactElement } from "react";
 import { fontHauora } from "@/constant/constant";
 import { Div, Text, Toggle } from "react-native-magnus";
 import { IconChevronRight } from "@tabler/icons-react-native";
-import { TouchableOpacity } from "react-native";
+import { Dimensions, TouchableOpacity } from "react-native";
 
 type PropsType = {
   title: string;
@@ -14,6 +14,8 @@ type PropsType = {
   toggleValue?: boolean;
   disabled?: boolean;
 };
+
+const windowWidth = Dimensions.get("window").width;
 
 const SettingButton: React.FC<PropsType> = (props) => {
   const {
@@ -57,7 +59,7 @@ const SettingButton: React.FC<PropsType> = (props) => {
                 fontSize={14}
                 fontFamily={fontHauora}
                 lineHeight={20}
-                maxW={240}
+                maxW={windowWidth < 390 ? 230 : 240}
               >
                 {description}
               </Text>
@@ -72,8 +74,8 @@ const SettingButton: React.FC<PropsType> = (props) => {
             onPress={onPress}
             on={toggleValue}
             activeBg="#222"
-            w={52}
-            h={32}
+            w={windowWidth < 390 ? 48 : 52}
+            h={windowWidth < 390 ? 28 : 32}
           />
         )}
       </Div>

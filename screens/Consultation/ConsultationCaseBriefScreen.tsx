@@ -235,7 +235,7 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
         showsVerticalScrollIndicator={false}
       >
         <Text fontSize={"4xl"} mb={12} fontFamily={fontHeading}>
-          Tell the vet your pet's condition
+          Tell the expert your pet's condition
         </Text>
 
         <Text
