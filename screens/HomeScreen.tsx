@@ -2,8 +2,6 @@ import Layout from "@/components/app/Layout";
 import IconButton from "@/components/partials/IconButton";
 import {
   colorPrimary,
-  fontCooper,
-  fontCooperBold,
   fontHauoraBold,
   fontHauoraMedium,
   fontHauoraSemiBold,
@@ -13,15 +11,11 @@ import {
   IconArrowRight,
   IconBell,
   IconChevronRight,
-  IconMichelinStar,
   IconSettings,
-  IconUserCircle,
   IconX,
-  IconXboxX,
 } from "@tabler/icons-react-native";
 import {
   ActivityIndicator,
-  FlatList,
   ImageSourcePropType,
   ImageStyle,
   StyleProp,
@@ -31,34 +25,25 @@ import {
 import {
   Button,
   Div,
-  Icon,
   Image,
   ScrollDiv,
   Tag,
   Text,
+  WINDOW_WIDTH,
 } from "react-native-magnus";
 
 import AccountSetupModal from "@/components/app/account/AccountSetupModal";
 import OnboardingCongratsModal from "@/components/app/onboarding/OnboardingCongratsModal";
+import ClockIcon from "@/components/icons/ClockIcon";
 import AccountSetupProgress from "@/components/partials/AccountSetupProgress";
 import { useCounsellorStore } from "@/store/modules/counsellor";
+import { useNotificationStore } from "@/store/modules/notification";
 import { useUserStore } from "@/store/modules/user";
-import { NavigationType, PaymentPageRoute } from "@/store/types";
+import { NavigationType } from "@/store/types";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRoute } from "@react-navigation/native";
 import React, { useEffect, useMemo, useState } from "react";
-import TabNavigationBar from "@/components/app/TabNavigationBar";
 import { showMessage } from "react-native-flash-message";
-import { useNotificationStore } from "@/store/modules/notification";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import OnboardingIcon1 from "@/components/icons/OnboardingIcon1";
-import OnboardingIcon2 from "@/components/icons/OnboardingIcon2";
-import OnboardingIcon4 from "@/components/icons/OnboardingIcon4";
-import OnboardingIcon5 from "@/components/icons/OnboardingIcon5";
-import HomeScreenBoyIcon from "@/components/icons/HomeScreenBoyIcon";
-import ClockIcon from "@/components/icons/ClockIcon";
-import GirlIcon from "@/components/icons/GirlIcon";
-import DogIcon from "@/components/icons/DogIcon";
-import * as Sentry from "@sentry/react-native";
 
 interface Props {
   navigation: NavigationType;
@@ -364,7 +349,11 @@ const HomeScreen: React.FC<Props> = (props) => {
 
             {/* <OnboardingIcon1 width={130} height={130} /> */}
 
-            <Div style={{ transform: [{ translateX: -40 }] }}>
+            <Div
+              style={{
+                transform: [{ translateX: WINDOW_WIDTH <= 375 ? -40 : -15 }],
+              }}
+            >
               {/* <HomeScreenBoyIcon width={190} height={170} /> */}
               <Image
                 source={require("../assets/images/homepage-boy-img.png")}
