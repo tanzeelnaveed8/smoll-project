@@ -54,7 +54,6 @@ const OnboardingOtpModal: React.FC<Props> = (props) => {
 
       await verifyOtp({ phone: props.phone, otp: _otp ?? otp });
       const user = await findUser();
-      console.log("user===", user);
 
       const storedEnvs = await AsyncStorage.getItem("envs");
 
@@ -65,7 +64,6 @@ const OnboardingOtpModal: React.FC<Props> = (props) => {
         // Update the playerId everytime the user login
         const playerId = await OneSignal.User.pushSubscription.getIdAsync();
 
-        console.log("Initializing OneSignal");
         if (playerId) {
           await updateUser({ playerId });
         }

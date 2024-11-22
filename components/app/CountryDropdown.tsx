@@ -73,7 +73,7 @@ const CountryDropdown: React.FC<Props> = ({
             onSelect();
           }
         }}
-        showOnly={["ae", "in"]}
+        showOnly={["ae"]}
         onBackdropPress={() => setShow(false)}
         style={{}}
       />

@@ -1,18 +1,13 @@
-import CountryDropdown from "@/components/app/CountryDropdown";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import InputField from "@/components/partials/InputField";
+import SelectInput from "@/components/partials/SelectInput";
 import { fontHauora } from "@/constant/constant";
-import { NavigationType } from "@/store/types";
-import React, { useRef, useState, useEffect } from "react";
-import { Div, Image, Text } from "react-native-magnus";
-import BottomSheet from "@/components/partials/BottomSheet";
-import BackButton from "@/components/partials/BackButton";
-import OnboardingOtpModal from "./OnboardingOtpModal";
 import { useAuthStore } from "@/store/modules/auth";
-import ToastContainer from "react-native-toast-notifications/lib/typescript/toast-container";
-import Toast from "react-native-toast-notifications";
+import { NavigationType } from "@/store/types";
 import { getAxiosErrMsg } from "@/utils/helpers";
 import { AxiosError } from "axios";
+import parsePhoneNumber from "libphonenumber-js";
+import React, { useRef, useState } from "react";
 import {
   Keyboard,
   Linking,
@@ -20,11 +15,12 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from "react-native";
-import SelectInput from "@/components/partials/SelectInput";
-import { getCountryCodes } from "@/utils/country-codes";
+import { Div, Image, Text } from "react-native-magnus";
 import { GestureResponderEvent } from "react-native-modal";
+import Toast from "react-native-toast-notifications";
+import ToastContainer from "react-native-toast-notifications/lib/typescript/toast-container";
 import Layout from "../Layout";
-import parsePhoneNumber from "libphonenumber-js";
+import OnboardingOtpModal from "./OnboardingOtpModal";
 
 interface Props {
   navigation: NavigationType;
@@ -84,8 +80,6 @@ const SignupScreen: React.FC<{ navigation: NavigationType }> = ({
       cleanedValue = formattedPhone;
     }
 
-    // cleanedValue = cleanedValue.slice(0, 10);
-
     setPhone(cleanedValue.replace(/\s/g, ""));
   };
 
@@ -111,17 +105,6 @@ const SignupScreen: React.FC<{ navigation: NavigationType }> = ({
       setIsLoading(false);
     }
   };
-
-  useEffect(() => {
-    (async function () {
-      const _codes = (await getCountryCodes()).map((c) => ({
-        label: `(${c.code}) ${c.name}`,
-        value: c.code,
-        flag: c.flag,
-      }));
-      setCodes(_codes);
-    })();
-  }, []);
 
   return (
     <Layout>

@@ -20,17 +20,20 @@ const SelectCountryDropdown: React.FC<{
     value: "",
     flag: "",
   });
+
   const [codes, setCodes] = useState<
     { label: string; value: string; flag: string }[]
   >([]);
 
   useEffect(() => {
     (async function () {
-      const _codes = (await getCountryCodes()).map((c) => ({
-        label: `${hideCountryCode ? "" : `${c.code}`} ${c.name}`,
-        value: c.code,
-        flag: c.flag,
-      }));
+      const _codes = (await getCountryCodes())
+        .filter((c) => c.name === "United Arab Emirates")
+        .map((c) => ({
+          label: `${hideCountryCode ? "" : `${c.code}`} ${c.name}`,
+          value: c.code,
+          flag: c.flag,
+        }));
       setCodes(_codes);
     })();
   }, []);
