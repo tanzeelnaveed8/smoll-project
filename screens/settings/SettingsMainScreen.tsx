@@ -258,7 +258,7 @@ const SettingsMainScreen: React.FC<{ navigation: NavigationType }> = ({
             mb={6}
             color="#7B7B7B"
           >
-            App v 12.81
+            App v 2.0.0
           </Text>
         </Div>
       </ScrollDiv>
