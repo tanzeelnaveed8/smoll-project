@@ -1,4 +1,4 @@
-package com.anonymous.smollapp
+package com.anonymous.smoll
 
 import android.os.Build
 import android.os.Bundle

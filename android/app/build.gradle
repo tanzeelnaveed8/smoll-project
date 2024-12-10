@@ -110,9 +110,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.anonymous.smollapp'
+    namespace 'com.anonymous.smoll'
     defaultConfig {
-        applicationId 'com.anonymous.smollapp'
+        applicationId 'com.anonymous.smoll'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

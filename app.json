@@ -2,7 +2,7 @@
   "expo": {
     "main": "node_modules/expo/AppEntry.js",
     "name": "smoll",
-    "slug": "smoll-app",
+    "slug": "smoll",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -23,7 +23,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.anonymous.smollapp"
+      "package": "com.anonymous.smoll"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -33,7 +33,7 @@
         "@sentry/react-native/expo",
         {
           "url": "https://sentry.io/",
-          "project": "smoll-app",
+          "project": "smoll",
           "organization": "smoll-lo"
         }
       ]
