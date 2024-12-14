@@ -7,13 +7,34 @@ podfile_properties = JSON.parse(File.read(File.join(__dir__, 'Podfile.properties
 ENV['RCT_NEW_ARCH_ENABLED'] = podfile_properties['newArchEnabled'] == 'true' ? '1' : '0'
 ENV['EX_DEV_CLIENT_NETWORK_INSPECTOR'] = podfile_properties['EX_DEV_CLIENT_NETWORK_INSPECTOR']
 
+use_autolinking_method_symbol = ('use' + '_native' + '_modules!').to_sym
+origin_autolinking_method = self.method(use_autolinking_method_symbol)
+self.define_singleton_method(use_autolinking_method_symbol) do |*args|
+  if ENV['EXPO_UNSTABLE_CORE_AUTOLINKING'] == '1'
+    Pod::UI.puts('Using expo-modules-autolinking as core autolinking source'.green)
+    config_command = [
+      'node',
+      '--no-warnings',
+      '--eval',
+      'require(require.resolve(\'expo-modules-autolinking\', { paths: [require.resolve(\'expo/package.json\')] }))(process.argv.slice(1))',
+      'react-native-config',
+      '--json',
+      '--platform',
+      'ios'
+    ]
+    origin_autolinking_method.call(config_command)
+  else
+    origin_autolinking_method.call()
+  end
+end
+
 platform :ios, podfile_properties['ios.deploymentTarget'] || '13.4'
 install! 'cocoapods',
   :deterministic_uuids => false
 
 prepare_react_native_project!
 
-target 'smollapp' do
+target 'smoll' do
   use_expo_modules!
   config = use_native_modules!
 
@@ -27,12 +48,6 @@ target 'smollapp' do
     :app_path => "#{Pod::Config.instance.installation_root}/..",
     :privacy_file_aggregation_enabled => podfile_properties['apple.privacyManifestAggregationEnabled'] != 'false',
   )
-
-  permissions_path = '../node_modules/react-native-permissions/ios'
-  pod 'Permission-Camera', :path => "#{permissions_path}/Camera"
-  pod 'Permission-PhotoLibrary', :path => "#{permissions_path}/PhotoLibrary"
-  pod 'Permission-Microphone', :path => "#{permissions_path}/Microphone"
-  pod 'Permission-Notifications', :path => "#{permissions_path}/Notifications"
 
   post_install do |installer|
     react_native_post_install(
@@ -50,13 +65,6 @@ target 'smollapp' do
         resource_bundle_target.build_configurations.each do |config|
           config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'
         end
-      end
-    end
-
-    # Add this block at the end of the post_install hook
-    installer.pods_project.targets.each do |target|
-      target.build_configurations.each do |config|
-        config.build_settings['NODE_BINARY'] = `which node`.strip
       end
     end
   end
