@@ -87,6 +87,9 @@ import NewOnboardingScreen from "./screens/NewOnboardingScreen";
 import NotificationScreen from "./screens/NotificationScreen";
 import { initializeChat } from "./utils/chat.v2";
 import * as Sentry from "@sentry/react-native";
+import EmergencyScreen from "./screens/EmergencyScreen";
+import ClinicListScreen from "./screens/Clinic/ClinicListScreen";
+import ClinicDetailScreen from "./screens/Clinic/ClinicDetailScreen";
 
 Sentry.init({
   dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
@@ -458,7 +461,6 @@ const App = () => {
                   }}
                 >
                   <Stack.Screen name="SplashScreen" component={SplashScreen} />
-
                   <Stack.Screen
                     name="OnboardingScreen"
                     component={OnboardingScreen}
@@ -471,7 +473,6 @@ const App = () => {
                     component={NewOnboardingScreen}
                   />
                   <Stack.Screen name="SignupScreen" component={SignupScreen} />
-
                   <Stack.Screen
                     name="AccountSetupAddressScreen"
                     component={AccountSetupAddressScreen}
@@ -489,17 +490,25 @@ const App = () => {
                       component={HomeScreen}
                       options={{ headerShown: false }}
                     /> */}
-
                   <Stack.Screen
                     name="HomeScreen"
                     component={TabNavigation}
                     options={{ headerShown: false, gestureEnabled: false }}
                   />
-
                   <Stack.Screen
                     name="NotificationScreen"
                     component={NotificationScreen}
                   />
+                  <Stack.Screen
+                    name="ClinicListScreen"
+                    component={ClinicListScreen}
+                    // options={{ headerShown: false, gestureEnabled: false }}
+                  />
+                  <Stack.Screen
+                    name="ClinicDetailScreen"
+                    component={ClinicDetailScreen}
+                  />
+
                   <Stack.Screen
                     name="PetProfileScreen"
                     component={PetProfileScreen}
@@ -569,7 +578,10 @@ const App = () => {
                     name="RequestCallBackScreen"
                     component={RequestCallBackScreen}
                   />
-
+                  <Stack.Screen
+                    name="EmergencyScreen"
+                    component={EmergencyScreen}
+                  />
                   <Stack.Screen
                     name="ExpertsScheduleConfirmationScreen"
                     component={ExpertsScheduleConfirmationScreen}
@@ -581,17 +593,14 @@ const App = () => {
                       gestureEnabled: false,
                     }}
                   />
-
                   <Stack.Screen
                     name="CasesQuotesListScreen"
                     component={CasesQuotesListScreen}
                   />
-
                   <Stack.Screen
                     name="CaseDetailScreen"
                     component={CaseDetailScreen}
                   />
-
                   <Stack.Screen
                     name="CaseQuotesScreen"
                     component={CaseQuotesScreen}
@@ -600,7 +609,6 @@ const App = () => {
                     name="CaseQuoteDescriptionScreen"
                     component={CaseQuoteDescriptionScreen}
                   />
-
                   <Stack.Screen
                     name="PartnerVetScreen"
                     component={PartnerVetScreen}
@@ -661,7 +669,6 @@ const App = () => {
                     name="AppointmentDetailsScreen"
                     component={AppointmentDetailsScreen}
                   />
-
                   <Stack.Screen
                     name="PaymentDetailsScreen"
                     component={PaymentDetailsScreen}

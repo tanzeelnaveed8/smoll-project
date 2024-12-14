@@ -10,25 +10,379 @@ import {
   useAppointmentStore,
 } from "@/store/modules/appointments";
 import { NavigationType } from "@/store/types";
+import { AppointmentListResponseDto } from "@/store/types/appointments";
 import { useFocusEffect } from "@react-navigation/native";
 import { IconChevronRight, IconUser } from "@tabler/icons-react-native";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { RefreshControl, TouchableOpacity } from "react-native";
 import { FlatList } from "react-native-bidirectional-infinite-scroll";
 
 import { Div, Image, Tag, Text } from "react-native-magnus";
 
+const generateRandomData = () => {
+  return {
+    id: Math.random().toString(36).substring(2, 15),
+    scheduledAt: new Date(
+      Date.now() + Math.random() * 10000000000
+    ).toISOString(),
+    allServices: [
+      {
+        id: Math.random().toString(36).substring(2, 15),
+        name: "Service " + Math.floor(Math.random() * 100),
+        label: "Label " + Math.floor(Math.random() * 100),
+        price: Math.floor(Math.random() * 100) + 1,
+        description:
+          "Description for service " + Math.floor(Math.random() * 100),
+      },
+    ],
+    services: [
+      {
+        id: Math.random().toString(36).substring(2, 15),
+        name: "Service " + Math.floor(Math.random() * 100),
+        label: "Label " + Math.floor(Math.random() * 100),
+        price: Math.floor(Math.random() * 100) + 1,
+        description:
+          "Description for service " + Math.floor(Math.random() * 100),
+      },
+    ],
+    caseId: Math.random().toString(36).substring(2, 15),
+    partner: {
+      id: Math.random().toString(36).substring(2, 15),
+      name: "Partner " + Math.floor(Math.random() * 100),
+      email: `partner${Math.floor(Math.random() * 100)}@example.com`,
+      phone: `+123456789${Math.floor(Math.random() * 10000)}`,
+      clinicImg: {
+        filename: "clinic_image.jpg",
+        filesize: Math.floor(Math.random() * 10000),
+        mimetype: "image/jpeg",
+        url: "http://example.com/clinic_image.jpg",
+      },
+      address: "123 Main St",
+      city: "City " + Math.floor(Math.random() * 100),
+      country: "Country " + Math.floor(Math.random() * 100),
+    },
+    vet: {
+      id: Math.random().toString(36).substring(2, 15),
+      name: "Vet " + Math.floor(Math.random() * 100),
+      designation: "Veterinarian",
+      profileImg: {
+        filename: "vet_image.jpg",
+        filesize: Math.floor(Math.random() * 10000),
+        mimetype: "image/jpeg",
+        url: "http://example.com/vet_image.jpg",
+      },
+    },
+    pet: {
+      name: "Pet " + Math.floor(Math.random() * 100),
+    },
+    type: Math.random() > 0.5 ? "in-clinic" : "video",
+  };
+};
+
+// const dummyDataArray = Array.from({ length: 5 }, generateRandomData).sort(
+//   (a, b) =>
+//     new Date(b.scheduledAt).getTime() - new Date(a.scheduledAt).getTime()
+// );
+
+const dummyDataArray = [
+  {
+    id: "qnkdmjn87x8",
+    scheduledAt: "2025-03-06T09:28:43.803Z",
+    allServices: [
+      {
+        id: "mu6eej7ty9h",
+        name: "Service 27",
+        label: "Label 44",
+        price: 21,
+        description: "Description for service 51",
+      },
+    ],
+    services: [
+      {
+        id: "jqvzl29r8tj",
+        name: "Service 1",
+        label: "Label 76",
+        price: 78,
+        description: "Description for service 37",
+      },
+    ],
+    caseId: "3l1w13gt36m",
+    partner: {
+      id: "rp9uu73fmwr",
+      name: "Partner 49",
+      email: "partner98@example.com",
+      phone: "+1234567896587",
+      clinicImg: {
+        filename: "clinic_image.jpg",
+        filesize: 800,
+        mimetype: "image/jpeg",
+        url: "http://example.com/clinic_image.jpg",
+      },
+      address: "123 Main St",
+      city: "City 29",
+      country: "Country 92",
+    },
+    vet: {
+      id: "cyb747va9rg",
+      name: "Vet 40",
+      designation: "Veterinarian",
+      profileImg: {
+        filename: "vet_image.jpg",
+        filesize: 2064,
+        mimetype: "image/jpeg",
+        url: "http://example.com/vet_image.jpg",
+      },
+    },
+    pet: { name: "Pet 64" },
+    type: "in-clinic",
+  },
+  {
+    id: "141afwiut5hh",
+    scheduledAt: "2025-01-02T09:28:43.803Z",
+    allServices: [
+      {
+        id: "qf5p3cajamf",
+        name: "Service 21",
+        label: "Label 70",
+        price: 54,
+        description: "Description for service 51",
+      },
+    ],
+    services: [
+      {
+        id: "hroza81ub4a",
+        name: "Service 24",
+        label: "Label 13",
+        price: 74,
+        description: "Description for service 11",
+      },
+    ],
+    caseId: "ty61i6bw59",
+    partner: {
+      id: "43az7utrsl2",
+      name: "Partner 35",
+      email: "partner44@example.com",
+      phone: "+1234567896334",
+      clinicImg: {
+        filename: "clinic_image.jpg",
+        filesize: 3119,
+        mimetype: "image/jpeg",
+        url: "http://example.com/clinic_image.jpg",
+      },
+      address: "123 Main St",
+      city: "City 36",
+      country: "Country 54",
+    },
+    vet: {
+      id: "tq58qa5n1a",
+      name: "Vet 23",
+      designation: "Veterinarian",
+      profileImg: {
+        filename: "vet_image.jpg",
+        filesize: 349,
+        mimetype: "image/jpeg",
+        url: "http://example.com/vet_image.jpg",
+      },
+    },
+    pet: { name: "Pet 57" },
+    type: "video",
+  },
+  {
+    id: "gmph5vjwnxk",
+    scheduledAt: "2024-12-08T09:28:43.803Z",
+    allServices: [
+      {
+        id: "wyk1x6xj70c",
+        name: "Service 29",
+        label: "Label 27",
+        price: 82,
+        description: "Description for service 86",
+      },
+    ],
+    services: [
+      {
+        id: "8c8uu9gz6st",
+        name: "Service 2",
+        label: "Label 99",
+        price: 9,
+        description: "Description for service 25",
+      },
+    ],
+    caseId: "u9558kt0cg8",
+    partner: {
+      id: "tdhexsy5a9q",
+      name: "Partner 10",
+      email: "partner83@example.com",
+      phone: "+1234567897119",
+      clinicImg: {
+        filename: "clinic_image.jpg",
+        filesize: 3516,
+        mimetype: "image/jpeg",
+        url: "http://example.com/clinic_image.jpg",
+      },
+      address: "123 Main St",
+      city: "City 52",
+      country: "Country 38",
+    },
+    vet: {
+      id: "6dn4xcwkd1e",
+      name: "Vet 98",
+      designation: "Veterinarian",
+      profileImg: {
+        filename: "vet_image.jpg",
+        filesize: 4669,
+        mimetype: "image/jpeg",
+        url: "http://example.com/vet_image.jpg",
+      },
+    },
+    pet: { name: "Pet 75" },
+    type: "video",
+  },
+  {
+    id: "riag66w0c4s",
+    scheduledAt: "2025-01-05T09:28:43.803Z",
+    allServices: [
+      {
+        id: "8hjbedcfx5x",
+        name: "Service 55",
+        label: "Label 6",
+        price: 68,
+        description: "Description for service 24",
+      },
+    ],
+    services: [
+      {
+        id: "8ypftaa5d4u",
+        name: "Service 71",
+        label: "Label 88",
+        price: 24,
+        description: "Description for service 0",
+      },
+    ],
+    caseId: "dmm1kvsh6l6",
+    partner: {
+      id: "etmtfosoncd",
+      name: "Partner 82",
+      email: "partner22@example.com",
+      phone: "+1234567898937",
+      clinicImg: {
+        filename: "clinic_image.jpg",
+        filesize: 1115,
+        mimetype: "image/jpeg",
+        url: "http://example.com/clinic_image.jpg",
+      },
+      address: "123 Main St",
+      city: "City 37",
+      country: "Country 66",
+    },
+    vet: {
+      id: "zjlqd2yzx1m",
+      name: "Vet 73",
+      designation: "Veterinarian",
+      profileImg: {
+        filename: "vet_image.jpg",
+        filesize: 2803,
+        mimetype: "image/jpeg",
+        url: "http://example.com/vet_image.jpg",
+      },
+    },
+    pet: { name: "Pet 80" },
+    type: "in-clinic",
+  },
+  {
+    id: "zfb7f5y7r1",
+    scheduledAt: "2025-02-04T09:28:43.803Z",
+    allServices: [
+      {
+        id: "e231ayrsusd",
+        name: "Service 71",
+        label: "Label 52",
+        price: 1,
+        description: "Description for service 18",
+      },
+    ],
+    services: [
+      {
+        id: "4vt3ni1veg7",
+        name: "Service 47",
+        label: "Label 40",
+        price: 39,
+        description: "Description for service 14",
+      },
+    ],
+    caseId: "eswnhb18kwv",
+    partner: {
+      id: "y4pahqaoyf",
+      name: "Partner 64",
+      email: "partner45@example.com",
+      phone: "+1234567897304",
+      clinicImg: {
+        filename: "clinic_image.jpg",
+        filesize: 4404,
+        mimetype: "image/jpeg",
+        url: "http://example.com/clinic_image.jpg",
+      },
+      address: "123 Main St",
+      city: "City 57",
+      country: "Country 11",
+    },
+    vet: {
+      id: "g4m287kz8oq",
+      name: "Vet 71",
+      designation: "Veterinarian",
+      profileImg: {
+        filename: "vet_image.jpg",
+        filesize: 3796,
+        mimetype: "image/jpeg",
+        url: "http://example.com/vet_image.jpg",
+      },
+    },
+    pet: { name: "Pet 84" },
+    type: "in-clinic",
+  },
+];
+
 const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
-  const { fetchAppointments, appointment } = useAppointmentStore();
+  const { fetchAppointments, appointment: appointmentData } =
+    useAppointmentStore();
+
   const [isLoading, setIsLoading] = useState(false);
   const [nextPageId, setNextPageId] = useState(1);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [activeTab, setActiveTab] = useState("Upcoming");
+  const [appointment, setAppointment] = useState<
+    null | AppointmentListResponseDto[]
+  >(null);
+
+  // const appointmentData = dummyDataArray;
+
+  useEffect(() => {
+    if (!appointmentData) return;
+    const now = new Date(); // Get the current date and time
+
+    // Separate appointments into upcoming and archived
+    const upcomingAppointments = appointmentData.filter((item) => {
+      const scheduledAt = new Date(item.scheduledAt); // Convert to Date object
+      return scheduledAt > now; // Include only future appointments
+    }) as AppointmentListResponseDto[];
+
+    const archivedAppointments = appointmentData.filter((item) => {
+      const scheduledAt = new Date(item.scheduledAt); // Convert to Date object
+      return scheduledAt <= now; // Include only past or current appointments
+    }) as AppointmentListResponseDto[];
+
+    if (activeTab === "Upcoming") {
+      setAppointment(upcomingAppointments);
+    } else {
+      setAppointment(archivedAppointments);
+    }
+  }, [activeTab, appointmentData]);
 
   useFocusEffect(
     useCallback(() => {
-      handleFetchAppointments(undefined, true);
+      // handleFetchAppointments(undefined, true);
     }, [])
   );
 
@@ -67,6 +421,8 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
     });
   };
 
+  const actionBtns = ["Upcoming", "Archived"];
+
   return (
     <Layout
       showBack
@@ -79,7 +435,7 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
     >
       <Div flex={1}>
         <Div flex={1} pt={24}>
-          {!isLoading && appointment && appointment.length > 0 && (
+          {/* {!isLoading && appointment && appointment.length > 0 && (
             <Text
               fontSize={"xl"}
               fontFamily={fontHauoraSemiBold}
@@ -88,7 +444,49 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
             >
               Upcoming Appointments
             </Text>
-          )}
+          )} */}
+
+          <Div
+            flexDir="row"
+            justifyContent="space-around"
+            mb={45}
+            borderWidth={1}
+            borderColor="#ccc"
+            rounded={12}
+          >
+            {actionBtns.map((item) => (
+              <TouchableOpacity
+                key={item}
+                style={{
+                  width: item === activeTab ? "50%" : "50%",
+                  // borderWidth: 1,
+                  borderRightWidth:
+                    item === activeTab && activeTab === "Upcoming" ? 1 : 0,
+                  borderLeftWidth:
+                    item === activeTab && activeTab === "Archived" ? 1 : 0,
+                  borderColor: "#ccc",
+                  borderRadius: 12,
+                  alignItems: "center",
+                  padding: 5,
+                  paddingVertical: 8,
+                  backgroundColor: item !== activeTab ? "#FAF8F5" : "#f1ebe2",
+                }}
+                onPress={() => {
+                  setActiveTab(item);
+                }}
+              >
+                <Text
+                  fontSize={16}
+                  fontWeight="500"
+                  fontFamily={fontHauoraBold}
+                  ml={8}
+                  color={item !== activeTab ? "#ccc" : "#222"}
+                >
+                  {item}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </Div>
 
           <FlatList
             ListEmptyComponent={() => (

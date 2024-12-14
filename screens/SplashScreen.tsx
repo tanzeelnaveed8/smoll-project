@@ -19,14 +19,14 @@ const SplashScreen: React.FC<{ navigation: NavigationType }> = ({
           navigation.navigate("HomeScreen");
         } catch (error) {
           setTimeout(() => {
-            navigation.navigate("NewOnboardingScreen");
-            // navigation.navigate("OnboardingScreen");
+            navigation.navigate("NewOnboardingScreen"); // latest
+            // navigation.navigate("CasesQuotesListScreen");
           }, 1000);
         }
       } else {
         setTimeout(() => {
-          navigation.navigate("NewOnboardingScreen");
-          // navigation.navigate("OnboardingScreen");
+          navigation.navigate("NewOnboardingScreen"); // latest
+          // navigation.navigate("CasesQuotesListScreen");
         }, 1000);
       }
     };
