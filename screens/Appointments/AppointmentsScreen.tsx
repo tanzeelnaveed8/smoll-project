@@ -10,9 +10,10 @@ import {
   useAppointmentStore,
 } from "@/store/modules/appointments";
 import { NavigationType } from "@/store/types";
+import { AppointmentListResponseDto } from "@/store/types/appointments";
 import { useFocusEffect } from "@react-navigation/native";
 import { IconChevronRight, IconUser } from "@tabler/icons-react-native";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { RefreshControl, TouchableOpacity } from "react-native";
 import { FlatList } from "react-native-bidirectional-infinite-scroll";
 
@@ -21,14 +22,44 @@ import { Div, Image, Tag, Text } from "react-native-magnus";
 const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
-  const { fetchAppointments, appointment } = useAppointmentStore();
+  const { fetchAppointments, appointment: appointmentData } =
+    useAppointmentStore();
+
   const [isLoading, setIsLoading] = useState(false);
   const [nextPageId, setNextPageId] = useState(1);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [activeTab, setActiveTab] = useState("Upcoming");
+  const [appointment, setAppointment] = useState<
+    null | AppointmentListResponseDto[]
+  >(null);
+
+  // const appointmentData = dummyDataArray;
+
+  useEffect(() => {
+    if (!appointmentData) return;
+    const now = new Date(); // Get the current date and time
+
+    // Separate appointments into upcoming and archived
+    const upcomingAppointments = appointmentData.filter((item) => {
+      const scheduledAt = new Date(item.scheduledAt); // Convert to Date object
+      return scheduledAt > now; // Include only future appointments
+    }) as AppointmentListResponseDto[];
+
+    const archivedAppointments = appointmentData.filter((item) => {
+      const scheduledAt = new Date(item.scheduledAt); // Convert to Date object
+      return scheduledAt <= now; // Include only past or current appointments
+    }) as AppointmentListResponseDto[];
+
+    if (activeTab === "Upcoming") {
+      setAppointment(upcomingAppointments);
+    } else {
+      setAppointment(archivedAppointments);
+    }
+  }, [activeTab, appointmentData]);
 
   useFocusEffect(
     useCallback(() => {
-      handleFetchAppointments(undefined, true);
+      // handleFetchAppointments(undefined, true);
     }, [])
   );
 
@@ -67,6 +98,8 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
     });
   };
 
+  const actionBtns = ["Upcoming", "Archived"];
+
   return (
     <Layout
       showBack
@@ -79,7 +112,7 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
     >
       <Div flex={1}>
         <Div flex={1} pt={24}>
-          {!isLoading && appointment && appointment.length > 0 && (
+          {/* {!isLoading && appointment && appointment.length > 0 && (
             <Text
               fontSize={"xl"}
               fontFamily={fontHauoraSemiBold}
@@ -88,7 +121,49 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
             >
               Upcoming Appointments
             </Text>
-          )}
+          )} */}
+
+          <Div
+            flexDir="row"
+            justifyContent="space-around"
+            mb={45}
+            borderWidth={1}
+            borderColor="#ccc"
+            rounded={12}
+          >
+            {actionBtns.map((item) => (
+              <TouchableOpacity
+                key={item}
+                style={{
+                  width: item === activeTab ? "50%" : "50%",
+                  // borderWidth: 1,
+                  borderRightWidth:
+                    item === activeTab && activeTab === "Upcoming" ? 1 : 0,
+                  borderLeftWidth:
+                    item === activeTab && activeTab === "Archived" ? 1 : 0,
+                  borderColor: "#ccc",
+                  borderRadius: 12,
+                  alignItems: "center",
+                  padding: 5,
+                  paddingVertical: 8,
+                  backgroundColor: item !== activeTab ? "#FAF8F5" : "#f1ebe2",
+                }}
+                onPress={() => {
+                  setActiveTab(item);
+                }}
+              >
+                <Text
+                  fontSize={16}
+                  fontWeight="500"
+                  fontFamily={fontHauoraBold}
+                  // ml={8}
+                  color={item !== activeTab ? "#ccc" : "#222"}
+                >
+                  {item}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </Div>
 
           <FlatList
             ListEmptyComponent={() => (

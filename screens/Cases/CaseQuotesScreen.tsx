@@ -117,10 +117,26 @@ const CaseQuotesScreen: React.FC<{ navigation: NavigationType }> = ({
                   py={16}
                   px={20}
                   borderWidth={1}
-                  borderColor="#222"
+                  borderColor={
+                    hasPartnerBooking !== item.partner.id ? "#ddd" : "#222"
+                  }
                   rounded={35}
                   mb={25}
+                  position="relative"
+                  overflow="hidden"
                 >
+                  {hasPartnerBooking !== item.partner.id && (
+                    <Div
+                      position="absolute"
+                      w={"120%"}
+                      h={"150%"}
+                      bg="#eeeeee50"
+                      top={0}
+                      left={0}
+                      zIndex={10}
+                      pointerEvents="none"
+                    />
+                  )}
                   <TouchableOpacity
                     onPress={() => {
                       navigation.navigate("CaseQuoteDescriptionScreen", {
@@ -189,7 +205,11 @@ const CaseQuotesScreen: React.FC<{ navigation: NavigationType }> = ({
                       </Div>
 
                       <IconArrowRight
-                        color={"#222"}
+                        color={
+                          hasPartnerBooking !== item.partner.id
+                            ? "#bbb"
+                            : "#222"
+                        }
                         width={34}
                         height={34}
                         strokeWidth={2.4}

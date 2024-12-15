@@ -7,7 +7,7 @@ import { NavigationType } from "@/store/types";
 import { getAxiosErrMsg } from "@/utils/helpers";
 import { AxiosError } from "axios";
 import parsePhoneNumber from "libphonenumber-js";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Keyboard,
   Linking,
@@ -21,6 +21,7 @@ import Toast from "react-native-toast-notifications";
 import ToastContainer from "react-native-toast-notifications/lib/typescript/toast-container";
 import Layout from "../Layout";
 import OnboardingOtpModal from "./OnboardingOtpModal";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface Props {
   navigation: NavigationType;
@@ -48,11 +49,11 @@ const SignupScreen: React.FC<{ navigation: NavigationType }> = ({
   const [codes, setCodes] = useState<
     { label: string; value: string; flag: string }[]
   >([
-    // {
-    //   flag: "https://flagcdn.com/w320/in.png",
-    //   label: "(+91) India",
-    //   value: "+91",
-    // },
+    {
+      flag: "https://flagcdn.com/w320/in.png",
+      label: "(+91) India",
+      value: "+91",
+    },
     {
       flag: "https://flagcdn.com/w320/ae.png",
       label: "(+971) United Arab Emirates",

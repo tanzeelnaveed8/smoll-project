@@ -280,6 +280,10 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
       return;
     }
 
+    // if isEmergency is true then
+    // handleEmergencyBook
+
+    //esle
     handleBook();
   };
 

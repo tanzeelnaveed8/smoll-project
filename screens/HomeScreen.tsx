@@ -253,7 +253,8 @@ const HomeScreen: React.FC<Props> = (props) => {
               <IconButton
                 bg="bgColor"
                 onPress={() => {
-                  props.navigation.navigate("SettingsMainScreen");
+                  // props.navigation.navigate("SettingsMainScreen");
+                  props.navigation.navigate("ClinicDetailScreen");
                 }}
               >
                 <IconSettings

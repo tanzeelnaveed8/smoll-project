@@ -3,7 +3,8 @@ import axios from "axios";
 import { showMessage } from "react-native-flash-message";
 
 const api = axios.create({
-  baseURL: process.env.EXPO_PUBLIC_API_URL,
+  baseURL: "https://staging-api.smoll.me",
+  // baseURL: process.env.EXPO_PUBLIC_API_URL,
   withCredentials: true,
   headers: {
     Accept: "application/json",
