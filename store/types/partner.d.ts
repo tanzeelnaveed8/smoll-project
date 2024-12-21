@@ -9,6 +9,41 @@ export interface PartnerVet {
   profileImg: UploadedFile;
 }
 
+export interface ClinicDetails {
+  id: string;
+  name: string;
+  receptionistName: string;
+  phone: string;
+  email: string;
+  clinicImg: {
+    filename: string;
+    filesize: number;
+    mimetype: string;
+    url: string;
+  };
+  imgCollections: [
+    {
+      filename: string;
+      filesize: number;
+      mimetype: string;
+      url: string;
+    }
+  ];
+  address: string;
+  country: string;
+  city: string;
+  openingHours: string;
+  postalCode: string;
+  timeZone: string;
+  specialities: [
+    {
+      id: string;
+      name: string;
+    }
+  ];
+  createdAt: "2024-12-15T03:19:13.782Z";
+}
+
 export interface PartnerVetDetails extends PartnerVet {
   availabilities: ExpertAvailability[];
   partnerName: string;
@@ -18,8 +53,11 @@ export interface PartnerVetDetails extends PartnerVet {
 export interface State {
   partnerVets: Map<string, PartnerVet[]>;
   partnerVetDetails: Map<string, PartnerVetDetails>;
+  clinicDetails: Map<string, ClinicDetails>;
 
   fetchPartnerVets: (partnerId: string) => Promise<void>;
+  fetchClinicDetails: (id: string) => Promise<ClinicDetails>;
+
   fetchPartnerVetDetails: (
     id: string,
     partnerId: string
@@ -37,5 +75,15 @@ export interface State {
     services: { id: string; label: string }[],
     paymentIntentId?: string,
     bookingId?: string
+  ) => Promise<{ id: string }>;
+
+  emergencyBookPartner: (
+    id: string,
+    caseId: string,
+    paymentIntentId: string,
+    services: {
+      id: string;
+      label: string;
+    }[]
   ) => Promise<{ id: string }>;
 }

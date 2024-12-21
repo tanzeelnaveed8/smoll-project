@@ -64,6 +64,8 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
 
   const caseQuote = casesQuotes.get(caseId);
 
+  // console.log("caseQuote == ", JSON.stringify(caseQuote));
+
   useEffect(() => {
     fetchQuotes();
   }, [id, caseId]);
@@ -310,12 +312,23 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
           if (hasPartnerBooking) {
             navigation.navigate("AppointmentsScreen");
           } else {
-            navigation.navigate("PartnerVetScreen", {
-              partnerId: clinicQuote?.partner?.id,
-              partnerName: clinicQuote?.partner?.name,
-              caseId,
-              selectedServices,
-            });
+            if (clinicQuote?.isEmergency) {
+              navigation.navigate("EmergencyScreen", {
+                isEmergency: clinicQuote?.isEmergency,
+                partnerId: clinicQuote?.partner?.id,
+                partnerName: clinicQuote?.partner?.name,
+                caseId,
+                selectedServices,
+                petName: clinicQuote?.petName,
+              });
+            } else {
+              navigation.navigate("PartnerVetScreen", {
+                partnerId: clinicQuote?.partner?.id,
+                partnerName: clinicQuote?.partner?.name,
+                caseId,
+                selectedServices,
+              });
+            }
           }
         }}
       >

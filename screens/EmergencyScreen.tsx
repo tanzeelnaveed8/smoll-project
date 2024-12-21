@@ -4,15 +4,50 @@ import {
   fontCooper,
   fontCooperMedium,
   fontHauora,
+  fontHauoraBold,
   fontHauoraMedium,
+  fontHauoraSemiBold,
 } from "@/constant/constant";
+import { NavigationType } from "@/store/types";
+import { useRoute } from "@react-navigation/native";
 import { IconArrowRight } from "@tabler/icons-react-native";
 import React from "react";
 import { Div, Text } from "react-native-magnus";
 
-const EmergencyScreen = () => {
+const EmergencyScreen: React.FC<{ navigation: NavigationType }> = ({
+  navigation,
+}) => {
+  const route = useRoute() as {
+    params: {
+      isEmergency?: boolean;
+      partnerId: string;
+      partnerName: string;
+      caseId: string;
+      petName: string;
+      selectedServices: {
+        id: string;
+        label: string;
+        price: number;
+      }[];
+    };
+  };
+  const {
+    isEmergency,
+    partnerId,
+    partnerName,
+    caseId,
+    selectedServices,
+    petName,
+  } = route.params;
+
   return (
-    <Layout showBack>
+    <Layout
+      showBack
+      style={{ paddingBottom: 35 }}
+      onBackPress={() => {
+        navigation.goBack();
+      }}
+    >
       <Div
         flex={1}
         justifyContent="center"
@@ -29,13 +64,29 @@ const EmergencyScreen = () => {
           textAlign="center"
           fontFamily={fontHauoraMedium}
         >
-          Due the conditions of [pet's name] case you will be booked immediately
-          with the vet on duty at [Clinic Name]
+          Due the conditions of {petName} case you will be booked immediately
+          with the vet on duty at {partnerName}
         </Text>
       </Div>
 
-      <ButtonPrimary bgColor="danger">
-        Confirm Appointment <IconArrowRight size={24} color={"#222"} />
+      <ButtonPrimary
+        bgColor="danger"
+        flexDir="row-reverse"
+        alignItems="center"
+        icon={<IconArrowRight size={24} color={"#fff"} />}
+        onPress={() => {
+          navigation.navigate("PaymentDetailsScreen", {
+            // bookingId,
+            // vetId: item.id,
+            partnerId: partnerId,
+            partnerName,
+            caseId,
+            selectedServices,
+            isEmergency: isEmergency,
+          });
+        }}
+      >
+        Confirm Appointment
       </ButtonPrimary>
     </Layout>
   );

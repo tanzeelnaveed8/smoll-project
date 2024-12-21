@@ -118,25 +118,30 @@ const CaseQuotesScreen: React.FC<{ navigation: NavigationType }> = ({
                   px={20}
                   borderWidth={1}
                   borderColor={
-                    hasPartnerBooking !== item.partner.id ? "#ddd" : "#222"
+                    hasPartnerBooking !== undefined
+                      ? hasPartnerBooking !== item.partner.id
+                        ? "#ddd"
+                        : "#222"
+                      : "#222"
                   }
                   rounded={35}
                   mb={25}
                   position="relative"
                   overflow="hidden"
                 >
-                  {hasPartnerBooking !== item.partner.id && (
-                    <Div
-                      position="absolute"
-                      w={"120%"}
-                      h={"150%"}
-                      bg="#eeeeee50"
-                      top={0}
-                      left={0}
-                      zIndex={10}
-                      pointerEvents="none"
-                    />
-                  )}
+                  {hasPartnerBooking !== undefined &&
+                    hasPartnerBooking !== item.partner.id && (
+                      <Div
+                        position="absolute"
+                        w={"120%"}
+                        h={"150%"}
+                        bg="#eeeeee50"
+                        top={0}
+                        left={0}
+                        zIndex={10}
+                        pointerEvents="none"
+                      />
+                    )}
                   <TouchableOpacity
                     onPress={() => {
                       navigation.navigate("CaseQuoteDescriptionScreen", {
@@ -168,13 +173,21 @@ const CaseQuotesScreen: React.FC<{ navigation: NavigationType }> = ({
                         </Text>
                       </Div>
 
-                      <Image
-                        source={{ uri: item.partner?.clinicImg?.url }}
-                        w={80}
-                        h={80}
-                        rounded={100}
-                        bg="#fefefe"
-                      />
+                      <TouchableOpacity
+                        onPress={() => {
+                          navigation.navigate("ClinicDetailScreen", {
+                            id: item.partner.id,
+                          });
+                        }}
+                      >
+                        <Image
+                          source={{ uri: item.partner?.clinicImg?.url }}
+                          w={80}
+                          h={80}
+                          rounded={100}
+                          bg="#fefefe"
+                        />
+                      </TouchableOpacity>
                     </Div>
 
                     <Div flexDir="row" alignItems="flex-end">
@@ -206,8 +219,10 @@ const CaseQuotesScreen: React.FC<{ navigation: NavigationType }> = ({
 
                       <IconArrowRight
                         color={
-                          hasPartnerBooking !== item.partner.id
-                            ? "#bbb"
+                          hasPartnerBooking !== undefined
+                            ? hasPartnerBooking !== item.partner.id
+                              ? "#bbb"
+                              : "#222"
                             : "#222"
                         }
                         width={34}

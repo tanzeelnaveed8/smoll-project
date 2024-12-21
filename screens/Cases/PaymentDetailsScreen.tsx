@@ -87,10 +87,11 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
     vetId,
     partnerName,
     paymentIntentId,
+    isEmergency,
   } = route.params as PaymentPageRoute;
 
   const { user, createPaymentIntent } = useUserStore();
-  const { bookPartnerVet } = usePartnerStore();
+  const { bookPartnerVet, emergencyBookPartner } = usePartnerStore();
   const { casesQuotes, fetchCaseQuotes } = useCaseStore();
 
   const [loading, setLoading] = useState(false);
@@ -229,8 +230,10 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
     }
   };
 
+  console.log("paymentscreen isEmergency", isEmergency);
+
   const handleBook = async () => {
-    if (!partnerId || !vetId || !caseId || !scheduleAt) {
+    if (!partnerId || !caseId) {
       return;
     }
 
@@ -241,14 +244,33 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
         return { id: item.id, label: item.label };
       });
 
-      const { id } = await bookPartnerVet(
-        vetId,
-        partnerId,
-        caseId,
-        scheduleAt,
-        updatedServices,
-        paymentIntentRef.current
-      );
+      let id;
+      if (isEmergency) {
+        id = await emergencyBookPartner(
+          partnerId,
+          caseId,
+          `${paymentIntentRef.current}`,
+          updatedServices
+        );
+      } else {
+        id = await bookPartnerVet(
+          vetId,
+          partnerId,
+          caseId,
+          scheduleAt,
+          updatedServices,
+          paymentIntentRef.current
+        );
+      }
+
+      // const id = await bookPartnerVet(
+      //   vetId,
+      //   partnerId,
+      //   caseId,
+      //   scheduleAt,
+      //   updatedServices,
+      //   paymentIntentRef.current
+      // );
 
       navigation.navigate("PartnerVetSuccessfullScreen", {
         bookingId: id,
@@ -280,10 +302,6 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
       return;
     }
 
-    // if isEmergency is true then
-    // handleEmergencyBook
-
-    //esle
     handleBook();
   };
 

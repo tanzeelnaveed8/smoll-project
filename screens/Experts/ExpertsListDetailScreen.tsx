@@ -36,20 +36,18 @@ const windowWidth = Dimensions.get("window").width;
 type TimeBtnType = "morning" | "noon" | "evening";
 const timeTabBtns = ["morning", "noon", "evening"];
 
-type IntervalStateType = {
-  morning: {
+type IntervalStateType = Record<
+  TimeBtnType,
+  {
     from: string;
     to: string;
-  }[];
-  noon: {
-    from: string;
-    to: string;
-  }[];
-  evening: {
-    from: string;
-    to: string;
-  }[];
-};
+  }[]
+>;
+
+type IntervalType = {
+  from: string;
+  to: string;
+}[];
 
 const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
@@ -544,7 +542,11 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
                           {intervalData && (
                             <TimeButton
                               a={a}
-                              data={intervalData[activeTimeTab]}
+                              data={
+                                intervalData[
+                                  activeTimeTab.toLowerCase() as keyof IntervalStateType
+                                ]
+                              }
                             />
                           )}
                           {/* <TimeButton a={a} data={noonTimings} marginTop={5} />
