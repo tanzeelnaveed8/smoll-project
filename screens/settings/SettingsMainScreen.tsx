@@ -195,7 +195,7 @@ const SettingsMainScreen: React.FC<{ navigation: NavigationType }> = ({
     <Layout showBack onBackPress={() => navigation.goBack()} title="Settings">
       <ScrollDiv showsVerticalScrollIndicator={false}>
         {options.map((group) => (
-          <React.Fragment key={group.id}>
+          <React.Fragment key={`${group?.id}`}>
             <Text
               fontWeight="400"
               fontSize={"xl"}
@@ -208,7 +208,7 @@ const SettingsMainScreen: React.FC<{ navigation: NavigationType }> = ({
             <Div mb={24}>
               {group.options.map((option) => (
                 <SettingButton
-                  key={option.id}
+                  key={`${option?.id}`}
                   title={option.title}
                   description={option?.description}
                   toggleBtn={option?.toggleBtn}
