@@ -13,6 +13,7 @@ import { NavigationType } from "@/store/types";
 import { AppointmentListResponseDto } from "@/store/types/appointments";
 import { useFocusEffect } from "@react-navigation/native";
 import { IconChevronRight, IconUser } from "@tabler/icons-react-native";
+import dayjs from "dayjs";
 import React, { useCallback, useEffect, useState } from "react";
 import { RefreshControl, TouchableOpacity } from "react-native";
 import { FlatList } from "react-native-bidirectional-infinite-scroll";
@@ -24,6 +25,8 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
 }) => {
   const { fetchAppointments, appointment: appointmentData } =
     useAppointmentStore();
+
+  console.log(JSON.stringify(appointmentData, null, 2));
 
   const [isLoading, setIsLoading] = useState(false);
   const [nextPageId, setNextPageId] = useState(1);
@@ -37,15 +40,20 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
 
   useEffect(() => {
     if (!appointmentData) return;
+
     const now = new Date(); // Get the current date and time
 
     // Separate appointments into upcoming and archived
     const upcomingAppointments = appointmentData.filter((item) => {
+      if (item.isEmergency) return true;
+
       const scheduledAt = new Date(item.scheduledAt); // Convert to Date object
       return scheduledAt > now; // Include only future appointments
     }) as AppointmentListResponseDto[];
 
     const archivedAppointments = appointmentData.filter((item) => {
+      if (item.isEmergency) return false;
+
       const scheduledAt = new Date(item.scheduledAt); // Convert to Date object
       return scheduledAt <= now; // Include only past or current appointments
     }) as AppointmentListResponseDto[];
@@ -59,7 +67,7 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
 
   useFocusEffect(
     useCallback(() => {
-      // handleFetchAppointments(undefined, true);
+      handleFetchAppointments(undefined, true);
     }, [])
   );
 
@@ -75,8 +83,6 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
       }
 
       const response = await fetchAppointments(1, reset);
-
-      console.log("response", response);
 
       setNextPageId(response.nextPage);
     } finally {
@@ -112,17 +118,6 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
     >
       <Div flex={1}>
         <Div flex={1} pt={24}>
-          {/* {!isLoading && appointment && appointment.length > 0 && (
-            <Text
-              fontSize={"xl"}
-              fontFamily={fontHauoraSemiBold}
-              lineHeight={24}
-              mb={22}
-            >
-              Upcoming Appointments
-            </Text>
-          )} */}
-
           <Div
             flexDir="row"
             justifyContent="space-around"
@@ -150,6 +145,7 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
                 }}
                 onPress={() => {
                   setActiveTab(item);
+                  handleFetchAppointments(undefined, true);
                 }}
               >
                 <Text
@@ -176,24 +172,20 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
                   mx={"auto"}
                   lineHeight={36}
                 >
-                  You don't have any upcoming appointments
+                  You don't have any{" "}
+                  {activeTab === "Upcoming" ? "upcoming" : "archived"}{" "}
+                  appointments
                 </Text>
               </Div>
             )}
             onEndReached={handleLoadMore} // required, should return a promise
             onEndReachedThreshold={20} // optional
             activityIndicatorColor={"black"} // optional
-            refreshControl={
-              <RefreshControl
-                refreshing={isRefreshing}
-                tintColor={colorPrimary}
-                onRefresh={() => handleFetchAppointments(true)}
-              />
-            }
             showsVerticalScrollIndicator={false}
             data={appointment}
             renderItem={({ item, index }) => (
               <AppointmentCard
+                isEmergency={item.isEmergency}
                 img={item.partner?.clinicImg?.url ?? item.vet?.profileImg?.url}
                 pet={item.pet.name}
                 text={`Your upcoming ${
@@ -205,7 +197,7 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
                     ? "Clinic Visit"
                     : "Video Consultation"
                 }
-                alert={""}
+                alert={item.isEmergency ? "Emergency" : ""}
                 onPress={() => {
                   if (!item.scheduledAt && item.type === "in-clinic") {
                     navigation.navigate("PartnerVetScreen", {
@@ -226,19 +218,6 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
             )}
             keyExtractor={(item, index) => `${index}`}
           />
-
-          {/* {!isLoading &&
-            (!appointment || (appointment && appointment.length === 0)) && (
-              <Div h={"90%"} justifyContent="center">
-                <Text
-                  fontSize={"5xl"}
-                  textAlign="center"
-                  fontFamily={fontCooper}
-                >
-                  You don't have any upcoming appointments
-                </Text>
-              </Div>
-            )} */}
         </Div>
       </Div>
     </Layout>
@@ -253,6 +232,7 @@ const AppointmentCard: React.FC<{
   text: string;
   pet: string;
   alert?: string;
+  isEmergency?: boolean;
   isLastChild?: boolean;
   scheduledTime: string;
   onPress: () => void;
@@ -300,23 +280,20 @@ const AppointmentCard: React.FC<{
             </Tag>
 
             {props.alert && (
-              <Text
+              <Tag
                 fontSize={12}
                 fontFamily={fontHauoraSemiBold}
                 px={8}
                 py={6}
                 rounded={37}
                 borderWidth={1}
-                borderColor={
-                  props.alert.toLowerCase() === "pending" ? "#E02A2A" : "#222"
-                }
-                color={
-                  props.alert.toLowerCase() === "pending" ? "#E02A2A" : "#222"
-                }
+                borderColor="#E02A2A"
+                bg="#E02A2A"
+                color="#fff"
                 style={{ alignSelf: "flex-start" }}
               >
                 {props.alert}
-              </Text>
+              </Tag>
             )}
           </Div>
 
@@ -345,7 +322,9 @@ const AppointmentCard: React.FC<{
               lineHeight={24}
               color="primary"
             >
-              {appointmentFormatedTime(props.scheduledTime)}
+              {dayjs(props.scheduledTime).format(
+                `DD MMM YYYY ${props.isEmergency ? "" : ", hh:mm A"}`
+              )}
             </Text>
           ) : (
             <Tag

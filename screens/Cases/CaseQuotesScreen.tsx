@@ -21,7 +21,6 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Div, Image, Text } from "react-native-magnus";
-import PartnerVetStarRating from "./PartnerVetStarRating";
 import { IconArrowRight } from "@tabler/icons-react-native";
 
 const CaseQuotesScreen: React.FC<{ navigation: NavigationType }> = ({
@@ -31,6 +30,8 @@ const CaseQuotesScreen: React.FC<{ navigation: NavigationType }> = ({
   const caseId = (route.params as Record<string, string>)?.id;
   const hasPartnerBooking = (route.params as Record<string, string>)
     ?.hasPartnerBooking;
+
+  console.log("hasPartnerBooking", hasPartnerBooking);
 
   const { fetchCaseQuotes, casesQuotes } = useCaseStore();
 
@@ -85,6 +86,8 @@ const CaseQuotesScreen: React.FC<{ navigation: NavigationType }> = ({
       setRefresh(false);
     }
   };
+
+  console.log(JSON.stringify(caseQuotes, null, 2));
 
   return (
     <Layout

@@ -5,17 +5,13 @@ import MessageIcon from "@/components/icons/MessageIcon";
 import WalletIcon from "@/components/icons/WalletIcon";
 import BottomSheet from "@/components/partials/BottomSheet";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
-import FlashCustomContent from "@/components/partials/FlashCustomContent";
 import {
   fontHauoraBold,
   fontHauoraMedium,
   fontHauoraSemiBold,
   fontHeading,
 } from "@/constant/constant";
-import {
-  appointmentFormatedTime,
-  useAppointmentStore,
-} from "@/store/modules/appointments";
+import { useAppointmentStore } from "@/store/modules/appointments";
 import { NavigationType } from "@/store/types";
 import { AppointmentDetailResponseDto } from "@/store/types/appointments";
 import { useRoute } from "@react-navigation/native";
@@ -29,13 +25,7 @@ import {
 } from "@tabler/icons-react-native";
 import dayjs from "dayjs";
 import React, { useEffect, useMemo, useState, useCallback } from "react";
-import {
-  ActivityIndicator,
-  Dimensions,
-  Linking,
-  TouchableOpacity,
-} from "react-native";
-import { showMessage } from "react-native-flash-message";
+import { ActivityIndicator, Linking, TouchableOpacity } from "react-native";
 import { Button, Div, Image, ScrollDiv, Tag, Text } from "react-native-magnus";
 
 const actionBtn = [
@@ -156,6 +146,8 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
         id,
         type as "in-clinic" | "video"
       );
+
+      console.log(JSON.stringify(data, null, 2));
 
       setAppointmentDetail(data);
     } finally {
@@ -339,16 +331,19 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                       lineHeight={24}
                       mb={4}
                     >
-                      {appointmentDetail?.vet?.name}
+                      {appointmentDetail?.isEmergency
+                        ? "Emergency Appointment"
+                        : appointmentDetail?.vet?.name}
                     </Text>
 
-                    {appointmentDetail?.type !== "video" && (
-                      <Text fontSize={12} fontFamily={fontHauoraSemiBold}>
-                        {appointmentDetail?.vet?.designation ?? "-"}
-                      </Text>
-                    )}
+                    {appointmentDetail?.type !== "video" &&
+                      !appointmentDetail?.isEmergency && (
+                        <Text fontSize={12} fontFamily={fontHauoraSemiBold}>
+                          {appointmentDetail?.vet?.designation ?? "-"}
+                        </Text>
+                      )}
 
-                    <Div>
+                    <Div mb={16} mt={12} flexDir="row" justifyContent="center">
                       <Tag
                         fontSize={12}
                         fontFamily={fontHauoraSemiBold}
@@ -357,14 +352,29 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                         rounded={37}
                         borderWidth={1}
                         borderColor="#222"
-                        mb={16}
                         bg="transparent"
-                        mt={12}
                       >
                         {appointmentDetail?.type === "video"
                           ? "Video Consultation"
                           : "Clinic Visit"}
                       </Tag>
+
+                      {appointmentDetail?.isEmergency && (
+                        <Tag
+                          fontSize={12}
+                          fontFamily={fontHauoraSemiBold}
+                          px={8}
+                          py={6}
+                          ml={10}
+                          rounded={37}
+                          borderWidth={1}
+                          borderColor="#E02A2A"
+                          bg="#E02A2A"
+                          color="#fff"
+                        >
+                          Emergency
+                        </Tag>
+                      )}
                     </Div>
 
                     <Text fontSize={12} fontFamily={fontHauoraSemiBold} mb={8}>
@@ -378,7 +388,11 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                       color="primary"
                     >
                       {appointmentDetail?.scheduledAt &&
-                        appointmentFormatedTime(appointmentDetail?.scheduledAt)}
+                        dayjs(appointmentDetail?.scheduledAt).format(
+                          `DD MMM YYYY ${
+                            appointmentDetail?.isEmergency ? "" : ", hh:mm A"
+                          }`
+                        )}
                     </Text>
 
                     {appointmentDetail?.type === "video" && (
@@ -516,6 +530,13 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                     >
                       {actionBtn.map((item) => {
                         if (appointmentDetail?.type === "video") {
+                          return null;
+                        }
+
+                        if (
+                          appointmentDetail?.isEmergency &&
+                          item.text === "Reschedule"
+                        ) {
                           return null;
                         }
 
@@ -709,7 +730,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
 
           <Text fontSize={"md"} fontFamily={fontHauoraMedium} mb={16}>
             Are you sure you want to cancel your appointment with Dr.{" "}
-            {appointmentDetail?.vet.name}?
+            {appointmentDetail?.vet?.name}?
           </Text>
 
           <ButtonPrimary

@@ -17,6 +17,7 @@ export interface AppointmentListResponseDto {
   allServices: Service[];
   services: Service[];
   caseId: string;
+  isEmergency?: boolean;
   partner: {
     id: string;
     name: string;
