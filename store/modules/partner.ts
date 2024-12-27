@@ -5,6 +5,7 @@ import { State as PartnerState } from "../types/partner";
 export const usePartnerStore = create<PartnerState>((set, get) => ({
   partnerVets: new Map(),
   partnerVetDetails: new Map(),
+  clinicDetails: new Map(),
 
   fetchPartnerVets: async (partnerId) => {
     const response = await api.get(`/member/partners/${partnerId}/vets`);
@@ -58,5 +59,26 @@ export const usePartnerStore = create<PartnerState>((set, get) => ({
     );
 
     return { id: res.data.id };
+  },
+
+  emergencyBookPartner: async (id, caseId, paymentIntentId, services) => {
+    const res = await api.post(`/member/partners/${id}/emergency-book`, {
+      scheduleAt: new Date().toISOString(),
+      caseId,
+      services,
+      paymentIntentId,
+    });
+
+    return { id: res.data.id };
+  },
+
+  fetchClinicDetails: async (id) => {
+    const response = await api.get(`/member/partners/${id}`);
+
+    set({
+      clinicDetails: new Map([...get().clinicDetails, [id, response.data]]),
+    });
+
+    return response.data;
   },
 }));

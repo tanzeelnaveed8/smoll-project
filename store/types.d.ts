@@ -16,6 +16,7 @@ export type PaymentPageRoute = {
   partnerName: string;
   scheduleAt: string;
   paymentIntentId: string;
+  isEmergency?: string;
 };
 
 export interface SendBirdExtendedBaseMessage extends BaseMessage {

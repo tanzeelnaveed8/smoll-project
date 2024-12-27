@@ -32,8 +32,6 @@ const CaseQuotesScreen: React.FC<{ navigation: NavigationType }> = ({
   const hasPartnerBooking = (route.params as Record<string, string>)
     ?.hasPartnerBooking;
 
-  console.log("hasPartnerBooking", hasPartnerBooking);
-
   const { fetchCaseQuotes, casesQuotes } = useCaseStore();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -43,53 +41,6 @@ const CaseQuotesScreen: React.FC<{ navigation: NavigationType }> = ({
     () => casesQuotes.get(caseId),
     [caseId, casesQuotes]
   );
-
-  // console.log("caseQuotes ==", JSON.stringify(caseQuotes));
-  const responseData = [
-    {
-      id: 214,
-      note: "fdacad",
-      services: [
-        {
-          id: "97",
-          name: "Bordetella Vaccine",
-          type: "Medication",
-          label: "Contigent",
-          price: 184,
-          description:
-            'This is a vaccine to help prevent Canine Infectious Respiratory Disease (CIRD) in dogs. This disease is sometimes called "Kennel Cough".',
-        },
-        {
-          id: "98",
-          name: "Canine Rabies Vaccine",
-          type: "Medication",
-          label: "Contigent",
-          price: 154,
-          description:
-            "This vaccine helps protect dogs against rabies virus for one to three years depending on their age when they receive it.",
-        },
-      ],
-      partner: {
-        id: "RRN6UQzEFK",
-        name: "Euro Pets Clinic",
-        receptionistName: "Pam",
-        phone: "+918176021439",
-        email: "mohibarshi@gmail.com",
-        clinicImg: {
-          filename: "Screenshot 2024-08-28 at 11.45.57.png",
-          filesize: 61120,
-          mimetype: "image/png",
-          url: "https://sfriend.fra1.cdn.digitaloceanspaces.com/1724831168466-Screenshot_2024-08-28_at_11.45.57.png",
-        },
-        address: "Villa 341, Mirgab St, Al Qadsiya",
-        country: "United Arab Emirates",
-        city: "Sharjah",
-        openingHours: null,
-        postalCode: "110006",
-        createdAt: "2024-08-19T22:27:58.673Z",
-      },
-    },
-  ];
 
   useEffect(() => {
     handleFetchRequests();
@@ -166,10 +117,31 @@ const CaseQuotesScreen: React.FC<{ navigation: NavigationType }> = ({
                   py={16}
                   px={20}
                   borderWidth={1}
-                  borderColor="#222"
+                  borderColor={
+                    hasPartnerBooking !== undefined
+                      ? hasPartnerBooking !== item.partner.id
+                        ? "#ddd"
+                        : "#222"
+                      : "#222"
+                  }
                   rounded={35}
                   mb={25}
+                  position="relative"
+                  overflow="hidden"
                 >
+                  {hasPartnerBooking !== undefined &&
+                    hasPartnerBooking !== item.partner.id && (
+                      <Div
+                        position="absolute"
+                        w={"120%"}
+                        h={"150%"}
+                        bg="#eeeeee50"
+                        top={0}
+                        left={0}
+                        zIndex={10}
+                        pointerEvents="none"
+                      />
+                    )}
                   <TouchableOpacity
                     onPress={() => {
                       navigation.navigate("CaseQuoteDescriptionScreen", {
@@ -201,13 +173,21 @@ const CaseQuotesScreen: React.FC<{ navigation: NavigationType }> = ({
                         </Text>
                       </Div>
 
-                      <Image
-                        source={{ uri: item.partner?.clinicImg?.url }}
-                        w={80}
-                        h={80}
-                        rounded={100}
-                        bg="#fefefe"
-                      />
+                      <TouchableOpacity
+                        onPress={() => {
+                          navigation.navigate("ClinicDetailScreen", {
+                            id: item.partner.id,
+                          });
+                        }}
+                      >
+                        <Image
+                          source={{ uri: item.partner?.clinicImg?.url }}
+                          w={80}
+                          h={80}
+                          rounded={100}
+                          bg="#fefefe"
+                        />
+                      </TouchableOpacity>
                     </Div>
 
                     <Div flexDir="row" alignItems="flex-end">
@@ -238,7 +218,13 @@ const CaseQuotesScreen: React.FC<{ navigation: NavigationType }> = ({
                       </Div>
 
                       <IconArrowRight
-                        color={"#222"}
+                        color={
+                          hasPartnerBooking !== undefined
+                            ? hasPartnerBooking !== item.partner.id
+                              ? "#bbb"
+                              : "#222"
+                            : "#222"
+                        }
                         width={34}
                         height={34}
                         strokeWidth={2.4}

@@ -7,7 +7,6 @@ import DoctorCard from "@/components/partials/DoctorCard";
 import {
   colorPrimary,
   fontCooper,
-  fontHauora,
   fontHauoraMedium,
   fontHauoraSemiBold,
 } from "@/constant/constant";
@@ -17,8 +16,8 @@ import { ExpertAvailability } from "@/store/types/expert";
 import { hasAvailabilityDateTimePassed } from "@/utils/helpers";
 import { useFocusEffect, useRoute } from "@react-navigation/native";
 import dayjs from "dayjs";
-import { useCallback, useState } from "react";
-import { Dimensions, RefreshControl } from "react-native";
+import { useCallback, useEffect, useState } from "react";
+import { Dimensions, RefreshControl, TouchableOpacity } from "react-native";
 import { Button, Div, ScrollDiv, Skeleton, Text } from "react-native-magnus";
 
 const dayOfWeekMap: { [key: string]: number } = {
@@ -32,6 +31,22 @@ const dayOfWeekMap: { [key: string]: number } = {
 };
 
 const windowWidth = Dimensions.get("window").width;
+
+type TimeBtnType = "morning" | "noon" | "evening";
+const timeTabBtns = ["morning", "noon", "evening"];
+
+type IntervalStateType = Record<
+  TimeBtnType,
+  {
+    from: string;
+    to: string;
+  }[]
+>;
+
+type IntervalType = {
+  from: string;
+  to: string;
+}[];
 
 const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
@@ -62,6 +77,12 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [availabilityLoading, setAvailabilityLoading] = useState(false);
   const [isRequesting, setIsRequesting] = useState(false);
+  const [activeTimeTab, setActiveTimeTab] = useState<TimeBtnType>(
+    timeTabBtns[0] as TimeBtnType
+  );
+  const [intervalData, setIntervalData] = useState<IntervalStateType | null>(
+    null
+  );
 
   useFocusEffect(
     useCallback(() => {
@@ -115,6 +136,35 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
         expertId,
         new Date(date)
       );
+
+      const morningTimings = _availability[0].intervals.filter(
+        (item) => +item.from.split(":")[0] < 12
+      );
+      const noonTimings = _availability[0].intervals.filter((item) => {
+        console.log("item.from", item.from);
+        const time = +item.from.split(":")[0];
+        console.log("noonTimes == :", time);
+        if (time > 12 && time < 17) {
+          return item;
+        }
+      });
+      const eveningTimings = _availability[0].intervals.filter(
+        (item) => +item.from.split(":")[0] > 17
+      );
+
+      if (morningTimings.length > 0) {
+        setActiveTimeTab("morning");
+      } else if (noonTimings.length > 0) {
+        setActiveTimeTab("noon");
+      } else if (eveningTimings.length > 0) {
+        setActiveTimeTab("evening");
+      }
+
+      setIntervalData({
+        morning: morningTimings,
+        noon: noonTimings,
+        evening: eveningTimings,
+      });
 
       setAvailability(_availability);
     } finally {
@@ -206,16 +256,15 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
 
   const TimeButton: React.FC<{
     a: ExpertAvailability;
-    heading: string;
     marginTop?: number;
     data: {
       from: string;
       to: string;
     }[];
-  }> = ({ a, heading, data, marginTop }) => {
+  }> = ({ a, data, marginTop }) => {
     return (
       <>
-        {data.length > 0 && (
+        {/* {data.length > 0 && (
           <Text
             w={"100%"}
             px={12}
@@ -224,53 +273,60 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
           >
             {heading}
           </Text>
-        )}
-        {data.map((intr, index) => {
-          const time = formatTime(a, intr);
+        )} */}
+        {data.length > 0 &&
+          data.map((intr, index) => {
+            const time = formatTime(a, intr);
 
-          const isDisabled = hasAvailabilityDateTimePassed(
-            selectedDate ?? dayjs().format("YYYY-MM-DD"),
-            intr.from
-          );
+            const isDisabled = hasAvailabilityDateTimePassed(
+              selectedDate ?? dayjs().format("YYYY-MM-DD"),
+              intr.from
+            );
 
-          return (
-            <>
-              <Button
-                key={`${index}:${a.dayOfWeek ?? a.date}:${time}`}
-                w={170}
-                maxW={"50%"}
-                p={10}
-                borderWidth={1}
-                borderColor="#E0E0E0"
-                rounded={8}
-                bg={
-                  selectedTime?.label ===
-                  `${index}:${a.dayOfWeek ?? a.date}:${time}`
-                    ? "#222"
-                    : "transparent"
-                }
-                onPress={() => {
-                  setSelectedTime({
-                    value: { from: intr.from, to: intr.to },
-                    label: `${index}:${a.dayOfWeek ?? a.date}:${time}`,
-                  });
-                }}
-                disabled={isDisabled}
-              >
-                <TimeBtnText
-                  time={time}
-                  color={
+            return (
+              <>
+                <Button
+                  key={`${index}:${a.dayOfWeek ?? a.date}:${time}`}
+                  w={170}
+                  maxW={"50%"}
+                  p={10}
+                  borderWidth={1}
+                  borderColor="#E0E0E0"
+                  rounded={8}
+                  bg={
                     selectedTime?.label ===
                     `${index}:${a.dayOfWeek ?? a.date}:${time}`
-                      ? "#fff"
-                      : "#494949"
+                      ? "#222"
+                      : "transparent"
                   }
-                />
-                {/* {time} */}
-              </Button>
-            </>
-          );
-        })}
+                  onPress={() => {
+                    setSelectedTime({
+                      value: { from: intr.from, to: intr.to },
+                      label: `${index}:${a.dayOfWeek ?? a.date}:${time}`,
+                    });
+                  }}
+                  disabled={isDisabled}
+                >
+                  <TimeBtnText
+                    time={time}
+                    color={
+                      selectedTime?.label ===
+                      `${index}:${a.dayOfWeek ?? a.date}:${time}`
+                        ? "#fff"
+                        : "#494949"
+                    }
+                  />
+                  {/* {time} */}
+                </Button>
+              </>
+            );
+          })}
+
+        {data.length === 0 && (
+          <Div w={"100%"} flexDir="row" flexWrap="wrap" style={{ gap: 8 }}>
+            <Text>-</Text>
+          </Div>
+        )}
       </>
     );
   };
@@ -406,20 +462,15 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
               {!availabilityLoading &&
                 availability.length > 0 &&
                 availability.map((a) => {
-                  const morningTimings = a.intervals.filter(
-                    (item) => +item.from.split(":")[0] < 12
-                  );
-                  const noonTimings = a.intervals.filter((item) => {
-                    console.log("item.from", item.from);
-                    const time = +item.from.split(":")[0];
-                    console.log("noonTimes == :", time);
-                    if (time > 12 && time < 17) {
-                      return item;
-                    }
-                  });
-                  const eveningTimings = a.intervals.filter(
-                    (item) => +item.from.split(":")[0] > 17
-                  );
+                  // if (morningTimings.length > 0) {
+                  //   timeTabBtns.push("Morning");
+                  // }
+                  // if (noonTimings.length > 0) {
+                  //   timeTabBtns.push("Noon");
+                  // }
+                  // if (eveningTimings.length > 0) {
+                  //   timeTabBtns.push("Evening");
+                  // }
 
                   return (
                     <Div
@@ -447,23 +498,62 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
                           justifyContent="center"
                           style={{ gap: 8 }}
                         >
-                          <TimeButton
-                            a={a}
-                            data={morningTimings}
-                            heading="Morning Timing:"
-                          />
-                          <TimeButton
-                            a={a}
-                            data={noonTimings}
-                            heading="Noon Timing:"
-                            marginTop={5}
-                          />
+                          <Div
+                            w={"100%"}
+                            rounded={40}
+                            px={20}
+                            py={8}
+                            flexDir="row"
+                            justifyContent="center"
+                            alignItems="center"
+                            style={{ columnGap: 12 }}
+                          >
+                            {timeTabBtns.map((item) => (
+                              <TouchableOpacity
+                                key={item}
+                                onPress={() => {
+                                  setActiveTimeTab(item as TimeBtnType);
+                                }}
+                              >
+                                <Button
+                                  bg={
+                                    activeTimeTab === item
+                                      ? "#222"
+                                      : "transparent"
+                                  }
+                                  borderWidth={1.5}
+                                  borderColor={"#222"}
+                                  rounded={100}
+                                  px={22}
+                                  py={8}
+                                  color={
+                                    activeTimeTab === item ? "#fff" : "#222"
+                                  }
+                                  fontFamily={fontHauoraSemiBold}
+                                  pointerEvents="none"
+                                  textTransform="capitalize"
+                                >
+                                  {item}
+                                </Button>
+                              </TouchableOpacity>
+                            ))}
+                          </Div>
+                          {intervalData && (
+                            <TimeButton
+                              a={a}
+                              data={
+                                intervalData[
+                                  activeTimeTab.toLowerCase() as keyof IntervalStateType
+                                ]
+                              }
+                            />
+                          )}
+                          {/* <TimeButton a={a} data={noonTimings} marginTop={5} />
                           <TimeButton
                             a={a}
                             data={eveningTimings}
-                            heading="Evening Timing:"
                             marginTop={5}
-                          />
+                          /> */}
                         </Div>
                       )}
 

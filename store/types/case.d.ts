@@ -106,6 +106,8 @@ export interface CaseQuotesDto {
   note: string;
   services: ClinicServiceDto[];
   partner: Clinic;
+  isEmergency?: boolean;
+  petName: string;
 }
 
 export interface CasesState {
