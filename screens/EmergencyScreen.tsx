@@ -1,13 +1,6 @@
 import Layout from "@/components/app/Layout";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
-import {
-  fontCooper,
-  fontCooperMedium,
-  fontHauora,
-  fontHauoraBold,
-  fontHauoraMedium,
-  fontHauoraSemiBold,
-} from "@/constant/constant";
+import { fontCooper, fontHauoraMedium } from "@/constant/constant";
 import { NavigationType } from "@/store/types";
 import { useRoute } from "@react-navigation/native";
 import { IconArrowRight } from "@tabler/icons-react-native";
