@@ -380,7 +380,14 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                 <Div flexDir="row" alignItems="flex-end" mb={30}>
                   {/* <Div w={80} h={1} ml={30} mr={10} mb={8} bg="#222" /> */}
 
-                  <Div bg="#EFE9DB" rounded={22} px={22} py={18}>
+                  <Div
+                    bg="#EFE9DB"
+                    rounded={22}
+                    px={22}
+                    pl={20}
+                    py={18}
+                    ml={22}
+                  >
                     <Text mb={5} fontSize={13} fontFamily={fontHauoraMedium}>
                       Due now
                     </Text>
@@ -415,7 +422,7 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                 alignItems="center"
                 justifyContent="space-around"
                 style={{ gap: 20 }}
-                pl={15}
+                pl={5}
                 // mb={25}
               >
                 <Div>

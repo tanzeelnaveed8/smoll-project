@@ -31,8 +31,6 @@ const CaseQuotesScreen: React.FC<{ navigation: NavigationType }> = ({
   const hasPartnerBooking = (route.params as Record<string, string>)
     ?.hasPartnerBooking;
 
-  console.log("hasPartnerBooking", hasPartnerBooking);
-
   const { fetchCaseQuotes, casesQuotes } = useCaseStore();
 
   const [isLoading, setIsLoading] = useState(false);

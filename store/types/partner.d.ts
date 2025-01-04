@@ -41,6 +41,13 @@ export interface ClinicDetails {
       name: string;
     }
   ];
+  vets: {
+    designation: string;
+    id: string;
+    name: string;
+    profileImg: { url: string };
+    yearsOfExperience: number;
+  }[];
   createdAt: "2024-12-15T03:19:13.782Z";
 }
 
