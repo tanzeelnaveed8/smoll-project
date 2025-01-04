@@ -540,10 +540,20 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                         if (
                           (appointmentDetail?.isEmergency &&
                             item.text === "Reschedule") ||
-                          (appointmentDetail.scheduledAt &&
+                          (item.text === "Reschedule" &&
+                            appointmentDetail.scheduledAt &&
                             dayjs().isAfter(
                               dayjs(appointmentDetail.scheduledAt)
                             ))
+                        ) {
+                          return null;
+                        }
+
+                        if (
+                          item.text === "Cancel" &&
+                          !appointmentDetail.isEmergency &&
+                          appointmentDetail.scheduledAt &&
+                          dayjs().isAfter(dayjs(appointmentDetail.scheduledAt))
                         ) {
                           return null;
                         }
