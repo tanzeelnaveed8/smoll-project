@@ -94,7 +94,6 @@ const ClinicDetailScreen: React.FC<{ navigation: NavigationType }> = ({
 }) => {
   const route = useRoute();
   const { id } = route.params as { id: string };
-  console.log("clinic details id", id);
   const { clinicDetails, fetchClinicDetails } = usePartnerStore();
   // const id = "RRN6UQzEFK";
 
@@ -102,32 +101,7 @@ const ClinicDetailScreen: React.FC<{ navigation: NavigationType }> = ({
 
   const data = useMemo(() => clinicDetails.get(id), [id, clinicDetails]);
 
-  console.log("clinicDetailsData == ", data);
-  const response = {
-    address: "test",
-    city: "test",
-    clinicImg: null,
-    country: "United Arab Emirates",
-    createdAt: "2024-11-24T21:12:08.036Z",
-    email: "mohibarshi@gmail.com",
-    id: "Lo0cRgfhD2Ppv",
-    imgCollections: null,
-    name: "Mak clinic",
-    openingHours: null,
-    phone: "+917830977750",
-    postalCode: null,
-    receptionistName: "Mohib Test",
-    specialities: [],
-    vets: [
-      {
-        designation: "adf",
-        id: "1AlO61IJqmUx1",
-        name: "Test Vet",
-        profileImg: null,
-        yearsOfExperience: 2,
-      },
-    ],
-  };
+  console.log("clinicDetailsData == ", data?.openingHours);
 
   useEffect(() => {
     if (data) {
@@ -207,7 +181,6 @@ const ClinicDetailScreen: React.FC<{ navigation: NavigationType }> = ({
                     rounded={20}
                     mr={8}
                   />
-
                   <Text
                     fontSize={"md"}
                     fontFamily={fontHauoraBold}

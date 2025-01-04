@@ -21,7 +21,6 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Div, Image, Text } from "react-native-magnus";
-import PartnerVetStarRating from "./PartnerVetStarRating";
 import { IconArrowRight } from "@tabler/icons-react-native";
 
 const CaseQuotesScreen: React.FC<{ navigation: NavigationType }> = ({
@@ -85,6 +84,8 @@ const CaseQuotesScreen: React.FC<{ navigation: NavigationType }> = ({
       setRefresh(false);
     }
   };
+
+  console.log(JSON.stringify(caseQuotes, null, 2));
 
   return (
     <Layout

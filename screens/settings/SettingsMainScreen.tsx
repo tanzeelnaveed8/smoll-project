@@ -5,7 +5,6 @@ import { colorErrorText, fontHauora } from "@/constant/constant";
 import { NavigationType } from "@/store/types";
 import { logout } from "@/utils/chat.v2";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 import {
   IconBell,
   IconCreditCard,
@@ -13,13 +12,18 @@ import {
   IconHelp,
   IconPaw,
   IconUserCircle,
-  IconWritingSign,
 } from "@tabler/icons-react-native";
-import React, { useState, useEffect, useCallback } from "react";
-import { Alert, Linking, StyleSheet, TouchableOpacity } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
+import {
+  Alert,
+  AppState,
+  AppStateStatus,
+  Linking,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import { Div, ScrollDiv, Text } from "react-native-magnus";
 import { OneSignal } from "react-native-onesignal";
-import { AppState, AppStateStatus } from "react-native";
 
 interface OptionType {
   id: number;

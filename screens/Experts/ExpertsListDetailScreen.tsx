@@ -7,7 +7,6 @@ import DoctorCard from "@/components/partials/DoctorCard";
 import {
   colorPrimary,
   fontCooper,
-  fontHauora,
   fontHauoraMedium,
   fontHauoraSemiBold,
 } from "@/constant/constant";
