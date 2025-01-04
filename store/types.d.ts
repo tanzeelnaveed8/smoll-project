@@ -28,3 +28,13 @@ export interface SendBirdExtendedBaseMessage extends BaseMessage {
     profileUrl: string;
   };
 }
+
+export type TimeBtnType = "morning" | "noon" | "evening";
+
+export type IntervalStateType = Record<
+  TimeBtnType,
+  {
+    from: string;
+    to: string;
+  }[]
+>;

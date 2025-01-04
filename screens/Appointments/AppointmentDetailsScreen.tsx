@@ -40,11 +40,15 @@ import { Button, Div, Image, ScrollDiv, Tag, Text } from "react-native-magnus";
 
 const actionBtn = [
   {
-    icon: <IconCalendarClock width={30} height={30} color={"#427594"} />,
+    icon: (color?: string) => (
+      <IconCalendarClock width={30} height={30} color={color || "#427594"} />
+    ),
     text: "Reschedule",
   },
   {
-    icon: <IconUserX width={30} height={30} color={"#8F9498"} />,
+    icon: (color?: string) => (
+      <IconUserX width={30} height={30} color={color || "#8F9498"} />
+    ),
     text: "Cancel",
   },
 ];
@@ -191,7 +195,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
       navigation.navigate("PartnerVetScreen", {
         bookingId: id,
         partnerId: appointmentDetail.partner.id,
-        partnerName: appointmentDetail.partner.name,
+        partnerName: appointmentDetail?.partner?.name,
         caseId: appointmentDetail.caseId,
         selectedServices: appointmentDetail.services,
         backTo: "HomeScreen",
@@ -285,7 +289,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
         style={{ paddingBottom: 0 }}
         onBackPress={() => navigation.goBack()}
       >
-        {!isLoading && (
+        {!isLoading && appointmentDetail && (
           <ScrollDiv showsVerticalScrollIndicator={false}>
             <Div flex={1}>
               <Div
@@ -502,7 +506,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                       </Div>
 
                       <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold}>
-                        {appointmentDetail?.pet.name}
+                        {appointmentDetail?.pet?.name}
                       </Text>
                     </Div>
 
@@ -519,13 +523,22 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                           return null;
                         }
 
+                        const disableReschedule =
+                          appointmentDetail.isEmergency ||
+                          (appointmentDetail.scheduledAt &&
+                            dayjs().isAfter(
+                              dayjs(appointmentDetail.scheduledAt)
+                            ));
+
                         return (
                           <Div
                             mx={item.text === "Cancel" ? "auto" : 0}
                             key={item.text}
                           >
                             <TouchableOpacity
-                              disabled={rescheduleLoading}
+                              disabled={Boolean(
+                                rescheduleLoading || disableReschedule
+                              )}
                               key={item.text}
                               onPress={() => {
                                 if (item.text.includes("Cancel")) {
@@ -543,12 +556,20 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                                 style={{ gap: 8 }}
                                 alignItems="center"
                               >
-                                {item.icon}
+                                {item.icon(
+                                  item.text === "Reschedule"
+                                    ? disableReschedule
+                                      ? "#8F9498"
+                                      : ""
+                                    : ""
+                                )}
                                 <Text
                                   fontSize={"xl"}
                                   fontFamily={fontHauoraSemiBold}
                                   color={
                                     item.text === "Cancel"
+                                      ? "#8F9498"
+                                      : disableReschedule
                                       ? "#8F9498"
                                       : "primary"
                                   }
@@ -709,7 +730,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
 
           <Text fontSize={"md"} fontFamily={fontHauoraMedium} mb={16}>
             Are you sure you want to cancel your appointment with Dr.{" "}
-            {appointmentDetail?.vet.name}?
+            {appointmentDetail?.vet?.name}?
           </Text>
 
           <ButtonPrimary

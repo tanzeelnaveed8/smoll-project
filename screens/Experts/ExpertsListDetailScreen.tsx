@@ -12,7 +12,7 @@ import {
   fontHauoraSemiBold,
 } from "@/constant/constant";
 import { useExpertStore } from "@/store/modules/expert";
-import { NavigationType } from "@/store/types";
+import { NavigationType, TimeBtnType } from "@/store/types";
 import { ExpertAvailability } from "@/store/types/expert";
 import { hasAvailabilityDateTimePassed } from "@/utils/helpers";
 import { useFocusEffect, useRoute } from "@react-navigation/native";
@@ -33,7 +33,6 @@ const dayOfWeekMap: { [key: string]: number } = {
 
 const windowWidth = Dimensions.get("window").width;
 
-type TimeBtnType = "morning" | "noon" | "evening";
 const timeTabBtns = ["morning", "noon", "evening"];
 
 type IntervalStateType = Record<
@@ -325,7 +324,7 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
 
         {data.length === 0 && (
           <Div w={"100%"} flexDir="row" flexWrap="wrap" style={{ gap: 8 }}>
-            <Text>-</Text>
+            <Text>No available slots</Text>
           </Div>
         )}
       </>
@@ -463,16 +462,6 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
               {!availabilityLoading &&
                 availability.length > 0 &&
                 availability.map((a) => {
-                  // if (morningTimings.length > 0) {
-                  //   timeTabBtns.push("Morning");
-                  // }
-                  // if (noonTimings.length > 0) {
-                  //   timeTabBtns.push("Noon");
-                  // }
-                  // if (eveningTimings.length > 0) {
-                  //   timeTabBtns.push("Evening");
-                  // }
-
                   return (
                     <Div
                       key={a.id}
@@ -560,7 +549,7 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
 
                       {a.intervals.length === 0 && (
                         <Div flexDir="row" flexWrap="wrap" style={{ gap: 8 }}>
-                          <Text>-</Text>
+                          <Text>No availability</Text>
                         </Div>
                       )}
                     </Div>

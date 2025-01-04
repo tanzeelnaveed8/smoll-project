@@ -2,6 +2,8 @@ import Layout from "@/components/app/Layout";
 import Accordion from "@/components/partials/Accordion";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import {
+  fontCooper,
+  fontCooperMedium,
   fontHauoraBold,
   fontHauoraMedium,
   fontHauoraSemiBold,
@@ -266,7 +268,7 @@ const PartnerVetConfirmationScreen: React.FC<{
               <Accordion key={i}>
                 <Accordion.title>
                   <Text
-                    fontFamily={fontHauoraMedium}
+                    fontFamily={fontCooperMedium}
                     fontSize="lg"
                     lineHeight={20}
                     color="#494949"

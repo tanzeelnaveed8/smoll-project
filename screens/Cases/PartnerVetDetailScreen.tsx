@@ -4,12 +4,13 @@ import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import DoctorCard from "@/components/partials/DoctorCard";
 import { fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
 import { usePartnerStore } from "@/store/modules/partner";
-import { NavigationType } from "@/store/types";
+import { IntervalStateType, NavigationType } from "@/store/types";
 import { ExpertAvailability } from "@/store/types/expert";
 import { hasAvailabilityDateTimePassed } from "@/utils/helpers";
 import { useRoute } from "@react-navigation/native";
 import dayjs from "dayjs";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { Dimensions, TouchableOpacity } from "react-native";
 import { Button, Div, ScrollDiv, Skeleton, Text } from "react-native-magnus";
 
 const dayOfWeekMap: { [key: string]: number } = {
@@ -21,6 +22,10 @@ const dayOfWeekMap: { [key: string]: number } = {
   fri: 5,
   sat: 6,
 };
+
+const windowWidth = Dimensions.get("window").width;
+type TimeBtnType = "morning" | "noon" | "evening";
+const timeTabBtns = ["morning", "noon", "evening"];
 
 const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
@@ -46,6 +51,7 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
   )?.selectedServices;
   const isReschedule = (route.params as Record<string, boolean>)?.isReschedule;
   const [availability, setAvailability] = useState<ExpertAvailability[]>([]);
+
   const [selectedDate, setSelectedDate] = useState<string>();
   const [selectedTime, setSelectedTime] = useState<{
     value: { from: string; to: string };
@@ -57,6 +63,13 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [availabilityLoading, setAvailabilityLoading] = useState(false);
   const [isRequesting, setIsRequesting] = useState(false);
+
+  const [activeTimeTab, setActiveTimeTab] = useState<TimeBtnType>(
+    timeTabBtns[0] as TimeBtnType
+  );
+  const [intervalData, setIntervalData] = useState<IntervalStateType | null>(
+    null
+  );
 
   const partnerDetails = useMemo(() => {
     return partnerVetDetails.get(vetId);
@@ -94,6 +107,35 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
         partnerId,
         new Date(date)
       );
+
+      const morningTimings = _availability[0].intervals.filter(
+        (item) => +item.from.split(":")[0] < 12
+      );
+      const noonTimings = _availability[0].intervals.filter((item) => {
+        console.log("item.from", item.from);
+        const time = +item.from.split(":")[0];
+        console.log("noonTimes == :", time);
+        if (time > 12 && time < 17) {
+          return item;
+        }
+      });
+      const eveningTimings = _availability[0].intervals.filter(
+        (item) => +item.from.split(":")[0] > 17
+      );
+
+      if (morningTimings.length > 0) {
+        setActiveTimeTab("morning");
+      } else if (noonTimings.length > 0) {
+        setActiveTimeTab("noon");
+      } else if (eveningTimings.length > 0) {
+        setActiveTimeTab("evening");
+      }
+
+      setIntervalData({
+        morning: morningTimings,
+        noon: noonTimings,
+        evening: eveningTimings,
+      });
 
       setAvailability(_availability);
     } finally {
@@ -146,6 +188,119 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
       selectedServices,
       isReschedule,
     });
+  };
+
+  const TimeBtnText: React.FC<{ time: string; color: string }> = ({
+    time,
+    color,
+  }) => {
+    const font = windowWidth > 390 ? 15 : 14;
+
+    return (
+      <Div flexDir="row" w={"100%"} justifyContent="center" flexWrap="wrap">
+        <Text
+          color={color}
+          fontFamily={fontHauoraMedium}
+          lineHeight={20}
+          fontSize={font}
+        >
+          {time.split(" - ")[0]}
+        </Text>
+        <Text
+          color={color}
+          fontFamily={fontHauoraMedium}
+          lineHeight={20}
+          fontSize={font}
+        >
+          -
+        </Text>
+        <Text
+          color={color}
+          fontFamily={fontHauoraMedium}
+          lineHeight={20}
+          fontSize={font}
+        >
+          {time.split(" - ")[1]}
+        </Text>
+      </Div>
+    );
+  };
+
+  const TimeButton: React.FC<{
+    a: ExpertAvailability;
+    marginTop?: number;
+    data: {
+      from: string;
+      to: string;
+    }[];
+  }> = ({ a, data, marginTop }) => {
+    return (
+      <>
+        {/* {data.length > 0 && (
+          <Text
+            w={"100%"}
+            px={12}
+            mt={marginTop || 0}
+            fontFamily={fontHauoraSemiBold}
+          >
+            {heading}
+          </Text>
+        )} */}
+        {data.length > 0 &&
+          data.map((intr, index) => {
+            const time = formatTime(a, intr);
+
+            const isDisabled = hasAvailabilityDateTimePassed(
+              selectedDate ?? dayjs().format("YYYY-MM-DD"),
+              intr.from
+            );
+
+            return (
+              <>
+                <Button
+                  key={`${index}:${a.dayOfWeek ?? a.date}:${time}`}
+                  w={170}
+                  maxW={"50%"}
+                  p={10}
+                  borderWidth={1}
+                  borderColor="#E0E0E0"
+                  rounded={8}
+                  bg={
+                    selectedTime?.label ===
+                    `${index}:${a.dayOfWeek ?? a.date}:${time}`
+                      ? "#222"
+                      : "transparent"
+                  }
+                  onPress={() => {
+                    setSelectedTime({
+                      value: { from: intr.from, to: intr.to },
+                      label: `${index}:${a.dayOfWeek ?? a.date}:${time}`,
+                    });
+                  }}
+                  disabled={isDisabled}
+                >
+                  <TimeBtnText
+                    time={time}
+                    color={
+                      selectedTime?.label ===
+                      `${index}:${a.dayOfWeek ?? a.date}:${time}`
+                        ? "#fff"
+                        : "#494949"
+                    }
+                  />
+                  {/* {time} */}
+                </Button>
+              </>
+            );
+          })}
+
+        {data.length === 0 && (
+          <Div w={"100%"} flexDir="row" flexWrap="wrap" style={{ gap: 8 }}>
+            <Text>No available slots</Text>
+          </Div>
+        )}
+      </>
+    );
   };
 
   return (
@@ -243,57 +398,66 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
                         justifyContent="center"
                         style={{ gap: 8 }}
                       >
-                        {a.intervals.map((intr, index) => {
-                          const time = formatTime(a, intr);
-
-                          const isDisabled = hasAvailabilityDateTimePassed(
-                            selectedDate ?? dayjs().format("YYYY-MM-DD"),
-                            intr.from
-                          );
-
-                          return (
-                            <Button
-                              key={`${index}:${a.dayOfWeek ?? a.date}:${time}`}
-                              fontFamily={fontHauoraMedium}
-                              fontSize={15}
-                              lineHeight={20}
-                              p={10}
-                              w={170}
-                              borderWidth={1}
-                              color={
-                                selectedTime?.label ===
-                                `${index}:${a.dayOfWeek ?? a.date}:${time}`
-                                  ? "#fff"
-                                  : "#494949"
-                              }
-                              borderColor="#E0E0E0"
-                              rounded={8}
-                              bg={
-                                selectedTime?.label ===
-                                `${index}:${a.dayOfWeek ?? a.date}:${time}`
-                                  ? "#222"
-                                  : "transparent"
-                              }
+                        <Div
+                          w={"100%"}
+                          rounded={40}
+                          px={20}
+                          py={8}
+                          flexDir="row"
+                          justifyContent="center"
+                          alignItems="center"
+                          style={{ columnGap: 12 }}
+                        >
+                          {timeTabBtns.map((item) => (
+                            <TouchableOpacity
+                              key={item}
                               onPress={() => {
-                                setSelectedTime({
-                                  value: { from: intr.from, to: intr.to },
-                                  label: `${index}:${
-                                    a.dayOfWeek ?? a.date
-                                  }:${time}`,
-                                });
+                                setActiveTimeTab(item as TimeBtnType);
                               }}
-                              disabled={isDisabled}
                             >
-                              {time}
-                            </Button>
-                          );
-                        })}
+                              <Button
+                                bg={
+                                  activeTimeTab === item
+                                    ? "#222"
+                                    : "transparent"
+                                }
+                                borderWidth={1.5}
+                                borderColor={"#222"}
+                                rounded={100}
+                                px={22}
+                                py={8}
+                                color={activeTimeTab === item ? "#fff" : "#222"}
+                                fontFamily={fontHauoraSemiBold}
+                                pointerEvents="none"
+                                textTransform="capitalize"
+                              >
+                                {item}
+                              </Button>
+                            </TouchableOpacity>
+                          ))}
+                        </Div>
+                        {intervalData && (
+                          <TimeButton
+                            a={a}
+                            data={
+                              intervalData[
+                                activeTimeTab.toLowerCase() as keyof IntervalStateType
+                              ]
+                            }
+                          />
+                        )}
+                        {/* <TimeButton a={a} data={noonTimings} marginTop={5} />
+                          <TimeButton
+                            a={a}
+                            data={eveningTimings}
+                            marginTop={5}
+                          /> */}
                       </Div>
                     )}
 
                     {a.intervals.length === 0 && (
                       <Div flexDir="row" flexWrap="wrap" style={{ gap: 8 }}>
-                        <Text>-</Text>
+                        <Text>No availability</Text>
                       </Div>
                     )}
                   </Div>

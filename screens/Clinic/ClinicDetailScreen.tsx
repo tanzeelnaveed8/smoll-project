@@ -1,4 +1,5 @@
 import Layout from "@/components/app/Layout";
+import ImageUpload from "@/components/partials/ImageUpload";
 import StarRating from "@/components/partials/StarRating";
 import {
   colorPrimary,
@@ -47,12 +48,24 @@ const TimeTab: React.FC<{ heading: string; time: string; mb?: number }> = ({
 const category = ["Primary", "Equistrain", "Hospitalization", "Rehabilitation"];
 
 const images = [
-  require("@/assets/images/slider-1.png"),
-  require("@/assets/images/slider-2.png"),
-  require("@/assets/images/slider-3.png"),
-  require("@/assets/images/slider-1.png"),
-  require("@/assets/images/slider-2.png"),
-  require("@/assets/images/slider-3.png"),
+  {
+    url: "https://www.carandbike.com/_next/image?url=https%3A%2F%2Fimages.carandbike.com%2Fcms%2Farticles%2F2024%2F7%2F3213879%2FRoyal_Enfield_Guerrilla_450_launched_carandbike_edited_3_20980a956f.jpg&w=3840&q=75",
+  },
+  {
+    url: "https://imgd.aeplcdn.com/370x208/n/cw/ec/186579/royalenfield-guerrilla-450-right-side-view2.jpeg?isig=0&q=80",
+  },
+  {
+    url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSyHCgA8Tqz6eeb_f9uBBbNNjsg0_jnAuFp8uWo36Ho1PLRUAaFC5f4G24CcsEmU3JV0Oc&usqp=CAU",
+  },
+  {
+    url: "https://www.carandbike.com/_next/image?url=https%3A%2F%2Fimages.carandbike.com%2Fcms%2Farticles%2F2024%2F7%2F3213879%2FRoyal_Enfield_Guerrilla_450_launched_carandbike_edited_3_20980a956f.jpg&w=3840&q=75",
+  },
+  {
+    url: "https://imgd.aeplcdn.com/370x208/n/cw/ec/186579/royalenfield-guerrilla-450-right-side-view2.jpeg?isig=0&q=80",
+  },
+  {
+    url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSyHCgA8Tqz6eeb_f9uBBbNNjsg0_jnAuFp8uWo36Ho1PLRUAaFC5f4G24CcsEmU3JV0Oc&usqp=CAU",
+  },
 ];
 
 const doctorList = [
@@ -81,6 +94,7 @@ const ClinicDetailScreen: React.FC<{ navigation: NavigationType }> = ({
 }) => {
   const route = useRoute();
   const { id } = route.params as { id: string };
+  console.log("clinic details id", id);
   const { clinicDetails, fetchClinicDetails } = usePartnerStore();
   // const id = "RRN6UQzEFK";
 
@@ -88,7 +102,32 @@ const ClinicDetailScreen: React.FC<{ navigation: NavigationType }> = ({
 
   const data = useMemo(() => clinicDetails.get(id), [id, clinicDetails]);
 
-  console.log("clinicDetailsData == ", data?.openingHours);
+  console.log("clinicDetailsData == ", data);
+  const response = {
+    address: "test",
+    city: "test",
+    clinicImg: null,
+    country: "United Arab Emirates",
+    createdAt: "2024-11-24T21:12:08.036Z",
+    email: "mohibarshi@gmail.com",
+    id: "Lo0cRgfhD2Ppv",
+    imgCollections: null,
+    name: "Mak clinic",
+    openingHours: null,
+    phone: "+917830977750",
+    postalCode: null,
+    receptionistName: "Mohib Test",
+    specialities: [],
+    vets: [
+      {
+        designation: "adf",
+        id: "1AlO61IJqmUx1",
+        name: "Test Vet",
+        profileImg: null,
+        yearsOfExperience: 2,
+      },
+    ],
+  };
 
   useEffect(() => {
     if (data) {
@@ -127,7 +166,16 @@ const ClinicDetailScreen: React.FC<{ navigation: NavigationType }> = ({
         <Div flex={1} pt={24}>
           <ScrollDiv showsVerticalScrollIndicator={false}>
             <Div flexDir="row" alignItems="center" style={{ gap: 12 }} mb={16}>
-              <Image src={data.clinicImg.url} w={100} h={100} rounded={100} />
+              {data?.clinicImg?.url ? (
+                <Image src={data.clinicImg.url} w={100} h={100} rounded={100} />
+              ) : (
+                <Image
+                  source={require("@/assets/images/no-image.png")}
+                  w={100}
+                  h={100}
+                  rounded={100}
+                />
+              )}
 
               <Div>
                 <Text
@@ -153,12 +201,13 @@ const ClinicDetailScreen: React.FC<{ navigation: NavigationType }> = ({
 
                 <Div flexDir="row" alignItems="center">
                   <Image
-                    src={data.clinicImg.url}
+                    source={require("@/assets/images/uae-icon.png")}
                     w={20}
                     h={20}
                     rounded={20}
                     mr={8}
                   />
+
                   <Text
                     fontSize={"md"}
                     fontFamily={fontHauoraBold}
@@ -219,10 +268,22 @@ const ClinicDetailScreen: React.FC<{ navigation: NavigationType }> = ({
                 </Text>
 
                 <FlatList
-                  data={data.imgCollections}
+                  data={data?.imgCollections}
                   renderItem={({ item, index }) => (
-                    <Div pr={index + 1 === images.length ? 0 : 8}>
-                      <Image src={item.url} w={120} h={100} rounded={8} />
+                    <Div
+                      pr={index + 1 === data?.imgCollections?.length ? 0 : 8}
+                    >
+                      {/* <Image source={item.url} w={120} h={100} rounded={8} /> */}
+                      <ImageUpload
+                        h={120}
+                        w={120}
+                        rounded={8}
+                        uri={item.url}
+                        hideUnselectBtn
+                        openImageOnTab
+                        disableDownload
+                        // onChange={handleUpdateImage}
+                      />
                     </Div>
                   )}
                   // keyExtractor={({ item, index }) => `${index}`}

@@ -38,16 +38,25 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
   useEffect(() => {
     if (!appointmentData) return;
     const now = new Date(); // Get the current date and time
+    const currentDate = new Date().getDate();
 
     // Separate appointments into upcoming and archived
     const upcomingAppointments = appointmentData.filter((item) => {
       const scheduledAt = new Date(item.scheduledAt); // Convert to Date object
-      return scheduledAt > now; // Include only future appointments
+      const scheduleAtDate = new Date(scheduledAt).getDate();
+
+      return item.isEmergency
+        ? scheduleAtDate >= currentDate
+        : scheduledAt > now; // Include only future appointments
     }) as AppointmentListResponseDto[];
 
     const archivedAppointments = appointmentData.filter((item) => {
       const scheduledAt = new Date(item.scheduledAt); // Convert to Date object
-      return scheduledAt <= now; // Include only past or current appointments
+      const scheduleAtDate = new Date(scheduledAt).getDate();
+
+      return item.isEmergency
+        ? scheduleAtDate < currentDate
+        : scheduledAt <= now; // Include only past or current appointments
     }) as AppointmentListResponseDto[];
 
     if (activeTab === "Upcoming") {
@@ -59,7 +68,7 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
 
   useFocusEffect(
     useCallback(() => {
-      // handleFetchAppointments(undefined, true);
+      handleFetchAppointments(undefined, true);
     }, [])
   );
 
@@ -98,7 +107,7 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
     });
   };
 
-  const actionBtns = ["Upcoming", "Archived"];
+  const actionBtns = ["Upcoming", "Past"];
 
   return (
     <Layout
@@ -140,7 +149,7 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
                   borderRightWidth:
                     item === activeTab && activeTab === "Upcoming" ? 1 : 0,
                   borderLeftWidth:
-                    item === activeTab && activeTab === "Archived" ? 1 : 0,
+                    item === activeTab && activeTab === "Past" ? 1 : 0,
                   borderColor: "#ccc",
                   borderRadius: 12,
                   alignItems: "center",
