@@ -68,27 +68,6 @@ const images = [
   },
 ];
 
-const doctorList = [
-  {
-    img: require("@/assets/images/doctor-img.png"),
-    name: "Dr. Christopher Adams",
-    speciality: "DVM, GPCERT (FelP)",
-    experience: 3,
-  },
-  {
-    img: require("@/assets/images/doctor-img.png"),
-    name: "Dr. Christopher Adams",
-    speciality: "DVM, GPCERT (FelP)",
-    experience: 3,
-  },
-  {
-    img: require("@/assets/images/doctor-img.png"),
-    name: "Dr. Christopher Adams",
-    speciality: "DVM, GPCERT (FelP)",
-    experience: 3,
-  },
-];
-
 const ClinicDetailScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
@@ -101,7 +80,33 @@ const ClinicDetailScreen: React.FC<{ navigation: NavigationType }> = ({
 
   const data = useMemo(() => clinicDetails.get(id), [id, clinicDetails]);
 
-  console.log("clinicDetailsData == ", data?.openingHours);
+  console.log("clinicDetailsData == ", data);
+
+  const response = {
+    address: "test",
+    city: "test",
+    clinicImg: null,
+    country: "United Arab Emirates",
+    createdAt: "2024-11-24T21:12:08.036Z",
+    email: "mohibarshi@gmail.com",
+    id: "Lo0cRgfhD2Ppv",
+    imgCollections: null,
+    name: "Mak clinic",
+    openingHours: null,
+    phone: "+917830977750",
+    postalCode: null,
+    receptionistName: "Mohib Test",
+    specialities: [],
+    vets: [
+      {
+        designation: "adf",
+        id: "1AlO61IJqmUx1",
+        name: "Test Vet",
+        profileImg: null,
+        yearsOfExperience: 2,
+      },
+    ],
+  };
 
   useEffect(() => {
     if (data) {
@@ -323,7 +328,7 @@ const ClinicDetailScreen: React.FC<{ navigation: NavigationType }> = ({
                 Veterinarian
               </Text>
 
-              {doctorList.map((item, i) => (
+              {data.vets.map((item, i) => (
                 <Div
                   key={i}
                   pb={16}
@@ -332,7 +337,23 @@ const ClinicDetailScreen: React.FC<{ navigation: NavigationType }> = ({
                   borderColor="#D0D7DC"
                   flexDir="row"
                 >
-                  <Image source={item.img} w={32} h={32} rounded={32} mr={16} />
+                  {item?.profileImg?.url ? (
+                    <Image
+                      src={item?.profileImg?.url}
+                      w={32}
+                      h={32}
+                      rounded={32}
+                      mr={16}
+                    />
+                  ) : (
+                    <Image
+                      source={require("@/assets/images/no-image.png")}
+                      w={32}
+                      h={32}
+                      rounded={32}
+                      mr={16}
+                    />
+                  )}
                   <Div>
                     <Text
                       fontSize={"lg"}
@@ -349,7 +370,7 @@ const ClinicDetailScreen: React.FC<{ navigation: NavigationType }> = ({
                       color="#494949"
                       mb={4}
                     >
-                      {item.speciality}
+                      {item.designation}
                     </Text>
                     <Text
                       fontSize={"md"}
@@ -358,7 +379,7 @@ const ClinicDetailScreen: React.FC<{ navigation: NavigationType }> = ({
                       color="#494949"
                       mb={12}
                     >
-                      {item.experience} yrs of experience
+                      {item.yearsOfExperience} yrs of experience
                     </Text>
                     <Div flexDir="row" alignItems="center">
                       <Div p={2}>
