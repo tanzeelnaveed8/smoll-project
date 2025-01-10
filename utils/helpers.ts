@@ -103,7 +103,7 @@ export const hasAvailabilityDateTimePassed = (
   date: string,
   time: string
 ): boolean => {
-  const dateTime = dayjs(`${date}T${time}Z`);
+  const dateTime = dayjs(`${date}T${time}Z`); // need to test it
   const timeOnly = dateTime.format("HH:mm");
   const currentTimeOnly = dayjs().format("HH:mm");
 
@@ -112,8 +112,10 @@ export const hasAvailabilityDateTimePassed = (
     return false;
   }
 
+  // console.log("currentTimeOnly", currentTimeOnly, "timeOnly", timeOnly);
+
   // For today, compare times
-  return currentTimeOnly > timeOnly;
+  return currentTimeOnly > time;
 };
 
 export const getUserTimezoneOffset = () => {

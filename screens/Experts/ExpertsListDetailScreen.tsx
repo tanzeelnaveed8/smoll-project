@@ -83,6 +83,8 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
     null
   );
 
+  console.log("selectedDate = ", selectedDate);
+
   useFocusEffect(
     useCallback(() => {
       handleFetchExpertDetails();
