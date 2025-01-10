@@ -77,10 +77,14 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
     );
   }, [appointmentDetail]);
 
+  console.log("selectedServicesAmount:", selectedServicesAmount);
+
   const bookingCharges = useMemo(() => {
     const amount = (selectedServicesAmount ?? 0) * 0.229 + 1;
     return amount;
   }, [selectedServicesAmount]);
+
+  console.log("bookingCharges:", bookingCharges);
 
   const [isJoinEnabled, setIsJoinEnabled] = useState(false);
 

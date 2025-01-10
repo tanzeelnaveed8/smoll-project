@@ -540,6 +540,7 @@ const App = () => {
                   <Stack.Screen
                     name="ExpertsListDetailScreen"
                     component={ExpertsListDetailScreen}
+                    options={{ headerTintColor: "#222" }}
                   />
                   <Stack.Screen
                     name="ExpertsInboxScreen"
