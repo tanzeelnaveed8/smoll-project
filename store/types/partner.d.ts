@@ -7,6 +7,7 @@ export interface PartnerVet {
   designation: string;
   yearsOfExperience: number;
   profileImg: UploadedFile;
+  about?: string;
 }
 
 export interface ClinicDetails {

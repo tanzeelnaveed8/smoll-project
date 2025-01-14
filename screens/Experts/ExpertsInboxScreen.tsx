@@ -70,6 +70,8 @@ const ExpertsInboxScreen: React.FC<Props> = (props) => {
             loading={actionLoading}
             image={expert.profileImg?.url ?? "https://via.placeholder.com/150"}
             expertId={expert.id}
+            verified={expert.verified}
+            about={expert.about}
           />
         ))}
       </Div>

@@ -154,13 +154,21 @@ const CaseQuotesScreen: React.FC<{ navigation: NavigationType }> = ({
                   >
                     <Div flexDir="row" justifyContent="space-between">
                       <Div maxW={"70%"}>
-                        <Text
-                          fontSize={"xl"}
-                          mb={4}
-                          fontFamily={fontHauoraSemiBold}
+                        <TouchableOpacity
+                          onPress={() => {
+                            navigation.navigate("ClinicDetailScreen", {
+                              id: item.partner.id,
+                            });
+                          }}
                         >
-                          {item.partner.name}
-                        </Text>
+                          <Text
+                            fontSize={"xl"}
+                            mb={4}
+                            fontFamily={fontHauoraSemiBold}
+                          >
+                            {item.partner.name}
+                          </Text>
+                        </TouchableOpacity>
 
                         {/* <PartnerVetStarRating rating={4} color="" /> */}
 

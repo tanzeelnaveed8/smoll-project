@@ -2,7 +2,8 @@ import React from "react";
 import { Button, Div, Image, Text } from "react-native-magnus";
 import { IconChevronRight } from "@tabler/icons-react-native";
 import { ActivityIndicator, TouchableOpacity } from "react-native";
-import { colorPrimary } from "@/constant/constant";
+import { colorPrimary, fontHauoraMedium } from "@/constant/constant";
+import VerifiedIcon from "@/components/icons/VerifiedIcon";
 
 interface Props {
   onPress: () => void;
@@ -11,6 +12,8 @@ interface Props {
   image: string;
   loading?: string;
   expertId: string;
+  verified?: boolean;
+  about?: string;
 }
 
 const ChatInboxItem: React.FC<Props> = (props) => {
@@ -32,12 +35,30 @@ const ChatInboxItem: React.FC<Props> = (props) => {
 
         <Div flexDir="row" alignItems="center" flex={1}>
           <Div>
-            <Text fontSize={"xl"} mb={4} lineHeight={24}>
-              {props.title}
-            </Text>
+            <Div row style={{ gap: 7 }}>
+              <Text fontSize={"xl"} mb={4} lineHeight={24}>
+                {props.title}
+              </Text>
+              {true && (
+                <Div mt={4}>
+                  <VerifiedIcon />
+                </Div>
+              )}
+            </Div>
             <Text mb={4} fontSize={"md"} color="darkGreyText">
               {props.subtitle}
             </Text>
+
+            {props.about && (
+              <Text
+                fontSize="md"
+                // fontFamily={fontHauoraMedium}
+                color="darkGreyText"
+                lineHeight={20}
+              >
+                {props.about}
+              </Text>
+            )}
           </Div>
 
           <Div ml="auto">

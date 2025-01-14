@@ -2,6 +2,7 @@ import { fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
 import { Avatar, Badge, Div, Image, Text } from "react-native-magnus";
 import Verified from "./Verified";
 import { IconUser } from "@tabler/icons-react-native";
+import VerifiedIcon from "../icons/VerifiedIcon";
 
 type PropTypes = {
   name: string;
@@ -11,6 +12,7 @@ type PropTypes = {
   slotScreen?: boolean;
   isOnline?: boolean;
   image?: string;
+  about?: string;
 };
 
 const DoctorCard: React.FC<PropTypes> = (props) => {
@@ -22,6 +24,7 @@ const DoctorCard: React.FC<PropTypes> = (props) => {
     slotScreen = false,
     isOnline = false,
     image,
+    about,
   } = props;
 
   return (
@@ -65,14 +68,22 @@ const DoctorCard: React.FC<PropTypes> = (props) => {
         )}
         <Div w="full" flexDir="row" justifyContent="space-between">
           <Div style={{ gap: 4 }}>
-            <Text
-              fontFamily={fontHauoraSemiBold}
-              fontSize="xl"
-              lineHeight={24}
-              color="#222222"
-            >
-              {name}
-            </Text>
+            <Div row alignItems="center" style={{ gap: 6 }}>
+              <Text
+                fontFamily={fontHauoraSemiBold}
+                fontSize="xl"
+                lineHeight={24}
+                color="#222222"
+              >
+                {name}
+              </Text>
+
+              {!slotScreen && verified && (
+                <Div mb={1}>
+                  <VerifiedIcon />
+                </Div>
+              )}
+            </Div>
             <Text
               fontSize="md"
               fontFamily={fontHauoraMedium}
@@ -89,7 +100,18 @@ const DoctorCard: React.FC<PropTypes> = (props) => {
             >
               {experience} yrs of experience
             </Text>
-            {!slotScreen && verified && <Verified />}
+
+            {about && (
+              <Text
+                fontSize="md"
+                fontFamily={fontHauoraMedium}
+                color="#494949"
+                lineHeight={20}
+              >
+                {about}
+              </Text>
+            )}
+            {/* {!slotScreen && verified && <Verified />} */}
           </Div>
         </Div>
       </Div>

@@ -13,6 +13,7 @@ type PropTypes = {
   onCheckAvailability?: () => void;
   isOnline?: boolean;
   image?: string;
+  about?: string;
 };
 
 const DoctorListCard: React.FC<PropTypes> = (props) => {
@@ -26,6 +27,7 @@ const DoctorListCard: React.FC<PropTypes> = (props) => {
     onCheckAvailability,
     isOnline,
     image,
+    about,
   } = props;
 
   return (
@@ -37,6 +39,7 @@ const DoctorListCard: React.FC<PropTypes> = (props) => {
         verified={verified}
         isOnline={isOnline}
         image={image}
+        about={about}
       />
 
       {/* card footer */}

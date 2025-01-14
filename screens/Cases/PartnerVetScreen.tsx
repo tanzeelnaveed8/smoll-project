@@ -97,6 +97,7 @@ const PartnerVetScreen: React.FC<{ navigation: NavigationType }> = ({
             image={item.profileImg?.url}
             verified
             nextAvailable=""
+            about={item?.about}
             onCheckAvailability={() => {
               navigation.navigate("PartnerVetDetailScreen", {
                 bookingId,
