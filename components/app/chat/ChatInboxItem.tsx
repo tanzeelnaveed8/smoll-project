@@ -55,8 +55,11 @@ const ChatInboxItem: React.FC<Props> = (props) => {
                 // fontFamily={fontHauoraMedium}
                 color="darkGreyText"
                 lineHeight={20}
+                maxW={"90%"}
               >
-                {props.about}
+                {props.about.length > 60
+                  ? props.about.slice(0, 60) + "..."
+                  : props.about}
               </Text>
             )}
           </Div>

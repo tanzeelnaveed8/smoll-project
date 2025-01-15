@@ -107,8 +107,9 @@ const DoctorCard: React.FC<PropTypes> = (props) => {
                 fontFamily={fontHauoraMedium}
                 color="#494949"
                 lineHeight={20}
+                maxW={"90%"}
               >
-                {about}
+                {about.length > 60 ? about.slice(0, 60) + "..." : about}
               </Text>
             )}
             {/* {!slotScreen && verified && <Verified />} */}
