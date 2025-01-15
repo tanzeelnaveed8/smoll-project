@@ -1,11 +1,13 @@
 import Layout from "@/components/app/Layout";
 import CallIcon from "@/components/icons/CallIcon";
+import DotIcon from "@/components/icons/DotIcon";
 import LocationIcon from "@/components/icons/LocationIcon";
 import MessageIcon from "@/components/icons/MessageIcon";
 import WalletIcon from "@/components/icons/WalletIcon";
 import BottomSheet from "@/components/partials/BottomSheet";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import {
+  colorPrimary,
   fontHauoraBold,
   fontHauoraMedium,
   fontHauoraSemiBold,
@@ -37,7 +39,7 @@ const actionBtn = [
   },
   {
     icon: (color?: string) => (
-      <IconUserX width={30} height={30} color={color || "#8F9498"} />
+      <IconUserX width={30} height={30} color={colorPrimary} />
     ),
     text: "Cancel",
   },
@@ -319,6 +321,15 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                         mb={8}
                         src={appointmentDetail?.vet?.profileImg?.url}
                       />
+                    ) : appointmentDetail.isEmergency ? (
+                      <Image
+                        w={100}
+                        h={100}
+                        rounded={100}
+                        mx={"auto"}
+                        mb={8}
+                        source={require("@/assets/images/emergency-icon.png")}
+                      />
                     ) : (
                       <Div
                         mb={8}
@@ -453,13 +464,33 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                               mb={8}
                               justifyContent="space-between"
                             >
-                              <Text
-                                fontSize={"lg"}
-                                mb={8}
-                                fontFamily={fontHauoraSemiBold}
+                              <TouchableOpacity
+                                style={{
+                                  flexDirection: "row",
+                                  alignItems: "center",
+                                  columnGap: 5,
+                                }}
+                                onPress={() => {
+                                  navigation.navigate("ClinicDetailScreen", {
+                                    id: appointmentDetail?.partner?.id,
+                                  });
+                                }}
                               >
-                                {appointmentDetail?.partner?.name ?? "-"}
-                              </Text>
+                                <Text
+                                  fontSize={"lg"}
+                                  mb={8}
+                                  fontFamily={fontHauoraSemiBold}
+                                >
+                                  {appointmentDetail?.partner?.name ?? "-"}
+                                </Text>
+
+                                <IconArrowRight
+                                  width={15}
+                                  height={16}
+                                  color="#222"
+                                  style={{ marginTop: -2 }}
+                                />
+                              </TouchableOpacity>
 
                               <Text
                                 fontSize={"md"}
@@ -564,7 +595,12 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
 
                         return (
                           <Div
-                            mx={item.text === "Cancel" ? "auto" : 0}
+                            mx={
+                              !appointmentDetail.isEmergency &&
+                              item.text === "Cancel"
+                                ? "auto"
+                                : 0
+                            }
                             key={item.text}
                           >
                             <TouchableOpacity
@@ -590,11 +626,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                                 <Text
                                   fontSize={"xl"}
                                   fontFamily={fontHauoraSemiBold}
-                                  color={
-                                    item.text === "Cancel"
-                                      ? "#8F9498"
-                                      : "primary"
-                                  }
+                                  color={"primary"}
                                 >
                                   {item.text}
                                 </Text>
@@ -665,6 +697,15 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                             AED
                           </Text>
                         </Text>
+                      </Div>
+
+                      <Div
+                        style={{
+                          marginLeft: 28,
+                          marginVertical: 6,
+                        }}
+                      >
+                        <DotIcon />
                       </Div>
 
                       <Div

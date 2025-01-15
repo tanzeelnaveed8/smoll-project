@@ -324,8 +324,14 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
           })}
 
         {data.length === 0 && (
-          <Div w={"100%"} flexDir="row" flexWrap="wrap" style={{ gap: 8 }}>
-            <Text>No available slots</Text>
+          <Div
+            w={"100%"}
+            flexDir="row"
+            py={15}
+            flexWrap="wrap"
+            style={{ gap: 8 }}
+          >
+            <Text mx={"auto"}>No available slots</Text>
           </Div>
         )}
       </>

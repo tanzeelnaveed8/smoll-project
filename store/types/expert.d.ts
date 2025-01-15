@@ -16,6 +16,8 @@ interface Expert {
   designation: string;
   address: string;
   country: string;
+  about?: string;
+  verified?: boolean;
   //   availability: {};
   isOnline: true;
   yearsOfExperience: Nullable<number>;
