@@ -100,8 +100,8 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
         .day(dayOfWeekMap[availability.dayOfWeek])
         .format("YYYY-MM-DD");
 
-      const fromTime = dayjs(`${date}T${interval.from}`).format("hh:mm A");
-      const toTime = dayjs(`${date}T${interval.to}`).format("hh:mm A");
+      const fromTime = dayjs(`${date}T${interval.from}Z`).format("hh:mm A");
+      const toTime = dayjs(`${date}T${interval.to}Z`).format("hh:mm A");
 
       return `${fromTime} - ${toTime}`;
     },
