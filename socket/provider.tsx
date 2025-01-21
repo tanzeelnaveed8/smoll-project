@@ -14,6 +14,11 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     const newSocket = io(process.env.EXPO_PUBLIC_SOCKET_URL ?? "");
+
+    newSocket.on("connect", () => {
+      console.log("Connected to socket");
+    });
+
     setSocket(newSocket);
 
     return () => {
