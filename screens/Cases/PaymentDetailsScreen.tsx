@@ -364,7 +364,7 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
               mb={30}
               lineHeight={40}
             >
-              {clinicName}
+              {clinicName || partnerName}
             </Text>
 
             <Div
@@ -384,7 +384,7 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                     bg="#EFE9DB"
                     rounded={22}
                     px={22}
-                    pl={20}
+                    pl={17}
                     py={18}
                     ml={22}
                   >
@@ -409,7 +409,7 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                       marginLeft: "auto",
                       position: "absolute",
                       bottom: -33,
-                      left: 25,
+                      left: 40,
                     }}
                   >
                     <DotIcon />
@@ -423,6 +423,7 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                 justifyContent="space-around"
                 style={{ gap: 20 }}
                 pl={5}
+                ml={20}
                 // mb={25}
               >
                 <Div>

@@ -15,7 +15,11 @@ import { useFocusEffect } from "@react-navigation/native";
 import { IconChevronRight, IconUser } from "@tabler/icons-react-native";
 import dayjs from "dayjs";
 import React, { useCallback, useEffect, useState } from "react";
-import { RefreshControl, TouchableOpacity } from "react-native";
+import {
+  ActivityIndicator,
+  RefreshControl,
+  TouchableOpacity,
+} from "react-native";
 import { FlatList } from "react-native-bidirectional-infinite-scroll";
 
 import { Div, Image, Tag, Text } from "react-native-magnus";
@@ -25,8 +29,6 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
 }) => {
   const { fetchAppointments, appointment: appointmentData } =
     useAppointmentStore();
-
-  console.log(JSON.stringify(appointmentData, null, 2));
 
   const [isLoading, setIsLoading] = useState(false);
   const [nextPageId, setNextPageId] = useState(1);
@@ -46,25 +48,27 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
 
     // Separate appointments into upcoming and archived
     const upcomingAppointments = appointmentData.filter((item) => {
-      if (item.isEmergency) return true;
+      if (item.isEmergency) {
+        const scheduledAt = new Date(item.scheduledAt); // Convert to Date object
+        const oneDayAgo = new Date(now);
+        oneDayAgo.setDate(now.getDate() - 1); // Set to 1 day ago
+        return scheduledAt > oneDayAgo; // Include only emergency appointments that are less than 1 day old
+      }
 
       const scheduledAt = new Date(item.scheduledAt); // Convert to Date object
-      const scheduleAtDate = new Date(scheduledAt).getDate();
-
-      return item.isEmergency
-        ? scheduleAtDate >= currentDate
-        : scheduledAt > now; // Include only future appointments
+      return scheduledAt > now; // Include only future appointments
     }) as AppointmentListResponseDto[];
 
     const archivedAppointments = appointmentData.filter((item) => {
-      if (item.isEmergency) return false;
+      if (item.isEmergency) {
+        const scheduledAt = new Date(item.scheduledAt); // Convert to Date object
+        const oneDayAgo = new Date(now);
+        oneDayAgo.setDate(now.getDate() - 1); // Set to 1 day ago
+        return scheduledAt <= oneDayAgo; // Include emergency appointments that are 1 day old or older
+      }
 
       const scheduledAt = new Date(item.scheduledAt); // Convert to Date object
-      const scheduleAtDate = new Date(scheduledAt).getDate();
-
-      return item.isEmergency
-        ? scheduleAtDate < currentDate
-        : scheduledAt <= now; // Include only past or current appointments
+      return scheduledAt <= now; // Include only past or current appointments
     }) as AppointmentListResponseDto[];
 
     if (activeTab === "Upcoming") {
@@ -123,7 +127,7 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
       onBackPress={() => {
         navigation.navigate("HomeScreen");
       }}
-      loading={isLoading}
+      // loading={isLoading}
     >
       <Div flex={1}>
         <Div flex={1} pt={24}>
@@ -170,63 +174,71 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
             ))}
           </Div>
 
-          <FlatList
-            ListEmptyComponent={() => (
-              <Div minH={350} justifyContent="flex-end">
-                <Text
-                  fontSize={"5xl"}
-                  textAlign="center"
-                  fontFamily={fontCooper}
-                  maxW={"80%"}
-                  mx={"auto"}
-                  lineHeight={36}
-                >
-                  You don't have any{" "}
-                  {activeTab === "Upcoming" ? "upcoming" : "archived"}{" "}
-                  appointments
-                </Text>
-              </Div>
-            )}
-            onEndReached={handleLoadMore} // required, should return a promise
-            onEndReachedThreshold={20} // optional
-            activityIndicatorColor={"black"} // optional
-            showsVerticalScrollIndicator={false}
-            data={appointment}
-            renderItem={({ item, index }) => (
-              <AppointmentCard
-                isEmergency={item.isEmergency}
-                img={item.partner?.clinicImg?.url ?? item.vet?.profileImg?.url}
-                pet={item.pet.name}
-                text={`Your upcoming ${
-                  item.type === "in-clinic" ? "visit" : "consultation"
-                } with ${item.partner?.name ?? item.vet?.name}`}
-                scheduledTime={item.scheduledAt}
-                type={
-                  item.type === "in-clinic"
-                    ? "Clinic Visit"
-                    : "Video Consultation"
-                }
-                alert={item.isEmergency ? "Emergency" : ""}
-                onPress={() => {
-                  if (!item.scheduledAt && item.type === "in-clinic") {
-                    navigation.navigate("PartnerVetScreen", {
-                      bookingId: item.id,
-                      caseId: item.caseId,
-                      partnerId: item.partner?.id,
-                      partnerName: item.partner?.name,
-                      selectedServices: item.services,
-                    });
-                  } else {
-                    navigation.navigate("AppointmentDetailsScreen", {
-                      id: item.id,
-                      type: item.type,
-                    });
+          {isLoading ? (
+            <Div h={"65%"} justifyContent="center">
+              <ActivityIndicator size={"large"} color={colorPrimary} />
+            </Div>
+          ) : (
+            <FlatList
+              ListEmptyComponent={() => (
+                <Div minH={350} justifyContent="flex-end">
+                  <Text
+                    fontSize={"5xl"}
+                    textAlign="center"
+                    fontFamily={fontCooper}
+                    maxW={"80%"}
+                    mx={"auto"}
+                    lineHeight={36}
+                  >
+                    You don't have any{" "}
+                    {activeTab === "Upcoming" ? "upcoming" : "archived"}{" "}
+                    appointments
+                  </Text>
+                </Div>
+              )}
+              onEndReached={handleLoadMore} // required, should return a promise
+              onEndReachedThreshold={20} // optional
+              activityIndicatorColor={"black"} // optional
+              showsVerticalScrollIndicator={false}
+              data={appointment}
+              renderItem={({ item, index }) => (
+                <AppointmentCard
+                  isEmergency={item.isEmergency}
+                  img={
+                    item.partner?.clinicImg?.url ?? item.vet?.profileImg?.url
                   }
-                }}
-              />
-            )}
-            keyExtractor={(item, index) => `${index}`}
-          />
+                  pet={item.pet.name}
+                  text={`Your upcoming ${
+                    item.type === "in-clinic" ? "visit" : "consultation"
+                  } with ${item.partner?.name ?? item.vet?.name}`}
+                  scheduledTime={item.scheduledAt}
+                  type={
+                    item.type === "in-clinic"
+                      ? "Clinic Visit"
+                      : "Video Consultation"
+                  }
+                  alert={item.isEmergency ? "Emergency" : ""}
+                  onPress={() => {
+                    if (!item.scheduledAt && item.type === "in-clinic") {
+                      navigation.navigate("PartnerVetScreen", {
+                        bookingId: item.id,
+                        caseId: item.caseId,
+                        partnerId: item.partner?.id,
+                        partnerName: item.partner?.name,
+                        selectedServices: item.services,
+                      });
+                    } else {
+                      navigation.navigate("AppointmentDetailsScreen", {
+                        id: item.id,
+                        type: item.type,
+                      });
+                    }
+                  }}
+                />
+              )}
+              keyExtractor={(item, index) => `${index}`}
+            />
+          )}
         </Div>
       </Div>
     </Layout>

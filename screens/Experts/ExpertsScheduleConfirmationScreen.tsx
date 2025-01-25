@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Button, Div, ScrollDiv, Text } from "react-native-magnus";
 import {
+  fontCooper,
   fontCooperMedium,
   fontHauoraBold,
   fontHauoraMedium,
@@ -202,7 +203,7 @@ const ExpertsScheduleConfirmationScreen: React.FC<{
               <Accordion key={i}>
                 <Accordion.title>
                   <Text
-                    fontFamily={fontCooperMedium}
+                    fontFamily={fontCooper}
                     fontSize="lg"
                     lineHeight={20}
                     color="#494949"
