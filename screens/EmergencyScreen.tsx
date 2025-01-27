@@ -4,8 +4,8 @@ import { fontCooper, fontHauoraMedium } from "@/constant/constant";
 import { NavigationType } from "@/store/types";
 import { useRoute } from "@react-navigation/native";
 import { IconArrowRight } from "@tabler/icons-react-native";
-import React from "react";
 import { Div, Text } from "react-native-magnus";
+import React from "react";
 
 const EmergencyScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,

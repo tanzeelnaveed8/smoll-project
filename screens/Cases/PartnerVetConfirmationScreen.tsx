@@ -268,7 +268,7 @@ const PartnerVetConfirmationScreen: React.FC<{
               <Accordion key={i}>
                 <Accordion.title>
                   <Text
-                    fontFamily={fontCooperMedium}
+                    fontFamily={fontCooper}
                     fontSize="lg"
                     lineHeight={20}
                     color="#494949"

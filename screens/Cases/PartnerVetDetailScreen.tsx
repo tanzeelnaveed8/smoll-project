@@ -108,19 +108,22 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
         new Date(date)
       );
 
+      const getHour = (time: string) => {
+        const dateTime = dayjs(`2025-01-21T${time}Z`);
+        return dateTime.hour();
+      };
       const morningTimings = _availability[0].intervals.filter(
-        (item) => +item.from.split(":")[0] < 12
+        (item) => getHour(item.from) < 12
       );
       const noonTimings = _availability[0].intervals.filter((item) => {
-        console.log("item.from", item.from);
-        const time = +item.from.split(":")[0];
-        console.log("noonTimes == :", time);
+        const time = getHour(item.from);
+
         if (time > 12 && time < 17) {
           return item;
         }
       });
       const eveningTimings = _availability[0].intervals.filter(
-        (item) => +item.from.split(":")[0] > 17
+        (item) => getHour(item.from) > 17
       );
 
       if (morningTimings.length > 0) {

@@ -118,6 +118,7 @@ export const hasAvailabilityDateTimePassed = (
   // return currentTimeOnly > time;
 
   const dateTime = dayjs(`${date}T${time}Z`);
+  // console.log("dateTime = ", dateTime);
   const timeOnly = dateTime.format("HH:mm");
   const currentTimeOnly = dayjs().format("HH:mm");
 

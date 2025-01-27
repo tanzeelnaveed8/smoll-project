@@ -37,7 +37,7 @@ const ExpertsListScreen: React.FC<{ navigation: NavigationType }> = ({
   return (
     <Layout
       showBack
-      title="Find your Expert"
+      title="Chat with Expert"
       onBackPress={() => {
         navigation.goBack();
       }}
@@ -46,16 +46,17 @@ const ExpertsListScreen: React.FC<{ navigation: NavigationType }> = ({
       <FlatList
         data={experts}
         showsVerticalScrollIndicator={false}
-        ListHeaderComponent={
-          <Text
-            fontSize="xl"
-            fontFamily={fontHauoraSemiBold}
-            lineHeight={24}
-            mb={16}
-          >
-            Discover an Expert
-          </Text>
-        }
+        style={{ paddingTop: 20 }}
+        // ListHeaderComponent={
+        //   <Text
+        //     fontSize="xl"
+        //     fontFamily={fontHauoraSemiBold}
+        //     lineHeight={24}
+        //     mb={16}
+        //   >
+        //     Discover an Expert
+        //   </Text>
+        // }
         renderItem={({ item, index }) => (
           <DoctorListCard
             mb={index + 1 === experts.length ? 0 : 20}
