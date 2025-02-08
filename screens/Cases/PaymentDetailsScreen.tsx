@@ -1,9 +1,7 @@
 import Layout from "@/components/app/Layout";
 import AccurateCostIcon from "@/components/icons/AccurateCostIcon";
-import AedoIcon from "@/components/icons/AedoIcon";
 import DotIcon from "@/components/icons/DotIcon";
 import InformationIcon from "@/components/icons/InformationIcon";
-import InstantConfirmationIcon from "@/components/icons/InstantConfirmationIcon";
 import RefundIcon from "@/components/icons/RefundIcon";
 import StripeIcon from "@/components/icons/StripeIcon";
 import WalletIcon from "@/components/icons/WalletIcon";
@@ -12,7 +10,6 @@ import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import FlashCustomContent from "@/components/partials/FlashCustomContent";
 import {
   fontCooper,
-  fontCooperMedium,
   fontHauoraBold,
   fontHauoraMedium,
   fontHauoraSemiBold,
@@ -29,14 +26,8 @@ import {
   StripeProvider,
 } from "@stripe/stripe-react-native";
 import { SetupParams } from "@stripe/stripe-react-native/lib/typescript/src/types/PaymentSheet";
-import {
-  IconAlertCircle,
-  IconAlertCircleFilled,
-  IconCalendarCheck,
-  IconDotsVertical,
-} from "@tabler/icons-react-native";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Platform, TouchableOpacity } from "react-native";
+import { TouchableOpacity } from "react-native";
 import { showMessage } from "react-native-flash-message";
 import { Div, Image, ScrollDiv, Text } from "react-native-magnus";
 
@@ -230,8 +221,6 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
     }
   };
 
-  console.log("paymentscreen isEmergency", isEmergency);
-
   const handleBook = async () => {
     if (!partnerId || !caseId) {
       return;
@@ -302,10 +291,6 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
       return;
     }
 
-    // if isEmergency is true then
-    // handleEmergencyBook
-
-    //esle
     handleBook();
   };
 

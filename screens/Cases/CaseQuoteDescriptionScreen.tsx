@@ -312,9 +312,10 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
           if (hasPartnerBooking) {
             navigation.navigate("AppointmentsScreen");
           } else {
-            if (clinicQuote?.isEmergency) {
+            if (clinicQuote?.isEmergency || clinicQuote?.isDirectEscalated) {
               navigation.navigate("EmergencyScreen", {
                 isEmergency: clinicQuote?.isEmergency,
+                isDirectEscalated: clinicQuote?.isDirectEscalated,
                 partnerId: clinicQuote?.partner?.id,
                 partnerName: clinicQuote?.partner?.name,
                 caseId,

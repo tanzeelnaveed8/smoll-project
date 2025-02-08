@@ -13,6 +13,7 @@ const EmergencyScreen: React.FC<{ navigation: NavigationType }> = ({
   const route = useRoute() as {
     params: {
       isEmergency?: boolean;
+      isDirectEscalated?: boolean;
       partnerId: string;
       partnerName: string;
       caseId: string;
@@ -49,7 +50,7 @@ const EmergencyScreen: React.FC<{ navigation: NavigationType }> = ({
         mx={"auto"}
       >
         <Text fontSize={"6xl"} fontFamily={fontCooper} mb={10}>
-          Emergency
+          {isEmergency ? "Emergency" : "Direct Escalation"}
         </Text>
         <Text
           fontSize={"lg"}
@@ -57,8 +58,11 @@ const EmergencyScreen: React.FC<{ navigation: NavigationType }> = ({
           textAlign="center"
           fontFamily={fontHauoraMedium}
         >
-          Due the conditions of {petName} case you will be booked immediately
-          with the vet on duty at {partnerName}
+          {isEmergency
+            ? `Due to the conditions of ${petName} case you will be booked immediately
+          with the vet on duty at ${partnerName}`
+            : `Expert has escalated the case on their behalf and you will be booked immediately
+          with the assigned vet at ${partnerName}`}
         </Text>
       </Div>
 

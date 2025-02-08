@@ -16,7 +16,7 @@ import { ExpertAvailability } from "@/store/types/expert";
 import { hasAvailabilityDateTimePassed } from "@/utils/helpers";
 import { useFocusEffect, useRoute } from "@react-navigation/native";
 import dayjs from "dayjs";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { Dimensions, RefreshControl, TouchableOpacity } from "react-native";
 import { Button, Div, ScrollDiv, Skeleton, Text } from "react-native-magnus";
 
@@ -290,41 +290,39 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
             );
 
             return (
-              <>
-                <Button
-                  key={`${index}:${a.dayOfWeek ?? a.date}:${time}`}
-                  w={170}
-                  maxW={"50%"}
-                  p={10}
-                  borderWidth={1}
-                  borderColor="#E0E0E0"
-                  rounded={8}
-                  bg={
+              <Button
+                key={`${index}:${a.dayOfWeek ?? a.date}:${time}`}
+                w={170}
+                maxW={"50%"}
+                p={10}
+                borderWidth={1}
+                borderColor="#E0E0E0"
+                rounded={8}
+                bg={
+                  selectedTime?.label ===
+                  `${index}:${a.dayOfWeek ?? a.date}:${time}`
+                    ? "#222"
+                    : "transparent"
+                }
+                onPress={() => {
+                  setSelectedTime({
+                    value: { from: intr.from, to: intr.to },
+                    label: `${index}:${a.dayOfWeek ?? a.date}:${time}`,
+                  });
+                }}
+                disabled={isDisabled}
+              >
+                <TimeBtnText
+                  time={time}
+                  color={
                     selectedTime?.label ===
                     `${index}:${a.dayOfWeek ?? a.date}:${time}`
-                      ? "#222"
-                      : "transparent"
+                      ? "#fff"
+                      : "#494949"
                   }
-                  onPress={() => {
-                    setSelectedTime({
-                      value: { from: intr.from, to: intr.to },
-                      label: `${index}:${a.dayOfWeek ?? a.date}:${time}`,
-                    });
-                  }}
-                  disabled={isDisabled}
-                >
-                  <TimeBtnText
-                    time={time}
-                    color={
-                      selectedTime?.label ===
-                      `${index}:${a.dayOfWeek ?? a.date}:${time}`
-                        ? "#fff"
-                        : "#494949"
-                    }
-                  />
-                  {/* {time} */}
-                </Button>
-              </>
+                />
+                {/* {time} */}
+              </Button>
             );
           })}
 

@@ -107,6 +107,7 @@ export interface CaseQuotesDto {
   services: ClinicServiceDto[];
   partner: Clinic;
   isEmergency?: boolean;
+  isDirectEscalated?: boolean;
   petName: string;
 }
 
