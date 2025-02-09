@@ -108,6 +108,10 @@ export interface CaseQuotesDto {
   partner: Clinic;
   isEmergency?: boolean;
   isDirectEscalated?: boolean;
+  meta?: {
+    scheduledAt: string;
+    partnerVetId: string;
+  };
   petName: string;
 }
 

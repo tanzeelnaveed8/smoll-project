@@ -18,6 +18,8 @@ const EmergencyScreen: React.FC<{ navigation: NavigationType }> = ({
       partnerName: string;
       caseId: string;
       petName: string;
+      partnerVetId: string;
+      scheduleAt: string;
       selectedServices: {
         id: string;
         label: string;
@@ -25,13 +27,17 @@ const EmergencyScreen: React.FC<{ navigation: NavigationType }> = ({
       }[];
     };
   };
+
   const {
     isEmergency,
+    isDirectEscalated,
     partnerId,
     partnerName,
     caseId,
     selectedServices,
     petName,
+    partnerVetId,
+    scheduleAt,
   } = route.params;
 
   return (
@@ -73,13 +79,14 @@ const EmergencyScreen: React.FC<{ navigation: NavigationType }> = ({
         icon={<IconArrowRight size={24} color={"#fff"} />}
         onPress={() => {
           navigation.navigate("PaymentDetailsScreen", {
-            // bookingId,
-            // vetId: item.id,
             partnerId: partnerId,
             partnerName,
             caseId,
             selectedServices,
             isEmergency: isEmergency,
+            isDirectEscalated: isDirectEscalated,
+            vetId: partnerVetId,
+            scheduleAt,
           });
         }}
       >

@@ -128,16 +128,36 @@ const CasesQuotesListScreen: React.FC<{ navigation: NavigationType }> = ({
             showsVerticalScrollIndicator={false}
             renderItem={({ item, index }) => (
               <Div mb={index + 1 === cases?.length ? 0 : 12}>
-                <Text
-                  fontSize={"md"}
-                  mb={8}
-                  fontFamily={fontHauoraSemiBold}
-                  style={{
-                    textTransform: "capitalize",
-                  }}
-                >
-                  {dayjs(item.createdAt).fromNow()}
-                </Text>
+                <Div flexDir="row" justifyContent="space-between">
+                  <Text
+                    fontSize={"md"}
+                    mb={8}
+                    fontFamily={fontHauoraSemiBold}
+                    style={{
+                      textTransform: "capitalize",
+                    }}
+                  >
+                    {dayjs(item.createdAt).fromNow()}
+                  </Text>
+
+                  {Boolean(item.requestCount) && (
+                    <Button
+                      fontSize={"lg"}
+                      bg="transparent"
+                      p={0}
+                      fontFamily={fontHauoraSemiBold}
+                      color="primary"
+                      onPress={() => {
+                        navigation.navigate("CaseQuotesScreen", {
+                          id: item.id,
+                          hasPartnerBooking: item.hasPartnerBooking,
+                        });
+                      }}
+                    >
+                      View
+                    </Button>
+                  )}
+                </Div>
 
                 <Div
                   bg="transparent"
@@ -229,24 +249,6 @@ const CasesQuotesListScreen: React.FC<{ navigation: NavigationType }> = ({
                   >
                     {item.requestCount} Quotations
                   </Text>
-
-                  {Boolean(item.requestCount) && (
-                    <Button
-                      fontSize={"lg"}
-                      bg="transparent"
-                      p={0}
-                      fontFamily={fontHauoraSemiBold}
-                      color="primary"
-                      onPress={() => {
-                        navigation.navigate("CaseQuotesScreen", {
-                          id: item.id,
-                          hasPartnerBooking: item.hasPartnerBooking,
-                        });
-                      }}
-                    >
-                      View
-                    </Button>
-                  )}
                 </Div>
               </Div>
             )}

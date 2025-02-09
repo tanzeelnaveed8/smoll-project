@@ -64,8 +64,6 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
 
   const caseQuote = casesQuotes.get(caseId);
 
-  // console.log("caseQuote == ", JSON.stringify(caseQuote));
-
   useEffect(() => {
     fetchQuotes();
   }, [id, caseId]);
@@ -318,6 +316,8 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
                 isDirectEscalated: clinicQuote?.isDirectEscalated,
                 partnerId: clinicQuote?.partner?.id,
                 partnerName: clinicQuote?.partner?.name,
+                partnerVetId: clinicQuote?.meta?.partnerVetId,
+                scheduleAt: clinicQuote?.meta?.scheduledAt,
                 caseId,
                 selectedServices,
                 petName: clinicQuote?.petName,
