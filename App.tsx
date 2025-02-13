@@ -93,11 +93,10 @@ import ClinicDetailScreen from "./screens/Clinic/ClinicDetailScreen";
 
 Sentry.init({
   dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
-  // uncomment the line below to enable Spotlight (https://spotlightjs.com)
-  // enableSpotlight: __DEV__,
   enabled: !__DEV__,
   tracesSampleRate: 1.0,
   profilesSampleRate: 1.0,
+  enableAutoSessionTracking: true,
 });
 
 dayjs.extend(relativeTime);
