@@ -72,6 +72,8 @@ export interface CaseDetail {
   pet: PetDetail;
   assignedVet: Expert;
   scheduleAt?: string;
+  isEmergency?: boolean;
+  isDirectEscalated?: boolean;
 }
 
 export interface Clinic {

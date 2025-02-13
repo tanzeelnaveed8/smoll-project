@@ -80,14 +80,17 @@ const CaseDetailScreen: React.FC<{
               bg={
                 getCaseStatusColor(
                   caseDetail?.status,
-                  caseDetail?.scheduleAt
+                  caseDetail?.scheduleAt,
+                  caseDetail?.isEmergency
                 ) ?? ""
               }
             >
               <Text textTransform="capitalize" color="#fff">
                 {getCaseStatusLabel(
                   caseDetail?.status,
-                  caseDetail?.scheduleAt
+                  caseDetail?.scheduleAt,
+                  caseDetail?.isEmergency,
+                  caseDetail?.isDirectEscalated
                 ) ?? ""}
               </Text>
             </Tag>

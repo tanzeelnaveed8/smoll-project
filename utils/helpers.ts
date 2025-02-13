@@ -31,7 +31,8 @@ export const getAxiosErrMsg = (error: AxiosError<any, any>) => {
 export const getCaseStatusLabel = (
   status?: CaseStatusEnum,
   scheduledAt?: string,
-  hasPartnerBooking?: boolean
+  isEmergency?: boolean,
+  isDirectEscalated?: boolean
 ) => {
   if (scheduledAt) {
     const currentTime = dayjs();
@@ -44,10 +45,6 @@ export const getCaseStatusLabel = (
       return "Scheduled Cancelled";
     }
 
-    if (hasPartnerBooking) {
-      return "Scheduled in Clinic";
-    }
-
     if (currentTime.isAfter(scheduledTime.add(35, "minute"))) {
       return "Scheduled Expired";
     }
@@ -57,7 +54,15 @@ export const getCaseStatusLabel = (
 
   switch (status) {
     case CaseStatusEnum.OPEN_ESCALATED:
-      return "Emergency";
+      if (isEmergency) {
+        return "Emergency";
+      }
+
+      if (isDirectEscalated) {
+        return "Direct Escalated";
+      }
+
+      return "Escalated";
     case CaseStatusEnum.CLOSED:
       return "Closed";
     case CaseStatusEnum.OPEN:
@@ -69,7 +74,8 @@ export const getCaseStatusLabel = (
 
 export const getCaseStatusColor = (
   status?: CaseStatusEnum,
-  scheduledAt?: string
+  scheduledAt?: string,
+  isEmergency?: boolean
 ) => {
   if (scheduledAt) {
     const currentTime = dayjs();
@@ -90,8 +96,13 @@ export const getCaseStatusColor = (
   }
 
   switch (status) {
-    case CaseStatusEnum.OPEN_ESCALATED:
-      return colorErrorText;
+    case CaseStatusEnum.OPEN_ESCALATED: {
+      if (isEmergency) {
+        return colorErrorText;
+      }
+
+      return colorPrimary;
+    }
     case CaseStatusEnum.CLOSED:
       return colorSuccessText;
     default:
