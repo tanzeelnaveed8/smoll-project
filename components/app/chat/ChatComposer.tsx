@@ -10,7 +10,7 @@ import {
 } from "@tabler/icons-react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useRef, useState } from "react";
-import { ActivityIndicator } from "react-native";
+import { ActivityIndicator, Platform } from "react-native";
 import { showMessage } from "react-native-flash-message";
 import {
   IMessage,
@@ -21,6 +21,7 @@ import {
 import { Div, Input, Text } from "react-native-magnus";
 import { Audio } from "expo-av";
 import { useSound } from "@/functions/useSound";
+import { check, request, PERMISSIONS, RESULTS } from "react-native-permissions";
 
 interface Props extends InputToolbarProps<IMessage> {
   isSending: boolean;
@@ -215,7 +216,32 @@ const ChatComposer: React.FC<Props> = (props) => {
     if (!recording) return;
 
     try {
-      await recording.startAsync();
+      const permission =
+        Platform.OS === "ios"
+          ? PERMISSIONS.IOS.MICROPHONE
+          : PERMISSIONS.ANDROID.RECORD_AUDIO;
+      const result = await check(permission);
+
+      if (result === RESULTS.DENIED) {
+        const requestResult = await request(permission);
+        if (requestResult !== RESULTS.GRANTED) {
+          showMessage({
+            message: "Permission Required",
+            description:
+              "Microphone permission is required for recording audio",
+            type: "warning",
+          });
+          return;
+        }
+      } else if (result !== RESULTS.GRANTED) {
+        showMessage({
+          message: "Permission Required",
+          description: "Microphone permission is required for recording audio",
+          type: "warning",
+        });
+        return;
+      }
+
       setIsPaused(false);
       intervalRef.current = setInterval(() => {
         setRecordingDuration((prev) => prev + 1);

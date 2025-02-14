@@ -12,7 +12,6 @@ import ZIM, {
 } from "zego-zim-react-native";
 import * as FileSystem from "expo-file-system";
 import { Audio } from "expo-av";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 let zim: ZIM;
 

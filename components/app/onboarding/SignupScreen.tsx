@@ -179,7 +179,7 @@ const SignupScreen: React.FC<{ navigation: NavigationType }> = ({
             <ButtonPrimary
               //   bgColor="primary"
               loading={isLoading}
-              disabled={isLoading || !country.value || phone.length < 10}
+              disabled={isLoading || !country.value || phone.length < 9}
               onPress={handleGetOtp}
             >
               Get OTP
