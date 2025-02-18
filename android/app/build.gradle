@@ -110,13 +110,13 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.anonymous.smoll'
+    namespace 'com.seldom.small_friend'
     defaultConfig {
-        applicationId 'com.anonymous.smoll'
+        applicationId 'com.seldom.small_friend'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 2
-        versionName "2.0.0"
+        versionCode 35
+        versionName "35.0.0"
     }
     signingConfigs {
         debug {
@@ -174,7 +174,7 @@ android {
         }
     }
 }
-
+ 
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
@@ -183,7 +183,7 @@ dependencies {
     def isWebpEnabled = (findProperty('expo.webp.enabled') ?: "") == "true";
     def isWebpAnimatedEnabled = (findProperty('expo.webp.animated') ?: "") == "true";
 
-    if (isGifEnabled) {
+    if (isGifEnabled) { 
         // For animated gif support
         implementation("com.facebook.fresco:animated-gif:${reactAndroidLibs.versions.fresco.get()}")
     }

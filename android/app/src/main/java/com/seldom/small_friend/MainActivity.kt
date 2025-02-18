@@ -1,4 +1,4 @@
-package com.anonymous.smoll
+package com.seldom.small_friend
 
 import android.os.Build
 import android.os.Bundle
