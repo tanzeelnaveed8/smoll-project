@@ -3,6 +3,7 @@ import { create } from "zustand";
 import { AuthState } from "../types/auth";
 import api from "@/utils/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { OneSignal } from "react-native-onesignal";
 
 export const useAuthStore = create<AuthState>((set) => ({
   async login(payload) {
@@ -31,5 +32,13 @@ export const useAuthStore = create<AuthState>((set) => ({
     await AsyncStorage.setItem("accessToken", token);
     await AsyncStorage.setItem("zegoToken", zegoToken);
     await AsyncStorage.setItem("envs", JSON.stringify(envs));
+
+    if (envs?.ONESIGNAL_APP_ID) {
+      OneSignal.initialize(envs.ONESIGNAL_APP_ID);
+      const playerId = await OneSignal.User.pushSubscription.getIdAsync();
+      if (playerId) {
+        await api.patch("/members/me", { playerId });
+      }
+    }
   },
 }));

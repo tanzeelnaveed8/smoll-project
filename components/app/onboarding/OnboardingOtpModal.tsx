@@ -55,20 +55,6 @@ const OnboardingOtpModal: React.FC<Props> = (props) => {
       await verifyOtp({ phone: props.phone, otp: _otp ?? otp });
       const user = await findUser();
 
-      const storedEnvs = await AsyncStorage.getItem("envs");
-
-      if (storedEnvs) {
-        const parsedEnvs = JSON.parse(storedEnvs);
-        // Ensure OneSignal is initialized before any other OneSignal methods
-        OneSignal.initialize(parsedEnvs?.ONESIGNAL_APP_ID as string);
-        // Update the playerId everytime the user login
-        const playerId = await OneSignal.User.pushSubscription.getIdAsync();
-
-        if (playerId) {
-          await updateUser({ playerId });
-        }
-      }
-
       if (!user.timeZone) {
         await updateUser({ timeZone: getUserTimezoneOffset() });
       }

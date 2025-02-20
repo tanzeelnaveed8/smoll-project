@@ -19,7 +19,7 @@
 	<key>CFBundlePackageType</key>
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0.4</string>
+	<string>2.0.1</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -36,18 +36,18 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
-	<key>ITSAppUsesNonExemptEncryption</key>
-	<false/>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
 		<false/>
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>NSCameraUsageDescription</key>
-	<string>Smoll would like to access your camera</string>
+	<string>We use the camera for live video consultations with pet experts. Video sessions may be recorded and securely stored on our servers for quality and compliance purposes.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Smoll would like to access your microphone</string>
+	<string>We use the microphone to capture voice notes about your pet's health. These recordings are stored on our servers so you can access them later."</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Smoll would like to access your photos</string>
 	<key>UIBackgroundModes</key>

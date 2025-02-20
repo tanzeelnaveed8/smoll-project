@@ -93,7 +93,7 @@ import ClinicDetailScreen from "./screens/Clinic/ClinicDetailScreen";
 
 Sentry.init({
   dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
-  enabled: !__DEV__,
+  // enabled: !__DEV__,
   tracesSampleRate: 1.0,
   profilesSampleRate: 1.0,
   enableAutoSessionTracking: true,
@@ -410,7 +410,11 @@ const App = () => {
 
           // Ensure OneSignal is initialized before any other OneSignal methods
           OneSignal.initialize(parsedEnvs?.ONESIGNAL_APP_ID as string);
-          OneSignal.login(user.playerId);
+
+          if (user.playerId) {
+            OneSignal.login(user.playerId);
+          }
+
           initializeChat(
             parsedEnvs?.ZEGO_APP_ID as string,
             parsedEnvs?.ZEGO_APP_SIGN as string,
