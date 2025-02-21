@@ -19,7 +19,7 @@ interface Expert {
   about?: string;
   verified?: boolean;
   //   availability: {};
-  isOnline: true;
+  isOnline: boolean;
   yearsOfExperience: Nullable<number>;
   profileImg: Nullable<UploadedFile>;
   timezone: string;
@@ -56,6 +56,7 @@ interface ExpertState {
 
   fetchExperts: () => Promise<Expert[]>;
   fetchExpertDetail: (id: string) => Promise<void>;
+  updateExpertStatus: (id: string, status: boolean) => void;
   fetchExpertAvailability: (
     id: string,
     date?: Date

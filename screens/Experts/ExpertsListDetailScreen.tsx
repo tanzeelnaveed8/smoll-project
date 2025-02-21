@@ -10,13 +10,15 @@ import {
   fontHauoraMedium,
   fontHauoraSemiBold,
 } from "@/constant/constant";
+import { SocketEventEnum } from "@/socket/events";
+import { useSocket } from "@/socket/provider";
 import { useExpertStore } from "@/store/modules/expert";
 import { NavigationType, TimeBtnType } from "@/store/types";
 import { ExpertAvailability } from "@/store/types/expert";
 import { hasAvailabilityDateTimePassed } from "@/utils/helpers";
 import { useFocusEffect, useRoute } from "@react-navigation/native";
 import dayjs from "dayjs";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Dimensions, RefreshControl, TouchableOpacity } from "react-native";
 import { Button, Div, ScrollDiv, Skeleton, Text } from "react-native-magnus";
 
@@ -51,6 +53,8 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
   const route = useRoute();
+  const socket = useSocket();
+
   const expertId =
     (route.params as Record<string, string>)?.id ??
     (route.params as Record<string, string>)?.expertId;
@@ -59,6 +63,7 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
 
   const {
     expertDetailMap,
+    updateExpertStatus,
     fetchExpertDetail,
     fetchExpertAvailability,
     requestConsultation,
@@ -90,6 +95,21 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
       handleFetchExpertDetails();
     }, [expertId])
   );
+
+  useEffect(() => {
+    if (socket) {
+      socket.on(SocketEventEnum.VET_ONLINE_STATUS_CHANGE, async (data) => {
+        const vetId = data?.vetId;
+        const isOnline = data?.isOnline;
+
+        updateExpertStatus(vetId, isOnline);
+      });
+    }
+
+    return () => {
+      socket?.off(SocketEventEnum.VET_ONLINE_STATUS_CHANGE);
+    };
+  }, []);
 
   const formatTime = useCallback(
     (

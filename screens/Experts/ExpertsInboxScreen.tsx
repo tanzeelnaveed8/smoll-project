@@ -1,6 +1,8 @@
 import Layout from "@/components/app/Layout";
 import ChatInboxItem from "@/components/app/chat/ChatInboxItem";
 import { fontHauoraSemiBold } from "@/constant/constant";
+import { SocketEventEnum } from "@/socket/events";
+import { useSocket } from "@/socket/provider";
 import { useExpertStore } from "@/store/modules/expert";
 import { NavigationType } from "@/store/types";
 import { useEffect, useState } from "react";
@@ -11,8 +13,13 @@ interface Props {
 }
 
 const ExpertsInboxScreen: React.FC<Props> = (props) => {
-  const { experts, expertDetailMap, fetchExperts, fetchExpertDetail } =
-    useExpertStore();
+  const {
+    experts,
+    expertDetailMap,
+    updateExpertStatus,
+    fetchExperts,
+    fetchExpertDetail,
+  } = useExpertStore();
 
   const [loading, setLoading] = useState(false);
   const [actionLoading, setActionLoading] = useState("");
