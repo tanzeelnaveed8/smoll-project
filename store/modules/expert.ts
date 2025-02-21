@@ -22,6 +22,18 @@ export const useExpertStore = create<ExpertState>((set, get) => ({
       expertDetailMap: state.expertDetailMap.set(id, response.data),
     }));
   },
+  updateExpertStatus: (id, status) => {
+    set((state) => {
+      const expertDetailMap = new Map(state.expertDetailMap);
+      const expert = expertDetailMap.get(id);
+      if (expert) {
+        expert.isOnline = status;
+        expertDetailMap.set(id, expert);
+      }
+      return { expertDetailMap };
+    });
+  },
+
   fetchExpertAvailability: async (id, date) => {
     const response = await api.get(`/member/vets/${id}/availabilities`, {
       params: {
