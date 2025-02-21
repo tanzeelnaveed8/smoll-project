@@ -411,7 +411,6 @@ const App = () => {
           // Ensure OneSignal is initialized before any other OneSignal methods
           OneSignal.initialize(parsedEnvs?.ONESIGNAL_APP_ID as string);
 
-          console.log("user.playerId", user.playerId);
           if (user.playerId) {
             OneSignal.login(user.playerId);
           }
