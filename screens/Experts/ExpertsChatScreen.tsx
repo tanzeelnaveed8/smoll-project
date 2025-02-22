@@ -1,12 +1,14 @@
 import Layout from "@/components/app/Layout";
 import Chat from "@/components/app/chat/Chat";
+import ChatComposer from "@/components/app/chat/ChatComposer";
+import { fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
 import { SocketEventEnum } from "@/socket/events";
 import { useSocket } from "@/socket/provider";
 import { useExpertStore } from "@/store/modules/expert";
 import { NavigationType } from "@/store/types";
 import { useRoute } from "@react-navigation/native";
 import { useEffect, useState } from "react";
-import { Div, Text } from "react-native-magnus";
+import { Div, Image, Text } from "react-native-magnus";
 
 interface Props {
   navigation: NavigationType;
@@ -91,6 +93,38 @@ const ExpertsChatScreen: React.FC<Props> = (props) => {
         recipientId={expertId}
         chatFor="experts"
         chatWithName={expertName}
+        emptyMessageUi={
+          <Div flex={1} mt={20} justifyContent="space-between">
+            <Div px={20}>
+              <Image
+                source={require("../../assets/images/chat-screen-img.png")}
+                resizeMode="contain"
+                h={200}
+                style={{ transform: [{ translateX: -70 }] }}
+                mb={15}
+              />
+
+              <Text
+                fontFamily={fontHauoraSemiBold}
+                fontSize={"2xl"}
+                maxW={"70%"}
+                mb={10}
+              >
+                Hi! Welcome to your messaging room.
+              </Text>
+              <Text maxW={"90%"}>
+                It's just{" "}
+                <Text fontFamily={fontHauoraSemiBold}>
+                  you and {expertName}
+                </Text>{" "}
+                in here. Feel free to chat, send pictures, files, or even voice
+                notes.
+              </Text>
+            </Div>
+
+            <ChatComposer {...props} isSending={false} channelUrl={""} />
+          </Div>
+        }
       />
     </Layout>
   );

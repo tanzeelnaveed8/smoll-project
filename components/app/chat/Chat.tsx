@@ -10,7 +10,7 @@ import {
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Platform } from "react-native";
 import { Avatar, GiftedChat, IMessage } from "react-native-gifted-chat";
-import { Div } from "react-native-magnus";
+import { Div, Image, Text } from "react-native-magnus";
 import {
   ZIMAudioMessage,
   ZIMConversationType,
@@ -38,6 +38,7 @@ interface Props {
   recipientId: string;
   chatFor: "experts" | "counsellors";
   chatWithName?: string;
+  emptyMessageUi?: React.ReactNode;
 }
 
 const Chat: React.FC<Props> = (props) => {
@@ -263,7 +264,9 @@ const Chat: React.FC<Props> = (props) => {
     </Div>
   );
 
-  return (
+  return messages.length === 0 ? (
+    props.emptyMessageUi
+  ) : (
     <GiftedChat
       messages={messages.sort((a, b) => +b.createdAt - +a.createdAt)}
       onSend={(messages) => handleSend(messages)}
