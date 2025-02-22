@@ -52,6 +52,8 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
   const id = (route.params as { id: string })?.id;
   const type = (route.params as { type: string })?.type;
 
+  console.log("id", id, "type", type);
+
   const { fetchAppointmentDetail, cancelAppointment, cancelConsultation } =
     useAppointmentStore();
 
