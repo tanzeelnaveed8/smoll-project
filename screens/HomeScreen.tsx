@@ -100,7 +100,7 @@ const HomeScreen: React.FC<Props> = (props) => {
       ),
     },
     {
-      name: "PetID",
+      name: "smollink",
       value: "petProfileScreen",
       description: "Add and track your pet’s records",
       loading: false,
