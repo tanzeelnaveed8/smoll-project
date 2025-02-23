@@ -1,4 +1,4 @@
-import { colorPrimary } from "@/constant/constant";
+import { colorPrimary, fontHauoraSemiBold } from "@/constant/constant";
 import { useSound } from "@/functions/useSound";
 import { useUserStore } from "@/store/modules/user";
 import { getMessages, sendMessage, zim } from "@/utils/chat.v2";
@@ -8,9 +8,13 @@ import {
   useRoute,
 } from "@react-navigation/native";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, Platform } from "react-native";
+import {
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import { Avatar, GiftedChat, IMessage } from "react-native-gifted-chat";
-import { Div, Image, Text } from "react-native-magnus";
+import { Div, Image, ScrollDiv, Text } from "react-native-magnus";
 import {
   ZIMAudioMessage,
   ZIMConversationType,
@@ -38,7 +42,6 @@ interface Props {
   recipientId: string;
   chatFor: "experts" | "counsellors";
   chatWithName?: string;
-  emptyMessageUi?: React.ReactNode;
 }
 
 const Chat: React.FC<Props> = (props) => {
@@ -264,9 +267,7 @@ const Chat: React.FC<Props> = (props) => {
     </Div>
   );
 
-  return messages.length === 0 ? (
-    props.emptyMessageUi
-  ) : (
+  return (
     <GiftedChat
       messages={messages.sort((a, b) => +b.createdAt - +a.createdAt)}
       onSend={(messages) => handleSend(messages)}
@@ -292,7 +293,44 @@ const Chat: React.FC<Props> = (props) => {
         />
       )}
       renderChatFooter={() => <Div h={24}></Div>}
-      renderChatEmpty={renderChatEmpty}
+      renderChatEmpty={() => (
+        <Div>
+          <Div
+            style={{ transform: [{ rotate: "180deg" }] }}
+            flex={1}
+            mt={20}
+            bg="red"
+            justifyContent="space-between"
+          >
+            <Div px={20} flex={1}>
+              <Image
+                source={require("../../../assets/images/chat-screen-img.png")}
+                resizeMode="contain"
+                h={200}
+                style={{ transform: [{ translateX: -70 }] }}
+                mb={15}
+              />
+
+              <Text
+                fontFamily={fontHauoraSemiBold}
+                fontSize={"2xl"}
+                maxW={"70%"}
+                mb={10}
+              >
+                Hi! Welcome to your messaging room.
+              </Text>
+              <Text maxW={"90%"}>
+                It's just{" "}
+                <Text fontFamily={fontHauoraSemiBold}>
+                  you and {props.chatWithName}
+                </Text>{" "}
+                in here. Feel free to chat, send pictures, files, or even voice
+                notes.
+              </Text>
+            </Div>
+          </Div>
+        </Div>
+      )}
     />
   );
 };
