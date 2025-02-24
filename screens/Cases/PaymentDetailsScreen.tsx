@@ -262,7 +262,7 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
       // );
 
       navigation.navigate("PartnerVetSuccessfullScreen", {
-        bookingId: id,
+        bookingId: id.id,
         vetId,
         partnerId,
         partnerName,

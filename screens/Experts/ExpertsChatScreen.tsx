@@ -1,12 +1,14 @@
 import Layout from "@/components/app/Layout";
 import Chat from "@/components/app/chat/Chat";
+import ChatComposer from "@/components/app/chat/ChatComposer";
+import { fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
 import { SocketEventEnum } from "@/socket/events";
 import { useSocket } from "@/socket/provider";
 import { useExpertStore } from "@/store/modules/expert";
 import { NavigationType } from "@/store/types";
 import { useRoute } from "@react-navigation/native";
 import { useEffect, useState } from "react";
-import { Div, Text } from "react-native-magnus";
+import { Div, Image, ScrollDiv, Text } from "react-native-magnus";
 
 interface Props {
   navigation: NavigationType;

@@ -78,8 +78,8 @@ const ExpertsScheduleSuccessScreen: React.FC<Props> = ({ navigation }) => {
             source={require("../../assets/images/congratulation-tick.png")}
             w={100}
             h={100}
-            mb={32}
             style={{ transform: [{ translateX: -10 }] }}
+            mb={32}
           />
 
           <Text fontSize={"6xl"} mb={8} fontFamily={fontHeading}>
@@ -123,7 +123,7 @@ const ExpertsScheduleSuccessScreen: React.FC<Props> = ({ navigation }) => {
             });
           }}
         >
-          View Appointments
+          View Appointment
         </ButtonPrimary>
       </Div>
     </Layout>

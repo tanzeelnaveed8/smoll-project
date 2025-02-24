@@ -114,8 +114,8 @@ const PartnerVetSuccessfullScreen: React.FC<Props> = ({ navigation }) => {
             source={require("../../assets/images/congratulation-tick.png")}
             w={100}
             h={100}
-            mb={32}
             style={{ transform: [{ translateX: -10 }] }}
+            mb={32}
           />
 
           <Text fontSize={"6xl"} mb={8} fontFamily={fontHeading}>
@@ -160,7 +160,13 @@ const PartnerVetSuccessfullScreen: React.FC<Props> = ({ navigation }) => {
 
         <ButtonPrimary
           disabled={isLoading || rescheduleLoading}
-          onPress={() => navigation.navigate("AppointmentsScreen")}
+          onPress={() => {
+            // navigation.navigate("AppointmentsScreen");
+            navigation.navigate("AppointmentDetailsScreen", {
+              id: bookingId,
+              type: "in-clinic",
+            });
+          }}
         >
           Appointment details
         </ButtonPrimary>
