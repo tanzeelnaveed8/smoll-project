@@ -13,7 +13,12 @@ import { NavigationType } from "@/store/types";
 import { useRoute } from "@react-navigation/native";
 import { IconCircleCheck, IconPhone } from "@tabler/icons-react-native";
 import React, { useEffect, useMemo, useState } from "react";
-import { ActivityIndicator, FlatList, TouchableOpacity } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  Linking,
+  TouchableOpacity,
+} from "react-native";
 import { Div, Image, ScrollDiv, Text } from "react-native-magnus";
 
 const TimeTab: React.FC<{ heading: string; time: string; mb?: number }> = ({
@@ -296,7 +301,11 @@ const ClinicDetailScreen: React.FC<{ navigation: NavigationType }> = ({
                 {data.address}
               </Text>
               {data.phone && (
-                <TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    Linking.openURL(`tel:${data.phone}`);
+                  }}
+                >
                   <Div flexDir="row" alignItems="center">
                     <IconPhone
                       width={24}
