@@ -294,15 +294,14 @@ const Chat: React.FC<Props> = (props) => {
       )}
       renderChatFooter={() => <Div h={24}></Div>}
       renderChatEmpty={() => (
-        <Div>
+        <Div flex={1}>
           <Div
             style={{ transform: [{ rotate: "180deg" }] }}
             flex={1}
             mt={20}
-            bg="red"
             justifyContent="space-between"
           >
-            <Div px={20} flex={1}>
+            <Div px={20} pt={5} flex={1}>
               <Image
                 source={require("../../../assets/images/chat-screen-img.png")}
                 resizeMode="contain"
