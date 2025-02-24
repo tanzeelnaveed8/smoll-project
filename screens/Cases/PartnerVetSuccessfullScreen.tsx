@@ -111,9 +111,10 @@ const PartnerVetSuccessfullScreen: React.FC<Props> = ({ navigation }) => {
       <Div flex={1} justifyContent="space-between" pt={20}>
         <Div>
           <Image
-            source={require("../../assets/images/congratulation-screen-tick.png")}
-            w={86.25}
-            h={86.25}
+            source={require("../../assets/images/congratulation-tick.png")}
+            w={100}
+            h={100}
+            style={{ transform: [{ translateX: -10 }] }}
             mb={32}
           />
 
@@ -159,7 +160,13 @@ const PartnerVetSuccessfullScreen: React.FC<Props> = ({ navigation }) => {
 
         <ButtonPrimary
           disabled={isLoading || rescheduleLoading}
-          onPress={() => navigation.navigate("AppointmentsScreen")}
+          onPress={() => {
+            // navigation.navigate("AppointmentsScreen");
+            navigation.navigate("AppointmentDetailsScreen", {
+              id: bookingId,
+              type: "in-clinic",
+            });
+          }}
         >
           Appointment details
         </ButtonPrimary>

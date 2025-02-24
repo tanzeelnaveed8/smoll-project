@@ -49,6 +49,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
   const route = useRoute();
+
   const id = (route.params as { id: string })?.id;
   const type = (route.params as { type: string })?.type;
 
@@ -285,7 +286,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
         title="Appointment Details"
         showBack
         style={{ paddingBottom: 0 }}
-        onBackPress={() => navigation.goBack()}
+        onBackPress={() => navigation.navigate("AppointmentsScreen")}
       >
         {!isLoading && appointmentDetail && (
           <ScrollDiv showsVerticalScrollIndicator={false}>
