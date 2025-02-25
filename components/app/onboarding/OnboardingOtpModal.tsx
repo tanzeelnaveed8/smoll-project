@@ -20,9 +20,6 @@ import {
   Linking,
   TouchableWithoutFeedback,
 } from "react-native";
-import { OneSignal } from "react-native-onesignal";
-import dayjs from "dayjs";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface Props {
   navigation: NavigationType;
