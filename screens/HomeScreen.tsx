@@ -447,7 +447,7 @@ const HomeScreen: React.FC<Props> = (props) => {
           <Div h={50} />
         </ScrollDiv>
 
-        {completedStep < 3 && showAccountSetupButton && (
+        {/* {completedStep < 3 && showAccountSetupButton && (
           <Div
             mb={16}
             position="absolute"
@@ -474,7 +474,7 @@ const HomeScreen: React.FC<Props> = (props) => {
               />
             </TouchableOpacity>
           </Div>
-        )}
+        )} */}
 
         <OnboardingCongratsModal
           isVisible={showCongratsModal}
@@ -484,11 +484,11 @@ const HomeScreen: React.FC<Props> = (props) => {
         />
 
         {/* remove it for now */}
-        <AccountSetupModal
+        {/* <AccountSetupModal
           isVisible={showAccountSetupModal}
           onBack={() => setShowAccountSetupModal(false)}
           navigation={props.navigation}
-        />
+        /> */}
       </Layout>
 
       {/* <TabNavigationBar navigation={props.navigation} /> */}
