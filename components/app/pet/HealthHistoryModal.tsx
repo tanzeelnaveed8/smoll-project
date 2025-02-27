@@ -153,8 +153,8 @@ const HealthHistoryModal = (props: PropTypes) => {
             maxW={350}
             mb={24}
           >
-            We need your address to suggest the nearest vet clinic for in-clinic
-            visits
+            Please enter the details of your pet’s medical history, including
+            past illnesses, treatments, and any ongoing conditions
           </Text>
 
           <Div mb={24} style={{ gap: 8 }}>
