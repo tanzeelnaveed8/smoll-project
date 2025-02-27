@@ -296,7 +296,11 @@ const Chat: React.FC<Props> = (props) => {
       renderChatEmpty={() => (
         <Div flex={1}>
           <Div
-            style={{ transform: [{ rotate: "180deg" }] }}
+            style={
+              Platform.OS === "android"
+                ? { transform: [{ rotate: "180deg" }] }
+                : {}
+            }
             flex={1}
             mt={20}
             justifyContent="space-between"
