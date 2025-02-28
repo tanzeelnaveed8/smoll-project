@@ -1,42 +1,15 @@
 {
-  "expo": {
-    "main": "node_modules/expo/AppEntry.js",
-    "name": "smoll",
-    "slug": "smoll",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
-    "jsEngine": "hermes",
-    "entryPoint": "./App.js",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
+  "name": "main",
+  "displayName": "smoll",
+  "ios": {
+    "supportsTablet": true,
+    "bundleIdentifier": "com.outlyze.sf"
+  },
+  "android": {
+    "package": "com.seldom.small_friend",
+    "adaptiveIcon": {
+      "foregroundImage": "./assets/adaptive-icon.png",
       "backgroundColor": "#ffffff"
-    },
-    "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.outlyze.sf"
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
-      "package": "com.seldom.small_friend"
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    },
-    "plugins": [
-      [
-        "@sentry/react-native/expo",
-        {
-          "url": "https://sentry.io/",
-          "project": "smoll",
-          "organization": "smoll-lo"
-        }
-      ]
-    ]
+    }
   }
 }

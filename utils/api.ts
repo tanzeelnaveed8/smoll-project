@@ -1,9 +1,10 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { showMessage } from "react-native-flash-message";
+import Config from "react-native-config";
 
 const api = axios.create({
-  baseURL: process.env.EXPO_PUBLIC_API_URL,
+  baseURL: Config.API_URL,
   withCredentials: true,
   headers: {
     Accept: "application/json",

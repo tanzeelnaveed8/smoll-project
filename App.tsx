@@ -90,9 +90,12 @@ import * as Sentry from "@sentry/react-native";
 import EmergencyScreen from "./screens/EmergencyScreen";
 import ClinicListScreen from "./screens/Clinic/ClinicListScreen";
 import ClinicDetailScreen from "./screens/Clinic/ClinicDetailScreen";
+import Config from "react-native-config";
+
+console.log(Config);
 
 Sentry.init({
-  dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
+  dsn: Config.SENTRY_DSN,
   // enabled: !__DEV__,
   tracesSampleRate: 1.0,
   profilesSampleRate: 1.0,

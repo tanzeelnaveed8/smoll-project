@@ -7,14 +7,11 @@ import {
   useNavigation,
   useRoute,
 } from "@react-navigation/native";
+import { activateKeepAwakeAsync, deactivateKeepAwake } from "expo-keep-awake";
 import { useEffect, useState } from "react";
-import {
-  ActivityIndicator,
-  KeyboardAvoidingView,
-  Platform,
-} from "react-native";
+import { ActivityIndicator, Platform } from "react-native";
 import { Avatar, GiftedChat, IMessage } from "react-native-gifted-chat";
-import { Div, Image, ScrollDiv, Text } from "react-native-magnus";
+import { Div, Image, Text } from "react-native-magnus";
 import {
   ZIMAudioMessage,
   ZIMConversationType,
@@ -29,13 +26,6 @@ import {
 } from "zego-zim-react-native";
 import ChatBubble from "./ChatBubble";
 import ChatComposer from "./ChatComposer";
-import { activateKeepAwakeAsync, deactivateKeepAwake } from "expo-keep-awake";
-
-interface Attachment {
-  fileName: string;
-  url: string;
-  type: string; // e.g., 'image', 'video', 'audio', 'file'
-}
 
 interface Props {
   initialMessages: IMessage[];
@@ -47,8 +37,6 @@ interface Props {
 const Chat: React.FC<Props> = (props) => {
   const { play } = useSound();
   const { user } = useUserStore();
-  const navigation = useNavigation();
-  const route = useRoute();
 
   const [messages, setMessages] = useState<IMessage[]>(props.initialMessages);
 
@@ -57,7 +45,6 @@ const Chat: React.FC<Props> = (props) => {
   const [isTyping, setIsTyping] = useState(false);
   const [channelUrl, setChannelUrl] = useState<string | null>(null);
   const [isSending, setIsSending] = useState(false);
-  const [showLoadEarlierBtn, setShowLoadEarlierBtn] = useState(true);
   const [hasMoreMessages, setHasMoreMessages] = useState(true);
   const [lastMessageTimestamp, setLastMessageTimestamp] = useState<
     number | null
@@ -223,49 +210,55 @@ const Chat: React.FC<Props> = (props) => {
 
   const showAvatar = (msg?: IMessage) => msg?.user.avatar;
 
-  const renderChatEmpty = () => (
-    <Div
-      justifyContent="center"
-      alignItems="center"
-      style={{
-        transform:
-          Platform.OS !== "android" ? [{ scaleY: -1 }] : [{ rotate: "180deg" }],
-      }}
-    >
-      <ChatBubble
-        position="left"
-        currentMessage={{
-          _id: "000",
-          createdAt: new Date(),
-          text:
-            props.chatFor === "experts"
-              ? "Welcome to Smoll Expert Chat!👋"
-              : "Welcome to Smoll Counsellor Chat!👋",
-          user: {
-            _id: "0001",
-            avatar: "",
-            name: "",
-          },
-        }}
-      />
-      <ChatBubble
-        position="left"
-        currentMessage={{
-          _id: "000",
-          createdAt: new Date(),
-          text:
-            props.chatFor === "experts"
-              ? `Message ${props.chatWithName} to start the conversation!`
-              : `${props.chatWithName} will be your dedicated counsellor!`,
-          user: {
-            _id: "0001",
-            avatar: "",
-            name: "",
-          },
-        }}
-      />
-    </Div>
-  );
+  console.log(Platform.OS);
+
+  const ChatEmptyView = () => {
+    return (
+      <Div flex={1}>
+        <Div
+          style={
+            Platform.OS === "android"
+              ? { transform: [{ rotate: "180deg" }] }
+              : { transform: [{ rotate: "180deg" }, { rotateY: "180deg" }] }
+          }
+          flex={1}
+          mt={20}
+          justifyContent="space-between"
+        >
+          <Div px={20} pt={5} flex={1}>
+            <Image
+              source={require("../../../assets/images/chat-screen-img.png")}
+              resizeMode="contain"
+              h={200}
+              style={
+                Platform.OS === "android"
+                  ? { transform: [{ translateX: -70 }] }
+                  : { transform: [{ translateX: -50 }] }
+              }
+              mb={15}
+            />
+
+            <Text
+              fontFamily={fontHauoraSemiBold}
+              fontSize={"2xl"}
+              maxW={"70%"}
+              mb={10}
+            >
+              Hi! Welcome to your messaging room.
+            </Text>
+            <Text maxW={"90%"}>
+              It's just{" "}
+              <Text fontFamily={fontHauoraSemiBold}>
+                you and {props.chatWithName}
+              </Text>{" "}
+              in here. Feel free to chat, send pictures, files, or even voice
+              notes.
+            </Text>
+          </Div>
+        </Div>
+      </Div>
+    );
+  };
 
   return (
     <GiftedChat
@@ -293,47 +286,7 @@ const Chat: React.FC<Props> = (props) => {
         />
       )}
       renderChatFooter={() => <Div h={24}></Div>}
-      renderChatEmpty={() => (
-        <Div flex={1}>
-          <Div
-            style={
-              Platform.OS === "android"
-                ? { transform: [{ rotate: "180deg" }] }
-                : {}
-            }
-            flex={1}
-            mt={20}
-            justifyContent="space-between"
-          >
-            <Div px={20} pt={5} flex={1}>
-              <Image
-                source={require("../../../assets/images/chat-screen-img.png")}
-                resizeMode="contain"
-                h={200}
-                style={{ transform: [{ translateX: -70 }] }}
-                mb={15}
-              />
-
-              <Text
-                fontFamily={fontHauoraSemiBold}
-                fontSize={"2xl"}
-                maxW={"70%"}
-                mb={10}
-              >
-                Hi! Welcome to your messaging room.
-              </Text>
-              <Text maxW={"90%"}>
-                It's just{" "}
-                <Text fontFamily={fontHauoraSemiBold}>
-                  you and {props.chatWithName}
-                </Text>{" "}
-                in here. Feel free to chat, send pictures, files, or even voice
-                notes.
-              </Text>
-            </Div>
-          </Div>
-        </Div>
-      )}
+      renderChatEmpty={ChatEmptyView}
     />
   );
 };

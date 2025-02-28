@@ -101,7 +101,7 @@ const PetProfileScreen: React.FC<Props> = (props) => {
           navigateTo: comingFrom === "modal" ? "HomeScreen" : comingFrom,
           petId: id ?? "",
           petName: pet.name,
-          petBg: pet.photos[0].url,
+          petBg: pet.photos?.[0]?.url ?? "",
           expertId,
           consultationId,
           scheduleAt,
