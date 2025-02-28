@@ -8,7 +8,7 @@ import {
   useRoute,
 } from "@react-navigation/native";
 import { activateKeepAwakeAsync, deactivateKeepAwake } from "expo-keep-awake";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, Platform } from "react-native";
 import { Avatar, GiftedChat, IMessage } from "react-native-gifted-chat";
 import { Div, Image, Text } from "react-native-magnus";
@@ -210,7 +210,26 @@ const Chat: React.FC<Props> = (props) => {
 
   const showAvatar = (msg?: IMessage) => msg?.user.avatar;
 
-  console.log(Platform.OS);
+  const emptyViewImgs = {
+    cat: require("../../../assets/images/chat-screen-img.png"),
+    dog: require("../../../assets/images/chat-screen-img-2.png"),
+  };
+
+  const imgTypes = ["cat", "dog"];
+  const randomImgType = imgTypes[Math.floor(Math.random() * imgTypes.length)];
+
+  const randomEmptyViewImg =
+    emptyViewImgs[randomImgType as keyof typeof emptyViewImgs];
+
+  const style = () => {
+    if (randomImgType === "cat") {
+      return Platform.OS === "android"
+        ? { transform: [{ translateX: -70 }] }
+        : { transform: [{ translateX: -50 }] };
+    }
+
+    return {};
+  };
 
   const ChatEmptyView = () => {
     return (
@@ -227,14 +246,10 @@ const Chat: React.FC<Props> = (props) => {
         >
           <Div px={20} pt={5} flex={1}>
             <Image
-              source={require("../../../assets/images/chat-screen-img.png")}
+              source={randomEmptyViewImg}
               resizeMode="contain"
               h={200}
-              style={
-                Platform.OS === "android"
-                  ? { transform: [{ translateX: -70 }] }
-                  : { transform: [{ translateX: -50 }] }
-              }
+              style={style()}
               mb={15}
             />
 
