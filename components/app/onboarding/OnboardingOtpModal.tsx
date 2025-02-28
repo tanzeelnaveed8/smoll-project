@@ -126,7 +126,7 @@ const OnboardingOtpModal: React.FC<Props> = (props) => {
             </Text>
 
             <Text fontSize={"xl"} mb={24} color="#494949">
-              We have send a 4 digit code to the phone number{" "}
+              We have sent you a 4 digit code to the phone number{" "}
               <Text fontSize={"xl"} color="#222222">
                 {props.label}
               </Text>
