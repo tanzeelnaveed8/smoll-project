@@ -1,3 +1,4 @@
+import { useAppVersion } from "@/app/hooks/useAppVersion";
 import Layout from "@/components/app/Layout";
 import ConfirmationModal from "@/components/partials/ConfirmationModal";
 import SettingButton from "@/components/partials/SettingButton";
@@ -131,11 +132,11 @@ const SettingsMainScreen: React.FC<{ navigation: NavigationType }> = ({
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const checkPushNotificationStatus = useCallback(async () => {
-    console.log("Checking push notification status");
     const deviceState = await OneSignal.Notifications.getPermissionAsync();
-    console.log("deviceState", deviceState);
     setPushNotificationEnabled(deviceState ?? false);
   }, []);
+
+  const { version, buildNumber } = useAppVersion();
 
   useEffect(() => {
     const subscription = AppState.addEventListener(
@@ -262,7 +263,7 @@ const SettingsMainScreen: React.FC<{ navigation: NavigationType }> = ({
             mb={6}
             color="#7B7B7B"
           >
-            App v 2.0.0
+            App v {version} ({buildNumber})
           </Text>
         </Div>
       </ScrollDiv>
