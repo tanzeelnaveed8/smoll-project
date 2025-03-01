@@ -92,7 +92,7 @@ import ClinicListScreen from "./screens/Clinic/ClinicListScreen";
 import ClinicDetailScreen from "./screens/Clinic/ClinicDetailScreen";
 import Config from "react-native-config";
 
-console.log(Config);
+console.log("config", Config);
 
 Sentry.init({
   dsn: Config.SENTRY_DSN,

@@ -264,6 +264,8 @@ const Chat: React.FC<Props> = (props) => {
     return {};
   };
 
+  const chatWithName = props.chatWithName;
+
   const ChatEmptyView = () => {
     return (
       <Div flex={1}>
@@ -335,6 +337,7 @@ const Chat: React.FC<Props> = (props) => {
           channelUrl={channelUrl || ""}
           replyingTo={replyingTo}
           onCancelReply={cancelReply}
+          expertName={chatWithName}
         />
       )}
       renderChatFooter={() => <Div h={24}></Div>}

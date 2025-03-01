@@ -34,6 +34,7 @@ interface Props extends InputToolbarProps<IMessage> {
   channelUrl: string;
   replyingTo?: IMessage | null;
   onCancelReply?: () => void;
+  expertName?: string;
 }
 
 const ChatComposer: React.FC<Props> = (props) => {
@@ -268,7 +269,7 @@ const ChatComposer: React.FC<Props> = (props) => {
     const isMyMessage = replyingTo.user._id === user?.id;
     const replyingToName = isMyMessage
       ? "Yourself"
-      : replyingTo.user.name || "User";
+      : props.expertName || "User";
 
     const getMessagePreview = () => {
       if (replyingTo.text) return replyingTo.text;

@@ -396,6 +396,7 @@ const ChatBubble: React.FC<Props> = (props) => {
   return (
     <Bubble
       {...props}
+      renderTime={() => null}
       wrapperStyle={{
         left: getWrapperStyle("left"),
         right: getWrapperStyle("right"),
@@ -410,13 +411,19 @@ const ChatBubble: React.FC<Props> = (props) => {
               right: rightTextStyles,
             }}
           />
-          <Div row justifyContent="flex-end">
+          <Div row justifyContent="flex-end" alignItems="flex-end">
             {renderReplyButton()}
             <Time
               {...props}
               timeTextStyle={{
-                right: { fontSize: 10, color: "#CCC" },
-                left: { fontSize: 10, color: "#666" },
+                right: {
+                  fontSize: 10,
+                  color: "#CCC",
+                },
+                left: {
+                  fontSize: 10,
+                  color: "#666",
+                },
               }}
             />
           </Div>
