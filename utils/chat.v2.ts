@@ -95,16 +95,38 @@ const sendMessage = async (toUserId: string, messages: IMessage[]) => {
   const sentMessages: ZIMMessage[] = [];
 
   const messagePromises = messages.map(async (message) => {
+    // Prepare extended data for reply functionality
+    let extendedData = {};
+
+    // If this is a reply to another message, include the reply metadata
+    if (message.replyTo) {
+      extendedData = {
+        replyTo: {
+          _id: message.replyTo._id,
+          text: message.replyTo.text || "",
+          user: {
+            _id: message.replyTo.user._id,
+            name: message.replyTo.user.name || "",
+            avatar: message.replyTo.user.avatar || "",
+          },
+        },
+      };
+    }
+
+    const extendedDataString = JSON.stringify(extendedData);
+
     if (message.image) {
       const mediaMessage: ZIMMediaMessageBase = {
         type: ZIMMessageType.Image,
         fileLocalPath: message.image.replace("file://", ""),
+        extendedData: extendedDataString,
       };
       return sendMediaMessage(zim, mediaMessage, toUserId);
     } else if (message.video) {
       const mediaMessage: ZIMMediaMessageBase = {
         type: ZIMMessageType.Video,
         fileLocalPath: message.video.replace("file://", ""),
+        extendedData: extendedDataString,
       };
       return sendMediaMessage(zim, mediaMessage, toUserId);
     } else if (message.audio) {
@@ -124,6 +146,7 @@ const sendMessage = async (toUserId: string, messages: IMessage[]) => {
         type: ZIMMessageType.Audio,
         fileLocalPath: audioPath,
         audioDuration: durationMillis ? Math.round(durationMillis / 1000) : 0, // Convert to seconds
+        extendedData: extendedDataString,
       };
 
       return sendMediaMessage(zim, mediaMessage, toUserId);
@@ -131,6 +154,7 @@ const sendMessage = async (toUserId: string, messages: IMessage[]) => {
       const textMessage: ZIMMessageBase = {
         type: ZIMMessageType.Text,
         message: message.text,
+        extendedData: extendedDataString,
       };
       return sendTextMessage(zim, textMessage, toUserId);
     }

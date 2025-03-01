@@ -39,6 +39,7 @@ const Chat: React.FC<Props> = (props) => {
   const { user } = useUserStore();
 
   const [messages, setMessages] = useState<IMessage[]>(props.initialMessages);
+  const [replyingTo, setReplyingTo] = useState<IMessage | null>(null);
 
   const [isLoadingEarlier, setIsLoadingEarlier] = useState(false);
   const [loading, setIsLoading] = useState(true);
@@ -76,6 +77,18 @@ const Chat: React.FC<Props> = (props) => {
           avatar: undefined,
         },
       };
+
+      // Parse reply metadata from extendedData if present
+      if (msg.extendedData) {
+        try {
+          const extendedData = JSON.parse(msg.extendedData);
+          if (extendedData.replyTo) {
+            obj.replyTo = extendedData.replyTo;
+          }
+        } catch (e) {
+          console.error("Error parsing extendedData:", e);
+        }
+      }
 
       switch (msg.type) {
         case ZIMMessageType.Text:
@@ -187,17 +200,37 @@ const Chat: React.FC<Props> = (props) => {
         setIsSending(true);
       }
 
+      // Add reply metadata if replying to a message
+      if (replyingTo) {
+        newMessages[0].replyTo = {
+          _id: replyingTo._id,
+          text: replyingTo.text,
+          user: replyingTo.user,
+        };
+      }
+
       const response = await sendMessage(props.recipientId, newMessages);
 
       if (!response) return;
 
       const transformedMessages = transformMessages(response);
       setMessages((prevMessages) => [...transformedMessages, ...prevMessages]);
+
+      // Clear reply state after sending
+      setReplyingTo(null);
     } finally {
       setIsSending(false);
     }
 
     return;
+  };
+
+  const handleReply = (message: IMessage) => {
+    setReplyingTo(message);
+  };
+
+  const cancelReply = () => {
+    setReplyingTo(null);
   };
 
   if (loading) {
@@ -288,7 +321,9 @@ const Chat: React.FC<Props> = (props) => {
       }}
       showAvatarForEveryMessage={false}
       showUserAvatar={false}
-      renderBubble={(props) => <ChatBubble {...props} />}
+      renderBubble={(props) => (
+        <ChatBubble {...props} onReply={(message) => handleReply(message)} />
+      )}
       renderAvatar={(props) =>
         showAvatar(props.currentMessage) ? <Avatar {...props} /> : null
       }
@@ -298,6 +333,8 @@ const Chat: React.FC<Props> = (props) => {
           {...props}
           isSending={isSending}
           channelUrl={channelUrl || ""}
+          replyingTo={replyingTo}
+          onCancelReply={cancelReply}
         />
       )}
       renderChatFooter={() => <Div h={24}></Div>}

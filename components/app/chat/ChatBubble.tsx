@@ -3,6 +3,7 @@ import {
   IconPaperclip,
   IconPlayerPlay,
   IconPlayerPause,
+  IconArrowBackUp,
 } from "@tabler/icons-react-native";
 import {
   StyleProp,
@@ -18,7 +19,9 @@ import { Audio } from "expo-av";
 import { useState, useEffect } from "react";
 import { Alert } from "react-native";
 
-interface Props extends BubbleProps<IMessage> {}
+interface Props extends BubbleProps<IMessage> {
+  onReply?: (message: IMessage) => void;
+}
 
 const commonWrapperStyles: StyleProp<ViewStyle> = {
   paddingTop: 12,
@@ -52,6 +55,25 @@ const leftTextStyles: StyleProp<TextStyle> = {
 
 const rightTextStyles: StyleProp<TextStyle> = {
   color: "#fff",
+};
+
+const replyWrapperStyles: StyleProp<ViewStyle> = {
+  padding: 8,
+  marginBottom: 4,
+  borderRadius: 12,
+  maxWidth: "90%",
+};
+
+const rightReplyWrapperStyles: StyleProp<ViewStyle> = {
+  ...replyWrapperStyles,
+  backgroundColor: "rgba(255, 255, 255, 0.15)",
+  marginLeft: 8,
+};
+
+const leftReplyWrapperStyles: StyleProp<ViewStyle> = {
+  ...replyWrapperStyles,
+  backgroundColor: "rgba(0, 0, 0, 0.05)",
+  marginRight: 8,
 };
 
 const ChatBubble: React.FC<Props> = (props) => {
@@ -191,6 +213,62 @@ const ChatBubble: React.FC<Props> = (props) => {
     }
   };
 
+  const handleReply = () => {
+    if (props.currentMessage && props.onReply) {
+      props.onReply(props.currentMessage);
+    }
+  };
+
+  const renderReplyButton = () => {
+    if (!props.onReply) return null;
+
+    return (
+      <TouchableOpacity onPress={handleReply} style={{ marginRight: 10 }}>
+        <Div p={4} justifyContent="center" alignItems="center">
+          <IconArrowBackUp
+            size={18}
+            color={position === "left" ? "#666" : "#BBB"}
+          />
+        </Div>
+      </TouchableOpacity>
+    );
+  };
+
+  const renderRepliedMessage = () => {
+    const { currentMessage } = props;
+    if (!currentMessage?.replyTo) return null;
+
+    const isRepliedMessageFromCurrentUser =
+      currentMessage.replyTo.user._id.toString().toLowerCase() ===
+      user?.id.toLowerCase();
+
+    const replyStyle =
+      position === "right" ? rightReplyWrapperStyles : leftReplyWrapperStyles;
+
+    const replyTextColor =
+      position === "right" ? "rgba(255, 255, 255, 0.7)" : "#666";
+
+    return (
+      <Div style={replyStyle}>
+        <Text fontSize={12} color={replyTextColor} fontWeight="bold" mb={2}>
+          {isRepliedMessageFromCurrentUser
+            ? "You"
+            : currentMessage.replyTo.user.name || "User"}
+        </Text>
+        <Text fontSize={12} color={replyTextColor} numberOfLines={1}>
+          {currentMessage.replyTo.text ||
+            (currentMessage.replyTo.image
+              ? "[Image]"
+              : currentMessage.replyTo.audio
+              ? "[Audio]"
+              : currentMessage.replyTo.video
+              ? "[Video]"
+              : "[File]")}
+        </Text>
+      </Div>
+    );
+  };
+
   const renderAudioPlayer = () => {
     const formatDuration = (milliseconds: number | null) => {
       if (!milliseconds) return "00:00";
@@ -248,16 +326,13 @@ const ChatBubble: React.FC<Props> = (props) => {
               />
             )}
           </Div>
-          <Div flexDir="column">
+          <Div flex={1}>
             <Text
-              fontSize={14}
-              fontWeight="bold"
-              color={position === "left" ? "#333" : "#FFF"}
+              fontSize={12}
+              color={position === "left" ? "#666" : "#CCC"}
+              textAlign="right"
             >
-              Audio Message
-            </Text>
-            <Text fontSize={12} color={position === "left" ? "#666" : "#CCC"}>
-              {formatDuration(isPlaying ? currentTime : duration)}
+              {formatDuration(currentTime)} / {formatDuration(duration)}
             </Text>
           </Div>
         </Div>
@@ -265,40 +340,88 @@ const ChatBubble: React.FC<Props> = (props) => {
     );
   };
 
+  if (props.currentMessage?.text?.startsWith("[ATTACHMENT]")) {
+    return (
+      <Bubble
+        {...props}
+        wrapperStyle={{
+          left: { backgroundColor: "transparent" },
+          right: { backgroundColor: "transparent" },
+        }}
+        renderMessageText={() => (
+          <Div>
+            {renderRepliedMessage()}
+            {renderAttachment(props.currentMessage?.text || "")}
+            <Div row justifyContent="flex-end">
+              {renderReplyButton()}
+              <Time
+                {...props}
+                timeTextStyle={{ right: { fontSize: 10, color: "#666" } }}
+              />
+            </Div>
+          </Div>
+        )}
+      />
+    );
+  }
+
+  if (isAudioMessage) {
+    return (
+      <Bubble
+        {...props}
+        wrapperStyle={{
+          left: { backgroundColor: "transparent" },
+          right: { backgroundColor: "transparent" },
+        }}
+        renderMessageText={() => (
+          <Div>
+            {renderRepliedMessage()}
+            {renderAudioPlayer()}
+            <Div row justifyContent="flex-end">
+              {renderReplyButton()}
+              <Time
+                {...props}
+                timeTextStyle={{
+                  right: { fontSize: 10, color: "#666" },
+                  left: { fontSize: 10, color: "#666" },
+                }}
+              />
+            </Div>
+          </Div>
+        )}
+      />
+    );
+  }
+
   return (
     <Bubble
       {...props}
-      position={position}
       wrapperStyle={{
-        right: getWrapperStyle("right"),
         left: getWrapperStyle("left"),
+        right: getWrapperStyle("right"),
       }}
-      textStyle={{
-        right: rightTextStyles,
-        left: leftTextStyles,
-      }}
-      renderTime={(_props) => {
-        if (_props.currentMessage?.audio) {
-          return (
+      renderMessageText={() => (
+        <Div>
+          {renderRepliedMessage()}
+          <MessageText
+            {...props}
+            textStyle={{
+              left: leftTextStyles,
+              right: rightTextStyles,
+            }}
+          />
+          <Div row justifyContent="flex-end">
+            {renderReplyButton()}
             <Time
-              {..._props}
+              {...props}
               timeTextStyle={{
-                right: { color: "#333" },
+                right: { fontSize: 10, color: "#CCC" },
+                left: { fontSize: 10, color: "#666" },
               }}
             />
-          );
-        }
-
-        return <Time {..._props} />;
-      }}
-      renderMessageAudio={renderAudioPlayer}
-      renderMessageText={(_props) => {
-        if (_props.currentMessage?.text?.startsWith("[ATTACHMENT]")) {
-          return renderAttachment(props.currentMessage.text);
-        }
-
-        return <MessageText {..._props} />;
-      }}
+          </Div>
+        </Div>
+      )}
     />
   );
 };
