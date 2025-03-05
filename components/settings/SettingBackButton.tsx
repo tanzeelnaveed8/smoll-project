@@ -11,7 +11,7 @@ const SettingBackButton = (props: PropsType) => {
     <Div flexDir="row" alignItems="center" mb={4} ml={-8}>
       <Button px={0} py={0} bg="transparent" alignItems="center">
         <IconChevronLeft
-          fontSize={18}
+          fontSize={"xl"}
           color="#222222"
           style={{ marginTop: 2.5 }}
           strokeWidth={1.5}

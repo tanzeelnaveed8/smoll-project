@@ -110,7 +110,7 @@ const PetDetailsModal = (props: PropTypes) => {
     >
       <ScrollDiv style={{}} showsVerticalScrollIndicator={false}>
         <Div flex={1} px={20} pb={30}>
-          <Text fontSize={32} lineHeight={40} color="#222222" mb={4}>
+          <Text fontSize={"6xl"} lineHeight={40} color="#222222" mb={4}>
             Details
           </Text>
           <Text

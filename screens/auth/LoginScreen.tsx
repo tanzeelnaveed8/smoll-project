@@ -37,7 +37,7 @@ const LoginScreen: React.FC<{ navigation: NavigationType }> = ({
             mt={24}
             style={{ flexDirection: "row", justifyContent: "center" }}
           >
-            <Text fontSize={16} color="#6B6B6B" fontFamily={fontHauora}>
+            <Text fontSize={"lg"} color="#6B6B6B" fontFamily={fontHauora}>
               Already have an account?{" "}
             </Text>
             <Button
@@ -45,7 +45,7 @@ const LoginScreen: React.FC<{ navigation: NavigationType }> = ({
               color="#0189F9"
               px={0}
               py={0}
-              fontSize={16}
+              fontSize={"lg"}
               fontFamily={fontHauora}
               onPress={() => {
                 navigation.navigate("Register");

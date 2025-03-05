@@ -246,7 +246,7 @@ const SettingsMainScreen: React.FC<{ navigation: NavigationType }> = ({
           >
             <Text
               fontWeight="400"
-              fontSize={18}
+              fontSize={"xl"}
               fontFamily={fontHauora}
               lineHeight={24}
               color="#0189F9"
@@ -257,7 +257,7 @@ const SettingsMainScreen: React.FC<{ navigation: NavigationType }> = ({
 
           <Text
             fontWeight="400"
-            fontSize={18}
+            fontSize={"xl"}
             fontFamily={fontHauora}
             lineHeight={24}
             mb={6}

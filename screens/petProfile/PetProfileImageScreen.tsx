@@ -39,7 +39,7 @@ const PetProfileImageScreen: React.FC<Props> = (props) => {
   return (
     <Div>
       <Text
-        fontSize={32}
+        fontSize={"6xl"}
         lineHeight={40}
         color="#222222"
         mb={16}

@@ -289,11 +289,15 @@ const HomeScreen: React.FC<Props> = (props) => {
           >
             <Div px={20} pr={0} h={191}>
               <Div mb={30} mt={34}>
-                <Text fontSize={24} fontFamily={fontHauoraBold} lineHeight={27}>
+                <Text
+                  fontSize={"4xl"}
+                  fontFamily={fontHauoraBold}
+                  lineHeight={27}
+                >
                   Chat with pet
                 </Text>
                 <Text
-                  fontSize={24}
+                  fontSize={"4xl"}
                   fontFamily={fontHauoraBold}
                   lineHeight={27}
                   mb={3}
@@ -419,14 +423,14 @@ const HomeScreen: React.FC<Props> = (props) => {
 
                   <Div flex={1}>
                     <Text
-                      fontSize={19}
+                      fontSize={"xl"}
                       fontFamily={fontHauoraBold}
                       lineHeight={20}
                     >
                       {item.name}
                     </Text>
                     <Text
-                      fontSize={12}
+                      fontSize={"sm"}
                       fontFamily={fontHauoraMedium}
                       lineHeight={18}
                       maxW={"90%"}

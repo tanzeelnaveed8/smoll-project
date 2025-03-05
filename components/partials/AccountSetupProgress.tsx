@@ -28,7 +28,7 @@ const AccountSetupProgress: React.FC<Props> = (props) => {
           <Icon
             name="info"
             fontFamily="Feather"
-            fontSize={24}
+            fontSize={"4xl"}
             color="#E02A2A"
             style={{ padding: 2, paddingTop: 5 }}
           />

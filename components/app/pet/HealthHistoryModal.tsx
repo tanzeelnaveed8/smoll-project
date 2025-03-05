@@ -137,7 +137,7 @@ const HealthHistoryModal = (props: PropTypes) => {
           keyboardShouldPersistTaps="handled"
         >
           <Text
-            fontSize={32}
+            fontSize={"6xl"}
             lineHeight={40}
             color="#222222"
             mb={4}

@@ -131,7 +131,7 @@ const SettingPersonalInfoScreen: React.FC<{ navigation: NavigationType }> = ({
                 });
               }}
             >
-              <Text fontSize={16} lineHeight={24} color="primary">
+              <Text fontSize={"lg"} lineHeight={24} color="primary">
                 Edit
               </Text>
             </TouchableOpacity>

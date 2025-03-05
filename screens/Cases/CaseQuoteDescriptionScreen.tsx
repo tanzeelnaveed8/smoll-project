@@ -243,7 +243,7 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
                     lineHeight={36}
                   >
                     {getMinQuote(clinicQuote)}
-                    <Text fontSize={15} fontFamily={fontHauoraMedium}>
+                    <Text fontSize={"lg"} fontFamily={fontHauoraMedium}>
                       {" "}
                       AED
                     </Text>
@@ -263,7 +263,7 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
                     lineHeight={36}
                   >
                     {getTotalQuote()}
-                    <Text fontSize={15} fontFamily={fontHauoraMedium}>
+                    <Text fontSize={"lg"} fontFamily={fontHauoraMedium}>
                       {" "}
                       AED
                     </Text>
@@ -272,7 +272,7 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
               </Div>
             </Div>
 
-            <Text fontSize={20} fontFamily={fontCooper} mb={10}>
+            <Text fontSize={"2xl"} fontFamily={fontCooper} mb={10}>
               Upfront transparent pricing
             </Text>
           </Div>
@@ -333,7 +333,7 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
           }
         }}
       >
-        <Text color="#222" fontSize={20} fontFamily={fontHauoraSemiBold}>
+        <Text color="#222" fontSize={"2xl"} fontFamily={fontHauoraSemiBold}>
           {hasPartnerBooking ? "Appointments" : "Proceed"}
         </Text>
 
@@ -368,7 +368,7 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
               fill={"#000"}
             /> */}
             <QuoteDescriptionInfoIcon />
-            <Text ml={3} fontSize={12} mt={-1} fontFamily={fontHauoraMedium}>
+            <Text ml={3} fontSize={"sm"} mt={-1} fontFamily={fontHauoraMedium}>
               Understand how quotes work
             </Text>
           </Div>
@@ -393,7 +393,7 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
           <Div flexDir="row" alignItems="flex-start" mb={22}>
             <InformationIcon width={28} height={28} />
             <Text
-              fontSize={14}
+              fontSize={"md"}
               ml={8}
               fontFamily={fontHauoraBold}
               style={{ position: "relative", top: 4 }}

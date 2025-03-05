@@ -162,7 +162,7 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
                 }}
               >
                 <Text
-                  fontSize={16}
+                  fontSize={"lg"}
                   fontWeight="500"
                   fontFamily={fontHauoraBold}
                   // ml={8}
@@ -287,7 +287,7 @@ const AppointmentCard: React.FC<{
         <Div maxW={230}>
           <Div mb={4} flexDir="row" style={{ gap: 4 }}>
             <Tag
-              fontSize={12}
+              fontSize={"sm"}
               fontFamily={fontHauoraSemiBold}
               px={8}
               py={6}
@@ -302,7 +302,7 @@ const AppointmentCard: React.FC<{
 
             {props.alert && (
               <Tag
-                fontSize={12}
+                fontSize={"sm"}
                 fontFamily={fontHauoraSemiBold}
                 px={8}
                 py={6}
@@ -349,7 +349,7 @@ const AppointmentCard: React.FC<{
             </Text>
           ) : (
             <Tag
-              fontSize={12}
+              fontSize={"sm"}
               fontFamily={fontHauoraSemiBold}
               px={8}
               py={6}

@@ -394,7 +394,7 @@ const ImageUpload: React.FC<Props> = ({
                         fontFamily={fontHauoraSemiBold}
                         textAlign="center"
                         lineHeight={16}
-                        fontSize={12}
+                        fontSize={"sm"}
                         px={2}
                       >
                         {documentName.length > 22

@@ -50,7 +50,7 @@ const ButtonPrimary: React.FC<ButtonPrimaryProps> = ({
       <Text
         color={textColor ?? "white"}
         mb={2}
-        fontSize={18}
+        fontSize={"xl"}
         fontFamily={fontHauoraMedium}
       >
         {children}

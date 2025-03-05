@@ -19,7 +19,7 @@ const InClinicDetailsScreen = () => {
       >
         <Button bg="transparent" px={0}>
           <Icon
-            fontSize={24}
+            fontSize={"4xl"}
             color="#222222"
             name="arrow-back-outline"
             fontFamily="Ionicons"
@@ -28,7 +28,7 @@ const InClinicDetailsScreen = () => {
         <Text fontSize={"xl"}>Details</Text>
         <Button bg="transparent" px={0}>
           <Icon
-            fontSize={24}
+            fontSize={"4xl"}
             color="#222222"
             name="questioncircleo"
             fontFamily="AntDesign"
@@ -78,7 +78,7 @@ const InClinicDetailsScreen = () => {
           </Text>
 
           <Icon
-            fontSize={20}
+            fontSize={"2xl"}
             color="#494949"
             name="arrow-forward-ios"
             fontFamily="MaterialIcons"
