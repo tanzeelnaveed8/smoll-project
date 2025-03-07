@@ -99,14 +99,14 @@ const sendMessage = async (toUserId: string, messages: IMessage[]) => {
       const mediaMessage = {
         type: ZIMMessageType.Image,
         fileLocalPath: message.image.replace("file://", ""),
-        repliedInfo: message.repliedInfo,
+        extendedData: message.extendedData,
       } as ZIMMediaMessageBase;
       return sendMediaMessage(zim, mediaMessage, toUserId);
     } else if (message.video) {
       const mediaMessage = {
         type: ZIMMessageType.Video,
         fileLocalPath: message.video.replace("file://", ""),
-        repliedInfo: message.repliedInfo,
+        extendedData: message.extendedData,
       } as ZIMMediaMessageBase;
       return sendMediaMessage(zim, mediaMessage, toUserId);
     } else if (message.audio) {
@@ -126,7 +126,7 @@ const sendMessage = async (toUserId: string, messages: IMessage[]) => {
         type: ZIMMessageType.Audio,
         fileLocalPath: audioPath,
         audioDuration: durationMillis ? Math.round(durationMillis / 1000) : 0, // Convert to seconds
-        repliedInfo: message.repliedInfo,
+        extendedData: message.extendedData,
       } as ZIMMediaMessageBase;
 
       return sendMediaMessage(zim, mediaMessage, toUserId);
@@ -134,7 +134,7 @@ const sendMessage = async (toUserId: string, messages: IMessage[]) => {
       const textMessage = {
         type: ZIMMessageType.Text,
         message: message.text,
-        repliedInfo: message.repliedInfo,
+        extendedData: message.extendedData,
       } as ZIMMessageBase;
       return sendTextMessage(zim, textMessage, toUserId);
     }

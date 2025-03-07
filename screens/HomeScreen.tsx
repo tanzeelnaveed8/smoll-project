@@ -355,7 +355,7 @@ const HomeScreen: React.FC<Props> = (props) => {
 
             <Div
               style={{
-                transform: [{ translateX: WINDOW_WIDTH <= 375 ? -40 : -15 }],
+                transform: [{ translateX: WINDOW_WIDTH <= 375 ? -40 : -25 }],
               }}
             >
               {/* <HomeScreenBoyIcon width={190} height={170} /> */}

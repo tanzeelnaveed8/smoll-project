@@ -1,23 +1,31 @@
 import { useUserStore } from "@/store/modules/user";
 import {
-  IconPaperclip,
-  IconPlayerPlay,
-  IconPlayerPause,
   IconArrowBackUp,
+  IconMicrophone,
+  IconPaperclip,
+  IconPhoto,
+  IconPlayerPause,
+  IconPlayerPlay,
+  IconVideo,
 } from "@tabler/icons-react-native";
+import { Audio } from "expo-av";
+import { useEffect, useState } from "react";
 import {
+  Image,
+  Linking,
   StyleProp,
   TextStyle,
-  ViewStyle,
   TouchableOpacity,
-  Linking,
+  ViewStyle,
 } from "react-native";
-import { Bubble, MessageText, Time } from "react-native-gifted-chat";
-import { BubbleProps, IMessage } from "react-native-gifted-chat";
+import {
+  Bubble,
+  BubbleProps,
+  IMessage,
+  MessageText,
+  Time,
+} from "react-native-gifted-chat";
 import { Div, Text } from "react-native-magnus";
-import { Audio } from "expo-av";
-import { useState, useEffect } from "react";
-import { Alert } from "react-native";
 
 interface Props extends BubbleProps<IMessage> {
   onReply?: (message: IMessage) => void;
@@ -33,6 +41,7 @@ const commonWrapperStyles: StyleProp<ViewStyle> = {
 
 const rightWrapperStyles: StyleProp<ViewStyle> = {
   ...commonWrapperStyles,
+  paddingLeft: 12,
   borderTopRightRadius: 24,
   borderTopLeftRadius: 24,
   borderBottomRightRadius: 0,
@@ -42,6 +51,7 @@ const rightWrapperStyles: StyleProp<ViewStyle> = {
 
 const leftWrapperStyles: StyleProp<ViewStyle> = {
   ...commonWrapperStyles,
+  paddingRight: 12,
   borderTopRightRadius: 24,
   borderTopLeftRadius: 24,
   borderBottomRightRadius: 24,
@@ -55,25 +65,6 @@ const leftTextStyles: StyleProp<TextStyle> = {
 
 const rightTextStyles: StyleProp<TextStyle> = {
   color: "#fff",
-};
-
-const replyWrapperStyles: StyleProp<ViewStyle> = {
-  padding: 8,
-  marginBottom: 4,
-  borderRadius: 12,
-  maxWidth: "90%",
-};
-
-const rightReplyWrapperStyles: StyleProp<ViewStyle> = {
-  ...replyWrapperStyles,
-  backgroundColor: "rgba(255, 255, 255, 0.15)",
-  marginLeft: 8,
-};
-
-const leftReplyWrapperStyles: StyleProp<ViewStyle> = {
-  ...replyWrapperStyles,
-  backgroundColor: "rgba(0, 0, 0, 0.05)",
-  marginRight: 8,
 };
 
 const ChatBubble: React.FC<Props> = (props) => {
@@ -110,6 +101,14 @@ const ChatBubble: React.FC<Props> = (props) => {
         }
       : undefined;
   }, [sound]);
+
+  if (props.currentMessage?.audio) {
+    console.log(
+      "isAudioMessage",
+      isAudioMessage,
+      JSON.stringify(props.currentMessage, null, 2)
+    );
+  }
 
   useEffect(() => {
     if (!props.currentMessage?.audio) return;
@@ -258,36 +257,106 @@ const ChatBubble: React.FC<Props> = (props) => {
   };
 
   const renderRepliedMessage = () => {
-    const { currentMessage } = props;
-    if (!currentMessage?.replyTo) return null;
+    const replyTo = props.currentMessage?.replyTo;
+    if (!replyTo) return null;
 
-    const isRepliedMessageFromCurrentUser =
-      currentMessage.replyTo.user._id.toString().toLowerCase() ===
-      user?.id.toLowerCase();
+    const renderReplyContent = () => {
+      if (replyTo.image) {
+        return (
+          <Div row alignItems="center">
+            <IconPhoto
+              size={16}
+              color={position === "left" ? "#666" : "#FFF"}
+            />
+            <Text
+              ml={4}
+              color={position === "left" ? "#666" : "#FFF"}
+              fontSize={12}
+            >
+              Photo
+            </Text>
+            <Image
+              source={{ uri: replyTo.image }}
+              h={40}
+              w={40}
+              ml={8}
+              rounded={4}
+              resizeMode="cover"
+            />
+          </Div>
+        );
+      } else if (replyTo.video) {
+        return (
+          <Div row alignItems="center">
+            <IconVideo
+              size={16}
+              color={position === "left" ? "#666" : "#FFF"}
+            />
+            <Text
+              ml={4}
+              color={position === "left" ? "#666" : "#FFF"}
+              fontSize={12}
+            >
+              Video
+            </Text>
+            <Image
+              source={{ uri: replyTo.video }}
+              h={40}
+              w={40}
+              ml={8}
+              rounded={4}
+              resizeMode="cover"
+            />
+          </Div>
+        );
+      } else if (replyTo.audio) {
+        return (
+          <Div row alignItems="center">
+            <IconMicrophone
+              size={16}
+              color={position === "left" ? "#666" : "#FFF"}
+            />
+            <Text
+              ml={4}
+              color={position === "left" ? "#666" : "#FFF"}
+              fontSize={12}
+            >
+              Voice Message
+            </Text>
+          </Div>
+        );
+      }
 
-    const replyStyle =
-      position === "right" ? rightReplyWrapperStyles : leftReplyWrapperStyles;
-
-    const replyTextColor =
-      position === "right" ? "rgba(255, 255, 255, 0.7)" : "#666";
+      return (
+        <Text
+          color={position === "left" ? "#666" : "#FFF"}
+          fontSize={12}
+          numberOfLines={1}
+        >
+          {replyTo.text}
+        </Text>
+      );
+    };
 
     return (
-      <Div style={replyStyle}>
-        <Text fontSize={12} color={replyTextColor} fontWeight="bold" mb={2}>
-          {isRepliedMessageFromCurrentUser
-            ? "You"
-            : currentMessage.replyTo.user.name || "User"}
+      <Div
+        bg={position === "left" ? "rgba(0,0,0,0.05)" : "rgba(255,255,255,0.1)"}
+        px={8}
+        py={4}
+        rounded={4}
+        mb={4}
+        right={position === "right" ? 4 : undefined}
+        left={position === "left" ? 4 : undefined}
+      >
+        <Text
+          color={position === "left" ? "#333" : "#FFF"}
+          fontSize={10}
+          fontWeight="bold"
+          mb={2}
+        >
+          {replyTo.user.name || "You"}
         </Text>
-        <Text fontSize={12} color={replyTextColor} numberOfLines={1}>
-          {currentMessage.replyTo.text ||
-            (currentMessage.replyTo.image
-              ? "[Image]"
-              : currentMessage.replyTo.audio
-              ? "[Audio]"
-              : currentMessage.replyTo.video
-              ? "[Video]"
-              : "[File]")}
-        </Text>
+        {renderReplyContent()}
       </Div>
     );
   };
@@ -349,13 +418,16 @@ const ChatBubble: React.FC<Props> = (props) => {
               />
             )}
           </Div>
-          <Div flex={1}>
+          <Div flexDir="column">
             <Text
-              fontSize={12}
-              color={position === "left" ? "#666" : "#CCC"}
-              textAlign="right"
+              fontSize={14}
+              fontWeight="bold"
+              color={position === "left" ? "#333" : "#FFF"}
             >
-              {formatDuration(currentTime)} / {formatDuration(duration)}
+              Audio Message
+            </Text>
+            <Text fontSize={12} color={position === "left" ? "#666" : "#CCC"}>
+              {formatDuration(isPlaying ? currentTime : duration)}
             </Text>
           </Div>
         </Div>
@@ -381,13 +453,14 @@ const ChatBubble: React.FC<Props> = (props) => {
                 timeTextStyle={{ right: { fontSize: 10, color: "#666" } }}
               />
             </Div>
+            {renderReplyButton()}
           </Div>
         )}
       />
     );
   }
 
-  if (isAudioMessage) {
+  if (props.currentMessage?.image) {
     return (
       <Bubble
         {...props}
@@ -398,7 +471,19 @@ const ChatBubble: React.FC<Props> = (props) => {
         renderMessageText={() => (
           <Div>
             {renderRepliedMessage()}
-            {renderAudioPlayer()}
+            <Div position="relative">
+              <Image
+                source={{ uri: props.currentMessage?.image }}
+                style={{
+                  height: 200,
+                  width: 200,
+                  marginLeft: 8,
+                  borderRadius: 8,
+                }}
+                resizeMode="cover"
+              />
+              {renderReplyButton()}
+            </Div>
             <Div row justifyContent="flex-end">
               <Time
                 {...props}
@@ -408,7 +493,45 @@ const ChatBubble: React.FC<Props> = (props) => {
                 }}
               />
             </Div>
-            {renderReplyButton()}
+          </Div>
+        )}
+      />
+    );
+  }
+
+  if (props.currentMessage?.video) {
+    return (
+      <Bubble
+        {...props}
+        wrapperStyle={{
+          left: { backgroundColor: "transparent" },
+          right: { backgroundColor: "transparent" },
+        }}
+        renderMessageText={() => (
+          <Div>
+            {renderRepliedMessage()}
+            <Div position="relative">
+              <Image
+                source={{ uri: props.currentMessage?.video }}
+                style={{
+                  height: 200,
+                  width: 200,
+                  marginLeft: 8,
+                  borderRadius: 8,
+                }}
+                resizeMode="cover"
+              />
+              {renderReplyButton()}
+            </Div>
+            <Div row justifyContent="flex-end">
+              <Time
+                {...props}
+                timeTextStyle={{
+                  right: { fontSize: 10, color: "#666" },
+                  left: { fontSize: 10, color: "#666" },
+                }}
+              />
+            </Div>
           </Div>
         )}
       />
@@ -423,6 +546,7 @@ const ChatBubble: React.FC<Props> = (props) => {
         left: getWrapperStyle("left"),
         right: getWrapperStyle("right"),
       }}
+      renderMessageAudio={renderAudioPlayer}
       renderMessageText={() => (
         <Div>
           {renderRepliedMessage()}

@@ -403,7 +403,7 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
             mb={4}
             color="#368526"
           >
-            Instant consultation
+            Instant Chat
           </Text>
           <Text
             color="darkGreyText"
@@ -411,7 +411,7 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
             fontSize={"lg"}
             fontFamily={fontHauoraMedium}
           >
-            You can easily get a consultation if an expert is online.{" "}
+            You can easily chat with an expert if they are online
           </Text>
         </Div>
 

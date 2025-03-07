@@ -73,27 +73,43 @@ const Chat: React.FC<Props> = (props) => {
         createdAt: new Date(msg.timestamp),
         user: {
           _id: msg.senderUserID,
-          name: undefined,
+          name:
+            msg.senderUserID === props.recipientId
+              ? props.chatWithName
+              : undefined,
           avatar: undefined,
         },
       };
 
-      // Parse reply metadata from repliedInfo if present
+      // Handle reply metadata from both sources
       if (msg.repliedInfo) {
+        // Handle web replies
         obj.replyTo = {
           _id: msg.repliedInfo.messageID,
-          text: (msg.repliedInfo.messageInfo as unknown as { message: string })
-            .message,
+          text: msg.repliedInfo.messageInfo.message,
           user: {
             _id: msg.repliedInfo.senderUserID,
-            name: undefined,
+            name:
+              msg.repliedInfo.senderUserID === props.recipientId
+                ? props.chatWithName
+                : undefined,
             avatar: undefined,
           },
+          image:
+            msg.repliedInfo.messageInfo.type === ZIMMessageType.Image
+              ? (msg as ZIMImageMessage).fileDownloadUrl
+              : undefined,
+          video:
+            msg.repliedInfo.messageInfo.type === ZIMMessageType.Video
+              ? (msg as ZIMVideoMessage).fileDownloadUrl
+              : undefined,
+          audio:
+            msg.repliedInfo.messageInfo.type === ZIMMessageType.Audio
+              ? (msg as ZIMAudioMessage).fileDownloadUrl
+              : undefined,
         };
-      }
-
-      // Parse reply metadata from extendedData if present
-      if (msg.extendedData) {
+      } else if (msg.extendedData) {
+        // Handle app replies
         try {
           const extendedData = JSON.parse(msg.extendedData);
           if (extendedData.repliedInfo) {
@@ -102,14 +118,28 @@ const Chat: React.FC<Props> = (props) => {
               text: extendedData.repliedInfo.messageInfo.message,
               user: {
                 _id: extendedData.repliedInfo.senderUserID,
-                name: undefined,
+                name:
+                  extendedData.repliedInfo.senderUserID === props.recipientId
+                    ? props.chatWithName
+                    : undefined,
                 avatar: undefined,
               },
+              image:
+                extendedData.repliedInfo.messageInfo.type ===
+                ZIMMessageType.Image
+                  ? extendedData.repliedInfo.messageInfo.fileDownloadUrl
+                  : undefined,
+              video:
+                extendedData.repliedInfo.messageInfo.type ===
+                ZIMMessageType.Video
+                  ? extendedData.repliedInfo.messageInfo.fileDownloadUrl
+                  : undefined,
+              audio:
+                extendedData.repliedInfo.messageInfo.type ===
+                ZIMMessageType.Audio
+                  ? extendedData.repliedInfo.messageInfo.fileDownloadUrl
+                  : undefined,
             };
-          }
-          // For backward compatibility
-          if (extendedData.replyTo) {
-            obj.replyTo = extendedData.replyTo;
           }
         } catch (e) {
           console.error("Error parsing extendedData:", e);
@@ -228,17 +258,37 @@ const Chat: React.FC<Props> = (props) => {
         setIsSending(true);
       }
 
-      // Add reply metadata using repliedInfo
+      // Add reply metadata
       if (replyingTo) {
-        newMessages[0].repliedInfo = {
-          messageID: replyingTo._id.toString(),
-          timestamp: new Date(replyingTo.createdAt).getTime(),
-          senderUserID: replyingTo.user._id.toString(),
-          messageInfo: {
-            message: replyingTo.text || "",
-            type: ZIMMessageType.Text,
+        let messageType = ZIMMessageType.Text;
+        let messageContent = replyingTo.text || "";
+        let fileDownloadUrl = undefined;
+
+        if (replyingTo.image) {
+          messageType = ZIMMessageType.Image;
+          fileDownloadUrl = replyingTo.image;
+        } else if (replyingTo.video) {
+          messageType = ZIMMessageType.Video;
+          fileDownloadUrl = replyingTo.video;
+        } else if (replyingTo.audio) {
+          messageType = ZIMMessageType.Audio;
+          fileDownloadUrl = replyingTo.audio;
+        }
+
+        newMessages[0].extendedData = JSON.stringify({
+          repliedInfo: {
+            senderUserID: replyingTo.user._id.toString(),
+            state: 0,
+            messageID: replyingTo._id.toString(),
+            sentTime: new Date(replyingTo.createdAt).getTime(),
+            messageInfo: {
+              message: messageContent,
+              type: messageType,
+              fileDownloadUrl: fileDownloadUrl,
+            },
+            messageSeq: parseInt(replyingTo._id.toString().slice(-3)),
           },
-        };
+        });
       }
 
       const response = await sendMessage(props.recipientId, newMessages);
