@@ -78,10 +78,36 @@ const Chat: React.FC<Props> = (props) => {
         },
       };
 
+      // Parse reply metadata from repliedInfo if present
+      if (msg.repliedInfo) {
+        obj.replyTo = {
+          _id: msg.repliedInfo.messageID,
+          text: (msg.repliedInfo.messageInfo as unknown as { message: string })
+            .message,
+          user: {
+            _id: msg.repliedInfo.senderUserID,
+            name: undefined,
+            avatar: undefined,
+          },
+        };
+      }
+
       // Parse reply metadata from extendedData if present
       if (msg.extendedData) {
         try {
           const extendedData = JSON.parse(msg.extendedData);
+          if (extendedData.repliedInfo) {
+            obj.replyTo = {
+              _id: extendedData.repliedInfo.messageID,
+              text: extendedData.repliedInfo.messageInfo.message,
+              user: {
+                _id: extendedData.repliedInfo.senderUserID,
+                name: undefined,
+                avatar: undefined,
+              },
+            };
+          }
+          // For backward compatibility
           if (extendedData.replyTo) {
             obj.replyTo = extendedData.replyTo;
           }
@@ -165,6 +191,8 @@ const Chat: React.FC<Props> = (props) => {
         config
       );
 
+      console.log("messageList", JSON.stringify(messageList, null, 2));
+
       if (messageList.length === 0) {
         setHasMoreMessages(false);
       } else {
@@ -200,12 +228,16 @@ const Chat: React.FC<Props> = (props) => {
         setIsSending(true);
       }
 
-      // Add reply metadata if replying to a message
+      // Add reply metadata using repliedInfo
       if (replyingTo) {
-        newMessages[0].replyTo = {
-          _id: replyingTo._id,
-          text: replyingTo.text,
-          user: replyingTo.user,
+        newMessages[0].repliedInfo = {
+          messageID: replyingTo._id.toString(),
+          timestamp: new Date(replyingTo.createdAt).getTime(),
+          senderUserID: replyingTo.user._id.toString(),
+          messageInfo: {
+            message: replyingTo.text || "",
+            type: ZIMMessageType.Text,
+          },
         };
       }
 
