@@ -14,7 +14,7 @@ const CalendarHeader = ({ date }: { date: string }) => {
     <Text
       bg="#FAF8F5"
       fontFamily={fontHauoraSemiBold}
-      fontSize={20}
+      fontSize={"2xl"}
       lineHeight={32}
       color="#222222"
     >

@@ -373,7 +373,7 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                     py={18}
                     ml={22}
                   >
-                    <Text mb={5} fontSize={13} fontFamily={fontHauoraMedium}>
+                    <Text mb={5} fontSize={"sm"} fontFamily={fontHauoraMedium}>
                       Due now
                     </Text>
                     <Text
@@ -432,7 +432,7 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                 <Div style={{ gap: 2 }}>
                   <WalletIcon mb={4} width={30} height={30} />
                   <Text
-                    fontSize={11}
+                    fontSize={"xs"}
                     lineHeight={15}
                     fontFamily={fontHauoraSemiBold}
                     maxW={130}
@@ -478,7 +478,7 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
             </ButtonPrimary>
 
             <Text
-              fontSize={12}
+              fontSize={"sm"}
               fontFamily={fontHauoraBold}
               textAlign="center"
               maxW={"70%"}
@@ -538,7 +538,7 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
             <Div flexDir="row" alignItems="flex-start" mb={22}>
               <InformationIcon width={28} height={28} />
               <Text
-                fontSize={14}
+                fontSize={"md"}
                 ml={8}
                 fontFamily={fontHauoraBold}
                 style={{ position: "relative", top: 4 }}
@@ -556,7 +556,7 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                   pb={i + 1 === howPaymentWorks.length ? 0 : 12}
                   mb={i + 1 === howPaymentWorks.length ? 0 : 10}
                 >
-                  <Text fontSize={13} fontFamily={fontHauoraMedium} mb={2}>
+                  <Text fontSize={"sm"} fontFamily={fontHauoraMedium} mb={2}>
                     {item.question}
                   </Text>
                   <Text fontSize={8} fontFamily={fontHauoraMedium} maxW={"90%"}>

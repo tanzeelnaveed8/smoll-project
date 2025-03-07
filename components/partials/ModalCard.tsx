@@ -33,7 +33,7 @@ const ModalCard: React.FC<{
           style={{ alignItems: "center" }}
         >
           <Icon
-            fontSize={28}
+            fontSize={"5xl"}
             color="#222222"
             name={backBtn ? "arrowleft" : "close"}
           />

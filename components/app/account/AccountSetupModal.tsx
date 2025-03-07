@@ -150,7 +150,7 @@ const AccountSetupModal: React.FC<Props> = (props) => {
                         name="chevron-right"
                         fontFamily="Feather"
                         color="#222222"
-                        fontSize={24}
+                        fontSize={"4xl"}
                       />
                     )}
                   </Div>
@@ -159,7 +159,7 @@ const AccountSetupModal: React.FC<Props> = (props) => {
                     <Icon
                       name="checkcircle"
                       fontFamily="AntDesign"
-                      fontSize={24}
+                      fontSize={"4xl"}
                       color="#368526"
                     />
                   ) : (

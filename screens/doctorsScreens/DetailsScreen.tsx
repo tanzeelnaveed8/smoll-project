@@ -200,7 +200,7 @@ const ReadonlyItem = ({ field, value }: { field: string; value: string }) => {
     <Div py={12} borderBottomWidth={1} borderColor="#E0E0E0">
       <Text
         fontFamily={fontHauoraMedium}
-        fontSize={12}
+        fontSize={"sm"}
         lineHeight={16}
         color="#494949"
       >

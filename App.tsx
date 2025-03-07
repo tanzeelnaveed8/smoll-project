@@ -1,5 +1,6 @@
 import {
   ActivityIndicator,
+  Dimensions,
   Platform,
   SafeAreaView,
   StatusBar,
@@ -116,13 +117,39 @@ async function loadFonts() {
   });
 }
 
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
+// const BASE_FONT_SCALE = SCREEN_WIDTH < 350 ? 0.85 : 1; // Reduce base font size by 15% on small screens
+
+const BASE_FONT_SCALE =
+  SCREEN_WIDTH < 320
+    ? 0.8 // Very small screens (iPhone SE 1st gen)
+    : SCREEN_WIDTH < 350
+    ? 0.85 // Small screens
+    : SCREEN_WIDTH < 375
+    ? 0.9 // Medium screens
+    : 1;
+
+// Create a utility function to scale fonts
+export const scaleFontSize = (size: number): number => {
+  return Math.round(size * BASE_FONT_SCALE);
+};
+
 const theme = {
   fontSize: {
-    "5xl": 28,
-    "2xl": 20,
-    xl: 18,
-    lg: 16,
-    md: 14,
+    // "5xl": 28,
+    // "2xl": 20,
+    // xl: 18,
+    // lg: 16,
+    // md: 14,
+    "5xl": scaleFontSize(28),
+    "2xl": scaleFontSize(20),
+    "4xl": scaleFontSize(24),
+    "6xl": scaleFontSize(32),
+    xl: scaleFontSize(18),
+    lg: scaleFontSize(16),
+    md: scaleFontSize(14),
+    sm: scaleFontSize(12),
+    xs: scaleFontSize(11),
   },
   colors: {
     primary: "#427594",

@@ -35,7 +35,7 @@ const ProfileOptionButton = (props: OptionPropTypes) => {
           </Text>
           <Text
             color="#222222"
-            fontSize={18}
+            fontSize={"xl"}
             lineHeight={24}
             fontFamily={fontHauoraMedium}
           >
@@ -45,7 +45,7 @@ const ProfileOptionButton = (props: OptionPropTypes) => {
 
         {editable && (
           <TouchableOpacity onPress={onEdit}>
-            <Text fontSize={16} lineHeight={24} color="primary">
+            <Text fontSize={"lg"} lineHeight={24} color="primary">
               {value ? "Edit" : "Add"}
             </Text>
           </TouchableOpacity>

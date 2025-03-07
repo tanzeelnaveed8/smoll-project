@@ -39,7 +39,7 @@ const DatePickerComponent: React.FC<DatePickerComponentProps> = ({
         <Button
           py={py ? py : 16}
           px={12}
-          fontSize={18}
+          fontSize={"xl"}
           rounded={12}
           borderColor="#494949"
           borderWidth={1}

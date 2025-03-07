@@ -219,7 +219,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
         <Div px={20} mt={20}>
           <Div flexDir="row" style={{ gap: 8 }} mb={10}>
             <IconHelpCircle width={20} height={20} color="#222" />
-            <Text fontSize={12} fontFamily={fontHauoraBold} mt={2}>
+            <Text fontSize={"sm"} fontFamily={fontHauoraBold} mt={2}>
               Help
             </Text>
           </Div>
@@ -232,7 +232,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
           >
             <Div>
               <Text
-                fontSize={12}
+                fontSize={"sm"}
                 fontFamily={fontHauoraBold}
                 mb={3}
                 color="#959594"
@@ -251,7 +251,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
               </TouchableOpacity>
             </Div>
 
-            <Text fontSize={12} fontFamily={fontHauoraBold}>
+            <Text fontSize={"sm"} fontFamily={fontHauoraBold}>
               or
             </Text>
 
@@ -262,7 +262,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                 }}
               >
                 <Text
-                  fontSize={12}
+                  fontSize={"sm"}
                   fontFamily={fontHauoraBold}
                   mb={3}
                   color="#959594"
@@ -358,14 +358,14 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
 
                     {appointmentDetail?.type !== "video" &&
                       !appointmentDetail?.isEmergency && (
-                        <Text fontSize={12} fontFamily={fontHauoraSemiBold}>
+                        <Text fontSize={"sm"} fontFamily={fontHauoraSemiBold}>
                           {appointmentDetail?.vet?.designation ?? "-"}
                         </Text>
                       )}
 
                     <Div mb={16} mt={12} flexDir="row" justifyContent="center">
                       <Tag
-                        fontSize={12}
+                        fontSize={"sm"}
                         fontFamily={fontHauoraSemiBold}
                         px={8}
                         py={6}
@@ -381,7 +381,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
 
                       {appointmentDetail?.isEmergency && (
                         <Tag
-                          fontSize={12}
+                          fontSize={"sm"}
                           fontFamily={fontHauoraSemiBold}
                           px={8}
                           py={6}
@@ -397,7 +397,11 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                       )}
                     </Div>
 
-                    <Text fontSize={12} fontFamily={fontHauoraSemiBold} mb={8}>
+                    <Text
+                      fontSize={"sm"}
+                      fontFamily={fontHauoraSemiBold}
+                      mb={8}
+                    >
                       Appointment On
                     </Text>
 
@@ -451,7 +455,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                           borderColor="#D0D7DC"
                         >
                           <Text
-                            fontSize={12}
+                            fontSize={"sm"}
                             fontFamily={fontHauoraSemiBold}
                             color="darkGreyText"
                             mb={8}
@@ -536,7 +540,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                       )}
 
                     <Text
-                      fontSize={12}
+                      fontSize={"sm"}
                       fontFamily={fontHauoraSemiBold}
                       color="darkGreyText"
                       mb={8}
@@ -659,7 +663,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                           mb={20}
                         >
                           <IconReceipt width={20} height={20} color="#222" />
-                          <Text fontSize={12} fontFamily={fontHauoraBold}>
+                          <Text fontSize={"sm"} fontFamily={fontHauoraBold}>
                             Approved Quotation
                           </Text>
                           <IconArrowRight
@@ -682,7 +686,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                       >
                         <Text
                           mb={6}
-                          fontSize={13}
+                          fontSize={"sm"}
                           fontFamily={fontHauoraMedium}
                         >
                           You have paid
@@ -747,7 +751,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                         <Div style={{ gap: 2 }}>
                           <WalletIcon mb={4} width={30} height={30} />
                           <Text
-                            fontSize={11}
+                            fontSize={"xs"}
                             lineHeight={15}
                             fontFamily={fontHauoraSemiBold}
                             maxW={180}

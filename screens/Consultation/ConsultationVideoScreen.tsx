@@ -346,7 +346,7 @@ const ConsultationVideoScreen: React.FC<{ navigation: NavigationType }> = ({
             name={isRemoteAudioEnabled ? "mic" : "mic-off"}
             color="white"
             fontFamily="Feather"
-            fontSize={20}
+            fontSize={"2xl"}
           />
         </Div>
       </Div>
@@ -394,7 +394,7 @@ const ConsultationVideoScreen: React.FC<{ navigation: NavigationType }> = ({
               name={isMuted ? "mic-off" : "mic"}
               color="white"
               fontFamily="Feather"
-              fontSize={20}
+              fontSize={"2xl"}
             />
           </Button>
           <Button
@@ -408,7 +408,7 @@ const ConsultationVideoScreen: React.FC<{ navigation: NavigationType }> = ({
               name={isVideoEnabled ? "video" : "video-off"}
               color="white"
               fontFamily="Feather"
-              fontSize={20}
+              fontSize={"2xl"}
             />
           </Button>
           <Button
@@ -422,7 +422,7 @@ const ConsultationVideoScreen: React.FC<{ navigation: NavigationType }> = ({
               name="refresh-cw"
               color="white"
               fontFamily="Feather"
-              fontSize={20}
+              fontSize={"2xl"}
             />
           </Button>
           <Button
@@ -436,7 +436,7 @@ const ConsultationVideoScreen: React.FC<{ navigation: NavigationType }> = ({
               name="phone-off"
               color="white"
               fontFamily="Feather"
-              fontSize={20}
+              fontSize={"2xl"}
             />
           </Button>
         </Div>

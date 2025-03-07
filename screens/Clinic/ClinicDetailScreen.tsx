@@ -242,7 +242,7 @@ const ClinicDetailScreen: React.FC<{ navigation: NavigationType }> = ({
             {data?.imgCollections?.length > 0 && (
               <Div mb={16}>
                 <Text
-                  fontSize={12}
+                  fontSize={"sm"}
                   fontFamily={fontHauora}
                   mb={8}
                   color="#494949"
@@ -329,7 +329,7 @@ const ClinicDetailScreen: React.FC<{ navigation: NavigationType }> = ({
 
             <Div>
               <Text
-                fontSize={12}
+                fontSize={"sm"}
                 fontFamily={fontHauoraSemiBold}
                 color="#494949"
                 mb={24}
@@ -399,7 +399,7 @@ const ClinicDetailScreen: React.FC<{ navigation: NavigationType }> = ({
                         />
                       </Div>
                       <Text
-                        fontSize={12}
+                        fontSize={"sm"}
                         fontFamily={fontHauoraMedium}
                         lineHeight={16}
                       >

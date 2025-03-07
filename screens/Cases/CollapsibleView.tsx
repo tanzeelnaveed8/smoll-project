@@ -99,7 +99,7 @@ const CollapsibleView: React.FC<{
             ml={"auto"}
           >
             <Tag
-              fontSize={11}
+              fontSize={"xs"}
               fontFamily={fontHauoraSemiBold}
               borderColor="#222"
               borderWidth={1.5}

@@ -56,7 +56,7 @@ const PetProfileCongratulationsScreen = ({
           </Div>
           <Text
             w="90%"
-            fontSize={32}
+            fontSize={"6xl"}
             lineHeight={40}
             color="#222222"
             textAlign="center"
