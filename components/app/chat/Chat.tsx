@@ -336,6 +336,7 @@ const Chat: React.FC<Props> = (props) => {
       setReplyingTo(null);
 
       // Auto scroll to bottom if user is already at bottom
+      await new Promise((resolve) => setTimeout(resolve, 50));
       scrollToBottom();
     } finally {
       setIsSending(false);

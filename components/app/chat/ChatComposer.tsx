@@ -1,18 +1,19 @@
-import IconButton from "@/components/partials/IconButton";
 import {
   colorErrorText,
   colorPrimary,
   colorTextPrimary,
 } from "@/constant/constant";
-import { sendTypingStatus } from "@/utils/chat.v2";
+import { useSound } from "@/functions/useSound";
+import { useUserStore } from "@/store/modules/user";
 import {
-  IconPaperclip,
-  IconSend,
   IconMicrophone,
+  IconPaperclip,
   IconPlayerPause,
+  IconSend,
   IconTrash,
   IconX,
 } from "@tabler/icons-react-native";
+import { Audio } from "expo-av";
 import * as ImagePicker from "expo-image-picker";
 import React, { useRef, useState } from "react";
 import { ActivityIndicator, Platform, TouchableOpacity } from "react-native";
@@ -24,10 +25,6 @@ import {
   SendProps,
 } from "react-native-gifted-chat";
 import { Div, Input, Text } from "react-native-magnus";
-import { Audio } from "expo-av";
-import { useSound } from "@/functions/useSound";
-import { check, request, PERMISSIONS, RESULTS } from "react-native-permissions";
-import { useUserStore } from "@/store/modules/user";
 
 interface Props extends InputToolbarProps<IMessage> {
   isSending: boolean;
@@ -148,16 +145,6 @@ const ChatComposer: React.FC<Props> = (props) => {
     }
 
     play("message");
-  };
-
-  const handleTyping = () => {
-    // if (typingTimeoutRef.current) {
-    //   clearTimeout(typingTimeoutRef.current);
-    // }
-    // sendTypingStatus(props.channelUrl, true);
-    // typingTimeoutRef.current = setTimeout(() => {
-    //   sendTypingStatus(props.channelUrl, false);
-    // }, 2000);
   };
 
   const pickImage = async () => {
@@ -391,7 +378,7 @@ const ChatComposer: React.FC<Props> = (props) => {
           renderComposer={() => (
             <Div style={{ flex: 1 }}>
               {renderReplyPreview()}
-              <Div flexDir="row" alignItems="center">
+              <Div flexDir="row" alignItems="center" top={8}>
                 <Input
                   placeholder="Type a message..."
                   flex={1}
@@ -406,7 +393,6 @@ const ChatComposer: React.FC<Props> = (props) => {
                   value={text}
                   onChangeText={(value) => {
                     setText(value);
-                    handleTyping();
                   }}
                 />
                 <Div row alignItems="center" ml={8}>

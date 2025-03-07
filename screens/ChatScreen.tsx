@@ -1,10 +1,7 @@
 import Layout from "@/components/app/Layout";
 import Chat from "@/components/app/chat/Chat";
-import ChatBubble from "@/components/app/chat/ChatBubble";
-import ChatComposer from "@/components/app/chat/ChatComposer";
-import { useCallback, useEffect, useState } from "react";
-import { Bubble, GiftedChat, IMessage } from "react-native-gifted-chat";
-import { Div, Text } from "react-native-magnus";
+import { useEffect, useState } from "react";
+import { IMessage } from "react-native-gifted-chat";
 
 const ChatScreen: React.FC = () => {
   const [messages, setMessages] = useState<IMessage[]>([]);
