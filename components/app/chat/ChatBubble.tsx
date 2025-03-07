@@ -223,8 +223,31 @@ const ChatBubble: React.FC<Props> = (props) => {
     if (!props.onReply) return null;
 
     return (
-      <TouchableOpacity onPress={handleReply} style={{ marginRight: 10 }}>
-        <Div p={4} justifyContent="center" alignItems="center">
+      <TouchableOpacity
+        onPress={handleReply}
+        style={{
+          padding: 10, // Increase tap area
+          marginHorizontal: 5,
+          justifyContent: "center",
+          alignItems: "center",
+          position: "absolute",
+          right: position === "left" ? -55 : undefined, // Increased spacing from bubble
+          left: position === "right" ? -55 : undefined, // Increased spacing from bubble
+          top: "50%",
+          transform: [{ translateY: -12 }], // Adjusted for better centering
+          height: 36, // Fixed height for better touch target
+          width: 36, // Fixed width for better touch target
+        }}
+      >
+        <Div
+          bg={position === "left" ? "#F4F6F8" : "#333"}
+          p={8}
+          rounded="circle"
+          w={36}
+          h={36}
+          justifyContent="center"
+          alignItems="center"
+        >
           <IconArrowBackUp
             size={18}
             color={position === "left" ? "#666" : "#BBB"}
@@ -353,7 +376,6 @@ const ChatBubble: React.FC<Props> = (props) => {
             {renderRepliedMessage()}
             {renderAttachment(props.currentMessage?.text || "")}
             <Div row justifyContent="flex-end">
-              {renderReplyButton()}
               <Time
                 {...props}
                 timeTextStyle={{ right: { fontSize: 10, color: "#666" } }}
@@ -378,7 +400,6 @@ const ChatBubble: React.FC<Props> = (props) => {
             {renderRepliedMessage()}
             {renderAudioPlayer()}
             <Div row justifyContent="flex-end">
-              {renderReplyButton()}
               <Time
                 {...props}
                 timeTextStyle={{
@@ -387,6 +408,7 @@ const ChatBubble: React.FC<Props> = (props) => {
                 }}
               />
             </Div>
+            {renderReplyButton()}
           </Div>
         )}
       />
@@ -412,7 +434,6 @@ const ChatBubble: React.FC<Props> = (props) => {
             }}
           />
           <Div row justifyContent="flex-end" alignItems="flex-end">
-            {renderReplyButton()}
             <Time
               {...props}
               timeTextStyle={{
@@ -427,6 +448,7 @@ const ChatBubble: React.FC<Props> = (props) => {
               }}
             />
           </Div>
+          {renderReplyButton()}
         </Div>
       )}
     />

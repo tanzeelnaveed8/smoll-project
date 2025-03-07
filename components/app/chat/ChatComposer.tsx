@@ -300,7 +300,13 @@ const ChatComposer: React.FC<Props> = (props) => {
             {getMessagePreview()}
           </Text>
         </Div>
-        <TouchableOpacity onPress={handleCancelReply}>
+        <TouchableOpacity
+          onPress={handleCancelReply}
+          style={{
+            padding: 10, // Increase tap area
+            margin: -10, // Offset padding to maintain visual position
+          }}
+        >
           <IconX size={16} color="#999" />
         </TouchableOpacity>
       </Div>

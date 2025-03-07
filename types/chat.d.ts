@@ -11,5 +11,15 @@ declare module "react-native-gifted-chat" {
       audio?: string;
       video?: string;
     };
+    repliedInfo?: {
+      messageID: string;
+      timestamp: number;
+      senderUserID: string;
+      messageInfo: {
+        message: string;
+        type: number;
+      };
+    };
+    extendedData?: string;
   }
 }
