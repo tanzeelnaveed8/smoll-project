@@ -8,9 +8,14 @@ import {
   useRoute,
 } from "@react-navigation/native";
 import { activateKeepAwakeAsync, deactivateKeepAwake } from "expo-keep-awake";
-import { useEffect, useMemo, useState } from "react";
-import { ActivityIndicator, Platform } from "react-native";
-import { Avatar, GiftedChat, IMessage } from "react-native-gifted-chat";
+import { useEffect, useMemo, useState, useRef } from "react";
+import { ActivityIndicator, Platform, TouchableOpacity } from "react-native";
+import {
+  Avatar,
+  GiftedChat,
+  GiftedChatProps,
+  IMessage,
+} from "react-native-gifted-chat";
 import { Div, Image, Text } from "react-native-magnus";
 import {
   ZIMAudioMessage,
@@ -50,8 +55,11 @@ const Chat: React.FC<Props> = (props) => {
   const [lastMessageTimestamp, setLastMessageTimestamp] = useState<
     number | null
   >(null);
+  const [showNewMessageChip, setShowNewMessageChip] = useState(false);
+  const isAtBottomRef = useRef(true);
 
   const isFocused = useIsFocused();
+  const listViewRef = useRef<GiftedChatProps<IMessage>["listViewProps"]>(null);
 
   useEffect(() => {
     fetchMessages();
@@ -95,17 +103,17 @@ const Chat: React.FC<Props> = (props) => {
                 : undefined,
             avatar: undefined,
           },
+          audio:
+            msg.repliedInfo.messageInfo.type === ZIMMessageType.Audio
+              ? msg.repliedInfo.messageInfo.fileDownloadUrl
+              : undefined,
           image:
             msg.repliedInfo.messageInfo.type === ZIMMessageType.Image
-              ? (msg as ZIMImageMessage).fileDownloadUrl
+              ? msg.repliedInfo.messageInfo.fileDownloadUrl
               : undefined,
           video:
             msg.repliedInfo.messageInfo.type === ZIMMessageType.Video
-              ? (msg as ZIMVideoMessage).fileDownloadUrl
-              : undefined,
-          audio:
-            msg.repliedInfo.messageInfo.type === ZIMMessageType.Audio
-              ? (msg as ZIMAudioMessage).fileDownloadUrl
+              ? msg.repliedInfo.messageInfo.fileDownloadUrl
               : undefined,
         };
       } else if (msg.extendedData) {
@@ -176,7 +184,7 @@ const Chat: React.FC<Props> = (props) => {
 
   useEffect(() => {
     const eventHandler: Partial<ZIMEventHandler> = {
-      receivePeerMessage: (zim, { messageList, fromConversationID }) => {
+      receivePeerMessage: async (zim, { messageList, fromConversationID }) => {
         const transformedMessages = transformMessages(messageList);
 
         setMessages((prevMessages) => [
@@ -185,6 +193,13 @@ const Chat: React.FC<Props> = (props) => {
         ]);
 
         play("messageReceived");
+
+        if (isAtBottomRef.current) {
+          await new Promise((resolve) => setTimeout(resolve, 400));
+          scrollToBottom();
+        } else {
+          setShowNewMessageChip(true);
+        }
       },
     };
 
@@ -221,8 +236,6 @@ const Chat: React.FC<Props> = (props) => {
         config
       );
 
-      console.log("messageList", JSON.stringify(messageList, null, 2));
-
       if (messageList.length === 0) {
         setHasMoreMessages(false);
       } else {
@@ -250,6 +263,27 @@ const Chat: React.FC<Props> = (props) => {
   const handleLoadEarlier = async () => {
     if (isLoadingEarlier || !hasMoreMessages) return;
     await fetchMessages(true);
+  };
+
+  const handleScroll = (event: any) => {
+    const { contentOffset } = event.nativeEvent;
+    const isCloseToBottom = contentOffset.y <= 20;
+
+    isAtBottomRef.current = isCloseToBottom;
+    if (isCloseToBottom) {
+      setShowNewMessageChip(false);
+    }
+  };
+
+  const scrollToBottom = () => {
+    if (listViewRef.current) {
+      // @ts-ignore
+      listViewRef.current.scrollToOffset({
+        offset: 0,
+        animated: true,
+      });
+      setShowNewMessageChip(false);
+    }
   };
 
   const handleSend = async (newMessages: IMessage[] = []) => {
@@ -300,6 +334,9 @@ const Chat: React.FC<Props> = (props) => {
 
       // Clear reply state after sending
       setReplyingTo(null);
+
+      // Auto scroll to bottom if user is already at bottom
+      scrollToBottom();
     } finally {
       setIsSending(false);
     }
@@ -393,38 +430,81 @@ const Chat: React.FC<Props> = (props) => {
   };
 
   return (
-    <GiftedChat
-      messages={messages.sort((a, b) => +b.createdAt - +a.createdAt)}
-      onSend={(messages) => handleSend(messages)}
-      onLoadEarlier={handleLoadEarlier}
-      isLoadingEarlier={isLoadingEarlier}
-      loadEarlier={hasMoreMessages}
-      isTyping={isTyping}
-      user={{
-        _id: user!.id,
-      }}
-      showAvatarForEveryMessage={false}
-      showUserAvatar={false}
-      renderBubble={(props) => (
-        <ChatBubble {...props} onReply={(message) => handleReply(message)} />
+    <Div flex={1}>
+      <GiftedChat
+        messages={messages.sort((a, b) => +b.createdAt - +a.createdAt)}
+        onSend={(messages) => handleSend(messages)}
+        onLoadEarlier={handleLoadEarlier}
+        isLoadingEarlier={isLoadingEarlier}
+        loadEarlier={hasMoreMessages}
+        isTyping={isTyping}
+        user={{
+          _id: user!.id,
+        }}
+        showAvatarForEveryMessage={false}
+        showUserAvatar={false}
+        renderBubble={(props) => (
+          <ChatBubble {...props} onReply={(message) => handleReply(message)} />
+        )}
+        renderAvatar={(props) =>
+          showAvatar(props.currentMessage) ? <Avatar {...props} /> : null
+        }
+        renderMessageImage={(props) => null}
+        listViewProps={{
+          showsVerticalScrollIndicator: false,
+          ref: listViewRef,
+          onScroll: handleScroll,
+          scrollEventThrottle: 400,
+          onLayout: () => {
+            if (listViewRef.current) {
+              // @ts-ignore
+              listViewRef.current.scrollToOffset({ offset: 0, animated: true });
+            }
+          },
+          maintainVisibleContentPosition: {
+            minIndexForVisible: 0,
+          },
+        }}
+        renderInputToolbar={(props) => (
+          <ChatComposer
+            {...props}
+            isSending={isSending}
+            channelUrl={channelUrl || ""}
+            replyingTo={replyingTo}
+            onCancelReply={cancelReply}
+            expertName={chatWithName}
+          />
+        )}
+        renderChatFooter={() => <Div h={24}></Div>}
+        renderChatEmpty={ChatEmptyView}
+      />
+      {showNewMessageChip && (
+        <TouchableOpacity
+          onPress={scrollToBottom}
+          style={{
+            position: "absolute",
+            bottom: 80,
+            right: 20,
+            backgroundColor: colorPrimary,
+            paddingHorizontal: 16,
+            paddingVertical: 8,
+            borderRadius: 20,
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 0,
+              height: 2,
+            },
+            shadowOpacity: 0.25,
+            shadowRadius: 3.84,
+            elevation: 5,
+          }}
+        >
+          <Text color="white" fontSize="sm" fontWeight="bold">
+            New Message
+          </Text>
+        </TouchableOpacity>
       )}
-      renderAvatar={(props) =>
-        showAvatar(props.currentMessage) ? <Avatar {...props} /> : null
-      }
-      listViewProps={{ showsVerticalScrollIndicator: false }}
-      renderInputToolbar={(props) => (
-        <ChatComposer
-          {...props}
-          isSending={isSending}
-          channelUrl={channelUrl || ""}
-          replyingTo={replyingTo}
-          onCancelReply={cancelReply}
-          expertName={chatWithName}
-        />
-      )}
-      renderChatFooter={() => <Div h={24}></Div>}
-      renderChatEmpty={ChatEmptyView}
-    />
+    </Div>
   );
 };
 

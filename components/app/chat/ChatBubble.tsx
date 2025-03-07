@@ -18,6 +18,7 @@ import {
   TouchableOpacity,
   ViewStyle,
 } from "react-native";
+import { MessageImage } from "react-native-gifted-chat";
 import {
   Bubble,
   BubbleProps,
@@ -101,14 +102,6 @@ const ChatBubble: React.FC<Props> = (props) => {
         }
       : undefined;
   }, [sound]);
-
-  if (props.currentMessage?.audio) {
-    console.log(
-      "isAudioMessage",
-      isAudioMessage,
-      JSON.stringify(props.currentMessage, null, 2)
-    );
-  }
 
   useEffect(() => {
     if (!props.currentMessage?.audio) return;
@@ -218,7 +211,7 @@ const ChatBubble: React.FC<Props> = (props) => {
     }
   };
 
-  const renderReplyButton = () => {
+  const renderReplyButton = (options?: { style?: StyleProp<ViewStyle> }) => {
     if (!props.onReply) return null;
 
     return (
@@ -230,12 +223,14 @@ const ChatBubble: React.FC<Props> = (props) => {
           justifyContent: "center",
           alignItems: "center",
           position: "absolute",
-          right: position === "left" ? -55 : undefined, // Increased spacing from bubble
-          left: position === "right" ? -55 : undefined, // Increased spacing from bubble
+          right: position === "left" ? -65 : undefined, // Increased spacing from bubble
+          left: position === "right" ? -65 : undefined, // Increased spacing from bubble
           top: "50%",
           transform: [{ translateY: -12 }], // Adjusted for better centering
           height: 36, // Fixed height for better touch target
           width: 36, // Fixed width for better touch target
+          // @ts-ignore
+          ...options?.style,
         }}
       >
         <Div
@@ -277,11 +272,13 @@ const ChatBubble: React.FC<Props> = (props) => {
             </Text>
             <Image
               source={{ uri: replyTo.image }}
-              h={40}
-              w={40}
-              ml={8}
-              rounded={4}
-              resizeMode="cover"
+              style={{
+                height: 40,
+                width: 40,
+                marginLeft: 8,
+                borderRadius: 4,
+                resizeMode: "cover"
+              }}
             />
           </Div>
         );
@@ -301,6 +298,14 @@ const ChatBubble: React.FC<Props> = (props) => {
             </Text>
             <Image
               source={{ uri: replyTo.video }}
+              style={{
+                height: 40,
+                width: 40,
+                marginLeft: 8,
+                borderRadius: 4,
+                resizeMode: "cover"
+              }}
+            />
               h={40}
               w={40}
               ml={8}
@@ -360,6 +365,98 @@ const ChatBubble: React.FC<Props> = (props) => {
       </Div>
     );
   };
+
+  if (props.currentMessage?.text?.startsWith("[ATTACHMENT]")) {
+    return (
+      <Bubble
+        {...props}
+        wrapperStyle={{
+          left: { backgroundColor: "transparent" },
+          right: { backgroundColor: "transparent" },
+        }}
+        renderMessageText={() => (
+          <Div>
+            {renderRepliedMessage()}
+            {renderAttachment(props.currentMessage?.text || "")}
+            <Div row justifyContent="flex-end">
+              <Time
+                {...props}
+                timeTextStyle={{ right: { fontSize: 10, color: "#666" } }}
+              />
+            </Div>
+            {renderReplyButton()}
+          </Div>
+        )}
+      />
+    );
+  }
+
+  if (props.currentMessage?.image) {
+    return (
+      <Div>
+        {renderRepliedMessage()}
+        <Div position="relative">
+          <MessageImage
+            {...props}
+            imageStyle={{
+              height: 160,
+              width: 160,
+              borderRadius: 8,
+            }}
+          />
+          {renderReplyButton()}
+        </Div>
+        <Div row justifyContent="flex-end">
+          <Time
+            {...props}
+            timeTextStyle={{
+              right: { fontSize: 10, color: "#666" },
+              left: { fontSize: 10, color: "#666" },
+            }}
+          />
+        </Div>
+      </Div>
+    );
+  }
+
+  if (props.currentMessage?.video) {
+    return (
+      <Bubble
+        {...props}
+        wrapperStyle={{
+          left: { backgroundColor: "transparent" },
+          right: { backgroundColor: "transparent" },
+        }}
+        renderMessageText={() => (
+          <Div>
+            {renderRepliedMessage()}
+            <Div position="relative">
+              <Image
+                source={{ uri: props.currentMessage?.video }}
+                style={{
+                  height: 200,
+                  width: 200,
+                  marginLeft: 8,
+                  borderRadius: 8,
+                }}
+                resizeMode="cover"
+              />
+              {renderReplyButton()}
+            </Div>
+            <Div row justifyContent="flex-end">
+              <Time
+                {...props}
+                timeTextStyle={{
+                  right: { fontSize: 10, color: "#666" },
+                  left: { fontSize: 10, color: "#666" },
+                }}
+              />
+            </Div>
+          </Div>
+        )}
+      />
+    );
+  }
 
   const renderAudioPlayer = () => {
     const formatDuration = (milliseconds: number | null) => {
@@ -430,113 +527,12 @@ const ChatBubble: React.FC<Props> = (props) => {
               {formatDuration(isPlaying ? currentTime : duration)}
             </Text>
           </Div>
+
+          {renderReplyButton()}
         </Div>
       </TouchableOpacity>
     );
   };
-
-  if (props.currentMessage?.text?.startsWith("[ATTACHMENT]")) {
-    return (
-      <Bubble
-        {...props}
-        wrapperStyle={{
-          left: { backgroundColor: "transparent" },
-          right: { backgroundColor: "transparent" },
-        }}
-        renderMessageText={() => (
-          <Div>
-            {renderRepliedMessage()}
-            {renderAttachment(props.currentMessage?.text || "")}
-            <Div row justifyContent="flex-end">
-              <Time
-                {...props}
-                timeTextStyle={{ right: { fontSize: 10, color: "#666" } }}
-              />
-            </Div>
-            {renderReplyButton()}
-          </Div>
-        )}
-      />
-    );
-  }
-
-  if (props.currentMessage?.image) {
-    return (
-      <Bubble
-        {...props}
-        wrapperStyle={{
-          left: { backgroundColor: "transparent" },
-          right: { backgroundColor: "transparent" },
-        }}
-        renderMessageText={() => (
-          <Div>
-            {renderRepliedMessage()}
-            <Div position="relative">
-              <Image
-                source={{ uri: props.currentMessage?.image }}
-                style={{
-                  height: 200,
-                  width: 200,
-                  marginLeft: 8,
-                  borderRadius: 8,
-                }}
-                resizeMode="cover"
-              />
-              {renderReplyButton()}
-            </Div>
-            <Div row justifyContent="flex-end">
-              <Time
-                {...props}
-                timeTextStyle={{
-                  right: { fontSize: 10, color: "#666" },
-                  left: { fontSize: 10, color: "#666" },
-                }}
-              />
-            </Div>
-          </Div>
-        )}
-      />
-    );
-  }
-
-  if (props.currentMessage?.video) {
-    return (
-      <Bubble
-        {...props}
-        wrapperStyle={{
-          left: { backgroundColor: "transparent" },
-          right: { backgroundColor: "transparent" },
-        }}
-        renderMessageText={() => (
-          <Div>
-            {renderRepliedMessage()}
-            <Div position="relative">
-              <Image
-                source={{ uri: props.currentMessage?.video }}
-                style={{
-                  height: 200,
-                  width: 200,
-                  marginLeft: 8,
-                  borderRadius: 8,
-                }}
-                resizeMode="cover"
-              />
-              {renderReplyButton()}
-            </Div>
-            <Div row justifyContent="flex-end">
-              <Time
-                {...props}
-                timeTextStyle={{
-                  right: { fontSize: 10, color: "#666" },
-                  left: { fontSize: 10, color: "#666" },
-                }}
-              />
-            </Div>
-          </Div>
-        )}
-      />
-    );
-  }
 
   return (
     <Bubble
