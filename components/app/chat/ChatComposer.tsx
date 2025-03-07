@@ -1,5 +1,9 @@
 import IconButton from "@/components/partials/IconButton";
-import { colorErrorText, colorTextPrimary } from "@/constant/constant";
+import {
+  colorErrorText,
+  colorPrimary,
+  colorTextPrimary,
+} from "@/constant/constant";
 import { sendTypingStatus } from "@/utils/chat.v2";
 import {
   IconPaperclip,
@@ -7,10 +11,11 @@ import {
   IconMicrophone,
   IconPlayerPause,
   IconTrash,
+  IconX,
 } from "@tabler/icons-react-native";
 import * as ImagePicker from "expo-image-picker";
-import { useRef, useState } from "react";
-import { ActivityIndicator, Platform } from "react-native";
+import React, { useRef, useState } from "react";
+import { ActivityIndicator, Platform, TouchableOpacity } from "react-native";
 import { showMessage } from "react-native-flash-message";
 import {
   IMessage,
@@ -22,14 +27,19 @@ import { Div, Input, Text } from "react-native-magnus";
 import { Audio } from "expo-av";
 import { useSound } from "@/functions/useSound";
 import { check, request, PERMISSIONS, RESULTS } from "react-native-permissions";
+import { useUserStore } from "@/store/modules/user";
 
 interface Props extends InputToolbarProps<IMessage> {
   isSending: boolean;
   channelUrl: string;
+  replyingTo?: IMessage | null;
+  onCancelReply?: () => void;
+  expertName?: string;
 }
 
 const ChatComposer: React.FC<Props> = (props) => {
   const { play } = useSound();
+  const { user } = useUserStore();
 
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [text, setText] = useState("");
@@ -246,177 +256,223 @@ const ChatComposer: React.FC<Props> = (props) => {
     return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
   };
 
+  const handleCancelReply = () => {
+    if (props.onCancelReply) {
+      props.onCancelReply();
+    }
+  };
+
+  const renderReplyPreview = () => {
+    if (!props.replyingTo) return null;
+
+    const replyingTo = props.replyingTo;
+    const isMyMessage = replyingTo.user._id === user?.id;
+    const replyingToName = isMyMessage
+      ? "Yourself"
+      : props.expertName || "User";
+
+    const getMessagePreview = () => {
+      if (replyingTo.text) return replyingTo.text;
+      if (replyingTo.image) return "[Image]";
+      if (replyingTo.audio) return "[Audio]";
+      if (replyingTo.video) return "[Video]";
+      return "[File]";
+    };
+
+    return (
+      <Div
+        bg="#F4F6F8"
+        borderLeftWidth={3}
+        borderLeftColor={colorPrimary}
+        px={10}
+        py={8}
+        mb={4}
+        rounded={4}
+        flexDir="row"
+        justifyContent="space-between"
+        alignItems="center"
+      >
+        <Div flex={1}>
+          <Text color={colorPrimary} fontSize={12} fontWeight="bold">
+            Replying to {replyingToName}
+          </Text>
+          <Text color="#666" fontSize={12} numberOfLines={1}>
+            {getMessagePreview()}
+          </Text>
+        </Div>
+        <TouchableOpacity
+          onPress={handleCancelReply}
+          style={{
+            padding: 10, // Increase tap area
+            margin: -10, // Offset padding to maintain visual position
+          }}
+        >
+          <IconX size={16} color="#999" />
+        </TouchableOpacity>
+      </Div>
+    );
+  };
+
   return (
     <>
-      <InputToolbar
-        {...props}
-        containerStyle={{ borderTopWidth: 0 }}
-        renderComposer={(composerProps) => {
-          return (
-            <Div flex={1}>
-              {isRecording ? (
-                <Div
-                  bg="#EFEFEF"
-                  h={56}
-                  row
-                  alignItems="center"
-                  px={16}
-                  style={{
-                    borderRadius: 8,
-                    borderTopRightRadius: 0,
-                    borderBottomRightRadius: 0,
-                  }}
-                >
-                  <Div>
-                    <IconButton
-                      bg={colorErrorText}
-                      h={40}
-                      w={40}
-                      rounded={100}
-                      mr={16}
-                      disableUnderlayColor={true}
-                      onPress={cancelRecording}
-                    >
-                      <IconTrash color="#fff" />
-                    </IconButton>
-                  </Div>
-
-                  <Text fontSize="lg" fontWeight="600" color={colorTextPrimary}>
-                    Recording... {formatDuration(recordingDuration)}
-                  </Text>
-                </Div>
+      {isRecording ? (
+        <Div
+          bg="#fff"
+          pt={16}
+          pb={24}
+          px={16}
+          borderTopWidth={1}
+          borderTopColor="#eaeaea"
+        >
+          <Div row alignItems="center" justifyContent="space-between" mb={10}>
+            <Text fontSize={16} fontWeight="500">
+              Recording...{" "}
+              <Text color={colorErrorText} fontSize={16}>
+                {formatDuration(recordingDuration)}
+              </Text>
+            </Text>
+            <Div row alignItems="center">
+              {isPaused ? (
+                <TouchableOpacity onPress={continueRecording}>
+                  <IconMicrophone size={24} style={{ marginRight: 16 }} />
+                </TouchableOpacity>
               ) : (
+                <TouchableOpacity onPress={pauseRecording}>
+                  <IconPlayerPause size={24} style={{ marginRight: 16 }} />
+                </TouchableOpacity>
+              )}
+              <TouchableOpacity onPress={cancelRecording}>
+                <IconTrash color={colorErrorText} size={24} />
+              </TouchableOpacity>
+            </Div>
+          </Div>
+          <Div row mt={16}>
+            <TouchableOpacity
+              onPress={() => cancelRecording()}
+              style={{ flex: 1, marginRight: 10 }}
+            >
+              <Div
+                bg="#f3f3f3"
+                py={12}
+                px={15}
+                rounded="lg"
+                alignItems="center"
+              >
+                <Text color="#666">Cancel</Text>
+              </Div>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => handleOnSend(undefined, true)}
+              style={{ flex: 1 }}
+            >
+              <Div
+                bg={colorPrimary}
+                py={12}
+                px={15}
+                rounded="lg"
+                alignItems="center"
+              >
+                <Text color="#fff">Send</Text>
+              </Div>
+            </TouchableOpacity>
+          </Div>
+        </Div>
+      ) : (
+        <InputToolbar
+          {...props}
+          containerStyle={{
+            backgroundColor: "#fff",
+            paddingTop: 8,
+            paddingBottom: Platform.OS === "ios" ? 24 : 8,
+            paddingHorizontal: 16,
+            borderTopWidth: 1,
+            borderTopColor: "#eaeaea",
+          }}
+          renderComposer={() => (
+            <Div style={{ flex: 1 }}>
+              {renderReplyPreview()}
+              <Div flexDir="row" alignItems="center">
                 <Input
+                  placeholder="Type a message..."
+                  flex={1}
+                  bg="#f3f3f3"
+                  rounded="circle"
+                  borderWidth={0}
+                  py={8}
+                  px={16}
+                  fontSize={16}
+                  color={colorTextPrimary}
+                  placeholderTextColor="#999"
                   value={text}
-                  bg="#EFEFEF"
-                  placeholder="Type a Message..."
-                  placeholderTextColor="#7B7B7B"
-                  borderColor="transparent"
-                  onChangeText={(e) => {
-                    setText(e);
+                  onChangeText={(value) => {
+                    setText(value);
                     handleTyping();
-                    if (composerProps.onTextChanged) {
-                      composerProps.onTextChanged(e);
-                    }
-                  }}
-                  h={56}
-                  fontSize="lg"
-                  fontWeight="600"
-                  style={{
-                    borderRadius: 8,
-                    borderTopRightRadius: 0,
-                    borderBottomRightRadius: 0,
                   }}
                 />
-              )}
-            </Div>
-          );
-        }}
-        renderSend={() => {
-          return (
-            <Div
-              alignItems="center"
-              justifyContent="center"
-              bg="#EFEFEF"
-              h={56}
-              style={{
-                borderTopRightRadius: 8,
-                borderBottomRightRadius: 8,
-                paddingRight: 16,
-              }}
-            >
-              <Div row>
-                {!isRecording && (
-                  <IconButton
-                    bg="#EFEFEF"
-                    h={40}
-                    w={40}
-                    rounded={100}
-                    disableUnderlayColor={true}
+                <Div row alignItems="center" ml={8}>
+                  <TouchableOpacity
                     onPress={pickImage}
+                    style={{ marginRight: 6 }}
                   >
-                    <IconPaperclip color={colorTextPrimary} />
-                  </IconButton>
-                )}
-
-                {isRecording || isPaused ? (
-                  <Div row alignItems="center">
-                    <IconButton
-                      bg="#333"
-                      h={40}
-                      w={40}
-                      rounded={100}
-                      disableUnderlayColor={true}
-                      onPress={isPaused ? continueRecording : pauseRecording}
+                    <Div
+                      h={38}
+                      w={38}
+                      rounded="circle"
+                      justifyContent="center"
+                      alignItems="center"
+                      bg="#f3f3f3"
                     >
-                      {isPaused ? (
-                        <IconMicrophone color="#fff" />
-                      ) : (
-                        <IconPlayerPause color="#fff" />
-                      )}
-                    </IconButton>
-
-                    <IconButton
-                      bg="#427594"
-                      h={40}
-                      w={40}
-                      rounded={100}
-                      ml={8}
-                      disabled={props.isSending}
-                      disableUnderlayColor={true}
-                      onPress={async () => {
-                        handleOnSend(undefined, true);
-                      }}
-                    >
-                      {props.isSending ? (
-                        <ActivityIndicator size="small" color={"#fff"} />
-                      ) : (
-                        <IconSend
-                          style={{
-                            transform: [{ rotate: "45deg" }],
-                            left: -1.5,
-                          }}
-                          color="#fff"
-                        />
-                      )}
-                    </IconButton>
-                  </Div>
-                ) : (
-                  <IconButton
-                    bg="#427594"
-                    h={40}
-                    w={40}
-                    rounded={100}
-                    disabled={props.isSending}
-                    disableUnderlayColor={true}
-                    onPress={() => {
-                      if (text.trim().length > 0) {
-                        handleOnSend();
-                      } else {
-                        startRecording();
-                      }
-                    }}
-                  >
-                    {props.isSending ? (
-                      <ActivityIndicator size="small" color={"#fff"} />
-                    ) : text.trim().length > 0 || audioUri ? (
-                      <IconSend
-                        style={{
-                          transform: [{ rotate: "45deg" }],
-                          left: -1.5,
-                        }}
-                        color="#fff"
+                      <IconPaperclip
+                        color={colorTextPrimary}
+                        strokeWidth={1.5}
+                        size={22}
                       />
-                    ) : (
-                      <IconMicrophone color="#fff" />
-                    )}
-                  </IconButton>
-                )}
+                    </Div>
+                  </TouchableOpacity>
+                  {text.length > 0 ? (
+                    <TouchableOpacity
+                      onPress={() => handleOnSend()}
+                      disabled={props.isSending}
+                    >
+                      <Div
+                        h={38}
+                        w={38}
+                        rounded="circle"
+                        justifyContent="center"
+                        alignItems="center"
+                        bg={colorPrimary}
+                      >
+                        {props.isSending ? (
+                          <ActivityIndicator color="#fff" size="small" />
+                        ) : (
+                          <IconSend color="#fff" strokeWidth={1.5} size={18} />
+                        )}
+                      </Div>
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity onPress={startRecording}>
+                      <Div
+                        h={38}
+                        w={38}
+                        rounded="circle"
+                        justifyContent="center"
+                        alignItems="center"
+                        bg={colorPrimary}
+                      >
+                        <IconMicrophone
+                          color="#fff"
+                          strokeWidth={1.5}
+                          size={18}
+                        />
+                      </Div>
+                    </TouchableOpacity>
+                  )}
+                </Div>
               </Div>
             </Div>
-          );
-        }}
-      />
+          )}
+        />
+      )}
     </>
   );
 };

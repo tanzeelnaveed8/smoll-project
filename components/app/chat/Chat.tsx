@@ -39,6 +39,7 @@ const Chat: React.FC<Props> = (props) => {
   const { user } = useUserStore();
 
   const [messages, setMessages] = useState<IMessage[]>(props.initialMessages);
+  const [replyingTo, setReplyingTo] = useState<IMessage | null>(null);
 
   const [isLoadingEarlier, setIsLoadingEarlier] = useState(false);
   const [loading, setIsLoading] = useState(true);
@@ -76,6 +77,44 @@ const Chat: React.FC<Props> = (props) => {
           avatar: undefined,
         },
       };
+
+      // Parse reply metadata from repliedInfo if present
+      if (msg.repliedInfo) {
+        obj.replyTo = {
+          _id: msg.repliedInfo.messageID,
+          text: (msg.repliedInfo.messageInfo as unknown as { message: string })
+            .message,
+          user: {
+            _id: msg.repliedInfo.senderUserID,
+            name: undefined,
+            avatar: undefined,
+          },
+        };
+      }
+
+      // Parse reply metadata from extendedData if present
+      if (msg.extendedData) {
+        try {
+          const extendedData = JSON.parse(msg.extendedData);
+          if (extendedData.repliedInfo) {
+            obj.replyTo = {
+              _id: extendedData.repliedInfo.messageID,
+              text: extendedData.repliedInfo.messageInfo.message,
+              user: {
+                _id: extendedData.repliedInfo.senderUserID,
+                name: undefined,
+                avatar: undefined,
+              },
+            };
+          }
+          // For backward compatibility
+          if (extendedData.replyTo) {
+            obj.replyTo = extendedData.replyTo;
+          }
+        } catch (e) {
+          console.error("Error parsing extendedData:", e);
+        }
+      }
 
       switch (msg.type) {
         case ZIMMessageType.Text:
@@ -152,6 +191,8 @@ const Chat: React.FC<Props> = (props) => {
         config
       );
 
+      console.log("messageList", JSON.stringify(messageList, null, 2));
+
       if (messageList.length === 0) {
         setHasMoreMessages(false);
       } else {
@@ -187,17 +228,41 @@ const Chat: React.FC<Props> = (props) => {
         setIsSending(true);
       }
 
+      // Add reply metadata using repliedInfo
+      if (replyingTo) {
+        newMessages[0].repliedInfo = {
+          messageID: replyingTo._id.toString(),
+          timestamp: new Date(replyingTo.createdAt).getTime(),
+          senderUserID: replyingTo.user._id.toString(),
+          messageInfo: {
+            message: replyingTo.text || "",
+            type: ZIMMessageType.Text,
+          },
+        };
+      }
+
       const response = await sendMessage(props.recipientId, newMessages);
 
       if (!response) return;
 
       const transformedMessages = transformMessages(response);
       setMessages((prevMessages) => [...transformedMessages, ...prevMessages]);
+
+      // Clear reply state after sending
+      setReplyingTo(null);
     } finally {
       setIsSending(false);
     }
 
     return;
+  };
+
+  const handleReply = (message: IMessage) => {
+    setReplyingTo(message);
+  };
+
+  const cancelReply = () => {
+    setReplyingTo(null);
   };
 
   if (loading) {
@@ -230,6 +295,8 @@ const Chat: React.FC<Props> = (props) => {
 
     return {};
   };
+
+  const chatWithName = props.chatWithName;
 
   const ChatEmptyView = () => {
     return (
@@ -288,7 +355,9 @@ const Chat: React.FC<Props> = (props) => {
       }}
       showAvatarForEveryMessage={false}
       showUserAvatar={false}
-      renderBubble={(props) => <ChatBubble {...props} />}
+      renderBubble={(props) => (
+        <ChatBubble {...props} onReply={(message) => handleReply(message)} />
+      )}
       renderAvatar={(props) =>
         showAvatar(props.currentMessage) ? <Avatar {...props} /> : null
       }
@@ -298,6 +367,9 @@ const Chat: React.FC<Props> = (props) => {
           {...props}
           isSending={isSending}
           channelUrl={channelUrl || ""}
+          replyingTo={replyingTo}
+          onCancelReply={cancelReply}
+          expertName={chatWithName}
         />
       )}
       renderChatFooter={() => <Div h={24}></Div>}

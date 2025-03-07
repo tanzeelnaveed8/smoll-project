@@ -96,16 +96,18 @@ const sendMessage = async (toUserId: string, messages: IMessage[]) => {
 
   const messagePromises = messages.map(async (message) => {
     if (message.image) {
-      const mediaMessage: ZIMMediaMessageBase = {
+      const mediaMessage = {
         type: ZIMMessageType.Image,
         fileLocalPath: message.image.replace("file://", ""),
-      };
+        repliedInfo: message.repliedInfo,
+      } as ZIMMediaMessageBase;
       return sendMediaMessage(zim, mediaMessage, toUserId);
     } else if (message.video) {
-      const mediaMessage: ZIMMediaMessageBase = {
+      const mediaMessage = {
         type: ZIMMessageType.Video,
         fileLocalPath: message.video.replace("file://", ""),
-      };
+        repliedInfo: message.repliedInfo,
+      } as ZIMMediaMessageBase;
       return sendMediaMessage(zim, mediaMessage, toUserId);
     } else if (message.audio) {
       const audioPath = message.audio.replace("file://", "");
@@ -120,18 +122,20 @@ const sendMessage = async (toUserId: string, messages: IMessage[]) => {
       const status = await sound.getStatusAsync();
       const durationMillis = status.isLoaded ? status.durationMillis : 0;
 
-      const mediaMessage: ZIMMediaMessageBase = {
+      const mediaMessage = {
         type: ZIMMessageType.Audio,
         fileLocalPath: audioPath,
         audioDuration: durationMillis ? Math.round(durationMillis / 1000) : 0, // Convert to seconds
-      };
+        repliedInfo: message.repliedInfo,
+      } as ZIMMediaMessageBase;
 
       return sendMediaMessage(zim, mediaMessage, toUserId);
     } else if (message.text) {
-      const textMessage: ZIMMessageBase = {
+      const textMessage = {
         type: ZIMMessageType.Text,
         message: message.text,
-      };
+        repliedInfo: message.repliedInfo,
+      } as ZIMMessageBase;
       return sendTextMessage(zim, textMessage, toUserId);
     }
   });
@@ -173,7 +177,6 @@ const sendTextMessage = async (
       config
     );
 
-    console.log("Text message sent successfully:", result.message);
     return result.message;
   } catch (error) {
     console.error("Error sending text message:", error);
