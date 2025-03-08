@@ -12,17 +12,19 @@ const AddButton: React.FC<{ text: string; onPress?: () => void }> = ({
       fontSize={"lg"}
       fontFamily={fontHauoraSemiBold}
       color="primary"
-      flexDir="row"
+      flexDir="column"
       alignItems="center"
+      mx={"auto"}
       style={{ gap: 4 }}
       p={0}
       bg="transparent"
       onPress={onPress}
     >
       <IconSquareRoundedPlus
-        width={24}
-        height={24}
+        width={38}
+        height={38}
         color={"#427594"}
+        strokeWidth={0.9}
         style={{ marginTop: 2 }}
       />
       <Text color="primary" fontSize={"lg"} fontFamily={fontHauoraSemiBold}>

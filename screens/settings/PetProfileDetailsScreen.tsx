@@ -420,7 +420,7 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
               )}
 
               <AddButton
-                text="Add Health History"
+                text="Add New Record"
                 onPress={() => {
                   if (!petDetailsData) return;
 
