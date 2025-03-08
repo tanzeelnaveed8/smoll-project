@@ -38,7 +38,8 @@ const PetProfileMedicalHistoryScreen: React.FC<Props> = (props) => {
   const [open, setOpen] = useState(false);
   const [healthHistoryId, setHealthHistoryId] = useState("");
 
-  console.log("healthHistoryId", healthHistoryId);
+  console.log("petprofileMedical healthHistoryId", healthHistoryId);
+  console.log("petprofileMedical petId", petId);
 
   const healthHistory = petsDetailMap.get(petId)?.healthHistory;
 
