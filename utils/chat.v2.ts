@@ -95,39 +95,19 @@ const sendMessage = async (toUserId: string, messages: IMessage[]) => {
   const sentMessages: ZIMMessage[] = [];
 
   const messagePromises = messages.map(async (message) => {
-    // Prepare extended data for reply functionality
-    let extendedData = {};
-
-    // If this is a reply to another message, include the reply metadata
-    if (message.replyTo) {
-      extendedData = {
-        replyTo: {
-          _id: message.replyTo._id,
-          text: message.replyTo.text || "",
-          user: {
-            _id: message.replyTo.user._id,
-            name: message.replyTo.user.name || "",
-            avatar: message.replyTo.user.avatar || "",
-          },
-        },
-      };
-    }
-
-    const extendedDataString = JSON.stringify(extendedData);
-
     if (message.image) {
-      const mediaMessage: ZIMMediaMessageBase = {
+      const mediaMessage = {
         type: ZIMMessageType.Image,
         fileLocalPath: message.image.replace("file://", ""),
-        extendedData: extendedDataString,
-      };
+        repliedInfo: message.repliedInfo,
+      } as ZIMMediaMessageBase;
       return sendMediaMessage(zim, mediaMessage, toUserId);
     } else if (message.video) {
-      const mediaMessage: ZIMMediaMessageBase = {
+      const mediaMessage = {
         type: ZIMMessageType.Video,
         fileLocalPath: message.video.replace("file://", ""),
-        extendedData: extendedDataString,
-      };
+        repliedInfo: message.repliedInfo,
+      } as ZIMMediaMessageBase;
       return sendMediaMessage(zim, mediaMessage, toUserId);
     } else if (message.audio) {
       const audioPath = message.audio.replace("file://", "");
@@ -142,20 +122,20 @@ const sendMessage = async (toUserId: string, messages: IMessage[]) => {
       const status = await sound.getStatusAsync();
       const durationMillis = status.isLoaded ? status.durationMillis : 0;
 
-      const mediaMessage: ZIMMediaMessageBase = {
+      const mediaMessage = {
         type: ZIMMessageType.Audio,
         fileLocalPath: audioPath,
         audioDuration: durationMillis ? Math.round(durationMillis / 1000) : 0, // Convert to seconds
-        extendedData: extendedDataString,
-      };
+        repliedInfo: message.repliedInfo,
+      } as ZIMMediaMessageBase;
 
       return sendMediaMessage(zim, mediaMessage, toUserId);
     } else if (message.text) {
-      const textMessage: ZIMMessageBase = {
+      const textMessage = {
         type: ZIMMessageType.Text,
         message: message.text,
-        extendedData: extendedDataString,
-      };
+        repliedInfo: message.repliedInfo,
+      } as ZIMMessageBase;
       return sendTextMessage(zim, textMessage, toUserId);
     }
   });
@@ -197,7 +177,6 @@ const sendTextMessage = async (
       config
     );
 
-    console.log("Text message sent successfully:", result.message);
     return result.message;
   } catch (error) {
     console.error("Error sending text message:", error);
