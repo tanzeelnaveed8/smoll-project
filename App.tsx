@@ -122,11 +122,11 @@ const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 const BASE_FONT_SCALE =
   SCREEN_WIDTH < 320
-    ? 0.8 // Very small screens (iPhone SE 1st gen)
+    ? 0.72 // Very small screens (iPhone SE 1st gen)
     : SCREEN_WIDTH < 350
-    ? 0.85 // Small screens
+    ? 0.75 // Small screens
     : SCREEN_WIDTH < 375
-    ? 0.9 // Medium screens
+    ? 0.85 // Medium screens
     : 1;
 
 // Create a utility function to scale fonts
