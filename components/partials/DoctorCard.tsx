@@ -31,27 +31,45 @@ const DoctorCard: React.FC<PropTypes> = (props) => {
     <Div flexDir={"row"} justifyContent="space-between">
       <Div flexDir="row" alignItems={slotScreen ? "center" : "flex-start"}>
         {isOnline ? (
-          <Badge
-            right={slotScreen ? 24 : 34}
-            top={8}
-            h={8}
-            w={8}
-            borderWidth={2}
-            borderColor="#fff"
-          >
-            {image ? (
-              <Image
-                source={{ uri: image }}
-                w={100}
-                h={100}
-                rounded={100}
-                bg="#eeeeee"
-                mr={slotScreen ? 12 : 24}
-              />
-            ) : (
-              <IconUser size={24} />
-            )}
-          </Badge>
+          <Div mr={slotScreen ? 12 : 24}>
+            <Badge
+              right={slotScreen ? 0 : 10}
+              top={6}
+              h={15}
+              w={15}
+              style={{ backgroundColor: "#00ff28" }}
+              borderWidth={2}
+              borderColor="#fff"
+            >
+              {image ? (
+                <Image
+                  source={{ uri: image }}
+                  w={100}
+                  h={100}
+                  rounded={100}
+                  bg="#eeeeee"
+                />
+              ) : (
+                <IconUser size={24} />
+              )}
+            </Badge>
+            <Div
+              bg="#17d34a"
+              rounded={15}
+              px={10}
+              py={2}
+              alignSelf="center"
+              mt={10}
+            >
+              <Text
+                fontSize={"sm"}
+                color="#fff"
+                fontFamily={fontHauoraSemiBold}
+              >
+                I'm Online!
+              </Text>
+            </Div>
+          </Div>
         ) : image ? (
           <Image
             source={{ uri: image }}
