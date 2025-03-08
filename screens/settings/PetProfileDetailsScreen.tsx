@@ -28,6 +28,7 @@ import { showMessage } from "react-native-flash-message";
 import ConfirmationModal from "@/components/partials/ConfirmationModal";
 import { IconDots } from "@tabler/icons-react-native";
 import Dropdown from "@/components/partials/Dropdown";
+import HealthHistoryModal from "@/components/app/pet/HealthHistoryModal";
 
 const btns = ["Basic Details", "Health History"];
 
@@ -64,6 +65,10 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
   const healthHistoryDataState = petsDetailMap.get(id)?.healthHistory;
 
   const [activeTab, setActiveTab] = useState(btns[0]);
+
+  const [open, setOpen] = useState(false);
+  const [selectedPetId, setSelectedPetId] = useState("");
+  const [healthHistoryId, setHealthHistoryId] = useState("");
 
   useEffect(() => {
     if (!id) return;
@@ -398,14 +403,18 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                       onOpen={() => {
                         if (!petDetailsData) return;
 
-                        navigation.navigate("PetProfileMedicalHistoryScreen", {
-                          navigateTo: "PetProfileDetailsScreen",
-                          petId: id ?? "",
-                          petName: petDetailsData.name,
-                          petBg: petDetailsData.photos[0]?.url,
-                          showBackBtn: "true",
-                          historyId: item.id,
-                        });
+                        setOpen(true);
+                        setSelectedPetId(id || "");
+                        setHealthHistoryId(item.id || "");
+
+                        // navigation.navigate("PetProfileMedicalHistoryScreen", {
+                        //   navigateTo: "PetProfileDetailsScreen",
+                        //   petId: id ?? "",
+                        //   petName: petDetailsData.name,
+                        //   petBg: petDetailsData.photos[0]?.url,
+                        //   showBackBtn: "true",
+                        //   historyId: item.id,
+                        // });
                       }}
                       isLoading={
                         item.id?.toString() === deleteHealthHistoryLoading
@@ -432,6 +441,17 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                     showBackBtn: "true",
                   });
                 }}
+              />
+
+              <HealthHistoryModal
+                open={open}
+                onClose={() => {
+                  setOpen(false);
+                  setSelectedPetId("");
+                  setHealthHistoryId("");
+                }}
+                petId={selectedPetId}
+                healthHistoryId={healthHistoryId}
               />
             </Div>
           )}
