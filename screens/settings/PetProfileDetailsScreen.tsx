@@ -67,7 +67,7 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
   const [activeTab, setActiveTab] = useState(btns[0]);
 
   const [open, setOpen] = useState(false);
-  const [selectedPetId, setSelectedPetId] = useState("");
+  // const [selectedPetId, setSelectedPetId] = useState("");
   const [healthHistoryId, setHealthHistoryId] = useState("");
 
   useEffect(() => {
@@ -404,7 +404,7 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                         if (!petDetailsData) return;
 
                         setOpen(true);
-                        setSelectedPetId(id || "");
+                        // setSelectedPetId(id || "");
                         setHealthHistoryId(item.id || "");
 
                         // navigation.navigate("PetProfileMedicalHistoryScreen", {
@@ -432,14 +432,17 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                 text="Add New Record"
                 onPress={() => {
                   if (!petDetailsData) return;
+                  setOpen(true);
 
-                  navigation.navigate("PetProfileMedicalHistoryScreen", {
-                    navigateTo: "PetProfileDetailsScreen",
-                    petId: id ?? "",
-                    petName: petDetailsData.name,
-                    petBg: petDetailsData.photos[0]?.url,
-                    showBackBtn: "true",
-                  });
+                  // setHealthHistoryId(item.id || "");
+
+                  // navigation.navigate("PetProfileMedicalHistoryScreen", {
+                  //   navigateTo: "PetProfileDetailsScreen",
+                  //   petId: id ?? "",
+                  //   petName: petDetailsData.name,
+                  //   petBg: petDetailsData.photos[0]?.url,
+                  //   showBackBtn: "true",
+                  // });
                 }}
               />
 
@@ -447,10 +450,10 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                 open={open}
                 onClose={() => {
                   setOpen(false);
-                  setSelectedPetId("");
+                  // setSelectedPetId("");
                   setHealthHistoryId("");
                 }}
-                petId={selectedPetId}
+                petId={id}
                 healthHistoryId={healthHistoryId}
               />
             </Div>

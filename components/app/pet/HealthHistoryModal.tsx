@@ -55,7 +55,7 @@ const HealthHistoryModal = (props: PropTypes) => {
     //   ?.pop();
     const healthHistory = petsDetailMap
       .get(props.petId)
-      ?.healthHistory?.filter((item) => item.id === props.healthHistoryId)
+      ?.healthHistory?.filter((item) => item.id === props?.healthHistoryId)
       ?.pop();
 
     if (healthHistory) {
