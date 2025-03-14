@@ -1,6 +1,8 @@
 import Layout from "@/components/app/Layout";
 import DoctorListCard from "@/components/partials/DoctorListCard";
 import { colorPrimary, fontHauoraSemiBold } from "@/constant/constant";
+import { SocketEventEnum } from "@/socket/events";
+import { useSocket } from "@/socket/provider";
 import { useExpertStore } from "@/store/modules/expert";
 import { NavigationType } from "@/store/types";
 import { Expert } from "@/store/types/expert";
@@ -13,22 +15,39 @@ const windowHeight = Dimensions.get("window").height;
 const ExpertsListScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
-  const { fetchExperts } = useExpertStore();
+  const socket = useSocket();
+  const { fetchExperts, updateExpertStatus, experts, expertDetailMap } =
+    useExpertStore();
 
-  const [experts, setExperts] = useState<Expert[]>([]);
+  // const [experts, setExperts] = useState<Expert[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     handleFetchRequests();
   }, []);
 
+  useEffect(() => {
+    if (socket) {
+      socket.on(SocketEventEnum.VET_ONLINE_STATUS_CHANGE, async (data) => {
+        const vetId = data?.vetId;
+        const isOnline = data?.isOnline;
+
+        updateExpertStatus(vetId, isOnline);
+      });
+    }
+
+    return () => {
+      socket?.off(SocketEventEnum.VET_ONLINE_STATUS_CHANGE);
+    };
+  }, []);
+
   const handleFetchRequests = async () => {
     try {
       setIsLoading(true);
 
-      const experts = await fetchExperts();
+      await fetchExperts();
 
-      setExperts(experts);
+      // setExperts(experts);
     } finally {
       setIsLoading(false);
     }
@@ -59,7 +78,7 @@ const ExpertsListScreen: React.FC<{ navigation: NavigationType }> = ({
         // }
         renderItem={({ item, index }) => (
           <DoctorListCard
-            mb={index + 1 === experts.length ? 0 : 20}
+            mb={index + 1 === experts?.length ? 0 : 20}
             name={item.name}
             speciality={item.designation}
             experience={item.yearsOfExperience ?? 0}
