@@ -21,7 +21,7 @@ const PetProfileBreedScreen: React.FC<Props> = (props) => {
   }, []);
 
   const breeds = useMemo(() => {
-    const species = props.pet.breed === PetSpeciesEnum.DOG ? "dogs" : "cats";
+    const species = props.pet.species === PetSpeciesEnum.DOG ? "dogs" : "cats";
 
     return (
       petBreeds?.[species]?.map((breed) => ({
