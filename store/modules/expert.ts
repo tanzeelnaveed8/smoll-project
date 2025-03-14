@@ -26,6 +26,19 @@ export const useExpertStore = create<ExpertState>((set, get) => ({
     set((state) => {
       const expertDetailMap = new Map(state.expertDetailMap);
       const expert = expertDetailMap.get(id);
+
+      const updatedExperts =
+        get().experts?.map((expert) => {
+          if (expert.id === id) {
+            return { ...expert, isOnline: status };
+          }
+          return expert;
+        }) ?? [];
+
+      set(() => ({
+        experts: updatedExperts,
+      }));
+
       if (expert) {
         expert.isOnline = status;
         expertDetailMap.set(id, expert);
