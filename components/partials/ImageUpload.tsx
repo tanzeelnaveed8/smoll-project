@@ -443,7 +443,8 @@ const ImageUpload: React.FC<Props> = ({
               {isPrimary && (
                 <IconStarFilled
                   size={21}
-                  fill="#85C3F1"
+                  fill="#68a6d4"
+                  color={"#68a6d4"}
                   style={{ position: "absolute", right: 8, bottom: 8 }}
                 />
               )}
@@ -494,7 +495,8 @@ const ImageUpload: React.FC<Props> = ({
             {isPrimary && (
               <IconStarFilled
                 size={21}
-                fill="#85C3F1"
+                fill="#68a6d4"
+                color={"#68a6d4"}
                 style={{ position: "absolute", left: 38, top: 38 }}
               />
             )}

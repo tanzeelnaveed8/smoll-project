@@ -48,17 +48,14 @@ const PetProfileImageScreen: React.FC<Props> = (props) => {
         Upload three images
       </Text>
       <Div mb={24} flexDir="row" style={{ gap: 12 }}>
-        {Array.from({ length: 3 }).map((_, index) => (
-          <ImageUpload
-            key={index}
-            uri={props.pet.photos[index]?.uri}
-            isPrimary={index === 0}
-            singleImage
-            onUnSelect={(e) => handleUnselectFile(index)}
-            onChange={(files) => handleImageChange(files, index)}
-            disableDownload
-          />
-        ))}
+        <ImageUpload
+          uri={props.pet.photos[0]?.uri}
+          isPrimary={true}
+          singleImage
+          onUnSelect={(e) => handleUnselectFile(0)}
+          onChange={(files) => handleImageChange(files, 0)}
+          disableDownload
+        />
       </Div>
       <Text
         fontFamily={fontHauoraMedium}
