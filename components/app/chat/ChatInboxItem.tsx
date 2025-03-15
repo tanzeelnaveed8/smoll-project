@@ -82,11 +82,13 @@ const ChatInboxItem: React.FC<Props> = (props) => {
             {props.loading === props.expertId ? (
               <ActivityIndicator size="small" color={colorPrimary} />
             ) : (
-              <IconChevronRight width={24} height={24} color={"#222222"} />
+              <>
+                <IconChevronRight width={24} height={24} color={"#222222"} />
+              </>
             )}
           </Div>
 
-          {Boolean(props.unreadMessageCount) && !props.loading && showNotification && <Text h={24} w={24} style={{
+          {props.loading !== props.expertId && Boolean(props.unreadMessageCount) && !props.loading && showNotification && <Text h={24} w={24} style={{
                   backgroundColor: '#f52c11',
                   borderRadius: 100,
                   color:'#fff',

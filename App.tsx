@@ -495,18 +495,17 @@ const App = () => {
 
           const eventHandler: Partial<ZIMEventHandler> = {
             receivePeerMessage: async (zim, { messageList, fromConversationID }) => {
-              const convoName = experts?.find((exp)=>exp.id = fromConversationID)?.id as string
+              const convoName = experts?.find((exp)=>exp.id === fromConversationID)?.name as string
               const transformedMessages = transformMessages(messageList,{recipientId:fromConversationID, chatWithName:convoName});
       
               const updatedConversations = conversations
 
-              const prevMessages = conversations.get(fromConversationID) as []
+              const prevMessages = conversations.get(fromConversationID) || []
               updatedConversations.set(fromConversationID,[...transformedMessages,...prevMessages])
               setConversations(updatedConversations)
 
                 const updatedUnreadMessages = unreadMessages
                  //IF fromConversation user is same as active user then clear unread message
-                 console.log(activeConvo === fromConversationID,activeConvo , fromConversationID)
                  
                   if (activeConvo === fromConversationID) {
                     updatedUnreadMessages.delete(fromConversationID)
@@ -518,20 +517,8 @@ const App = () => {
 
                   setUnreadMessage(updatedUnreadMessages)
 
-
-              // setMessages((prevMessages) => [
-              //   ...transformedMessages,
-              //   ...prevMessages,
-              // ]);
+                  // play("messageReceived"); MOVE IT TO CHAT
       
-              play("messageReceived");
-      
-              // if (isAtBottomRef.current) {
-              //   await new Promise((resolve) => setTimeout(resolve, 400));
-              //   scrollToBottom();
-              // } else {
-              //   setShowNewMessageChip(true);
-              // }
             },
           };
       

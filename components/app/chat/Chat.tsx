@@ -119,14 +119,13 @@ const Chat: React.FC<Props> = (props) => {
           setShowNewMessageChip(true);
         }
       }
-      const newConversations = conversations.get(props.recipientId) as []
-      const lastMessage = newConversations[0]
+      const newConversations = conversations.get(props.recipientId) as IMessage[]
+      const lastMessage = newConversations[0] as IMessage
       console.log(lastMessage)
       if(lastMessage.user._id === props.recipientId){
-
+        play("messageReceived"); 
         handlePageNewMessageUI()
       }
-      // console.log(newConversatins.values)
      }else{
       setNoNewMessage(false)
      }
