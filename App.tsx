@@ -41,9 +41,9 @@ import ExpertsInboxScreen from "./screens/Experts/ExpertsInboxScreen";
 import ExpertsListDetailScreen from "./screens/Experts/ExpertsListDetailScreen";
 import ExpertsListScreen from "./screens/Experts/ExpertsListScreen";
 // import PetProfileCongratulationsScreen from "./screens/PetProfile/PetProfileCongratulationsScreen";
-import PetProfileCongratulationsScreen from "./screens/petProfile/PetProfileCongratulationsScreen";
-import PetProfileMedicalHistoryScreen from "./screens/petProfile/PetProfileMedicalHistoryScreen";
-import PetProfileScreen from "./screens/petProfile/PetProfileScreen";
+import PetProfileCongratulationsScreen from "./screens/PetProfile/PetProfileCongratulationsScreen";
+import PetProfileMedicalHistoryScreen from "./screens/PetProfile/PetProfileMedicalHistoryScreen";
+import PetProfileScreen from "./screens/PetProfile/PetProfileScreen";
 
 import SlotBookingScreen from "./screens/doctorsScreens/SlotBookingScreen";
 import EditInfoScreen from "./screens/settings/EditInfoScreen";
