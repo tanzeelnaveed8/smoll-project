@@ -6,6 +6,8 @@ import {
 import { CaseDetail, CaseStatusEnum } from "@/store/types/case.d";
 import { AxiosError } from "axios";
 import dayjs from "dayjs";
+import { IMessage } from "react-native-gifted-chat";
+import { ZIMAudioMessage, ZIMFileMessage, ZIMImageMessage, ZIMMessage, ZIMMessageType, ZIMTextMessage, ZIMVideoMessage } from "zego-zim-react-native";
 
 export const getCountryCode = (input: string) => {
   // Use a regular expression to match the country code
@@ -153,4 +155,114 @@ export const getUserTimezoneOffset = () => {
     .padStart(2, "0")}`;
 
   return gmtOffset;
+};
+
+
+export const transformMessages = (data: ZIMMessage[], props:{recipientId:string,chatWithName:string}) => {
+  const transformedMessages = data.map((msg:any) => {
+    const obj: IMessage = {
+      _id: msg.messageID,
+      text: "",
+      createdAt: new Date(msg.timestamp),
+      user: {
+        _id: msg.senderUserID,
+        name:
+          msg.senderUserID === props.recipientId
+            ? props.chatWithName
+            : undefined,
+        avatar: undefined,
+      },
+    };
+
+    // Handle reply metadata from both sources
+    if (msg.repliedInfo) {
+      // Handle web replies
+      obj.replyTo = {
+        _id: msg.repliedInfo.messageID,
+        text: msg.repliedInfo.messageInfo.message,
+        user: {
+          _id: msg.repliedInfo.senderUserID,
+          name:
+            msg.repliedInfo.senderUserID === props.recipientId
+              ? props.chatWithName
+              : undefined,
+          avatar: undefined,
+        },
+        audio:
+          msg.repliedInfo.messageInfo.type === ZIMMessageType.Audio
+            ? msg.repliedInfo.messageInfo.fileDownloadUrl
+            : undefined,
+        image:
+          msg.repliedInfo.messageInfo.type === ZIMMessageType.Image
+            ? msg.repliedInfo.messageInfo.fileDownloadUrl
+            : undefined,
+        video:
+          msg.repliedInfo.messageInfo.type === ZIMMessageType.Video
+            ? msg.repliedInfo.messageInfo.fileDownloadUrl
+            : undefined,
+      };
+    } else if (msg.extendedData) {
+      // Handle app replies
+      try {
+        const extendedData = JSON.parse(msg.extendedData);
+        if (extendedData.repliedInfo) {
+          obj.replyTo = {
+            _id: extendedData.repliedInfo.messageID,
+            text: extendedData.repliedInfo.messageInfo.message,
+            user: {
+              _id: extendedData.repliedInfo.senderUserID,
+              name:
+                extendedData.repliedInfo.senderUserID === props.recipientId
+                  ? props.chatWithName
+                  : undefined,
+              avatar: undefined,
+            },
+            image:
+              extendedData.repliedInfo.messageInfo.type ===
+              ZIMMessageType.Image
+                ? extendedData.repliedInfo.messageInfo.fileDownloadUrl
+                : undefined,
+            video:
+              extendedData.repliedInfo.messageInfo.type ===
+              ZIMMessageType.Video
+                ? extendedData.repliedInfo.messageInfo.fileDownloadUrl
+                : undefined,
+            audio:
+              extendedData.repliedInfo.messageInfo.type ===
+              ZIMMessageType.Audio
+                ? extendedData.repliedInfo.messageInfo.fileDownloadUrl
+                : undefined,
+          };
+        }
+      } catch (e) {
+        console.error("Error parsing extendedData:", e);
+      }
+    }
+
+    switch (msg.type) {
+      case ZIMMessageType.Text:
+        obj.text = (msg as ZIMTextMessage).message;
+        break;
+      case ZIMMessageType.Image:
+        obj.image = (msg as ZIMImageMessage).fileDownloadUrl;
+        break;
+      case ZIMMessageType.Audio:
+        obj.audio = (msg as ZIMAudioMessage).fileDownloadUrl;
+        break;
+      case ZIMMessageType.Video:
+        obj.video = (msg as ZIMVideoMessage).fileDownloadUrl;
+        break;
+      case ZIMMessageType.File:
+        // Handle other file types as attachments
+        const fileMessage = msg as ZIMFileMessage;
+        obj.text = `[ATTACHMENT]|${fileMessage.extendedData}|${fileMessage.fileDownloadUrl}`;
+        break;
+      default:
+        obj.text = "Unsupported message type";
+    }
+
+    return obj;
+  });
+
+  return transformedMessages;
 };

@@ -1,14 +1,20 @@
 import { create } from "zustand";
 import api from "@/utils/api";
 import { ExpertState } from "../types/expert";
+import { ZIMConversationQueryConfig } from "zego-zim-react-native";
+import { zim } from "@/utils/chat.v2";
+import { IMessage } from "react-native-gifted-chat";
 
 export const useExpertStore = create<ExpertState>((set, get) => ({
   expertDetailMap: new Map(),
   experts: null,
+  unreadMessages: new Map(),
+  conversations:new Map(),
+  activeConvo: null,
 
   fetchExperts: async () => {
     const response = await api.get("/member/vets");
-
+   
     set(() => ({
       experts: response.data,
     }));
@@ -100,4 +106,32 @@ export const useExpertStore = create<ExpertState>((set, get) => ({
 
     return res.data;
   },
+
+  getUnreadMessage: async ()=> {
+    const queryConfig:ZIMConversationQueryConfig = {
+      count: 9999, 
+    };
+    const {conversationList} = await zim.queryConversationList(queryConfig)
+     conversationList.forEach((conv)=> set((state) => ({
+      unreadMessages: state.unreadMessages.set(conv.conversationID, conv.unreadMessageCount),
+    })))
+  },
+
+  setUnreadMessage:(value:Map<string,number>)=>{
+    set((state)=>({
+      unreadMessages: value
+    }))
+  },
+
+  setConversations:(value:Map<string,IMessage[]>)=>{
+    set((state)=>({
+      conversations: value
+    }))
+  },
+  
+  setActiveConvo:(value:string | null)=>{
+    set((state)=>({
+      activeConvo: value
+    }))
+  }
 }));

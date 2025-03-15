@@ -31,6 +31,8 @@ import {
 } from "zego-zim-react-native";
 import ChatBubble from "./ChatBubble";
 import ChatComposer from "./ChatComposer";
+import { useExpertStore } from "@/store/modules/expert";
+import { transformMessages } from "@/utils/helpers";
 
 interface Props {
   initialMessages: IMessage[];
@@ -43,7 +45,6 @@ const Chat: React.FC<Props> = (props) => {
   const { play } = useSound();
   const { user } = useUserStore();
 
-  const [messages, setMessages] = useState<IMessage[]>(props.initialMessages);
   const [replyingTo, setReplyingTo] = useState<IMessage | null>(null);
 
   const [isLoadingEarlier, setIsLoadingEarlier] = useState(false);
@@ -52,18 +53,42 @@ const Chat: React.FC<Props> = (props) => {
   const [channelUrl, setChannelUrl] = useState<string | null>(null);
   const [isSending, setIsSending] = useState(false);
   const [hasMoreMessages, setHasMoreMessages] = useState(true);
-  const [lastMessageTimestamp, setLastMessageTimestamp] = useState<
-    number | null
+  const [lastMessage, setLastMessage] = useState<
+    ZIMMessage | null
   >(null);
   const [showNewMessageChip, setShowNewMessageChip] = useState(false);
   const isAtBottomRef = useRef(true);
 
   const isFocused = useIsFocused();
   const listViewRef = useRef<GiftedChatProps<IMessage>["listViewProps"]>(null);
+  const {unreadMessages, setUnreadMessage , conversations , setConversations , setActiveConvo} = useExpertStore()
+  const [noNewMessage ,setNoNewMessage] = useState(true)
 
   useEffect(() => {
+     setLastMessage(null)
+
+    setActiveConvo(props.recipientId)
+     
     fetchMessages();
+
   }, [props.recipientId]);
+
+  useEffect(()=>{
+    return ()=>{
+      
+      (async()=>{
+        await zim.clearConversationUnreadMessageCount(
+        props.recipientId, 0
+        );
+      })()
+    
+      const udpatedUnreadMessages = unreadMessages
+      udpatedUnreadMessages.delete(props.recipientId)
+      setUnreadMessage(udpatedUnreadMessages)
+ 
+      setActiveConvo(null)
+    }
+  },[])
 
   useEffect(() => {
     if (isFocused) {
@@ -73,142 +98,40 @@ const Chat: React.FC<Props> = (props) => {
     }
   }, [isFocused]);
 
-  const transformMessages = (data: ZIMMessage[]) => {
-    const transformedMessages = data.map((msg) => {
-      const obj: IMessage = {
-        _id: msg.messageID,
-        text: "",
-        createdAt: new Date(msg.timestamp),
-        user: {
-          _id: msg.senderUserID,
-          name:
-            msg.senderUserID === props.recipientId
-              ? props.chatWithName
-              : undefined,
-          avatar: undefined,
-        },
-      };
-
-      // Handle reply metadata from both sources
-      if (msg.repliedInfo) {
-        // Handle web replies
-        obj.replyTo = {
-          _id: msg.repliedInfo.messageID,
-          text: msg.repliedInfo.messageInfo.message,
-          user: {
-            _id: msg.repliedInfo.senderUserID,
-            name:
-              msg.repliedInfo.senderUserID === props.recipientId
-                ? props.chatWithName
-                : undefined,
-            avatar: undefined,
-          },
-          audio:
-            msg.repliedInfo.messageInfo.type === ZIMMessageType.Audio
-              ? msg.repliedInfo.messageInfo.fileDownloadUrl
-              : undefined,
-          image:
-            msg.repliedInfo.messageInfo.type === ZIMMessageType.Image
-              ? msg.repliedInfo.messageInfo.fileDownloadUrl
-              : undefined,
-          video:
-            msg.repliedInfo.messageInfo.type === ZIMMessageType.Video
-              ? msg.repliedInfo.messageInfo.fileDownloadUrl
-              : undefined,
-        };
-      } else if (msg.extendedData) {
-        // Handle app replies
-        try {
-          const extendedData = JSON.parse(msg.extendedData);
-          if (extendedData.repliedInfo) {
-            obj.replyTo = {
-              _id: extendedData.repliedInfo.messageID,
-              text: extendedData.repliedInfo.messageInfo.message,
-              user: {
-                _id: extendedData.repliedInfo.senderUserID,
-                name:
-                  extendedData.repliedInfo.senderUserID === props.recipientId
-                    ? props.chatWithName
-                    : undefined,
-                avatar: undefined,
-              },
-              image:
-                extendedData.repliedInfo.messageInfo.type ===
-                ZIMMessageType.Image
-                  ? extendedData.repliedInfo.messageInfo.fileDownloadUrl
-                  : undefined,
-              video:
-                extendedData.repliedInfo.messageInfo.type ===
-                ZIMMessageType.Video
-                  ? extendedData.repliedInfo.messageInfo.fileDownloadUrl
-                  : undefined,
-              audio:
-                extendedData.repliedInfo.messageInfo.type ===
-                ZIMMessageType.Audio
-                  ? extendedData.repliedInfo.messageInfo.fileDownloadUrl
-                  : undefined,
-            };
-          }
-        } catch (e) {
-          console.error("Error parsing extendedData:", e);
-        }
-      }
-
-      switch (msg.type) {
-        case ZIMMessageType.Text:
-          obj.text = (msg as ZIMTextMessage).message;
-          break;
-        case ZIMMessageType.Image:
-          obj.image = (msg as ZIMImageMessage).fileDownloadUrl;
-          break;
-        case ZIMMessageType.Audio:
-          obj.audio = (msg as ZIMAudioMessage).fileDownloadUrl;
-          break;
-        case ZIMMessageType.Video:
-          obj.video = (msg as ZIMVideoMessage).fileDownloadUrl;
-          break;
-        case ZIMMessageType.File:
-          // Handle other file types as attachments
-          const fileMessage = msg as ZIMFileMessage;
-          obj.text = `[ATTACHMENT]|${fileMessage.extendedData}|${fileMessage.fileDownloadUrl}`;
-          break;
-        default:
-          obj.text = "Unsupported message type";
-      }
-
-      return obj;
-    });
-
-    return transformedMessages;
+  const scrollToBottom = () => {
+    if (listViewRef.current) {
+      // @ts-ignore
+      listViewRef.current.scrollToOffset({
+        offset: 0,
+        animated: true,
+      });
+      setShowNewMessageChip(false);
+    }
   };
 
-  useEffect(() => {
-    const eventHandler: Partial<ZIMEventHandler> = {
-      receivePeerMessage: async (zim, { messageList, fromConversationID }) => {
-        const transformedMessages = transformMessages(messageList);
-
-        setMessages((prevMessages) => [
-          ...transformedMessages,
-          ...prevMessages,
-        ]);
-
-        play("messageReceived");
-
+  useEffect(()=>{
+     if(!noNewMessage){
+      const handlePageNewMessageUI= async ()=>{
         if (isAtBottomRef.current) {
           await new Promise((resolve) => setTimeout(resolve, 400));
           scrollToBottom();
         } else {
           setShowNewMessageChip(true);
         }
-      },
-    };
+      }
+      const newConversations = conversations.get(props.recipientId) as []
+      const lastMessage = newConversations[0]
+      console.log(lastMessage)
+      if(lastMessage.user._id === props.recipientId){
 
-    zim.on("receivePeerMessage", eventHandler.receivePeerMessage!);
-
-    return () => {
-      zim.off("receivePeerMessage");
-    };
-  }, []);
+        handlePageNewMessageUI()
+      }
+      // console.log(newConversatins.values)
+     }else{
+      setNoNewMessage(false)
+     }
+  
+  },[conversations.get(props.recipientId)?.length])
 
   // fetch messages
   const fetchMessages = async (isLoadingEarlier = false) => {
@@ -226,8 +149,8 @@ const Chat: React.FC<Props> = (props) => {
         reverse: true,
       };
 
-      if (lastMessageTimestamp) {
-        config.nextMessage = { timestamp: lastMessageTimestamp } as ZIMMessage;
+      if (lastMessage?.timestamp && isLoadingEarlier) {
+        config.nextMessage = lastMessage as ZIMMessage;
       }
 
       const messageList = await getMessages(
@@ -235,24 +158,30 @@ const Chat: React.FC<Props> = (props) => {
         ZIMConversationType.Peer,
         config
       );
-
+  
+      //  console.log(messageList,"TESTING")
       if (messageList.length === 0) {
         setHasMoreMessages(false);
+        setLastMessage(null)
       } else {
-        setLastMessageTimestamp(messageList[messageList.length - 1].timestamp);
+        setLastMessage(messageList[0]);
       }
 
-      const transformedMessages = transformMessages(messageList);
+      const transformedMessages = transformMessages(messageList,{recipientId:props.recipientId,chatWithName:props.chatWithName || ''});
 
-      if (isLoadingEarlier) {
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          ...transformedMessages,
-        ]);
+      const updatedConversations = conversations
+
+      if (isLoadingEarlier) { 
+        const prevMessages = conversations.get(props.recipientId) as []
+        updatedConversations.set(props.recipientId,[...prevMessages,...transformedMessages])
+      
       } else {
-        setMessages(transformedMessages);
+        updatedConversations.set(props.recipientId,transformedMessages)
       }
+      setConversations(updatedConversations)
+
     } catch (error) {
+      console.log(error)
       console.error("Error fetching messages:", error);
     } finally {
       setIsLoading(false);
@@ -262,6 +191,7 @@ const Chat: React.FC<Props> = (props) => {
 
   const handleLoadEarlier = async () => {
     if (isLoadingEarlier || !hasMoreMessages) return;
+    setNoNewMessage(true)
     await fetchMessages(true);
   };
 
@@ -275,16 +205,7 @@ const Chat: React.FC<Props> = (props) => {
     }
   };
 
-  const scrollToBottom = () => {
-    if (listViewRef.current) {
-      // @ts-ignore
-      listViewRef.current.scrollToOffset({
-        offset: 0,
-        animated: true,
-      });
-      setShowNewMessageChip(false);
-    }
-  };
+ 
 
   const handleSend = async (newMessages: IMessage[] = []) => {
     try {
@@ -329,8 +250,11 @@ const Chat: React.FC<Props> = (props) => {
 
       if (!response) return;
 
-      const transformedMessages = transformMessages(response);
-      setMessages((prevMessages) => [...transformedMessages, ...prevMessages]);
+      const transformedMessages = transformMessages(response,{recipientId:props.recipientId,chatWithName:props.chatWithName || ''});
+      const updatedConversations = conversations
+      const prevMessages = conversations.get(props.recipientId) as []
+      updatedConversations.set(props.recipientId,[...prevMessages,...transformedMessages])
+      setConversations(updatedConversations)
 
       // Clear reply state after sending
       setReplyingTo(null);
@@ -433,7 +357,7 @@ const Chat: React.FC<Props> = (props) => {
   return (
     <Div flex={1}>
       <GiftedChat
-        messages={messages.sort((a, b) => +b.createdAt - +a.createdAt)}
+        messages={(conversations.get(props.recipientId) as IMessage[]).sort((a, b) => +b.createdAt - +a.createdAt)}
         onSend={(messages) => handleSend(messages)}
         onLoadEarlier={handleLoadEarlier}
         isLoadingEarlier={isLoadingEarlier}
