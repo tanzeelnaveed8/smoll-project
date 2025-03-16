@@ -23,6 +23,7 @@ const ExpertsInboxScreen: React.FC<Props> = (props) => {
 
   const [loading, setLoading] = useState(false);
   const [actionLoading, setActionLoading] = useState("");
+  const {unreadMessages} = useExpertStore()
 
   useEffect(() => {
     fetchAllExperts();
@@ -78,6 +79,7 @@ const ExpertsInboxScreen: React.FC<Props> = (props) => {
             expertId={expert.id}
             verified={expert.verified}
             about={expert.about}
+            unreadMessageCount={unreadMessages.get(expert.id)}
           />
         ))}
       </Div>

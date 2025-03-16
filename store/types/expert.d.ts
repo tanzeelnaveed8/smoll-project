@@ -1,3 +1,4 @@
+import { IMessage } from "react-native-gifted-chat";
 import { Nullable } from "../types";
 import { Case } from "./case";
 import { UploadedFile } from "./file";
@@ -53,6 +54,9 @@ export interface FindOneConsultationResDto {
 interface ExpertState {
   expertDetailMap: Map<string, Expert>;
   experts: Nullable<Expert[]>;
+  unreadMessages:Map<string, number>;
+  conversations:Map<string,IMessage[]>
+  activeConvo:string | null
 
   fetchExperts: () => Promise<Expert[]>;
   fetchExpertDetail: (id: string) => Promise<void>;
@@ -76,4 +80,9 @@ interface ExpertState {
     caseId: string;
   }) => Promise<void>;
   rateExpert: (payload: RateExpertPayloadDto) => Promise<void>;
+  getUnreadMessage: ()=>Promise<void>;
+  setUnreadMessage:(value:Map<string,number>)=>void
+  setConversations:(value:Map<string,IMessage[]>)=>void
+  setActiveConvo:(value:string | null)=>void
+
 }
