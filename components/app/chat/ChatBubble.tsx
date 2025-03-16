@@ -12,6 +12,7 @@ import {
 import { Audio } from "expo-av";
 import { useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   Image,
   Linking,
   StyleProp,
@@ -519,8 +520,8 @@ const ChatBubble: React.FC<Props> = (props) => {
         >
           <Div mr={8}>
             {isLoading ? (
-              <IconLoader
-                fontSize={24}
+              <ActivityIndicator
+                size={24}
                 color={position === "left" ? "#333" : "#FFF"}
               />
             ) : isPlaying ? (
