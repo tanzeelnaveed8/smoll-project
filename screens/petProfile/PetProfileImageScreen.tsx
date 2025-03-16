@@ -45,7 +45,7 @@ const PetProfileImageScreen: React.FC<Props> = (props) => {
         mb={16}
         fontFamily={fontHeading}
       >
-        Upload three images
+        Upload {props.pet.name ?? "your pet"} photo
       </Text>
       <Div mb={24} flexDir="row" style={{ gap: 12 }}>
         <ImageUpload
@@ -64,8 +64,7 @@ const PetProfileImageScreen: React.FC<Props> = (props) => {
         color="#494949"
         maxW={350}
       >
-        Please make sure to upload three high-quality images in JPEG format so
-        that the vet can clearly see your pet's profile.
+        Please make sure to upload a pretty clear photo in JPEG or PNG format
       </Text>
     </Div>
   );

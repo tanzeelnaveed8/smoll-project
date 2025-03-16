@@ -1,3 +1,4 @@
+import React from "react";
 import { Modal, Div, ModalProps, Button, Text } from "react-native-magnus";
 import { IconX } from "@tabler/icons-react-native";
 import { StyleProp, TouchableOpacity, ViewStyle } from "react-native";
@@ -34,6 +35,10 @@ const BottomSheet: React.FC<Props> = (props) => {
       pb={20}
       swipeDirection={["down"]}
       coverScreen={true}
+      scrollTo={() => {}}
+      scrollOffset={1}
+      propagateSwipe={true}
+      avoidKeyboard={true}
       {...restProps}
       onSwipeComplete={onCloseIconClick}
     >
@@ -44,12 +49,7 @@ const BottomSheet: React.FC<Props> = (props) => {
           <Div px={20}>
             <Div row justifyContent="space-between" alignItems="center" pb={24}>
               {showCloseIcon ? (
-                <Button
-                  px={0}
-                  py={0}
-                  bg="transparent"
-                  onPress={onCloseIconClick}
-                >
+                <Button p={4} bg="transparent" onPress={onCloseIconClick}>
                   <IconX size={24} color="#222222" strokeWidth={1.5} />
                 </Button>
               ) : (

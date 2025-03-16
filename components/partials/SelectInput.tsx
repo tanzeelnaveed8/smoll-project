@@ -132,6 +132,13 @@ const SelectInput: React.FC<Props> = (props) => {
           keyExtractor={(item) => item.value + item.label}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps={"always"}
+          scrollEventThrottle={16}
+          removeClippedSubviews={true}
+          bounces={true}
+          onStartShouldSetResponderCapture={() => true}
+          onStartShouldSetResponder={() => true}
+          onMoveShouldSetResponder={() => true}
+          directionalLockEnabled={true}
           renderItem={({ item, index }) =>
             renderLabel ? (
               renderLabel(item as OptionDto, onSelect, index)

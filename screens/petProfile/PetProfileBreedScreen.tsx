@@ -58,34 +58,6 @@ const PetProfileBreedScreen: React.FC<Props> = (props) => {
         }}
         selectedValue={props.pet.breed}
       />
-
-      {/* {showManualInput && (
-        <InputField
-          value={props.pet.breed}
-          onChangeText={(text) => {
-            props.setPet({ ...props.pet, breed: text });
-          }}
-          placeholder="Name"
-          marginTop={16}
-          floatingPlaceholder
-          inputStyle={{ borderRadius: 12 }}
-          loading={loading}
-          disabled={loading}
-        />
-      )} */}
-
-      {/* <Button
-        fontSize={"lg"}
-        color={colorPrimary}
-        px={0}
-        py={0}
-        bg={"transparent"}
-        onPress={() => {
-          setShowManualInput(true);
-        }}
-      >
-        My pet's breed is missing?
-      </Button> */}
     </Div>
   );
 };
