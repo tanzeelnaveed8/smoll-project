@@ -64,7 +64,8 @@ const PetProfileImageScreen: React.FC<Props> = (props) => {
         color="#494949"
         maxW={350}
       >
-        Please make sure to upload a pretty clear photo in JPEG or PNG format
+        Please make sure to upload a pretty and clear photo in JPEG or PNG
+        format
       </Text>
     </Div>
   );

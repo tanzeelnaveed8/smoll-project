@@ -53,42 +53,42 @@ const Chat: React.FC<Props> = (props) => {
   const [channelUrl, setChannelUrl] = useState<string | null>(null);
   const [isSending, setIsSending] = useState(false);
   const [hasMoreMessages, setHasMoreMessages] = useState(true);
-  const [lastMessage, setLastMessage] = useState<
-    ZIMMessage | null
-  >(null);
+  const [lastMessage, setLastMessage] = useState<ZIMMessage | null>(null);
   const [showNewMessageChip, setShowNewMessageChip] = useState(false);
   const isAtBottomRef = useRef(true);
 
   const isFocused = useIsFocused();
   const listViewRef = useRef<GiftedChatProps<IMessage>["listViewProps"]>(null);
-  const {unreadMessages, setUnreadMessage , conversations , setConversations , setActiveConvo} = useExpertStore()
-  const [noNewMessage ,setNoNewMessage] = useState(true)
+  const {
+    unreadMessages,
+    setUnreadMessage,
+    conversations,
+    setConversations,
+    setActiveConvo,
+  } = useExpertStore();
+  const [noNewMessage, setNoNewMessage] = useState(true);
 
   useEffect(() => {
-     setLastMessage(null)
+    setLastMessage(null);
 
-    setActiveConvo(props.recipientId)
-     
+    setActiveConvo(props.recipientId);
+
     fetchMessages();
-
   }, [props.recipientId]);
 
-  useEffect(()=>{
-    return ()=>{
-      
-      (async()=>{
-        await zim.clearConversationUnreadMessageCount(
-        props.recipientId, 0
-        );
-      })()
-    
-      const udpatedUnreadMessages = unreadMessages
-      udpatedUnreadMessages.delete(props.recipientId)
-      setUnreadMessage(udpatedUnreadMessages)
- 
-      setActiveConvo(null)
-    }
-  },[])
+  useEffect(() => {
+    return () => {
+      (async () => {
+        await zim.clearConversationUnreadMessageCount(props.recipientId, 0);
+      })();
+
+      const udpatedUnreadMessages = unreadMessages;
+      udpatedUnreadMessages.delete(props.recipientId);
+      setUnreadMessage(udpatedUnreadMessages);
+
+      setActiveConvo(null);
+    };
+  }, []);
 
   useEffect(() => {
     if (isFocused) {
@@ -109,28 +109,28 @@ const Chat: React.FC<Props> = (props) => {
     }
   };
 
-  useEffect(()=>{
-     if(!noNewMessage){
-      const handlePageNewMessageUI= async ()=>{
+  useEffect(() => {
+    if (!noNewMessage) {
+      const handlePageNewMessageUI = async () => {
         if (isAtBottomRef.current) {
           await new Promise((resolve) => setTimeout(resolve, 400));
           scrollToBottom();
         } else {
           setShowNewMessageChip(true);
         }
+      };
+      const newConversations = conversations.get(
+        props.recipientId
+      ) as IMessage[];
+      const lastMessage = newConversations[0] as IMessage;
+      if (lastMessage.user?._id === props.recipientId) {
+        play("messageReceived");
+        handlePageNewMessageUI();
       }
-      const newConversations = conversations.get(props.recipientId) as IMessage[]
-      const lastMessage = newConversations[0] as IMessage
-      console.log(lastMessage)
-      if(lastMessage.user._id === props.recipientId){
-        play("messageReceived"); 
-        handlePageNewMessageUI()
-      }
-     }else{
-      setNoNewMessage(false)
-     }
-  
-  },[conversations.get(props.recipientId)?.length])
+    } else {
+      setNoNewMessage(false);
+    }
+  }, [conversations.get(props.recipientId)?.length]);
 
   // fetch messages
   const fetchMessages = async (isLoadingEarlier = false) => {
@@ -157,30 +157,34 @@ const Chat: React.FC<Props> = (props) => {
         ZIMConversationType.Peer,
         config
       );
-  
+
       //  console.log(messageList,"TESTING")
       if (messageList.length === 0) {
         setHasMoreMessages(false);
-        setLastMessage(null)
+        setLastMessage(null);
       } else {
         setLastMessage(messageList[0]);
       }
 
-      const transformedMessages = transformMessages(messageList,{recipientId:props.recipientId,chatWithName:props.chatWithName || ''});
+      const transformedMessages = transformMessages(messageList, {
+        recipientId: props.recipientId,
+        chatWithName: props.chatWithName || "",
+      });
 
-      const updatedConversations = conversations
+      const updatedConversations = conversations;
 
-      if (isLoadingEarlier) { 
-        const prevMessages = conversations.get(props.recipientId) as []
-        updatedConversations.set(props.recipientId,[...prevMessages,...transformedMessages])
-      
+      if (isLoadingEarlier) {
+        const prevMessages = conversations.get(props.recipientId) as [];
+        updatedConversations.set(props.recipientId, [
+          ...prevMessages,
+          ...transformedMessages,
+        ]);
       } else {
-        updatedConversations.set(props.recipientId,transformedMessages)
+        updatedConversations.set(props.recipientId, transformedMessages);
       }
-      setConversations(updatedConversations)
-
+      setConversations(updatedConversations);
     } catch (error) {
-      console.log(error)
+      console.log(error);
       console.error("Error fetching messages:", error);
     } finally {
       setIsLoading(false);
@@ -190,7 +194,7 @@ const Chat: React.FC<Props> = (props) => {
 
   const handleLoadEarlier = async () => {
     if (isLoadingEarlier || !hasMoreMessages) return;
-    setNoNewMessage(true)
+    setNoNewMessage(true);
     await fetchMessages(true);
   };
 
@@ -203,8 +207,6 @@ const Chat: React.FC<Props> = (props) => {
       setShowNewMessageChip(false);
     }
   };
-
- 
 
   const handleSend = async (newMessages: IMessage[] = []) => {
     try {
@@ -249,11 +251,17 @@ const Chat: React.FC<Props> = (props) => {
 
       if (!response) return;
 
-      const transformedMessages = transformMessages(response,{recipientId:props.recipientId,chatWithName:props.chatWithName || ''});
-      const updatedConversations = conversations
-      const prevMessages = conversations.get(props.recipientId) as []
-      updatedConversations.set(props.recipientId,[...prevMessages,...transformedMessages])
-      setConversations(updatedConversations)
+      const transformedMessages = transformMessages(response, {
+        recipientId: props.recipientId,
+        chatWithName: props.chatWithName || "",
+      });
+      const updatedConversations = conversations;
+      const prevMessages = conversations.get(props.recipientId) as [];
+      updatedConversations.set(props.recipientId, [
+        ...prevMessages,
+        ...transformedMessages,
+      ]);
+      setConversations(updatedConversations);
 
       // Clear reply state after sending
       setReplyingTo(null);
@@ -356,7 +364,9 @@ const Chat: React.FC<Props> = (props) => {
   return (
     <Div flex={1}>
       <GiftedChat
-        messages={(conversations.get(props.recipientId) as IMessage[]).sort((a, b) => +b.createdAt - +a.createdAt)}
+        messages={(conversations.get(props.recipientId) as IMessage[]).sort(
+          (a, b) => +b.createdAt - +a.createdAt
+        )}
         onSend={(messages) => handleSend(messages)}
         onLoadEarlier={handleLoadEarlier}
         isLoadingEarlier={isLoadingEarlier}

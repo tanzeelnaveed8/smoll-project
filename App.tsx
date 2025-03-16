@@ -7,7 +7,7 @@ import {
   StyleSheet,
   ViewStyle,
 } from "react-native";
-import { Div, ThemeProvider } from "react-native-magnus";
+import { Badge, Div, ThemeProvider } from "react-native-magnus";
 
 import * as Font from "expo-font";
 import React, { useEffect, useState } from "react";
@@ -93,7 +93,11 @@ import EmergencyScreen from "./screens/EmergencyScreen";
 import ClinicListScreen from "./screens/Clinic/ClinicListScreen";
 import ClinicDetailScreen from "./screens/Clinic/ClinicDetailScreen";
 import Config from "react-native-config";
-import { ZIMConversationQueryConfig, ZIMConversationType, ZIMEventHandler } from "zego-zim-react-native";
+import {
+  ZIMConversationQueryConfig,
+  ZIMConversationType,
+  ZIMEventHandler,
+} from "zego-zim-react-native";
 import { useExpertStore } from "./store/modules/expert";
 import { useSound } from "./functions/useSound";
 import { transformMessages } from "./utils/helpers";
@@ -180,31 +184,21 @@ const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const TabNavigation = () => {
-  const TabButton: React.FC<{ focused: boolean; icon: React.ReactNode;isNotification?:Boolean }> = ({
-    focused,
-    icon,
-    isNotification
-  }) => {
-
-    const styles: {container:ViewStyle; notification:ViewStyle} = {
-      container:{
-          borderBottomRightRadius: 4,
-          borderBottomLeftRadius: 4,
-          position:'relative'
+  const TabButton: React.FC<{
+    focused: boolean;
+    icon: React.ReactNode;
+    isNotification?: Boolean;
+  }> = ({ focused, icon, isNotification }) => {
+    const styles: { container: ViewStyle } = {
+      container: {
+        borderBottomRightRadius: 4,
+        borderBottomLeftRadius: 4,
+        position: "relative",
       },
-      notification:{
-        position: "absolute",
-        top: 3,
-        right: 52, 
-        width: 10,
-        height: 10,
-        backgroundColor: '#f52c11',
-        borderRadius: 5, 
-      }
-    }
+    };
 
     return (
-      <>
+      <Div position="relative" justifyContent="center" alignItems="center">
         <Div
           h={4}
           bg={focused ? "#000" : "transparent"}
@@ -213,20 +207,25 @@ const TabNavigation = () => {
           style={styles.container}
         />
         {icon}
-        {isNotification && <Div style={styles.notification} />
-        }
-      </>
+        {isNotification && (
+          <Div position="absolute" top={4} right={0}>
+            <Badge bg="#f52c11" position="absolute" />
+          </Div>
+        )}
+      </Div>
     );
   };
-  
-  const [allUnreadMessageCount,setAllUnreadMessageCount ] = useState(0)
-  const {unreadMessages} = useExpertStore()
 
-  useEffect(()=>{
-    let countMessage = 0
-    Array.from(unreadMessages.values()).forEach((count) => (countMessage += count))
-    setAllUnreadMessageCount(countMessage)
-  },[unreadMessages.size])
+  const [allUnreadMessageCount, setAllUnreadMessageCount] = useState(0);
+  const { unreadMessages } = useExpertStore();
+
+  useEffect(() => {
+    let countMessage = 0;
+    Array.from(unreadMessages.values()).forEach(
+      (count) => (countMessage += count)
+    );
+    setAllUnreadMessageCount(countMessage);
+  }, [unreadMessages.values()]);
 
   return (
     <Tab.Navigator
@@ -337,12 +336,18 @@ const App = () => {
     ZEGO_APP_SIGN: string;
     ZEGO_SERVER_SECRET: string;
   } | null>(null);
- 
-  const {getUnreadMessage ,fetchExperts ,conversations ,setConversations ,activeConvo ,setUnreadMessage , unreadMessages} = useExpertStore();
+
+  const {
+    getUnreadMessage,
+    fetchExperts,
+    conversations,
+    setConversations,
+    activeConvo,
+    setUnreadMessage,
+    unreadMessages,
+  } = useExpertStore();
   const { play } = useSound();
 
-
-  
   useEffect(() => {
     (async () => {
       loadFonts().then(() => setFontsLoaded(true));
@@ -480,7 +485,7 @@ const App = () => {
             OneSignal.login(user.playerId);
           }
 
-          const experts = await fetchExperts()
+          const experts = await fetchExperts();
 
           await initializeChat(
             parsedEnvs?.ZEGO_APP_ID as string,
@@ -489,41 +494,58 @@ const App = () => {
             user.playerId,
             user.name,
             user?.profileImg?.url ?? ""
-          ); 
+          );
 
-          await getUnreadMessage()
+          await getUnreadMessage();
 
           const eventHandler: Partial<ZIMEventHandler> = {
-            receivePeerMessage: async (zim, { messageList, fromConversationID }) => {
-              const convoName = experts?.find((exp)=>exp.id === fromConversationID)?.name as string
-              const transformedMessages = transformMessages(messageList,{recipientId:fromConversationID, chatWithName:convoName});
-      
-              const updatedConversations = conversations
+            receivePeerMessage: async (
+              zim,
+              { messageList, fromConversationID }
+            ) => {
+              console.log("zim", activeConvo);
+              const convoName = experts?.find(
+                (exp) => exp.id === fromConversationID
+              )?.name as string;
+              const transformedMessages = transformMessages(messageList, {
+                recipientId: fromConversationID,
+                chatWithName: convoName,
+              });
 
-              const prevMessages = conversations.get(fromConversationID) || []
-              updatedConversations.set(fromConversationID,[...transformedMessages,...prevMessages])
-              setConversations(updatedConversations)
+              const updatedConversations = conversations;
 
-                const updatedUnreadMessages = unreadMessages
-                 //IF fromConversation user is same as active user then clear unread message
-                 
-                  if (activeConvo === fromConversationID) {
-                    updatedUnreadMessages.delete(fromConversationID)
-                  }else{
-                  //Handling unread message count
-                  const count = unreadMessages.get(fromConversationID) || 0
-                  updatedUnreadMessages.set(fromConversationID, count + 1)
-                  }
+              const prevMessages = conversations.get(fromConversationID) || [];
+              updatedConversations.set(fromConversationID, [
+                ...transformedMessages,
+                ...prevMessages,
+              ]);
+              setConversations(updatedConversations);
 
-                  setUnreadMessage(updatedUnreadMessages)
+              const updatedUnreadMessages = unreadMessages;
+              //IF fromConversation user is same as active user then clear unread message
 
-                  // play("messageReceived"); MOVE IT TO CHAT
-      
+              console.log(
+                "activeConvo",
+                activeConvo,
+                fromConversationID,
+                unreadMessages
+              );
+              if (activeConvo === fromConversationID) {
+                updatedUnreadMessages.delete(fromConversationID);
+              } else {
+                //Handling unread message count
+                const count = unreadMessages.get(fromConversationID) || 0;
+                updatedUnreadMessages.set(fromConversationID, count + 1);
+              }
+
+              setUnreadMessage(updatedUnreadMessages);
+
+              // play("messageReceived"); MOVE IT TO CHAT
             },
           };
-      
+
           zim.on("receivePeerMessage", eventHandler.receivePeerMessage!);
-      
+
           return () => {
             zim.off("receivePeerMessage");
           };

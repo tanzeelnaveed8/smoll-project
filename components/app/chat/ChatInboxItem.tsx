@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Div, Image, Text } from "react-native-magnus";
+import { Badge, Button, Div, Image, Tag, Text } from "react-native-magnus";
 import { IconChevronRight } from "@tabler/icons-react-native";
 import { ActivityIndicator, TouchableOpacity } from "react-native";
 import { colorPrimary, fontHauoraMedium } from "@/constant/constant";
@@ -15,21 +15,21 @@ interface Props {
   expertId: string;
   verified?: boolean;
   about?: string;
-  unreadMessageCount?:number
+  unreadMessageCount?: number;
 }
 
 const ChatInboxItem: React.FC<Props> = (props) => {
-  const [showNotification , setShowNotification] = useState(true)
-  const {unreadMessages} = useExpertStore() 
-  
-  const handlePress = () =>{
-    setShowNotification(false)
-    props.onPress()
-  }
-  
-  useEffect(()=>{
-    setShowNotification(true)
-  },[unreadMessages.size])
+  const [showNotification, setShowNotification] = useState(true);
+  const { unreadMessages } = useExpertStore();
+
+  const handlePress = () => {
+    setShowNotification(false);
+    props.onPress();
+  };
+
+  useEffect(() => {
+    setShowNotification(true);
+  }, [unreadMessages.size]);
 
   return (
     <TouchableOpacity
@@ -49,7 +49,7 @@ const ChatInboxItem: React.FC<Props> = (props) => {
 
         <Div flexDir="row" alignItems="center" flex={1} position="relative">
           <Div>
-            <Div row style={{ gap: 7 }} >
+            <Div row style={{ gap: 7 }}>
               <Text fontSize={"xl"} mb={4} lineHeight={24}>
                 {props.title}
               </Text>
@@ -88,19 +88,26 @@ const ChatInboxItem: React.FC<Props> = (props) => {
             )}
           </Div>
 
-          {props.loading !== props.expertId && Boolean(props.unreadMessageCount) && !props.loading && showNotification && <Text h={24} w={24} style={{
-                  backgroundColor: '#f52c11',
-                  borderRadius: 100,
-                  color:'#fff',
-                  fontWeight:'600',
-                  textAlign:'center',
-                  position:'absolute',
-                  top:1,
-                  right:0
-               }}>
-                 {props.unreadMessageCount}
-               </Text>
-          }
+          {props.loading !== props.expertId &&
+            Boolean(props.unreadMessageCount) &&
+            !props.loading &&
+            showNotification && (
+              <Div
+                h={24}
+                w={24}
+                bg={"#f52c11"}
+                rounded={100}
+                position="absolute"
+                top={1}
+                right={0}
+                justifyContent="center"
+                alignItems="center"
+              >
+                <Text color="#fff" fontWeight={"600"}>
+                  {props.unreadMessageCount}
+                </Text>
+              </Div>
+            )}
         </Div>
       </Button>
 
