@@ -123,7 +123,7 @@ const Chat: React.FC<Props> = (props) => {
         props.recipientId
       ) as IMessage[];
       const lastMessage = newConversations[0] as IMessage;
-      if (lastMessage.user?._id === props.recipientId) {
+      if (lastMessage?.user?._id === props.recipientId) {
         play("messageReceived");
         handlePageNewMessageUI();
       }
@@ -233,16 +233,16 @@ const Chat: React.FC<Props> = (props) => {
 
         newMessages[0].extendedData = JSON.stringify({
           repliedInfo: {
-            senderUserID: replyingTo.user._id.toString(),
+            senderUserID: replyingTo?.user?._id?.toString(),
             state: 0,
-            messageID: replyingTo._id.toString(),
-            sentTime: new Date(replyingTo.createdAt).getTime(),
+            messageID: replyingTo?._id?.toString(),
+            sentTime: new Date(replyingTo?.createdAt).getTime(),
             messageInfo: {
               message: messageContent,
               type: messageType,
               fileDownloadUrl: fileDownloadUrl,
             },
-            messageSeq: parseInt(replyingTo._id.toString().slice(-3)),
+            messageSeq: parseInt(replyingTo?._id?.toString()?.slice(-3)),
           },
         });
       }
