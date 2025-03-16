@@ -1,6 +1,7 @@
 import { useUserStore } from "@/store/modules/user";
 import {
   IconArrowBackUp,
+  IconLoader,
   IconMicrophone,
   IconPaperclip,
   IconPhoto,
@@ -72,6 +73,7 @@ const ChatBubble: React.FC<Props> = (props) => {
   const { user } = useUserStore();
   const [sound, setSound] = useState<Audio.Sound | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [duration, setDuration] = useState<number | null>(null);
   const [currentTime, setCurrentTime] = useState<number | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -108,17 +110,26 @@ const ChatBubble: React.FC<Props> = (props) => {
 
     (async () => {
       try {
+        // Set loading state to true
+        setIsLoading(true);
+        
         // Load the audio
         const { sound: newSound } = await Audio.Sound.createAsync(
           { uri: props.currentMessage?.audio || "" },
           { shouldPlay: false, volume: 1 },
           (status) => {
-            if (status.error) {
+            if ('error' in status) {
               console.error("Error loading audio:", status.error);
               setLoadError("Failed to load audio. The file may be damaged.");
             }
           }
         );
+
+        await Audio.setAudioModeAsync({
+          playsInSilentModeIOS: true,
+          allowsRecordingIOS: false,
+        })
+
         setSound(newSound);
 
         const status = await newSound.getStatusAsync();
@@ -140,9 +151,13 @@ const ChatBubble: React.FC<Props> = (props) => {
             }
           }
         });
+        
+        // Set loading state to false when done
+        setIsLoading(false);
       } catch (error) {
         console.error("Error loading audio:", error);
         setLoadError("Failed to load audio. Please try again.");
+        setIsLoading(false);
       }
     })();
   }, [props.currentMessage]);
@@ -491,7 +506,7 @@ const ChatBubble: React.FC<Props> = (props) => {
     }
 
     return (
-      <TouchableOpacity onPress={handlePlayPause}>
+      <TouchableOpacity onPress={isLoading ? undefined : handlePlayPause}>
         <Div
           alignItems="center"
           bg={position === "left" ? "#E0E0E0" : "#333"}
@@ -503,7 +518,12 @@ const ChatBubble: React.FC<Props> = (props) => {
           minW={"fit-content"}
         >
           <Div mr={8}>
-            {isPlaying ? (
+            {isLoading ? (
+              <IconLoader
+                fontSize={24}
+                color={position === "left" ? "#333" : "#FFF"}
+              />
+            ) : isPlaying ? (
               <IconPlayerPause
                 fontSize={24}
                 color={position === "left" ? "#333" : "#FFF"}
@@ -521,10 +541,10 @@ const ChatBubble: React.FC<Props> = (props) => {
               fontWeight="bold"
               color={position === "left" ? "#333" : "#FFF"}
             >
-              Audio Message
+              {isLoading ? "Loading Audio..." : "Audio Message"}
             </Text>
             <Text fontSize={12} color={position === "left" ? "#666" : "#CCC"}>
-              {formatDuration(isPlaying ? currentTime : duration)}
+              {isLoading ? "Please wait" : formatDuration(isPlaying ? currentTime : duration)}
             </Text>
           </Div>
 
