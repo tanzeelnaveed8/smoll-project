@@ -1,14 +1,12 @@
 import { colorPrimary, fontHauoraSemiBold } from "@/constant/constant";
 import { useSound } from "@/functions/useSound";
+import { useExpertStore } from "@/store/modules/expert";
 import { useUserStore } from "@/store/modules/user";
 import { getMessages, sendMessage, zim } from "@/utils/chat.v2";
-import {
-  useIsFocused,
-  useNavigation,
-  useRoute,
-} from "@react-navigation/native";
+import { transformMessages } from "@/utils/helpers";
+import { useIsFocused } from "@react-navigation/native";
 import { activateKeepAwakeAsync, deactivateKeepAwake } from "expo-keep-awake";
-import { useEffect, useMemo, useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Platform, TouchableOpacity } from "react-native";
 import {
   Avatar,
@@ -18,21 +16,13 @@ import {
 } from "react-native-gifted-chat";
 import { Div, Image, Text } from "react-native-magnus";
 import {
-  ZIMAudioMessage,
   ZIMConversationType,
-  ZIMEventHandler,
-  ZIMFileMessage,
-  ZIMImageMessage,
   ZIMMessage,
   ZIMMessageQueryConfig,
   ZIMMessageType,
-  ZIMTextMessage,
-  ZIMVideoMessage,
 } from "zego-zim-react-native";
 import ChatBubble from "./ChatBubble";
 import ChatComposer from "./ChatComposer";
-import { useExpertStore } from "@/store/modules/expert";
-import { transformMessages } from "@/utils/helpers";
 
 interface Props {
   initialMessages: IMessage[];
