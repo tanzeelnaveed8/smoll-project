@@ -68,6 +68,7 @@ interface Props {
   onLoading?: (isLoading: boolean) => void;
   disableDownload?: boolean;
   singleImage?: boolean;
+  aspectRatio?: number[] | 'auto'
 }
 
 const ImageUpload: React.FC<Props> = ({
@@ -93,6 +94,7 @@ const ImageUpload: React.FC<Props> = ({
   onLoading,
   disableDownload,
   singleImage,
+  aspectRatio
 }) => {
   const { uploadFile } = useFileStore();
   const toast = useToast();
@@ -103,6 +105,15 @@ const ImageUpload: React.FC<Props> = ({
   const [modalVisible, setModalVisible] = useState(false);
   const [downloadLoading, setDownloadLoading] = useState(false);
   const optionMenuRef = useRef<DropdownRef>(null);
+  const [newAspectRatio,setNewAspectRatio] = useState<any>()
+ 
+  useEffect(()=>{
+    if(!aspectRatio) {
+      setNewAspectRatio([4,3]) 
+      return
+     }
+    setNewAspectRatio(aspectRatio === 'auto' ? undefined : aspectRatio)
+  },[])
 
   const pickImage = async () => {
     if (disabled) return;
@@ -131,7 +142,7 @@ const ImageUpload: React.FC<Props> = ({
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.All,
         allowsEditing: true,
-        aspect: [4, 3],
+        aspect: newAspectRatio,
         quality: 1,
         allowsMultipleSelection: false,
       });
