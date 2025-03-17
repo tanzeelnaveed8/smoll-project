@@ -115,7 +115,7 @@ const ImageUpload: React.FC<Props> = ({
     setNewAspectRatio(aspectRatio === 'auto' ? undefined : aspectRatio)
   },[])
 
-  const pickImage = async (aspectRatio: number[] | null) => {
+  const pickImage = async () => {
     if (disabled) return;
 
     try {
@@ -369,7 +369,7 @@ const ImageUpload: React.FC<Props> = ({
               if (openImageOnTab) {
                 handleOpenImage();
               } else {
-                document ? handleDocumentSelection() : pickImage(aspectRatio === undefined ? [4,3] : null)
+                document ? handleDocumentSelection() : pickImage();
               }
             }}
             disabled={loading}
