@@ -318,6 +318,7 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
             mr={12}
             document
             noImage
+            aspectRatio={'auto'}
             onLoading={(item) => {
               setUploading(item);
             }}
