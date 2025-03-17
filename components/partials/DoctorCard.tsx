@@ -110,15 +110,6 @@ const DoctorCard: React.FC<PropTypes> = (props) => {
             >
               {speciality}
             </Text>
-            <Text
-              fontSize="md"
-              fontFamily={fontHauoraMedium}
-              color="#494949"
-              lineHeight={20}
-            >
-              {experience} yrs of experience
-            </Text>
-
             {about && (
               <Text
                 fontSize="md"
