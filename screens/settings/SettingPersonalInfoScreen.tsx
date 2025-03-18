@@ -4,6 +4,7 @@ import {
   fontHauora,
   fontHauoraMedium,
   fontHauoraSemiBold,
+  colorErrorText
 } from "@/constant/constant";
 import SettingBackButton from "@/components/settings/SettingBackButton";
 import { IconUser, IconEditCircle } from "@tabler/icons-react-native";
@@ -16,6 +17,7 @@ import ProfileOptionButton from "./ProfileOptionButton";
 import ImageUpload from "@/components/partials/ImageUpload";
 import { UploadedFile } from "@/store/types/file";
 import { useToast } from "react-native-toast-notifications";
+import ConfirmationModal from "@/components/partials/ConfirmationModal";
 
 const SettingPersonalInfoScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
@@ -23,6 +25,7 @@ const SettingPersonalInfoScreen: React.FC<{ navigation: NavigationType }> = ({
   const toast = useToast();
   const { user, updateUser } = useUserStore();
   // const [ImageLoading, setImageLoading] = useState(false);
+  const [showDeactivateAccountModal , setShowDeactivateAccountModal ] = useState(false)
 
   const handleUpdateImage = async (file: UploadedFile[]) => {
     if (!user) return;
@@ -38,6 +41,8 @@ const SettingPersonalInfoScreen: React.FC<{ navigation: NavigationType }> = ({
       // setImageLoading(false);
     }
   };
+
+  const handleDeactivateAccount = () =>{}
 
   return (
     <Layout
@@ -152,8 +157,33 @@ const SettingPersonalInfoScreen: React.FC<{ navigation: NavigationType }> = ({
               value={user?.postalCode ?? "-"}
             />
           </Div>
+          <TouchableOpacity
+            onPress={() => setShowDeactivateAccountModal(true)}
+            style={{ marginTop: 20 }}
+          >
+            <Text
+              fontSize={"xl"}
+              fontFamily={fontHauoraMedium}
+              lineHeight={24}
+              color={colorErrorText}
+            >
+              Deactivate Account
+            </Text>
+          </TouchableOpacity>
         </Div>
       </ScrollDiv>
+      <ConfirmationModal
+        heading="Deactivate Account?"
+        text="Deactivating your account will restrict access to your profile, messages, and other data."
+        isLoading={false}
+        showModal={showDeactivateAccountModal}
+        onClose={() => setShowDeactivateAccountModal(false)}
+        onConfirm={handleDeactivateAccount}
+        confirmText="Confirm"
+        cancelText="Cancel"
+        confirmBgColor={colorErrorText}
+        cancelBgColor="#222"
+      />
     </Layout>
   );
 };
