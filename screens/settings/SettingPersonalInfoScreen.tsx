@@ -146,7 +146,8 @@ const SettingPersonalInfoScreen: React.FC<{ navigation: NavigationType }> = ({
               title="Street address"
               value={user?.address ?? "-"}
             />
-            <ProfileOptionButton title="City" value={user?.country ?? "-"} />
+            <ProfileOptionButton title="City" value={user?.city ?? "-"} />
+            <ProfileOptionButton title="Country" value={user?.country ?? "-"} />
             <ProfileOptionButton
               title="Postal code"
               value={user?.postalCode ?? "-"}
