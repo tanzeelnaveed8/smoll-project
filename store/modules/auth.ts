@@ -13,8 +13,11 @@ export const useAuthStore = create<AuthState>((set) => ({
       await api.post("/member/auth/login", payload);
     } catch (err) {
       const error = err as AxiosError;
+      
       if (error.response?.status === 404) {
         exist = false;
+      }else{
+        throw err;
       }
     }
 
@@ -40,5 +43,8 @@ export const useAuthStore = create<AuthState>((set) => ({
         await api.patch("/members/me", { playerId });
       }
     }
+  },
+  async deactivateAccount() {
+   await api.post('/members/me/deactivate')
   },
 }));

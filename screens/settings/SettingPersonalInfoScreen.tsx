@@ -4,6 +4,7 @@ import {
   fontHauora,
   fontHauoraMedium,
   fontHauoraSemiBold,
+  colorErrorText
 } from "@/constant/constant";
 import SettingBackButton from "@/components/settings/SettingBackButton";
 import { IconUser, IconEditCircle } from "@tabler/icons-react-native";
@@ -16,13 +17,20 @@ import ProfileOptionButton from "./ProfileOptionButton";
 import ImageUpload from "@/components/partials/ImageUpload";
 import { UploadedFile } from "@/store/types/file";
 import { useToast } from "react-native-toast-notifications";
+import ConfirmationModal from "@/components/partials/ConfirmationModal";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { logout } from "@/utils/chat.v2";
+import { useAuthStore } from "@/store/modules/auth";
 
 const SettingPersonalInfoScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
   const toast = useToast();
   const { user, updateUser } = useUserStore();
+  const {deactivateAccount} = useAuthStore();
   // const [ImageLoading, setImageLoading] = useState(false);
+  const [showDeactivateAccountModal , setShowDeactivateAccountModal ] = useState(false)
+  const [isLoading , setIsLoading] = useState(false)
 
   const handleUpdateImage = async (file: UploadedFile[]) => {
     if (!user) return;
@@ -38,6 +46,23 @@ const SettingPersonalInfoScreen: React.FC<{ navigation: NavigationType }> = ({
       // setImageLoading(false);
     }
   };
+
+  const handleDeactivateAccount =async () =>{
+    try{
+      setIsLoading(true)
+    await deactivateAccount()
+
+    await AsyncStorage.setItem("accessToken", "");
+    AsyncStorage.removeItem("hideAccountSetupBtn");
+    navigation.navigate("NewOnboardingScreen");
+
+    logout();
+
+    }finally{
+      setIsLoading(false)
+      setShowDeactivateAccountModal(false);
+    }
+  }
 
   return (
     <Layout
@@ -152,8 +177,33 @@ const SettingPersonalInfoScreen: React.FC<{ navigation: NavigationType }> = ({
               value={user?.postalCode ?? "-"}
             />
           </Div>
+          <TouchableOpacity
+            onPress={() => setShowDeactivateAccountModal(true)}
+            style={{ marginTop: 20 }}
+          >
+            <Text
+              fontSize={"xl"}
+              fontFamily={fontHauoraMedium}
+              lineHeight={24}
+              color={colorErrorText}
+            >
+              Deactivate Account
+            </Text>
+          </TouchableOpacity>
         </Div>
       </ScrollDiv>
+      <ConfirmationModal
+        heading="Deactivate Account?"
+        text="Deactivating your account will restrict access to your profile, messages, and other data."
+        isLoading={isLoading}
+        showModal={showDeactivateAccountModal}
+        onClose={() => setShowDeactivateAccountModal(false)}
+        onConfirm={handleDeactivateAccount}
+        confirmText="Confirm"
+        cancelText="Cancel"
+        confirmBgColor={colorErrorText}
+        cancelBgColor="#222"
+      />
     </Layout>
   );
 };

@@ -45,7 +45,7 @@ const ConfirmationModal: React.FC<{
           </Text>
 
           {text && (
-            <Text fontSize={"md"} fontFamily={fontHauoraMedium} mb={16}>
+            <Text fontSize={"md"} fontFamily={fontHauoraMedium} mb={18}>
               {text}
             </Text>
           )}

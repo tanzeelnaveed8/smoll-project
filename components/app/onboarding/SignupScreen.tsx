@@ -95,13 +95,6 @@ const SignupScreen: React.FC<{ navigation: NavigationType }> = ({
 
       setShowOtpModal(true);
     } catch (err) {
-      const message = getAxiosErrMsg(err as AxiosError);
-
-      if (!message.toLowerCase().includes("not found")) {
-        toastRef.current?.show(message, {
-          type: "danger",
-        });
-      }
     } finally {
       setIsLoading(false);
     }
