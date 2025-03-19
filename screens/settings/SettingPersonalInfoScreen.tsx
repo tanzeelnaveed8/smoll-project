@@ -190,6 +190,9 @@ const SettingPersonalInfoScreen: React.FC<{ navigation: NavigationType }> = ({
             >
               Deactivate Account
             </Text>
+            <Div py={12}></Div>
+            <Div py={12}></Div>
+            <Div py={12}></Div>
           </TouchableOpacity>
         </Div>
       </ScrollDiv>

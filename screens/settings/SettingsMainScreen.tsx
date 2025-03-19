@@ -99,12 +99,6 @@ const options: GroupType[] = [
     groupName: "Billing and Security",
     options: [
       {
-        id: 1,
-        title: "Payment",
-        icon: IconCreditCard,
-        disabled: true,
-      },
-      {
         id: 2,
         title: "Legal",
         icon: IconGavel,
@@ -239,7 +233,7 @@ const SettingsMainScreen: React.FC<{ navigation: NavigationType }> = ({
           </React.Fragment>
         ))}
 
-        <Div mt="auto" mb={20}>
+        <Div mt="auto" my={20}>
           <TouchableOpacity
             onPress={() => setShowLogoutModal(true)}
             style={{ marginBottom: 10 }}
