@@ -387,7 +387,6 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({
           <DoctorCard
             name={expertDetailMap.get(expertId)?.name ?? ""}
             speciality={expertDetailMap.get(expertId)?.designation ?? ""}
-            experience={expertDetailMap.get(expertId)?.yearsOfExperience ?? 0}
             isOnline={expertDetailMap.get(expertId)?.isOnline ?? false}
             image={expertDetailMap.get(expertId)?.profileImg?.url ?? ""}
             verified={true}

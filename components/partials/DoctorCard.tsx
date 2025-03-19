@@ -7,7 +7,7 @@ import VerifiedIcon from "../icons/VerifiedIcon";
 type PropTypes = {
   name: string;
   speciality: string;
-  experience: number;
+  experience?: number;
   verified?: boolean;
   slotScreen?: boolean;
   isOnline?: boolean;
@@ -110,7 +110,7 @@ const DoctorCard: React.FC<PropTypes> = (props) => {
             >
               {speciality}
             </Text>
-            <Text
+            {experience !== undefined && <Text
               fontSize="md"
               fontFamily={fontHauoraMedium}
               color="#494949"
@@ -118,7 +118,7 @@ const DoctorCard: React.FC<PropTypes> = (props) => {
             >
               {experience} yrs of experience
             </Text>
-
+}
             {about && (
               <Text
                 fontSize="md"

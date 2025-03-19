@@ -6,7 +6,7 @@ import DoctorCard from "./DoctorCard";
 type PropTypes = {
   name: string;
   speciality: string;
-  experience: number;
+  experience?: number;
   verified?: boolean;
   nextAvailable: string;
   mb?: number;
