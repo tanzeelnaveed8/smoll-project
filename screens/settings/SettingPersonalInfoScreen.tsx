@@ -18,14 +18,19 @@ import ImageUpload from "@/components/partials/ImageUpload";
 import { UploadedFile } from "@/store/types/file";
 import { useToast } from "react-native-toast-notifications";
 import ConfirmationModal from "@/components/partials/ConfirmationModal";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { logout } from "@/utils/chat.v2";
+import { useAuthStore } from "@/store/modules/auth";
 
 const SettingPersonalInfoScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
 }) => {
   const toast = useToast();
   const { user, updateUser } = useUserStore();
+  const {deactivateAccount} = useAuthStore();
   // const [ImageLoading, setImageLoading] = useState(false);
   const [showDeactivateAccountModal , setShowDeactivateAccountModal ] = useState(false)
+  const [isLoading , setIsLoading] = useState(false)
 
   const handleUpdateImage = async (file: UploadedFile[]) => {
     if (!user) return;
@@ -42,7 +47,22 @@ const SettingPersonalInfoScreen: React.FC<{ navigation: NavigationType }> = ({
     }
   };
 
-  const handleDeactivateAccount = () =>{}
+  const handleDeactivateAccount =async () =>{
+    try{
+      setIsLoading(true)
+    await deactivateAccount()
+
+    await AsyncStorage.setItem("accessToken", "");
+    AsyncStorage.removeItem("hideAccountSetupBtn");
+    navigation.navigate("NewOnboardingScreen");
+
+    logout();
+
+    }finally{
+      setIsLoading(false)
+      setShowDeactivateAccountModal(false);
+    }
+  }
 
   return (
     <Layout
@@ -175,7 +195,7 @@ const SettingPersonalInfoScreen: React.FC<{ navigation: NavigationType }> = ({
       <ConfirmationModal
         heading="Deactivate Account?"
         text="Deactivating your account will restrict access to your profile, messages, and other data."
-        isLoading={false}
+        isLoading={isLoading}
         showModal={showDeactivateAccountModal}
         onClose={() => setShowDeactivateAccountModal(false)}
         onConfirm={handleDeactivateAccount}
