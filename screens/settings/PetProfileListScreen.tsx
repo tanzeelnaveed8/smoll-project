@@ -159,7 +159,6 @@ const ProfileCard: React.FC<{
             }
             w={58}
             h={58}
-            borderWidth={1.15}
             // borderColor="#fff"
             borderColor="#222"
             borderRadius={7}
