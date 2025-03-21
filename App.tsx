@@ -101,6 +101,7 @@ import {
 import { useExpertStore } from "./store/modules/expert";
 import { useSound } from "./functions/useSound";
 import { transformMessages } from "./utils/helpers";
+import BottomPopup from "./components/app/BottomPopup";
 
 Sentry.init({
   dsn: Config.SENTRY_DSN,
@@ -806,6 +807,7 @@ const App = () => {
                 </Stack.Navigator>
               </SocketProvider>
               <FlashMessage position="top" />
+              <BottomPopup type="emergencyCase" petName="Arya"/>
             </ToastProvider>
           </NavigationContainer>
         </SafeAreaView>
