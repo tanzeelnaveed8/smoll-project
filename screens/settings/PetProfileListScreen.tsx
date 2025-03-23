@@ -26,6 +26,7 @@ import {
 import { Pet } from "@/store/types/pet";
 import { useFocusEffect } from "@react-navigation/native";
 import rainbowImage from '../../assets//images/rainbow.png'
+import AddButton from "@/components/partials/AddButton";
 
 const PetProfileListScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
@@ -92,35 +93,14 @@ const PetProfileListScreen: React.FC<{ navigation: NavigationType }> = ({
               })}
           </Div>
 
-          <Button
-            fontSize={"lg"}
-            fontFamily={fontHauoraSemiBold}
-            color="primary"
-            flexDir="row"
-            alignItems="center"
-            style={{ gap: 4 }}
-            p={0}
-            bg="transparent"
+          <AddButton
+            text="Add New Pet"
             onPress={() => {
-              navigation.navigate("PetProfileScreen", {
-                navigateTo: "PetProfileListScreen",
-              });
+                navigation.navigate("PetProfileScreen", {
+                    navigateTo: "PetProfileListScreen",
+                });
             }}
-          >
-            <IconSquareRoundedPlus
-              width={24}
-              height={24}
-              color={"#427594"}
-              style={{ marginTop: 2 }}
-            />
-            <Text
-              color="primary"
-              fontSize={"lg"}
-              fontFamily={fontHauoraSemiBold}
-            >
-              Add Pets
-            </Text>
-          </Button>
+          />
         </Div>
       </ScrollDiv>
     </Layout>
