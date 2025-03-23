@@ -32,6 +32,7 @@ export interface Pet {
   id: string;
   name: string;
   photos: UploadedFile[];
+  isDeceased?:boolean
 }
 
 export type HealthHistory = {
