@@ -378,12 +378,13 @@ const ChatComposer: React.FC<Props> = (props) => {
           renderComposer={() => (
             <Div style={{ flex: 1 }}>
               {renderReplyPreview()}
-              <Div flexDir="row" alignItems="center" top={8}>
+              <Div flexDir="row" alignItems="flex-end" top={8}>
                 <Input
+                  multiline
                   placeholder="Type a message..."
                   flex={1}
                   bg="#f3f3f3"
-                  rounded="circle"
+                  rounded={24}
                   borderWidth={0}
                   py={8}
                   px={16}
@@ -395,7 +396,7 @@ const ChatComposer: React.FC<Props> = (props) => {
                     setText(value);
                   }}
                 />
-                <Div row alignItems="center" ml={8}>
+                <Div row alignItems="center" ml={8} mb={4}>
                   <TouchableOpacity
                     onPress={pickImage}
                     style={{ marginRight: 6 }}
