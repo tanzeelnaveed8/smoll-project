@@ -47,9 +47,14 @@
 	<key>NSCameraUsageDescription</key>
 	<string>We use the camera for live video consultations with pet experts. Video sessions may be recorded and securely stored on our servers for quality and compliance purposes.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>We use the microphone to capture voice notes about your pet's health. These recordings are stored on our servers so you can access them later."</string>
+	<string>We use the microphone to capture voice notes about your pet&apos;s health. These recordings are stored on our servers so you can access them later.&quot;</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Smoll would like to access your photos</string>
+	<string>Smoll needs access to your photos to help you upload and manage pet records easily and be able to share these photos with the pet expert to help you with better understanding of your pet’s case
+
+
+
+
+</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>
