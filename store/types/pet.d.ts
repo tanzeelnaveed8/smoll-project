@@ -15,7 +15,7 @@ export type PetDetail = {
   id?: string;
   name: string;
   age: number;
-  weight: number;
+  weight?: number;
   species: string;
   spayedOrNeutered: boolean;
   gender: PetGenderEnum;
