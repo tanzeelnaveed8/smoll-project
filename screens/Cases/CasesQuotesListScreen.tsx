@@ -2,6 +2,7 @@ import Layout from "@/components/app/Layout";
 import {
   colorPrimary,
   fontCooper,
+  fontHauoraBold,
   fontHauoraMedium,
   fontHauoraSemiBold,
 } from "@/constant/constant";
@@ -188,6 +189,9 @@ const CasesQuotesListScreen: React.FC<{ navigation: NavigationType }> = ({
                       >
                         <Text fontFamily={fontHauoraSemiBold} fontSize={"xl"}>
                           {item.pet.name}
+                        </Text>
+                        <Text color="#f52c11" fontFamily={fontHauoraBold} fontSize={"md"}>
+                          New!
                         </Text>
                       </Div>
 

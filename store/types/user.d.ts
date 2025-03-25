@@ -32,14 +32,17 @@ export interface User {
   profileImg: UploadedFile;
   stripeCustomerId: string;
   playerId: string;
+  navNotif?:{newQuotation?:number}
 }
 
 export interface UserState {
   user: Nullable<User>;
   callId: Nullable<string>;
+  navNotif:number | null
 
   UPDATE_PET_COUNT: (increment: number) => void;
   SET_CALL_ID: (callId: string | null) => void;
+  SET_NAV_NOTIF: (value: number | null) => void;
 
   fetchEnvs: () => Promise<void>;
   findUser: (skipErr?: boolean) => Promise<User>;

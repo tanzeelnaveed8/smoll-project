@@ -5,6 +5,7 @@ import { UserState } from "../types/user";
 export const useUserStore = create<UserState>((set, get) => ({
   user: null,
   callId: null,
+  navNotif:null,
 
   /** Mutations */
   SET_CALL_ID: (callId) => {
@@ -23,6 +24,11 @@ export const useUserStore = create<UserState>((set, get) => ({
         },
       });
     }
+  },
+  SET_NAV_NOTIF: (val:number | null) => {
+    set(() => ({
+      navNotif: val,
+    }));
   },
 
   fetchEnvs: async () => {
