@@ -6,11 +6,13 @@ import { fontHauoraBold, fontHauoraMedium, fontHauoraSemiBold } from "@/constant
 import blueWatch from "@/assets/images/blue-watch.png";
 import receiptSlip from "@/assets/images/receipt-slip.png";
 import important from "@/assets/images/important.png";
+import { TouchableOpacity } from "react-native";
 
 interface BottomPopupProps {
   type: "emergency" | "appointment" | "quotation";
   petName: string;
   onClose: () => void;
+  onButtonClick: () => void;
 }
 
 const popUpTypes = {
@@ -50,7 +52,7 @@ const popUpTypes = {
   },
 };
 
-const BottomPopup: React.FC<BottomPopupProps> = ({ type, petName, onClose }) => {
+const BottomPopup: React.FC<BottomPopupProps> = ({ type, petName, onClose, onButtonClick }) => {
   const [popup, setPopup] = useState(true);
   const handleSwipe = () => {
     onClose();
@@ -84,24 +86,26 @@ const BottomPopup: React.FC<BottomPopupProps> = ({ type, petName, onClose }) => 
               {popUpTypes[type].description(petName)}
             </Text>
           </Div>
-          <ButtonPrimary py={6} maxW={210} bg="#fff" fontWeight="500">
-            <Div flex={1} row={true} alignItems="center">
-              <Text
-                mr={8}
-                fontSize={18}
-                color={popUpTypes[type].bgColor}
-                fontFamily={fontHauoraBold}
-              >
-                {popUpTypes[type].buttonText}
-              </Text>
-              <IconArrowRight
-                width={34}
-                height={34}
-                strokeWidth={2.7}
-                color={popUpTypes[type].bgColor}
-              />
-            </Div>
-          </ButtonPrimary>
+          <TouchableOpacity onPress={() => onButtonClick()}>
+            <ButtonPrimary py={6} maxW={210} bg="#fff" fontWeight="500">
+              <Div flex={1} row={true} alignItems="center">
+                <Text
+                  mr={8}
+                  fontSize={18}
+                  color={popUpTypes[type].bgColor}
+                  fontFamily={fontHauoraBold}
+                >
+                  {popUpTypes[type].buttonText}
+                </Text>
+                <IconArrowRight
+                  width={34}
+                  height={34}
+                  strokeWidth={2.7}
+                  color={popUpTypes[type].bgColor}
+                />
+              </Div>
+            </ButtonPrimary>
+          </TouchableOpacity>
         </Div>
         <Div position="absolute" right={-12} top={20}>
           <Image

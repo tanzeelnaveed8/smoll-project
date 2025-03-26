@@ -99,6 +99,7 @@ import { useSound } from "./functions/useSound";
 import { transformMessages } from "./utils/helpers";
 import BottomPopup from "./components/app/BottomPopup";
 import { SocketEventEnum } from "./socket/events";
+import Popup from "./components/Popup";
 
 Sentry.init({
   dsn: Config.SENTRY_DSN,
@@ -202,6 +203,10 @@ const TabNavigation = () => {
         }
       });
     }
+
+    return () => {
+      socket?.off(SocketEventEnum.PARTNER_QUOTATION_SUBMITTED);
+    };
   }, []);
 
   const TabButton: React.FC<{
@@ -311,7 +316,7 @@ const TabNavigation = () => {
 };
 
 const App = () => {
-  const { user } = useUserStore();
+  const { user, clearPopupNotification } = useUserStore();
 
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const { backgroundColor } = useUIStore();
@@ -333,9 +338,8 @@ const App = () => {
     unreadMessages,
   } = useExpertStore();
   const { play } = useSound();
-  const [activePopup, setActivePopup] = useState<null | {
-    data: any;
-  }>(null);
+
+  const socket = useSocket();
 
   useEffect(() => {
     (async () => {
@@ -427,13 +431,6 @@ const App = () => {
             return;
           }
 
-          //TO SHOW BOTTOM POPUP
-          if (additionalData?.notificationType === "cta-popup") {
-            setActivePopup({ data: additionalData });
-            await AsyncStorage.setItem("popup", JSON.stringify(additionalData));
-            return;
-          }
-
           event.notification.display();
         });
       }
@@ -462,8 +459,12 @@ const App = () => {
           const parsedEnvs = JSON.parse(storedEnvs);
           setEnvs(parsedEnvs);
 
-          // Ensure OneSignal is initialized before any other OneSignal methods
-          OneSignal.initialize(parsedEnvs?.ONESIGNAL_APP_ID as string);
+          try {
+            // Ensure OneSignal is initialized before any other OneSignal methods
+            OneSignal.initialize(parsedEnvs?.ONESIGNAL_APP_ID as string);
+          } catch (err) {
+            console.log("One signal Initialization issue", err);
+          }
 
           if (user.playerId) {
             OneSignal.login(user.playerId);
@@ -520,11 +521,9 @@ const App = () => {
 
           zim.on("receivePeerMessage", eventHandler.receivePeerMessage!);
 
-          const storedPopupData = await AsyncStorage.getItem("popup");
-          if (storedPopupData) setActivePopup({ data: JSON.parse(storedPopupData) });
-
           return () => {
             zim.off("receivePeerMessage");
+            socket?.off(SocketEventEnum.CTA_POPUP);
           };
         }
       }
@@ -709,16 +708,7 @@ const App = () => {
                 </Stack.Navigator>
               </SocketProvider>
               <FlashMessage position="top" />
-              {activePopup && (
-                <BottomPopup
-                  type={activePopup?.data.type}
-                  petName={activePopup?.data.petName}
-                  onClose={async () => {
-                    setActivePopup(null);
-                    await AsyncStorage.removeItem("popup");
-                  }}
-                />
-              )}
+              <Popup />
             </ToastProvider>
           </NavigationContainer>
         </SafeAreaView>

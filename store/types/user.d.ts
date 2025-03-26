@@ -33,6 +33,7 @@ export interface User {
   stripeCustomerId: string;
   playerId: string;
   navNotif?: { newQuotation?: number };
+  notifInfo?: { type: "emergency" | "appointment" | "quotation"; data: any };
 }
 
 export interface UserState {
@@ -60,4 +61,5 @@ export interface UserState {
     customer: string;
   }>;
   readQuotation: (caseId: string, quotationId: string) => Promise<void>;
+  clearPopupNotification: (type: "emergency" | "quotation" | "appointment") => Promise<void>;
 }
