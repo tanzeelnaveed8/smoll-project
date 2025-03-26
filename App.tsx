@@ -333,6 +333,9 @@ const App = () => {
     unreadMessages,
   } = useExpertStore();
   const { play } = useSound();
+  const [activePopup, setActivePopup] = useState<null | {
+    data: any;
+  }>(null);
 
   useEffect(() => {
     (async () => {
@@ -351,7 +354,7 @@ const App = () => {
       if (envs) {
         OneSignal.Notifications.requestPermission(true);
 
-        OneSignal.Notifications.addEventListener("click", (event) => {
+        OneSignal.Notifications.addEventListener("click", async (event) => {
           const additionalData = event.notification?.additionalData as {
             notificationType?: string;
             consultationId?: string;
@@ -409,7 +412,7 @@ const App = () => {
         });
 
         // Method for listening for notifications received
-        OneSignal.Notifications.addEventListener("foregroundWillDisplay", (event) => {
+        OneSignal.Notifications.addEventListener("foregroundWillDisplay", async (event) => {
           const additionalData = event.notification?.additionalData as {
             expertId?: string;
           };
@@ -418,8 +421,16 @@ const App = () => {
 
           if (
             rootNavigation.getCurrentRoute()?.name === "ExpertsChatScreen" &&
-            additionalData?.expertId === expertId
+            additionalData?.expertId === expertId &&
+            additionalData.notificationType === "chat"
           ) {
+            return;
+          }
+
+          //TO SHOW BOTTOM POPUP
+          if (additionalData?.notificationType === "cta-popup") {
+            setActivePopup({ data: additionalData });
+            await AsyncStorage.setItem("popup", JSON.stringify(additionalData));
             return;
           }
 
@@ -493,7 +504,6 @@ const App = () => {
               const updatedUnreadMessages = unreadMessages;
               //IF fromConversation user is same as active user then clear unread message
 
-              console.log("activeConvo", activeConvo, fromConversationID, unreadMessages);
               if (activeConvo === fromConversationID) {
                 updatedUnreadMessages.delete(fromConversationID);
               } else {
@@ -509,6 +519,9 @@ const App = () => {
           };
 
           zim.on("receivePeerMessage", eventHandler.receivePeerMessage!);
+
+          const storedPopupData = await AsyncStorage.getItem("popup");
+          if (storedPopupData) setActivePopup({ data: JSON.parse(storedPopupData) });
 
           return () => {
             zim.off("receivePeerMessage");
@@ -696,7 +709,16 @@ const App = () => {
                 </Stack.Navigator>
               </SocketProvider>
               <FlashMessage position="top" />
-              <BottomPopup type="emergencyCase" petName="Arya" />
+              {activePopup && (
+                <BottomPopup
+                  type={activePopup?.data.type}
+                  petName={activePopup?.data.petName}
+                  onClose={async () => {
+                    setActivePopup(null);
+                    await AsyncStorage.removeItem("popup");
+                  }}
+                />
+              )}
             </ToastProvider>
           </NavigationContainer>
         </SafeAreaView>
