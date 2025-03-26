@@ -2,24 +2,21 @@ import Layout from "@/components/app/Layout";
 import {
   colorPrimary,
   fontCooper,
-  fontHauoraBold,
   fontHauoraMedium,
   fontHauoraSemiBold,
 } from "@/constant/constant";
 import { useCaseStore } from "@/store/modules/case";
 import { NavigationType } from "@/store/types";
 import { CaseStatusEnum } from "@/store/types/case.d";
-import { useRoute } from "@react-navigation/native";
+import { useFocusEffect, useRoute } from "@react-navigation/native";
 import dayjs from "dayjs";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { RefreshControl, TouchableOpacity } from "react-native";
 import { FlatList } from "react-native-bidirectional-infinite-scroll";
 
-import { Button, Div, Image, Text } from "react-native-magnus";
+import { Badge, Button, Div, Image, Text } from "react-native-magnus";
 
-const CasesQuotesListScreen: React.FC<{ navigation: NavigationType }> = ({
-  navigation,
-}) => {
+const CasesQuotesListScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
   const route = useRoute();
   const { escalatedCases: cases, fetchCases } = useCaseStore();
 
@@ -30,9 +27,11 @@ const CasesQuotesListScreen: React.FC<{ navigation: NavigationType }> = ({
 
   const comingFrom = (route.params as Record<string, string | undefined>)?.from;
 
-  useEffect(() => {
-    handleFetchCases(undefined, true);
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      handleFetchCases(undefined, true);
+    }, [])
+  );
 
   const handleFetchCases = async (isRefresh?: boolean, reset?: boolean) => {
     try {
@@ -66,6 +65,7 @@ const CasesQuotesListScreen: React.FC<{ navigation: NavigationType }> = ({
     });
   };
 
+  console.log(cases, "CASES DATA");
   return (
     <>
       <Layout
@@ -82,12 +82,7 @@ const CasesQuotesListScreen: React.FC<{ navigation: NavigationType }> = ({
       >
         <Div mb={24}>
           {cases && cases.length > 0 && (
-            <Text
-              fontSize={"4xl"}
-              fontWeight="bold"
-              mb={20}
-              fontFamily={fontCooper}
-            >
+            <Text fontSize={"4xl"} fontWeight="bold" mb={20} fontFamily={fontCooper}>
               Quotations
             </Text>
           )}
@@ -143,11 +138,7 @@ const CasesQuotesListScreen: React.FC<{ navigation: NavigationType }> = ({
 
                   {Boolean(item.requestCount) && (
                     <Button
-                      fontSize={"lg"}
                       bg="transparent"
-                      p={0}
-                      fontFamily={fontHauoraSemiBold}
-                      color="primary"
                       onPress={() => {
                         navigation.navigate("CaseQuotesScreen", {
                           id: item.id,
@@ -155,18 +146,15 @@ const CasesQuotesListScreen: React.FC<{ navigation: NavigationType }> = ({
                         });
                       }}
                     >
-                      View
+                      {item.hasNewQuotation && <Badge bg="#f52c11" mt={1} />}
+                      <Text fontFamily={fontHauoraSemiBold} fontSize={"lg"} color="primary" ml={-4}>
+                        View
+                      </Text>
                     </Button>
                   )}
                 </Div>
 
-                <Div
-                  bg="transparent"
-                  p={0}
-                  flexDir="row"
-                  alignItems="center"
-                  mb={12}
-                >
+                <Div bg="transparent" p={0} flexDir="row" alignItems="center" mb={12}>
                   <Image
                     source={{ uri: item.pet.photos?.[0]?.url }}
                     w={58}
@@ -175,12 +163,7 @@ const CasesQuotesListScreen: React.FC<{ navigation: NavigationType }> = ({
                     rounded={100}
                   />
                   <Div flex={1}>
-                    <Div
-                      mb={4}
-                      flexDir="row"
-                      justifyContent="space-between"
-                      flex={1}
-                    >
+                    <Div mb={4} flexDir="row" justifyContent="space-between" flex={1}>
                       <Div
                         flexDir="row"
                         justifyContent="space-between"
@@ -190,36 +173,21 @@ const CasesQuotesListScreen: React.FC<{ navigation: NavigationType }> = ({
                         <Text fontFamily={fontHauoraSemiBold} fontSize={"xl"}>
                           {item.pet.name}
                         </Text>
-                        <Text color="#f52c11" fontFamily={fontHauoraBold} fontSize={"md"}>
-                          New!
-                        </Text>
                       </Div>
 
                       {item.status === CaseStatusEnum.OPEN_ESCALATED && (
-                        <Text
-                          fontFamily={fontHauoraSemiBold}
-                          fontSize={"lg"}
-                          color="#2F6E20"
-                        >
+                        <Text fontFamily={fontHauoraSemiBold} fontSize={"lg"} color="#2F6E20">
                           {item.requestCount} Request
                         </Text>
                       )}
                     </Div>
 
                     <Div>
-                      <Text
-                        color="#494949"
-                        fontFamily={fontHauoraSemiBold}
-                        fontSize={"md"}
-                      >
+                      <Text color="#494949" fontFamily={fontHauoraSemiBold} fontSize={"md"}>
                         Expert: {item.vet}
                       </Text>
 
-                      <Text
-                        fontFamily={fontHauoraSemiBold}
-                        fontSize={"md"}
-                        color="#494949"
-                      >
+                      <Text fontFamily={fontHauoraSemiBold} fontSize={"md"} color="#494949">
                         Case Id: {item.id}
                       </Text>
                     </Div>
@@ -246,11 +214,7 @@ const CasesQuotesListScreen: React.FC<{ navigation: NavigationType }> = ({
                     </Text>
                   </TouchableOpacity>
 
-                  <Text
-                    fontFamily={fontHauoraMedium}
-                    fontSize={"lg"}
-                    color="#2F6E20"
-                  >
+                  <Text fontFamily={fontHauoraMedium} fontSize={"lg"} color="#2F6E20">
                     {item.requestCount} Quotations
                   </Text>
                 </Div>

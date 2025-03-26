@@ -203,7 +203,9 @@ const TabNavigation = () => {
     SET_NAV_NOTIF(user?.navNotif?.newQuotation || null)
     if(socket){
       socket.on(SocketEventEnum.PARTNER_QUOTATION_SUBMITTED,async (val)=>{
-         console.log(val,"TESTING SOCKET")
+         if(val.memberId === user?.id){
+            SET_NAV_NOTIF(Number(navNotif) + 1)
+         }
       })
     }
   },[])

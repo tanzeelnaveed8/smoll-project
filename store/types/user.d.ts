@@ -32,13 +32,13 @@ export interface User {
   profileImg: UploadedFile;
   stripeCustomerId: string;
   playerId: string;
-  navNotif?:{newQuotation?:number}
+  navNotif?: { newQuotation?: number };
 }
 
 export interface UserState {
   user: Nullable<User>;
   callId: Nullable<string>;
-  navNotif:number | null
+  navNotif: number | null;
 
   UPDATE_PET_COUNT: (increment: number) => void;
   SET_CALL_ID: (callId: string | null) => void;
@@ -59,4 +59,5 @@ export interface UserState {
     ephemeralKey: string;
     customer: string;
   }>;
+  readQuotation: (caseId: string, quotationId: string) => Promise<void>;
 }

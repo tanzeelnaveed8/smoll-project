@@ -60,6 +60,7 @@ export interface CaseListResponseDto {
   hasPartnerBooking?: boolean;
   requestCount?: number;
   createdAt: string;
+  hasNewQuotation?: boolean;
 }
 
 export interface CaseDetail {
@@ -115,6 +116,7 @@ export interface CaseQuotesDto {
     partnerVetId: string;
   };
   petName: string;
+  isViewed?: boolean;
 }
 
 export interface CasesState {
