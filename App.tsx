@@ -26,7 +26,7 @@ import CounsellingChatScreen from "./screens/Counselling/CounsellingChatScreen";
 import CounsellingInboxScreen from "./screens/Counselling/CounsellingInboxScreen";
 import CounsellingRequestScreen from "./screens/Counselling/CounsellingRequestScreen";
 import HomeScreen from "./screens/HomeScreen";
-import { SocketProvider } from "./socket/provider";
+import { SocketProvider, useSocket } from "./socket/provider";
 
 import PartnerVetConfirmationScreen from "./screens/Cases/PartnerVetConfirmationScreen";
 import PartnerVetDetailScreen from "./screens/Cases/PartnerVetDetailScreen";
@@ -101,6 +101,7 @@ import {
 import { useExpertStore } from "./store/modules/expert";
 import { useSound } from "./functions/useSound";
 import { transformMessages } from "./utils/helpers";
+import { SocketEventEnum } from "./socket/events";
 
 Sentry.init({
   dsn: Config.SENTRY_DSN,
@@ -184,6 +185,31 @@ const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const TabNavigation = () => {
+
+  const [allUnreadMessageCount, setAllUnreadMessageCount] = useState(0);
+  const { unreadMessages } = useExpertStore();
+  const { user ,navNotif ,SET_NAV_NOTIF } = useUserStore();
+  const socket = useSocket();
+
+  useEffect(() => {
+    let countMessage = 0;
+    Array.from(unreadMessages.values()).forEach(
+      (count) => (countMessage += count)
+    );
+    setAllUnreadMessageCount(countMessage);
+  }, [unreadMessages.values()]);
+
+  useEffect(()=>{
+    SET_NAV_NOTIF(user?.navNotif?.newQuotation || null)
+    if(socket){
+      socket.on(SocketEventEnum.PARTNER_QUOTATION_SUBMITTED,async (val)=>{
+         if(val.memberId === user?.id){
+            SET_NAV_NOTIF(Number(navNotif) + 1)
+         }
+      })
+    }
+  },[])
+
   const TabButton: React.FC<{
     focused: boolean;
     icon: React.ReactNode;
@@ -208,24 +234,13 @@ const TabNavigation = () => {
         />
         {icon}
         {isNotification && (
-          <Div position="absolute" top={4} right={0}>
+          <Div position="absolute" top={4} right={6}>
             <Badge bg="#f52c11" position="absolute" />
           </Div>
         )}
       </Div>
     );
   };
-
-  const [allUnreadMessageCount, setAllUnreadMessageCount] = useState(0);
-  const { unreadMessages } = useExpertStore();
-
-  useEffect(() => {
-    let countMessage = 0;
-    Array.from(unreadMessages.values()).forEach(
-      (count) => (countMessage += count)
-    );
-    setAllUnreadMessageCount(countMessage);
-  }, [unreadMessages.values()]);
 
   return (
     <Tab.Navigator
@@ -316,6 +331,7 @@ const TabNavigation = () => {
                   color={focused ? "#000" : "#494949"}
                 />
               }
+              isNotification={Boolean(navNotif)}
             />
           ),
         }}
