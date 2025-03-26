@@ -1,5 +1,6 @@
 import Layout from "@/components/app/Layout";
 import HealthHistoryModal from "@/components/app/pet/HealthHistoryModal";
+import AddButton from "@/components/partials/AddButton";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import { fontCooper, fontHauoraMedium, fontHeading } from "@/constant/constant";
 import { usePetStore } from "@/store/modules/pet";
@@ -131,29 +132,7 @@ const PetProfileMedicalHistoryScreen: React.FC<Props> = (props) => {
             {item.name}
           </Button>
         ))}
-
-        {/* <TouchableOpacity>
-        </TouchableOpacity>  */}
-        <Button
-          mt={16}
-          bg="transparent"
-          color="#427594"
-          fontFamily={fontHauoraMedium}
-          fontSize="lg"
-          lineHeight={24}
-          px={0}
-          py={0}
-          onPress={() => setOpen(true)}
-          prefix={
-            <IconSquareRoundedPlus
-              size={18}
-              color="#427594"
-              style={{ marginTop: 2, marginRight: 4 }}
-            />
-          }
-        >
-          Add Health History
-        </Button>
+        <AddButton text="Add Health History" onPress={() => setOpen(true)} styles={{marginTop:6}}/>
       </Div>
 
       <Div>
