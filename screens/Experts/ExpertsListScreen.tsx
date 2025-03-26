@@ -81,7 +81,6 @@ const ExpertsListScreen: React.FC<{ navigation: NavigationType }> = ({
             mb={index + 1 === experts?.length ? 0 : 20}
             name={item.name}
             speciality={item.designation}
-            experience={item.yearsOfExperience ?? 0}
             verified
             isOnline={item.isOnline}
             image={item.profileImg?.url}

@@ -5,6 +5,7 @@ import { UserState } from "../types/user";
 export const useUserStore = create<UserState>((set, get) => ({
   user: null,
   callId: null,
+  navNotif: null,
 
   /** Mutations */
   SET_CALL_ID: (callId) => {
@@ -23,6 +24,12 @@ export const useUserStore = create<UserState>((set, get) => ({
         },
       });
     }
+  },
+  SET_NAV_NOTIF: (val: number | null) => {
+    console.log(val, "SET NAV NOT VALUE");
+    set(() => ({
+      navNotif: val,
+    }));
   },
 
   fetchEnvs: async () => {
@@ -77,5 +84,9 @@ export const useUserStore = create<UserState>((set, get) => ({
     });
 
     return res.data;
+  },
+
+  async readQuotation(caseId: string, quotationId: string) {
+    await api.patch(`/member/cases/${caseId}/quotes/${quotationId}/read`);
   },
 }));

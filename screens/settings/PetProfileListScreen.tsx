@@ -25,6 +25,8 @@ import {
 } from "react-native-magnus";
 import { Pet } from "@/store/types/pet";
 import { useFocusEffect } from "@react-navigation/native";
+import rainbowImage from '../../assets//images/rainbow.png'
+import AddButton from "@/components/partials/AddButton";
 
 const PetProfileListScreen: React.FC<{ navigation: NavigationType }> = ({
   navigation,
@@ -80,6 +82,7 @@ const PetProfileListScreen: React.FC<{ navigation: NavigationType }> = ({
                     image={image}
                     key={i}
                     name={item.name}
+                    isDeceased={item.isDeceased}
                     onPress={() => {
                       navigation.navigate("PetProfileDetailsScreen", {
                         petId: item.id,
@@ -90,35 +93,14 @@ const PetProfileListScreen: React.FC<{ navigation: NavigationType }> = ({
               })}
           </Div>
 
-          <Button
-            fontSize={"lg"}
-            fontFamily={fontHauoraSemiBold}
-            color="primary"
-            flexDir="row"
-            alignItems="center"
-            style={{ gap: 4 }}
-            p={0}
-            bg="transparent"
+          <AddButton
+            text="Add New Pet"
             onPress={() => {
-              navigation.navigate("PetProfileScreen", {
-                navigateTo: "PetProfileListScreen",
-              });
+                navigation.navigate("PetProfileScreen", {
+                    navigateTo: "PetProfileListScreen",
+                });
             }}
-          >
-            <IconSquareRoundedPlus
-              width={24}
-              height={24}
-              color={"#427594"}
-              style={{ marginTop: 2 }}
-            />
-            <Text
-              color="primary"
-              fontSize={"lg"}
-              fontFamily={fontHauoraSemiBold}
-            >
-              Add Pets
-            </Text>
-          </Button>
+          />
         </Div>
       </ScrollDiv>
     </Layout>
@@ -129,7 +111,8 @@ const ProfileCard: React.FC<{
   name: string;
   onPress: () => void;
   image?: string;
-}> = ({ name, onPress, image }) => {
+  isDeceased?:boolean
+}> = ({ name, onPress, image ,isDeceased }) => {
   return (
     <TouchableOpacity onPress={onPress}>
       <Div
@@ -156,7 +139,6 @@ const ProfileCard: React.FC<{
             }
             w={58}
             h={58}
-            borderWidth={1.15}
             // borderColor="#fff"
             borderColor="#222"
             borderRadius={7}
@@ -165,13 +147,16 @@ const ProfileCard: React.FC<{
         <Text fontSize={"xl"} fontFamily={fontHauoraMedium} ml={8}>
           {name}
         </Text>
+        
+        <Div flex={1} row={true} alignItems="center">
+          {isDeceased && <Image ml='auto' mr={10}  source={rainbowImage} h={60} w={110}/>}
+          <IconChevronRight
+            width={24}
+            height={24}
+            color={"#222222"}
+          />
+        </Div>
 
-        <IconChevronRight
-          width={24}
-          height={24}
-          color={"#222222"}
-          style={{ marginLeft: "auto" }}
-        />
       </Div>
     </TouchableOpacity>
   );

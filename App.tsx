@@ -26,7 +26,7 @@ import CounsellingChatScreen from "./screens/Counselling/CounsellingChatScreen";
 import CounsellingInboxScreen from "./screens/Counselling/CounsellingInboxScreen";
 import CounsellingRequestScreen from "./screens/Counselling/CounsellingRequestScreen";
 import HomeScreen from "./screens/HomeScreen";
-import { SocketProvider } from "./socket/provider";
+import { SocketProvider, useSocket } from "./socket/provider";
 
 import PartnerVetConfirmationScreen from "./screens/Cases/PartnerVetConfirmationScreen";
 import PartnerVetDetailScreen from "./screens/Cases/PartnerVetDetailScreen";
@@ -71,11 +71,7 @@ import { navigationRef } from "./utils/root-navigation";
 import { useUIStore } from "@/store/modules/ui";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import PushNotificationIOS from "@react-native-community/push-notification-ios";
-import {
-  IconChecklist,
-  IconMessage,
-  IconWindow,
-} from "@tabler/icons-react-native";
+import { IconChecklist, IconMessage, IconWindow } from "@tabler/icons-react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import SignupScreen from "./components/app/onboarding/SignupScreen";
 import AppointmentDetailsScreen from "./screens/Appointments/AppointmentDetailsScreen";
@@ -102,6 +98,7 @@ import { useExpertStore } from "./store/modules/expert";
 import { useSound } from "./functions/useSound";
 import { transformMessages } from "./utils/helpers";
 import BottomPopup from "./components/app/BottomPopup";
+import { SocketEventEnum } from "./socket/events";
 
 Sentry.init({
   dsn: Config.SENTRY_DSN,
@@ -134,10 +131,10 @@ const BASE_FONT_SCALE =
   SCREEN_WIDTH < 320
     ? 0.72 // Very small screens (iPhone SE 1st gen)
     : SCREEN_WIDTH < 350
-    ? 0.75 // Small screens
-    : SCREEN_WIDTH < 375
-    ? 0.85 // Medium screens
-    : 1;
+      ? 0.75 // Small screens
+      : SCREEN_WIDTH < 375
+        ? 0.85 // Medium screens
+        : 1;
 
 // Create a utility function to scale fonts
 export const scaleFontSize = (size: number): number => {
@@ -185,6 +182,28 @@ const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const TabNavigation = () => {
+  const [allUnreadMessageCount, setAllUnreadMessageCount] = useState(0);
+  const { unreadMessages } = useExpertStore();
+  const { user, navNotif, SET_NAV_NOTIF } = useUserStore();
+  const socket = useSocket();
+
+  useEffect(() => {
+    let countMessage = 0;
+    Array.from(unreadMessages.values()).forEach((count) => (countMessage += count));
+    setAllUnreadMessageCount(countMessage);
+  }, [unreadMessages.values()]);
+
+  useEffect(() => {
+    SET_NAV_NOTIF(user?.navNotif?.newQuotation || null);
+    if (socket) {
+      socket.on(SocketEventEnum.PARTNER_QUOTATION_SUBMITTED, async (val) => {
+        if (val.memberId === user?.id) {
+          SET_NAV_NOTIF(Number(navNotif) + 1);
+        }
+      });
+    }
+  }, []);
+
   const TabButton: React.FC<{
     focused: boolean;
     icon: React.ReactNode;
@@ -200,33 +219,16 @@ const TabNavigation = () => {
 
     return (
       <Div position="relative" justifyContent="center" alignItems="center">
-        <Div
-          h={4}
-          bg={focused ? "#000" : "transparent"}
-          w={60}
-          mb={2}
-          style={styles.container}
-        />
+        <Div h={4} bg={focused ? "#000" : "transparent"} w={60} mb={2} style={styles.container} />
         {icon}
         {isNotification && (
-          <Div position="absolute" top={4} right={0}>
+          <Div position="absolute" top={4} right={6}>
             <Badge bg="#f52c11" position="absolute" />
           </Div>
         )}
       </Div>
     );
   };
-
-  const [allUnreadMessageCount, setAllUnreadMessageCount] = useState(0);
-  const { unreadMessages } = useExpertStore();
-
-  useEffect(() => {
-    let countMessage = 0;
-    Array.from(unreadMessages.values()).forEach(
-      (count) => (countMessage += count)
-    );
-    setAllUnreadMessageCount(countMessage);
-  }, [unreadMessages.values()]);
 
   return (
     <Tab.Navigator
@@ -253,13 +255,7 @@ const TabNavigation = () => {
           tabBarIcon: ({ focused }) => (
             <TabButton
               focused={focused}
-              icon={
-                <IconWindow
-                  width={28}
-                  height={28}
-                  color={focused ? "#000" : "#494949"}
-                />
-              }
+              icon={<IconWindow width={28} height={28} color={focused ? "#000" : "#494949"} />}
             />
           ),
         }}
@@ -289,13 +285,7 @@ const TabNavigation = () => {
           tabBarIcon: ({ focused }) => (
             <TabButton
               focused={focused}
-              icon={
-                <IconMessage
-                  width={28}
-                  height={28}
-                  color={focused ? "#000" : "#494949"}
-                />
-              }
+              icon={<IconMessage width={28} height={28} color={focused ? "#000" : "#494949"} />}
               isNotification={Boolean(allUnreadMessageCount)}
             />
           ),
@@ -310,13 +300,8 @@ const TabNavigation = () => {
           tabBarIcon: ({ focused }) => (
             <TabButton
               focused={focused}
-              icon={
-                <IconChecklist
-                  width={28}
-                  height={28}
-                  color={focused ? "#000" : "#494949"}
-                />
-              }
+              icon={<IconChecklist width={28} height={28} color={focused ? "#000" : "#494949"} />}
+              isNotification={Boolean(navNotif)}
             />
           ),
         }}
@@ -379,9 +364,7 @@ const App = () => {
             expertName?: string;
           };
 
-          if (
-            additionalData?.notificationType === "consultation-notification"
-          ) {
+          if (additionalData?.notificationType === "consultation-notification") {
             rootNavigation.navigate("AppointmentDetailsScreen", {
               id: additionalData.consultationId,
               type: "video",
@@ -401,9 +384,7 @@ const App = () => {
             });
           }
 
-          if (
-            additionalData?.notificationType === "partner-booking-notification"
-          ) {
+          if (additionalData?.notificationType === "partner-booking-notification") {
             const partnerBookingId = additionalData.partnerBookingId;
 
             rootNavigation.navigate("AppointmentDetailsScreen", {
@@ -419,9 +400,7 @@ const App = () => {
             });
           }
 
-          if (
-            additionalData?.notificationType === "vet-consultation-reminder"
-          ) {
+          if (additionalData?.notificationType === "vet-consultation-reminder") {
             rootNavigation.navigate("ConsultationWaitingScreen", {
               consultationId: additionalData.consultationId,
               petName: additionalData.petName,
@@ -430,35 +409,28 @@ const App = () => {
         });
 
         // Method for listening for notifications received
-        OneSignal.Notifications.addEventListener(
-          "foregroundWillDisplay",
-          (event) => {
-            const additionalData = event.notification?.additionalData as {
-              expertId?: string;
-            };
-            const expertId = (
-              rootNavigation.getCurrentRoute()?.params as Record<string, string>
-            )?.expertId;
+        OneSignal.Notifications.addEventListener("foregroundWillDisplay", (event) => {
+          const additionalData = event.notification?.additionalData as {
+            expertId?: string;
+          };
+          const expertId = (rootNavigation.getCurrentRoute()?.params as Record<string, string>)
+            ?.expertId;
 
-            if (
-              rootNavigation.getCurrentRoute()?.name === "ExpertsChatScreen" &&
-              additionalData?.expertId === expertId
-            ) {
-              return;
-            }
-
-            event.notification.display();
+          if (
+            rootNavigation.getCurrentRoute()?.name === "ExpertsChatScreen" &&
+            additionalData?.expertId === expertId
+          ) {
+            return;
           }
-        );
+
+          event.notification.display();
+        });
       }
     })();
 
     return () => {
       OneSignal.Notifications.removeEventListener("click", () => {});
-      OneSignal.Notifications.removeEventListener(
-        "foregroundWillDisplay",
-        () => {}
-      );
+      OneSignal.Notifications.removeEventListener("foregroundWillDisplay", () => {});
       PushNotificationIOS.removeEventListener("register");
       PushNotificationIOS.removeEventListener("notification");
     };
@@ -500,14 +472,10 @@ const App = () => {
           await getUnreadMessage();
 
           const eventHandler: Partial<ZIMEventHandler> = {
-            receivePeerMessage: async (
-              zim,
-              { messageList, fromConversationID }
-            ) => {
+            receivePeerMessage: async (zim, { messageList, fromConversationID }) => {
               console.log("zim", activeConvo);
-              const convoName = experts?.find(
-                (exp) => exp.id === fromConversationID
-              )?.name as string;
+              const convoName = experts?.find((exp) => exp.id === fromConversationID)
+                ?.name as string;
               const transformedMessages = transformMessages(messageList, {
                 recipientId: fromConversationID,
                 chatWithName: convoName,
@@ -525,12 +493,7 @@ const App = () => {
               const updatedUnreadMessages = unreadMessages;
               //IF fromConversation user is same as active user then clear unread message
 
-              console.log(
-                "activeConvo",
-                activeConvo,
-                fromConversationID,
-                unreadMessages
-              );
+              console.log("activeConvo", activeConvo, fromConversationID, unreadMessages);
               if (activeConvo === fromConversationID) {
                 updatedUnreadMessages.delete(fromConversationID);
               } else {
@@ -570,9 +533,7 @@ const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <SafeAreaProvider>
-        <SafeAreaView
-          style={[styles.safeAreaViewContainer, { backgroundColor }]}
-        >
+        <SafeAreaView style={[styles.safeAreaViewContainer, { backgroundColor }]}>
           <StatusBar barStyle="dark-content" />
           <NavigationContainer ref={navigationRef}>
             <ToastProvider
@@ -598,10 +559,7 @@ const App = () => {
                       gestureEnabled: false,
                     }}
                   />
-                  <Stack.Screen
-                    name="NewOnboardingScreen"
-                    component={NewOnboardingScreen}
-                  />
+                  <Stack.Screen name="NewOnboardingScreen" component={NewOnboardingScreen} />
                   <Stack.Screen name="SignupScreen" component={SignupScreen} />
                   <Stack.Screen
                     name="AccountSetupAddressScreen"
@@ -625,24 +583,15 @@ const App = () => {
                     component={TabNavigation}
                     options={{ headerShown: false, gestureEnabled: false }}
                   />
-                  <Stack.Screen
-                    name="NotificationScreen"
-                    component={NotificationScreen}
-                  />
+                  <Stack.Screen name="NotificationScreen" component={NotificationScreen} />
                   <Stack.Screen
                     name="ClinicListScreen"
                     component={ClinicListScreen}
                     // options={{ headerShown: false, gestureEnabled: false }}
                   />
-                  <Stack.Screen
-                    name="ClinicDetailScreen"
-                    component={ClinicDetailScreen}
-                  />
+                  <Stack.Screen name="ClinicDetailScreen" component={ClinicDetailScreen} />
 
-                  <Stack.Screen
-                    name="PetProfileScreen"
-                    component={PetProfileScreen}
-                  />
+                  <Stack.Screen name="PetProfileScreen" component={PetProfileScreen} />
                   <Stack.Screen
                     name="PetProfileMedicalHistoryScreen"
                     component={PetProfileMedicalHistoryScreen}
@@ -655,31 +604,16 @@ const App = () => {
                     name="CounsellingRequestScreen"
                     component={CounsellingRequestScreen}
                   />
-                  <Stack.Screen
-                    name="CounsellingInboxScreen"
-                    component={CounsellingInboxScreen}
-                  />
-                  <Stack.Screen
-                    name="CounsellingChatScreen"
-                    component={CounsellingChatScreen}
-                  />
-                  <Stack.Screen
-                    name="ExpertsListScreen"
-                    component={ExpertsListScreen}
-                  />
+                  <Stack.Screen name="CounsellingInboxScreen" component={CounsellingInboxScreen} />
+                  <Stack.Screen name="CounsellingChatScreen" component={CounsellingChatScreen} />
+                  <Stack.Screen name="ExpertsListScreen" component={ExpertsListScreen} />
                   <Stack.Screen
                     name="ExpertsListDetailScreen"
                     component={ExpertsListDetailScreen}
                     options={{ headerTintColor: "#222" }}
                   />
-                  <Stack.Screen
-                    name="ExpertsInboxScreen"
-                    component={ExpertsInboxScreen}
-                  />
-                  <Stack.Screen
-                    name="ExpertsChatScreen"
-                    component={ExpertsChatScreen}
-                  />
+                  <Stack.Screen name="ExpertsInboxScreen" component={ExpertsInboxScreen} />
+                  <Stack.Screen name="ExpertsChatScreen" component={ExpertsChatScreen} />
                   <Stack.Screen
                     name="ConsultationCaseBriefScreen"
                     component={ConsultationCaseBriefScreen}
@@ -694,10 +628,7 @@ const App = () => {
                       gestureEnabled: false,
                     }}
                   />
-                  <Stack.Screen
-                    name="UnavailableScreen"
-                    component={UnavailableScreen}
-                  />
+                  <Stack.Screen name="UnavailableScreen" component={UnavailableScreen} />
                   <Stack.Screen
                     name="ConsultationVideoScreen"
                     component={ConsultationVideoScreen}
@@ -705,14 +636,8 @@ const App = () => {
                       gestureEnabled: false,
                     }}
                   />
-                  <Stack.Screen
-                    name="RequestCallBackScreen"
-                    component={RequestCallBackScreen}
-                  />
-                  <Stack.Screen
-                    name="EmergencyScreen"
-                    component={EmergencyScreen}
-                  />
+                  <Stack.Screen name="RequestCallBackScreen" component={RequestCallBackScreen} />
+                  <Stack.Screen name="EmergencyScreen" component={EmergencyScreen} />
                   <Stack.Screen
                     name="ExpertsScheduleConfirmationScreen"
                     component={ExpertsScheduleConfirmationScreen}
@@ -724,34 +649,16 @@ const App = () => {
                       gestureEnabled: false,
                     }}
                   />
-                  <Stack.Screen
-                    name="CasesQuotesListScreen"
-                    component={CasesQuotesListScreen}
-                  />
-                  <Stack.Screen
-                    name="CaseDetailScreen"
-                    component={CaseDetailScreen}
-                  />
-                  <Stack.Screen
-                    name="CaseQuotesScreen"
-                    component={CaseQuotesScreen}
-                  />
+                  <Stack.Screen name="CasesQuotesListScreen" component={CasesQuotesListScreen} />
+                  <Stack.Screen name="CaseDetailScreen" component={CaseDetailScreen} />
+                  <Stack.Screen name="CaseQuotesScreen" component={CaseQuotesScreen} />
                   <Stack.Screen
                     name="CaseQuoteDescriptionScreen"
                     component={CaseQuoteDescriptionScreen}
                   />
-                  <Stack.Screen
-                    name="PartnerVetScreen"
-                    component={PartnerVetScreen}
-                  />
-                  <Stack.Screen
-                    name="SlotBookingScreen"
-                    component={SlotBookingScreen}
-                  />
-                  <Stack.Screen
-                    name="PartnerVetDetailScreen"
-                    component={PartnerVetDetailScreen}
-                  />
+                  <Stack.Screen name="PartnerVetScreen" component={PartnerVetScreen} />
+                  <Stack.Screen name="SlotBookingScreen" component={SlotBookingScreen} />
+                  <Stack.Screen name="PartnerVetDetailScreen" component={PartnerVetDetailScreen} />
                   <Stack.Screen
                     name="PartnerVetConfirmationScreen"
                     component={PartnerVetConfirmationScreen}
@@ -764,14 +671,8 @@ const App = () => {
                     name="SettingPersonalInfoScreen"
                     component={SettingPersonalInfoScreen}
                   />
-                  <Stack.Screen
-                    name="EditInfoScreen"
-                    component={EditInfoScreen}
-                  />
-                  <Stack.Screen
-                    name="PetEditInfoScreen"
-                    component={PetEditInfoScreen}
-                  />
+                  <Stack.Screen name="EditInfoScreen" component={EditInfoScreen} />
+                  <Stack.Screen name="PetEditInfoScreen" component={PetEditInfoScreen} />
                   <Stack.Screen
                     name="ConsultationFeedbackScreen"
                     component={ConsultationFeedbackScreen}
@@ -779,35 +680,23 @@ const App = () => {
                       gestureEnabled: false,
                     }}
                   />
-                  <Stack.Screen
-                    name="PetProfileListScreen"
-                    component={PetProfileListScreen}
-                  />
+                  <Stack.Screen name="PetProfileListScreen" component={PetProfileListScreen} />
                   <Stack.Screen
                     name="PetProfileDetailsScreen"
                     component={PetProfileDetailsScreen}
                   />
-                  <Stack.Screen
-                    name="SettingsMainScreen"
-                    component={SettingsMainScreen}
-                  />
+                  <Stack.Screen name="SettingsMainScreen" component={SettingsMainScreen} />
                   {/* Appointments Screens */}
-                  <Stack.Screen
-                    name="AppointmentsScreen"
-                    component={AppointmentsScreen}
-                  />
+                  <Stack.Screen name="AppointmentsScreen" component={AppointmentsScreen} />
                   <Stack.Screen
                     name="AppointmentDetailsScreen"
                     component={AppointmentDetailsScreen}
                   />
-                  <Stack.Screen
-                    name="PaymentDetailsScreen"
-                    component={PaymentDetailsScreen}
-                  />
+                  <Stack.Screen name="PaymentDetailsScreen" component={PaymentDetailsScreen} />
                 </Stack.Navigator>
               </SocketProvider>
               <FlashMessage position="top" />
-              <BottomPopup type="emergencyCase" petName="Arya"/>
+              <BottomPopup type="emergencyCase" petName="Arya" />
             </ToastProvider>
           </NavigationContainer>
         </SafeAreaView>
