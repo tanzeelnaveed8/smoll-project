@@ -100,6 +100,7 @@ import { transformMessages } from "./utils/helpers";
 import BottomPopup from "./components/app/BottomPopup";
 import { SocketEventEnum } from "./socket/events";
 import Popup from "./components/Popup";
+import SocketListener from "./components/SocketListener";
 
 Sentry.init({
   dsn: Config.SENTRY_DSN,
@@ -704,6 +705,7 @@ const App = () => {
                   <Stack.Screen name="PaymentDetailsScreen" component={PaymentDetailsScreen} />
                 </Stack.Navigator>
                 <Popup />
+                <SocketListener />
               </SocketProvider>
               <FlashMessage position="top" />
             </ToastProvider>

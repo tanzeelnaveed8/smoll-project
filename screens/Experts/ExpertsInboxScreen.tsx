@@ -13,17 +13,12 @@ interface Props {
 }
 
 const ExpertsInboxScreen: React.FC<Props> = (props) => {
-  const {
-    experts,
-    expertDetailMap,
-    updateExpertStatus,
-    fetchExperts,
-    fetchExpertDetail,
-  } = useExpertStore();
+  const { experts, expertDetailMap, updateExpertStatus, fetchExperts, fetchExpertDetail } =
+    useExpertStore();
 
   const [loading, setLoading] = useState(false);
   const [actionLoading, setActionLoading] = useState("");
-  const {unreadMessages} = useExpertStore()
+  const { unreadMessages } = useExpertStore();
 
   useEffect(() => {
     fetchAllExperts();
@@ -56,12 +51,10 @@ const ExpertsInboxScreen: React.FC<Props> = (props) => {
     }
   };
 
+  console.log(experts);
+
   return (
-    <Layout
-      title="Chats"
-      loading={loading}
-      onBackPress={() => props.navigation.navigate("Home")}
-    >
+    <Layout title="Chats" loading={loading} onBackPress={() => props.navigation.navigate("Home")}>
       <Div mb={24}>
         <Text fontSize={"xl"} fontWeight="bold" fontFamily={fontHauoraSemiBold}>
           All Experts
@@ -80,6 +73,7 @@ const ExpertsInboxScreen: React.FC<Props> = (props) => {
             verified={expert.verified}
             about={expert.about}
             unreadMessageCount={unreadMessages.get(expert.id)}
+            isOnline={expert.isOnline}
           />
         ))}
       </Div>
