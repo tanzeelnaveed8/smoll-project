@@ -89,4 +89,8 @@ export const useUserStore = create<UserState>((set, get) => ({
   async readQuotation(caseId: string, quotationId: string) {
     await api.patch(`/member/cases/${caseId}/quotes/${quotationId}/read`);
   },
+
+  async clearPopupNotification(type: "emergency" | "appointment" | "quotation") {
+    await api.post("/members/me/clear-popups", { type });
+  },
 }));

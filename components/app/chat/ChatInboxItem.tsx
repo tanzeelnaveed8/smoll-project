@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Badge, Button, Div, Image, Tag, Text } from "react-native-magnus";
-import { IconChevronRight } from "@tabler/icons-react-native";
+import { Avatar, Badge, Button, Div, Image, Tag, Text } from "react-native-magnus";
+import { IconChevronRight, IconUser } from "@tabler/icons-react-native";
 import { ActivityIndicator, TouchableOpacity } from "react-native";
 import { colorPrimary, fontHauoraMedium } from "@/constant/constant";
 import VerifiedIcon from "@/components/icons/VerifiedIcon";
@@ -16,6 +16,7 @@ interface Props {
   verified?: boolean;
   about?: string;
   unreadMessageCount?: number;
+  isOnline?: boolean;
 }
 
 const ChatInboxItem: React.FC<Props> = (props) => {
@@ -32,10 +33,7 @@ const ChatInboxItem: React.FC<Props> = (props) => {
   }, [unreadMessages.size]);
 
   return (
-    <TouchableOpacity
-      disabled={props.loading ? true : false}
-      onPress={handlePress}
-    >
+    <TouchableOpacity disabled={props.loading ? true : false} onPress={handlePress}>
       <Button
         bg="transparent"
         p={0}
@@ -45,7 +43,32 @@ const ChatInboxItem: React.FC<Props> = (props) => {
         style={{ gap: 24 }}
         pointerEvents="none"
       >
-        <Image w={72} h={72} rounded={100} source={{ uri: props.image }} />
+        {/* <Image w={72} h={72} rounded={100} source={{ uri: props.image }} /> */}
+        {props.isOnline ? (
+          <Div mr={24}>
+            <Badge
+              right={4}
+              top={1}
+              h={15}
+              w={15}
+              style={{ backgroundColor: "#00ff28" }}
+              borderWidth={2}
+              borderColor="#fff"
+            >
+              {props.image ? (
+                <Image source={{ uri: props.image }} w={72} h={72} rounded={100} bg="#eeeeee" />
+              ) : (
+                <IconUser size={24} />
+              )}
+            </Badge>
+          </Div>
+        ) : props.image ? (
+          <Image source={{ uri: props.image }} w={72} h={72} rounded={100} bg="#eeeeee" mr={24} />
+        ) : (
+          <Avatar size={72} bg="#eeeeee" mr={24}>
+            <IconUser size={30} color="#666" />
+          </Avatar>
+        )}
 
         <Div flexDir="row" alignItems="center" flex={1} position="relative">
           <Div>
@@ -71,9 +94,7 @@ const ChatInboxItem: React.FC<Props> = (props) => {
                 lineHeight={20}
                 maxW={"90%"}
               >
-                {props.about.length > 60
-                  ? props.about.slice(0, 60) + "..."
-                  : props.about}
+                {props.about.length > 60 ? props.about.slice(0, 60) + "..." : props.about}
               </Text>
             )}
           </Div>

@@ -65,7 +65,6 @@ const CasesQuotesListScreen: React.FC<{ navigation: NavigationType }> = ({ navig
     });
   };
 
-  console.log(cases, "CASES DATA");
   return (
     <>
       <Layout

@@ -88,8 +88,6 @@ const CaseQuotesScreen: React.FC<{ navigation: NavigationType }> = ({ navigation
     readQuotation(caseId, quotation.id);
   };
 
-  console.log(JSON.stringify(caseQuotes, null, 2));
-
   return (
     <Layout
       showBack

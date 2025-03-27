@@ -16,8 +16,7 @@ const ExpertsChatScreen: React.FC<Props> = (props) => {
   const route = useRoute();
   const socket = useSocket();
 
-  const { expertDetailMap, fetchExpertDetail, updateExpertStatus } =
-    useExpertStore();
+  const { expertDetailMap, fetchExpertDetail, updateExpertStatus } = useExpertStore();
   const [loading, setLoading] = useState(false);
 
   const expertId = (route.params as Record<string, string>).expertId;
@@ -37,23 +36,6 @@ const ExpertsChatScreen: React.FC<Props> = (props) => {
       setLoading(false);
     }
   }, [expertId]);
-
-  useEffect(() => {
-    if (socket) {
-      console.log("socket", socket);
-      socket.on(SocketEventEnum.VET_ONLINE_STATUS_CHANGE, async (data) => {
-        console.log("SocketEventEnum data", data);
-        const vetId = data?.vetId;
-        const isOnline = data?.isOnline;
-
-        updateExpertStatus(vetId, isOnline);
-      });
-    }
-
-    return () => {
-      socket?.off(SocketEventEnum.VET_ONLINE_STATUS_CHANGE);
-    };
-  }, []);
 
   return (
     <Layout
@@ -79,8 +61,7 @@ const ExpertsChatScreen: React.FC<Props> = (props) => {
             position="absolute"
           >
             <Text w={"70%"} mx={"auto"} textAlign="center" color="#fff">
-              The expert is currently offline but will respond as soon as they
-              are online.
+              The expert is currently offline but will respond as soon as they are online.
             </Text>
           </Div>
         </Div>
