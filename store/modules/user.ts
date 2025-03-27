@@ -91,6 +91,6 @@ export const useUserStore = create<UserState>((set, get) => ({
   },
 
   async clearPopupNotification(type: "emergency" | "appointment" | "quotation") {
-    await api.post("/members/me/clear-popups", type);
+    await api.post("/members/me/clear-popups", { type });
   },
 }));

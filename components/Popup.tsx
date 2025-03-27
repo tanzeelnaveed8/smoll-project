@@ -5,6 +5,8 @@ import { NavigationType } from "@/store/types";
 import React, { useEffect, useState } from "react";
 import BottomPopup from "./app/BottomPopup";
 import { useNavigation } from "@react-navigation/native";
+import { Text } from "react-native-magnus";
+import { confirmButtonStyles } from "react-native-modal-datetime-picker";
 
 const Popup: React.FC = () => {
   const navigation = useNavigation<NavigationType>();
@@ -18,42 +20,51 @@ const Popup: React.FC = () => {
 
   useEffect(() => {
     if (socket) {
-      socket.on(SocketEventEnum.CTA_POPUP, async (val) => {
-        setActivePopup(val);
+      socket.on(SocketEventEnum.CTA_POPUP, (val) => {
+        console.log(val, "test");
+        // if (val.type === "quote-submitted") {
+        setActivePopup({ ...val, type: "emergency" });
+        // }
       });
     }
     return () => {
       socket?.off(SocketEventEnum.CTA_POPUP);
     };
-  }, []);
+  }, [socket]);
 
   useEffect(() => {
-    if (user && user.notifInfo) {
-      setActivePopup(user.notifInfo);
+    console.log(user);
+    if (user && user.popups.emergency) {
+      setActivePopup({ data: { ...user.popups.emergency }, type: "emergency" });
     }
   }, [user]);
 
   const handlePopupClose = async () => {
-    if (activePopup?.type) {
-      await clearPopupNotification(activePopup.type);
-    }
     setActivePopup(null);
+
+    try {
+      if (activePopup?.type) {
+        await clearPopupNotification(activePopup.type);
+      }
+    } catch (error) {
+      console.log("ERROR WITH CLEARING");
+    }
   };
 
   return (
     <>
-      {activePopup && (
+      {activePopup !== null && (
         <BottomPopup
-          type={activePopup.type}
-          petName={activePopup.data.petName}
+          type={activePopup?.type}
+          petName={activePopup?.data.petName}
           onClose={handlePopupClose}
           onButtonClick={() => {
-            navigation.navigate("CaseQuoteDescriptionScreen", {
-              id: activePopup.data.partnerId,
-              caseId: activePopup.data.caseId,
-              hasBooking: activePopup.data.hasBooking,
-            });
             handlePopupClose();
+            navigation.navigate("CaseQuoteDescriptionScreen", {
+              id: activePopup?.data.partnerId,
+              caseId: activePopup?.data.caseId,
+              hasBooking: activePopup?.data.hasBooking,
+            });
           }}
         />
       )}

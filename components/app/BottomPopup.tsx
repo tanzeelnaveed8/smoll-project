@@ -86,26 +86,30 @@ const BottomPopup: React.FC<BottomPopupProps> = ({ type, petName, onClose, onBut
               {popUpTypes[type].description(petName)}
             </Text>
           </Div>
-          <TouchableOpacity onPress={() => onButtonClick()}>
-            <ButtonPrimary py={6} maxW={210} bg="#fff" fontWeight="500">
-              <Div flex={1} row={true} alignItems="center">
-                <Text
-                  mr={8}
-                  fontSize={18}
-                  color={popUpTypes[type].bgColor}
-                  fontFamily={fontHauoraBold}
-                >
-                  {popUpTypes[type].buttonText}
-                </Text>
-                <IconArrowRight
-                  width={34}
-                  height={34}
-                  strokeWidth={2.7}
-                  color={popUpTypes[type].bgColor}
-                />
-              </Div>
-            </ButtonPrimary>
-          </TouchableOpacity>
+          <ButtonPrimary
+            onPress={() => onButtonClick()}
+            py={6}
+            maxW={210}
+            bg="#fff"
+            fontWeight="500"
+          >
+            <Div flex={1} row={true} alignItems="center">
+              <Text
+                mr={8}
+                fontSize={18}
+                color={popUpTypes[type].bgColor}
+                fontFamily={fontHauoraBold}
+              >
+                {popUpTypes[type].buttonText}
+              </Text>
+              <IconArrowRight
+                width={34}
+                height={34}
+                strokeWidth={2.7}
+                color={popUpTypes[type].bgColor}
+              />
+            </Div>
+          </ButtonPrimary>
         </Div>
         <Div position="absolute" right={-12} top={20}>
           <Image

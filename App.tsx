@@ -339,8 +339,6 @@ const App = () => {
   } = useExpertStore();
   const { play } = useSound();
 
-  const socket = useSocket();
-
   useEffect(() => {
     (async () => {
       loadFonts().then(() => setFontsLoaded(true));
@@ -523,7 +521,6 @@ const App = () => {
 
           return () => {
             zim.off("receivePeerMessage");
-            socket?.off(SocketEventEnum.CTA_POPUP);
           };
         }
       }
@@ -706,9 +703,9 @@ const App = () => {
                   />
                   <Stack.Screen name="PaymentDetailsScreen" component={PaymentDetailsScreen} />
                 </Stack.Navigator>
+                <Popup />
               </SocketProvider>
               <FlashMessage position="top" />
-              <Popup />
             </ToastProvider>
           </NavigationContainer>
         </SafeAreaView>
