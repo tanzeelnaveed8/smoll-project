@@ -33,15 +33,12 @@ export const useCaseStore = create<CasesState>((set, get) => ({
       },
     });
 
-    console.log("fetch cases response==", response.data);
-
     const existingCases = reset ? [] : get().cases || [];
     const data = response.data.data;
 
     if (isEscalated) {
       set(() => ({
-        escalatedCases:
-          existingCases.length > 0 ? [...existingCases, ...data] : data,
+        escalatedCases: existingCases.length > 0 ? [...existingCases, ...data] : data,
       }));
     } else {
       set(() => ({
