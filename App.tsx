@@ -381,8 +381,6 @@ const App = () => {
       if (envs) {
         OneSignal.Notifications.requestPermission(true);
         OneSignal.User.pushSubscription.optIn();
-        console.log(await OneSignal.User.pushSubscription.getIdAsync(),"ID");
-
 
         OneSignal.Notifications.addEventListener("click", (event) => {
           const additionalData = event.notification?.additionalData as {
