@@ -21,10 +21,7 @@ const Popup: React.FC = () => {
   useEffect(() => {
     if (socket) {
       socket.on(SocketEventEnum.CTA_POPUP, (val) => {
-        console.log(val, "test");
-        // if (val.type === "quote-submitted") {
-        setActivePopup({ ...val, type: "emergency" });
-        // }
+        setActivePopup(val);
       });
     }
     return () => {
@@ -33,9 +30,13 @@ const Popup: React.FC = () => {
   }, [socket]);
 
   useEffect(() => {
-    console.log(user);
-    if (user && user.popups.emergency) {
-      setActivePopup({ data: { ...user.popups.emergency }, type: "emergency" });
+    if (user) {
+      console.log(user);
+      if (user.popups.emergency) {
+        setActivePopup({ data: { ...user.popups.emergency }, type: "emergency" });
+      } else if (user.popups.quotation) {
+        setActivePopup({ data: { ...user.popups.quotation }, type: "quotation" });
+      }
     }
   }, [user]);
 
@@ -51,6 +52,21 @@ const Popup: React.FC = () => {
     }
   };
 
+  const handleButtonPress = () => {
+    if (activePopup?.type === "emergency") {
+      navigation.navigate("CaseQuoteDescriptionScreen", {
+        id: activePopup?.data.partnerId,
+        caseId: activePopup?.data.caseId,
+        hasBooking: activePopup?.data.hasBooking,
+      });
+    } else {
+      navigation.navigate("CaseQuotesScreen", {
+        id: activePopup?.data.caseId,
+        hasBooking: activePopup?.data.hasBooking,
+      });
+    }
+  };
+
   return (
     <>
       {activePopup !== null && (
@@ -58,13 +74,9 @@ const Popup: React.FC = () => {
           type={activePopup?.type}
           petName={activePopup?.data.petName}
           onClose={handlePopupClose}
-          onButtonClick={() => {
+          onButtonPress={() => {
             handlePopupClose();
-            navigation.navigate("CaseQuoteDescriptionScreen", {
-              id: activePopup?.data.partnerId,
-              caseId: activePopup?.data.caseId,
-              hasBooking: activePopup?.data.hasBooking,
-            });
+            handleButtonPress();
           }}
         />
       )}

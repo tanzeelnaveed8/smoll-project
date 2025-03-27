@@ -33,7 +33,7 @@ export interface User {
   stripeCustomerId: string;
   playerId: string;
   navNotif?: { newQuotation?: number };
-  popups: { emergency: {} | null };
+  popups: { emergency: {} | null; quotation: {} | null };
 }
 
 export interface UserState {

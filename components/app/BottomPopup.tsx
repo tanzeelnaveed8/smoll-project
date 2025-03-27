@@ -12,7 +12,7 @@ interface BottomPopupProps {
   type: "emergency" | "appointment" | "quotation";
   petName: string;
   onClose: () => void;
-  onButtonClick: () => void;
+  onButtonPress: () => void;
 }
 
 const popUpTypes = {
@@ -42,8 +42,8 @@ const popUpTypes = {
     bgColor: "#0587F6",
     title: "Quotation has arrived!",
     description: (petName: string) =>
-      `Quotation for ${petName}'s\ncase has been recived,\nlet's take a look at it.`,
-    buttonText: "View Quotation",
+      `Quotation for ${petName}'s\ncase has been received,\nlet's take a look at it.`,
+    buttonText: "View Quotations",
     icon: {
       image: receiptSlip,
       h: 210,
@@ -52,7 +52,7 @@ const popUpTypes = {
   },
 };
 
-const BottomPopup: React.FC<BottomPopupProps> = ({ type, petName, onClose, onButtonClick }) => {
+const BottomPopup: React.FC<BottomPopupProps> = ({ type, petName, onClose, onButtonPress }) => {
   const [popup, setPopup] = useState(true);
   const handleSwipe = () => {
     onClose();
@@ -87,7 +87,7 @@ const BottomPopup: React.FC<BottomPopupProps> = ({ type, petName, onClose, onBut
             </Text>
           </Div>
           <ButtonPrimary
-            onPress={() => onButtonClick()}
+            onPress={() => onButtonPress()}
             py={6}
             maxW={210}
             bg="#fff"
