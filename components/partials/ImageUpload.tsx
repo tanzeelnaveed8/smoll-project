@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import * as ImagePicker from "expo-image-picker";
 import {
@@ -69,6 +69,7 @@ interface Props {
   disableDownload?: boolean;
   singleImage?: boolean;
   aspectRatio?: number[] | 'auto'
+  disableCropping?: boolean;
 }
 
 const ImageUpload: React.FC<Props> = ({
@@ -94,7 +95,8 @@ const ImageUpload: React.FC<Props> = ({
   onLoading,
   disableDownload,
   singleImage,
-  aspectRatio
+  aspectRatio,
+  disableCropping = false,
 }) => {
   const { uploadFile } = useFileStore();
   const toast = useToast();
@@ -141,8 +143,8 @@ const ImageUpload: React.FC<Props> = ({
 
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.All,
-        allowsEditing: true,
-        aspect: newAspectRatio,
+        allowsEditing: !disableCropping,
+        aspect: disableCropping ? undefined : newAspectRatio,
         quality: 1,
         allowsMultipleSelection: false,
       });
@@ -486,7 +488,7 @@ const ImageUpload: React.FC<Props> = ({
           >
             {loading && <ActivityIndicator size="large" color={colorPrimary} />}
             {!loading && (
-              <>
+              <React.Fragment>
                 {plusIcon ? (
                   <IconPlus size={32} color="#222222" strokeWidth={1.5} />
                 ) : userIcon ? (
@@ -500,7 +502,7 @@ const ImageUpload: React.FC<Props> = ({
                     Upload
                   </Text>
                 )}
-              </>
+              </React.Fragment>
             )}
 
             {isPrimary && (

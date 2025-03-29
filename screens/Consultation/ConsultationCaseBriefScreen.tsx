@@ -318,15 +318,12 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
             mr={12}
             document
             noImage
+            disableCropping
             aspectRatio={'auto'}
             onLoading={(item) => {
               setUploading(item);
             }}
             onUnSelect={handleUnSelectImage}
-            // onChange={(file) => {
-            //   handleImage(file);
-            // }}
-
             onChange={(file) => {
               console.log("filess == ", file);
               setDocuments((prev) => [...file, ...prev]);
@@ -341,9 +338,9 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
                   plusIcon={false}
                   mr={12}
                   w={139}
+                  disableCropping
                   h={150}
                   uri={item.url}
-                  // showDownloadBtn
                   onUnSelect={handleUnSelectImage}
                   disabled
                   docType={item.mimetype}
