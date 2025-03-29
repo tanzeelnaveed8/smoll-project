@@ -3,10 +3,10 @@ import { IconSquareRoundedPlus } from "@tabler/icons-react-native";
 import React from "react";
 import { Button, Text } from "react-native-magnus";
 
-const AddButton: React.FC<{ text: string; onPress?: () => void;styles:{} }> = ({
+const AddButton: React.FC<{ text: string; onPress?: () => void; styles?: {} }> = ({
   text,
   onPress,
-  styles
+  styles,
 }) => {
   return (
     <Button
@@ -16,7 +16,7 @@ const AddButton: React.FC<{ text: string; onPress?: () => void;styles:{} }> = ({
       flexDir="column"
       alignItems="center"
       mx={"auto"}
-      style={{ gap: 4,...styles }}
+      style={{ gap: 4, ...styles }}
       p={0}
       bg="transparent"
       onPress={onPress}
