@@ -324,6 +324,7 @@ const App = () => {
     unreadMessages,
   } = useExpertStore();
   const { play } = useSound();
+  const { SET_NAV_NOTIF } = useUserStore();
 
   useEffect(() => {
     (async () => {
@@ -404,6 +405,7 @@ const App = () => {
         OneSignal.Notifications.addEventListener("foregroundWillDisplay", async (event) => {
           const additionalData = event.notification?.additionalData as {
             expertId?: string;
+            notificationType?: string;
           };
           const expertId = (rootNavigation.getCurrentRoute()?.params as Record<string, string>)
             ?.expertId;
@@ -510,6 +512,9 @@ const App = () => {
             zim.off("receivePeerMessage");
           };
         }
+
+        //SETTING NAV NOTIFICATON
+        SET_NAV_NOTIF(user?.navNotif?.newQuotation || 0);
       }
     })();
   }, [user]);
