@@ -122,8 +122,8 @@ android {
         applicationId 'com.seldom.small_friend'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 20250328
-        versionName "2.0.2-20250328"
+        versionCode 20250330
+        versionName "2.0.3-20250330"
     }
     signingConfigs {
         debug {
