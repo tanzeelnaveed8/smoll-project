@@ -32,9 +32,5 @@ export default function SocketListener() {
     };
   }, [socket]);
 
-  useEffect(() => {
-    SET_NAV_NOTIF(user?.navNotif?.newQuotation || 0);
-  }, [user]);
-
   return <></>;
 }
