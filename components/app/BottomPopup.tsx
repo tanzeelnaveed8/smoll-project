@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { Div, Image, Modal, Text } from "react-native-magnus";
+import { Button, Div, Image, Modal, Text } from "react-native-magnus";
 import ButtonPrimary from "../partials/ButtonPrimary";
 import { IconArrowRight } from "@tabler/icons-react-native";
-import { fontHauoraBold, fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
+import { fontHauoraBold, fontHauoraMedium, fontHauoraSemiBold, fontHeadingBold } from "@/constant/constant";
 import blueWatch from "@/assets/images/blue-watch.png";
 import receiptSlip from "@/assets/images/receipt-slip.png";
 import important from "@/assets/images/important.png";
@@ -79,37 +79,24 @@ const BottomPopup: React.FC<BottomPopupProps> = ({ type, petName, onClose, onBut
       <Div flex={1} row={true} position="relative">
         <Div flex={1} row={false} justifyContent="space-between" h={"100%"} w={"100%"} mr={60}>
           <Div>
-            <Text color="#fff" fontSize={25} fontFamily={fontHauoraSemiBold}>
+            <Text color="#fff" fontSize={"4xl"} fontFamily={fontHauoraSemiBold}>
               {popUpTypes[type].title}
             </Text>
-            <Text color="#fff" fontSize={18} mt={8} fontFamily={fontHauoraMedium}>
+            <Text color="#fff" fontSize={"xl"} mt={8} fontFamily={fontHauoraMedium}>
               {popUpTypes[type].description(petName)}
             </Text>
           </Div>
-          <ButtonPrimary
+          <Button
             onPress={() => onButtonPress()}
-            py={6}
-            maxW={210}
+            rounded={100}
             bg="#fff"
-            fontWeight="500"
+            px={24}
+            fontFamily={fontHauoraBold}
+            color={popUpTypes[type].bgColor}
+            suffix={<IconArrowRight color={popUpTypes[type].bgColor} />}
           >
-            <Div flex={1} row={true} alignItems="center">
-              <Text
-                mr={8}
-                fontSize={18}
-                color={popUpTypes[type].bgColor}
-                fontFamily={fontHauoraBold}
-              >
-                {popUpTypes[type].buttonText}
-              </Text>
-              <IconArrowRight
-                width={34}
-                height={34}
-                strokeWidth={2.7}
-                color={popUpTypes[type].bgColor}
-              />
-            </Div>
-          </ButtonPrimary>
+            {popUpTypes[type].buttonText}
+          </Button>
         </Div>
         <Div position="absolute" right={-12} top={20}>
           <Image
