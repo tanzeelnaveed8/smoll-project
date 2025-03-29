@@ -2,6 +2,7 @@ import Layout from "@/components/app/Layout";
 import StarRating from "@/components/partials/StarRating";
 import {
   colorErrorText,
+  colorGray49,
   colorPrimary,
   fontHauoraBold,
   fontHauoraMedium,
@@ -151,7 +152,14 @@ const CaseQuotesScreen: React.FC<{ navigation: NavigationType }> = ({ navigation
                           }}
                         >
                           <Div row alignItems="center">
-                            <Text fontSize={"xl"} mb={4} fontFamily={fontHauoraSemiBold}>
+                            <Text
+                              fontSize={"xl"}
+                              mb={4}
+                              fontFamily={fontHauoraSemiBold}
+                              style={{
+                                borderBottomWidth: 1,
+                              }}
+                            >
                               {item.partner.name}
                             </Text>
                             {!item.isViewed && (
