@@ -195,21 +195,6 @@ const TabNavigation = () => {
     setAllUnreadMessageCount(countMessage);
   }, [unreadMessages.values()]);
 
-  useEffect(() => {
-    SET_NAV_NOTIF(user?.navNotif?.newQuotation || null);
-    if (socket) {
-      socket.on(SocketEventEnum.PARTNER_QUOTATION_SUBMITTED, async (val) => {
-        if (val.memberId === user?.id) {
-          SET_NAV_NOTIF(Number(navNotif) + 1);
-        }
-      });
-    }
-
-    return () => {
-      socket?.off(SocketEventEnum.PARTNER_QUOTATION_SUBMITTED);
-    };
-  }, []);
-
   const TabButton: React.FC<{
     focused: boolean;
     icon: React.ReactNode;
@@ -468,9 +453,8 @@ const App = () => {
 
           if (user.playerId) {
             OneSignal.login(user.playerId);
-            
           }
- 
+
           const experts = await fetchExperts();
 
           await initializeChat(

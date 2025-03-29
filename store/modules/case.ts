@@ -28,7 +28,7 @@ export const useCaseStore = create<CasesState>((set, get) => ({
     const response = await api.get("/member/cases", {
       params: {
         page: page,
-        limit: 10,
+        limit: 1000,
         isEscalated,
       },
     });
