@@ -195,21 +195,6 @@ const TabNavigation = () => {
     setAllUnreadMessageCount(countMessage);
   }, [unreadMessages.values()]);
 
-  useEffect(() => {
-    SET_NAV_NOTIF(user?.navNotif?.newQuotation || null);
-    if (socket) {
-      socket.on(SocketEventEnum.PARTNER_QUOTATION_SUBMITTED, async (val) => {
-        if (val.memberId === user?.id) {
-          SET_NAV_NOTIF(Number(navNotif) + 1);
-        }
-      });
-    }
-
-    return () => {
-      socket?.off(SocketEventEnum.PARTNER_QUOTATION_SUBMITTED);
-    };
-  }, []);
-
   const TabButton: React.FC<{
     focused: boolean;
     icon: React.ReactNode;
@@ -339,6 +324,7 @@ const App = () => {
     unreadMessages,
   } = useExpertStore();
   const { play } = useSound();
+  const { SET_NAV_NOTIF } = useUserStore();
 
   useEffect(() => {
     (async () => {
@@ -419,6 +405,7 @@ const App = () => {
         OneSignal.Notifications.addEventListener("foregroundWillDisplay", async (event) => {
           const additionalData = event.notification?.additionalData as {
             expertId?: string;
+            notificationType?: string;
           };
           const expertId = (rootNavigation.getCurrentRoute()?.params as Record<string, string>)
             ?.expertId;
@@ -468,9 +455,8 @@ const App = () => {
 
           if (user.playerId) {
             OneSignal.login(user.playerId);
-            
           }
- 
+
           const experts = await fetchExperts();
 
           await initializeChat(
@@ -526,6 +512,9 @@ const App = () => {
             zim.off("receivePeerMessage");
           };
         }
+
+        //SETTING NAV NOTIFICATON
+        SET_NAV_NOTIF(user?.navNotif?.newQuotation || 0);
       }
     })();
   }, [user]);
