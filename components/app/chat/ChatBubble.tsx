@@ -21,13 +21,7 @@ import {
   ViewStyle,
 } from "react-native";
 import { MessageImage } from "react-native-gifted-chat";
-import {
-  Bubble,
-  BubbleProps,
-  IMessage,
-  MessageText,
-  Time,
-} from "react-native-gifted-chat";
+import { Bubble, BubbleProps, IMessage, MessageText, Time } from "react-native-gifted-chat";
 import { Div, Text } from "react-native-magnus";
 
 interface Props extends BubbleProps<IMessage> {
@@ -45,6 +39,7 @@ const commonWrapperStyles: StyleProp<ViewStyle> = {
 const rightWrapperStyles: StyleProp<ViewStyle> = {
   ...commonWrapperStyles,
   paddingLeft: 12,
+  marginRight: 6,
   borderTopRightRadius: 24,
   borderTopLeftRadius: 24,
   borderBottomRightRadius: 0,
@@ -80,22 +75,16 @@ const ChatBubble: React.FC<Props> = (props) => {
   const [loadError, setLoadError] = useState<string | null>(null);
 
   const position =
-    props.currentMessage?.user._id.toString().toLowerCase() ===
-    user?.id.toLowerCase()
+    props.currentMessage?.user._id.toString().toLowerCase() === user?.id.toLowerCase()
       ? "right"
       : "left";
 
   const isAudioMessage = !!props.currentMessage?.audio;
 
-  const getWrapperStyle = (
-    position: "left" | "right"
-  ): StyleProp<ViewStyle> => {
-    const baseStyle =
-      position === "right" ? rightWrapperStyles : leftWrapperStyles;
+  const getWrapperStyle = (position: "left" | "right"): StyleProp<ViewStyle> => {
+    const baseStyle = position === "right" ? rightWrapperStyles : leftWrapperStyles;
 
-    return isAudioMessage
-      ? { ...baseStyle, backgroundColor: "transparent" }
-      : baseStyle;
+    return isAudioMessage ? { ...baseStyle, backgroundColor: "transparent" } : baseStyle;
   };
 
   useEffect(() => {
@@ -113,13 +102,13 @@ const ChatBubble: React.FC<Props> = (props) => {
       try {
         // Set loading state to true
         setIsLoading(true);
-        
+
         // Load the audio
         const { sound: newSound } = await Audio.Sound.createAsync(
           { uri: props.currentMessage?.audio || "" },
           { shouldPlay: false, volume: 1 },
           (status) => {
-            if ('error' in status) {
+            if ("error" in status) {
               console.error("Error loading audio:", status.error);
               setLoadError("Failed to load audio. The file may be damaged.");
             }
@@ -129,7 +118,7 @@ const ChatBubble: React.FC<Props> = (props) => {
         await Audio.setAudioModeAsync({
           playsInSilentModeIOS: true,
           allowsRecordingIOS: false,
-        })
+        });
 
         setSound(newSound);
 
@@ -146,13 +135,11 @@ const ChatBubble: React.FC<Props> = (props) => {
               setIsPlaying(false);
               setCurrentTime(status.durationMillis ?? 0);
             } else {
-              setCurrentTime(
-                status.durationMillis! - (status.positionMillis ?? 0)
-              );
+              setCurrentTime(status.durationMillis! - (status.positionMillis ?? 0));
             }
           }
         });
-        
+
         // Set loading state to false when done
         setIsLoading(false);
       } catch (error) {
@@ -169,9 +156,7 @@ const ChatBubble: React.FC<Props> = (props) => {
     const [, fileName, url] = text.split("|");
 
     const handlePress = () => {
-      Linking.openURL(url).catch((err) =>
-        console.error("An error occurred", err)
-      );
+      Linking.openURL(url).catch((err) => console.error("An error occurred", err));
     };
 
     return (
@@ -187,10 +172,7 @@ const ChatBubble: React.FC<Props> = (props) => {
           minW={"fit-content"}
         >
           <Div mr={8}>
-            <IconPaperclip
-              fontSize={24}
-              color={position === "left" ? "#333" : "#FFF"}
-            />
+            <IconPaperclip fontSize={24} color={position === "left" ? "#333" : "#FFF"} />
           </Div>
           <Div>
             <Text
@@ -258,10 +240,7 @@ const ChatBubble: React.FC<Props> = (props) => {
           justifyContent="center"
           alignItems="center"
         >
-          <IconArrowBackUp
-            size={18}
-            color={position === "left" ? "#666" : "#BBB"}
-          />
+          <IconArrowBackUp size={18} color={position === "left" ? "#666" : "#BBB"} />
         </Div>
       </TouchableOpacity>
     );
@@ -275,15 +254,8 @@ const ChatBubble: React.FC<Props> = (props) => {
       if (replyTo.image) {
         return (
           <Div row alignItems="center">
-            <IconPhoto
-              size={16}
-              color={position === "left" ? "#666" : "#FFF"}
-            />
-            <Text
-              ml={4}
-              color={position === "left" ? "#666" : "#FFF"}
-              fontSize={12}
-            >
+            <IconPhoto size={16} color={position === "left" ? "#666" : "#FFF"} />
+            <Text ml={4} color={position === "left" ? "#666" : "#FFF"} fontSize={12}>
               Photo
             </Text>
             <Image
@@ -293,23 +265,16 @@ const ChatBubble: React.FC<Props> = (props) => {
                 width: 40,
                 marginLeft: 8,
                 borderRadius: 4,
-                resizeMode: "cover"
+                resizeMode: "cover",
               }}
             />
           </Div>
         );
       } else if (replyTo.video) {
         return (
-          <Div row alignItems="center">
-            <IconVideo
-              size={16}
-              color={position === "left" ? "#666" : "#FFF"}
-            />
-            <Text
-              ml={4}
-              color={position === "left" ? "#666" : "#FFF"}
-              fontSize={12}
-            >
+          <Div row alignItems="center" style={{ marginRight: 6 }}>
+            <IconVideo size={16} color={position === "left" ? "#666" : "#FFF"} />
+            <Text ml={4} color={position === "left" ? "#666" : "#FFF"} fontSize={12}>
               Video
             </Text>
             <Image
@@ -319,29 +284,16 @@ const ChatBubble: React.FC<Props> = (props) => {
                 width: 40,
                 marginLeft: 8,
                 borderRadius: 4,
-                resizeMode: "cover"
+                resizeMode: "cover",
               }}
-            />
-              h={40}
-              w={40}
-              ml={8}
-              rounded={4}
-              resizeMode="cover"
             />
           </Div>
         );
       } else if (replyTo.audio) {
         return (
           <Div row alignItems="center">
-            <IconMicrophone
-              size={16}
-              color={position === "left" ? "#666" : "#FFF"}
-            />
-            <Text
-              ml={4}
-              color={position === "left" ? "#666" : "#FFF"}
-              fontSize={12}
-            >
+            <IconMicrophone size={16} color={position === "left" ? "#666" : "#FFF"} />
+            <Text ml={4} color={position === "left" ? "#666" : "#FFF"} fontSize={12}>
               Voice Message
             </Text>
           </Div>
@@ -349,11 +301,7 @@ const ChatBubble: React.FC<Props> = (props) => {
       }
 
       return (
-        <Text
-          color={position === "left" ? "#666" : "#FFF"}
-          fontSize={12}
-          numberOfLines={1}
-        >
+        <Text color={position === "left" ? "#666" : "#FFF"} fontSize={12} numberOfLines={1}>
           {replyTo.text}
         </Text>
       );
@@ -369,12 +317,7 @@ const ChatBubble: React.FC<Props> = (props) => {
         right={position === "right" ? 4 : undefined}
         left={position === "left" ? 4 : undefined}
       >
-        <Text
-          color={position === "left" ? "#333" : "#FFF"}
-          fontSize={10}
-          fontWeight="bold"
-          mb={2}
-        >
+        <Text color={position === "left" ? "#333" : "#FFF"} fontSize={10} fontWeight="bold" mb={2}>
           {replyTo.user.name || "You"}
         </Text>
         {renderReplyContent()}
@@ -395,10 +338,7 @@ const ChatBubble: React.FC<Props> = (props) => {
             {renderRepliedMessage()}
             {renderAttachment(props.currentMessage?.text || "")}
             <Div row justifyContent="flex-end">
-              <Time
-                {...props}
-                timeTextStyle={{ right: { fontSize: 10, color: "#666" } }}
-              />
+              <Time {...props} timeTextStyle={{ right: { fontSize: 10, color: "#666" } }} />
             </Div>
             {renderReplyButton()}
           </Div>
@@ -409,7 +349,7 @@ const ChatBubble: React.FC<Props> = (props) => {
 
   if (props.currentMessage?.image) {
     return (
-      <Div>
+      <Div style={{ marginRight: 6 }}>
         {renderRepliedMessage()}
         <Div position="relative">
           <MessageImage
@@ -520,28 +460,15 @@ const ChatBubble: React.FC<Props> = (props) => {
         >
           <Div mr={8}>
             {isLoading ? (
-              <ActivityIndicator
-                size={24}
-                color={position === "left" ? "#333" : "#FFF"}
-              />
+              <ActivityIndicator size={24} color={position === "left" ? "#333" : "#FFF"} />
             ) : isPlaying ? (
-              <IconPlayerPause
-                fontSize={24}
-                color={position === "left" ? "#333" : "#FFF"}
-              />
+              <IconPlayerPause fontSize={24} color={position === "left" ? "#333" : "#FFF"} />
             ) : (
-              <IconPlayerPlay
-                fontSize={24}
-                color={position === "left" ? "#333" : "#FFF"}
-              />
+              <IconPlayerPlay fontSize={24} color={position === "left" ? "#333" : "#FFF"} />
             )}
           </Div>
           <Div flexDir="column">
-            <Text
-              fontSize={14}
-              fontWeight="bold"
-              color={position === "left" ? "#333" : "#FFF"}
-            >
+            <Text fontSize={14} fontWeight="bold" color={position === "left" ? "#333" : "#FFF"}>
               {isLoading ? "Loading Audio..." : "Audio Message"}
             </Text>
             <Text fontSize={12} color={position === "left" ? "#666" : "#CCC"}>

@@ -7,13 +7,8 @@ import { transformMessages } from "@/utils/helpers";
 import { useIsFocused } from "@react-navigation/native";
 import { activateKeepAwakeAsync, deactivateKeepAwake } from "expo-keep-awake";
 import { useEffect, useRef, useState } from "react";
-import { ActivityIndicator, Platform, TouchableOpacity } from "react-native";
-import {
-  Avatar,
-  GiftedChat,
-  GiftedChatProps,
-  IMessage,
-} from "react-native-gifted-chat";
+import { ActivityIndicator, Platform, TouchableOpacity, View } from "react-native";
+import { Avatar, GiftedChat, GiftedChatProps, IMessage } from "react-native-gifted-chat";
 import { Div, Image, Text } from "react-native-magnus";
 import {
   ZIMConversationType,
@@ -49,13 +44,8 @@ const Chat: React.FC<Props> = (props) => {
 
   const isFocused = useIsFocused();
   const listViewRef = useRef<GiftedChatProps<IMessage>["listViewProps"]>(null);
-  const {
-    unreadMessages,
-    setUnreadMessage,
-    conversations,
-    setConversations,
-    setActiveConvo,
-  } = useExpertStore();
+  const { unreadMessages, setUnreadMessage, conversations, setConversations, setActiveConvo } =
+    useExpertStore();
   const [noNewMessage, setNoNewMessage] = useState(true);
 
   useEffect(() => {
@@ -109,9 +99,7 @@ const Chat: React.FC<Props> = (props) => {
           setShowNewMessageChip(true);
         }
       };
-      const newConversations = conversations.get(
-        props.recipientId
-      ) as IMessage[];
+      const newConversations = conversations.get(props.recipientId) as IMessage[];
       const lastMessage = newConversations[0] as IMessage;
       if (lastMessage?.user?._id === props.recipientId) {
         play("messageReceived");
@@ -142,11 +130,7 @@ const Chat: React.FC<Props> = (props) => {
         config.nextMessage = lastMessage as ZIMMessage;
       }
 
-      const messageList = await getMessages(
-        props.recipientId,
-        ZIMConversationType.Peer,
-        config
-      );
+      const messageList = await getMessages(props.recipientId, ZIMConversationType.Peer, config);
 
       //  console.log(messageList,"TESTING")
       if (messageList.length === 0) {
@@ -165,10 +149,7 @@ const Chat: React.FC<Props> = (props) => {
 
       if (isLoadingEarlier) {
         const prevMessages = conversations.get(props.recipientId) as [];
-        updatedConversations.set(props.recipientId, [
-          ...prevMessages,
-          ...transformedMessages,
-        ]);
+        updatedConversations.set(props.recipientId, [...prevMessages, ...transformedMessages]);
       } else {
         updatedConversations.set(props.recipientId, transformedMessages);
       }
@@ -247,10 +228,7 @@ const Chat: React.FC<Props> = (props) => {
       });
       const updatedConversations = conversations;
       const prevMessages = conversations.get(props.recipientId) as [];
-      updatedConversations.set(props.recipientId, [
-        ...prevMessages,
-        ...transformedMessages,
-      ]);
+      updatedConversations.set(props.recipientId, [...prevMessages, ...transformedMessages]);
       setConversations(updatedConversations);
 
       // Clear reply state after sending
@@ -292,8 +270,7 @@ const Chat: React.FC<Props> = (props) => {
   const imgTypes = ["cat", "dog"];
   const randomImgType = imgTypes[Math.floor(Math.random() * imgTypes.length)];
 
-  const randomEmptyViewImg =
-    emptyViewImgs[randomImgType as keyof typeof emptyViewImgs];
+  const randomEmptyViewImg = emptyViewImgs[randomImgType as keyof typeof emptyViewImgs];
 
   const style = () => {
     if (randomImgType === "cat") {
@@ -329,21 +306,12 @@ const Chat: React.FC<Props> = (props) => {
               mb={15}
             />
 
-            <Text
-              fontFamily={fontHauoraSemiBold}
-              fontSize={"2xl"}
-              maxW={"70%"}
-              mb={10}
-            >
+            <Text fontFamily={fontHauoraSemiBold} fontSize={"2xl"} maxW={"70%"} mb={10}>
               Hi! Welcome to your messaging room.
             </Text>
             <Text maxW={"90%"}>
-              It's just{" "}
-              <Text fontFamily={fontHauoraSemiBold}>
-                you and {props.chatWithName}
-              </Text>{" "}
-              in here. Feel free to chat, send pictures, files, or even voice
-              notes.
+              It's just <Text fontFamily={fontHauoraSemiBold}>you and {props.chatWithName}</Text> in
+              here. Feel free to chat, send pictures, files, or even voice notes.
             </Text>
           </Div>
         </Div>
@@ -352,7 +320,14 @@ const Chat: React.FC<Props> = (props) => {
   };
 
   return (
-    <Div flex={1}>
+    <Div
+      flex={1}
+      style={{
+        width: "111%",
+        position: "relative",
+        left: -20,
+      }}
+    >
       <GiftedChat
         messages={(conversations.get(props.recipientId) as IMessage[]).sort(
           (a, b) => +b.createdAt - +a.createdAt
@@ -370,9 +345,7 @@ const Chat: React.FC<Props> = (props) => {
         renderBubble={(props) => (
           <ChatBubble {...props} onReply={(message) => handleReply(message)} />
         )}
-        renderAvatar={(props) =>
-          showAvatar(props.currentMessage) ? <Avatar {...props} /> : null
-        }
+        renderAvatar={(props) => (showAvatar(props.currentMessage) ? <Avatar {...props} /> : null)}
         renderMessageImage={(props) => null}
         listViewProps={{
           showsVerticalScrollIndicator: false,
@@ -399,7 +372,7 @@ const Chat: React.FC<Props> = (props) => {
             expertName={chatWithName}
           />
         )}
-        renderChatFooter={() => <Div h={24}></Div>}
+        renderChatFooter={() => <Div></Div>}
         renderChatEmpty={ChatEmptyView}
       />
       {showNewMessageChip && (
@@ -408,7 +381,7 @@ const Chat: React.FC<Props> = (props) => {
           style={{
             position: "absolute",
             bottom: 80,
-            right: 20,
+            right: 16,
             backgroundColor: colorPrimary,
             paddingHorizontal: 16,
             paddingVertical: 8,
