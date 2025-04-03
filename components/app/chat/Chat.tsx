@@ -9,7 +9,7 @@ import { activateKeepAwakeAsync, deactivateKeepAwake } from "expo-keep-awake";
 import { useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Platform, TouchableOpacity, View } from "react-native";
 import { Avatar, GiftedChat, GiftedChatProps, IMessage } from "react-native-gifted-chat";
-import { Div, Image, Text } from "react-native-magnus";
+import { Badge, Div, Image, Text } from "react-native-magnus";
 import {
   ZIMConversationType,
   ZIMMessage,
@@ -24,6 +24,7 @@ interface Props {
   recipientId: string;
   chatFor: "experts" | "counsellors";
   chatWithName?: string;
+  expertIsOnline: boolean;
 }
 
 const Chat: React.FC<Props> = (props) => {
@@ -333,17 +334,21 @@ const Chat: React.FC<Props> = (props) => {
         isTyping={isTyping}
         user={{
           _id: user!.id,
+          name: user?.name || "",
         }}
-        showAvatarForEveryMessage={true}
+        showAvatarForEveryMessage={false}
         showUserAvatar={true}
         renderBubble={(props) => (
           <ChatBubble {...props} onReply={(message) => handleReply(message)} />
         )}
         renderAvatar={(avatarProps) => {
           const isUserMessage = user?.id === avatarProps.currentMessage.user._id;
-          const avatarUrl = isUserMessage
-            ? user?.profileImg?.url
-            : expertDetailMap.get(props.recipientId)?.profileImg?.url;
+          const avatar = isUserMessage
+            ? { name: user?.name || "", avatar: user.profileImg.url }
+            : {
+                avatar: expertDetailMap.get(props.recipientId)?.profileImg?.url,
+                name: expertDetailMap.get(props.recipientId)?.name,
+              };
 
           return (
             <View
@@ -351,15 +356,24 @@ const Chat: React.FC<Props> = (props) => {
                 marginBottom: 14,
                 marginLeft: isUserMessage ? -10 : 0,
                 marginRight: isUserMessage ? 0 : -10,
+                position: "relative",
               }}
             >
               <Avatar
                 {...avatarProps}
                 currentMessage={{
                   ...avatarProps.currentMessage,
-                  user: { ...avatarProps.currentMessage.user, avatar: avatarUrl },
+                  user: {
+                    ...avatarProps.currentMessage.user,
+                    ...avatar,
+                  },
                 }}
               />
+              {props.expertIsOnline && !isUserMessage && (
+                <Div position="absolute" top={-2} right={-2}>
+                  <Badge h={1} w={1} bg="#00ff28" position="absolute" />
+                </Div>
+              )}
             </View>
           );
         }}

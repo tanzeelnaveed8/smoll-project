@@ -72,6 +72,7 @@ const ExpertsChatScreen: React.FC<Props> = (props) => {
         recipientId={expertId}
         chatFor="experts"
         chatWithName={expertName}
+        expertIsOnline={Boolean(expertDetailData?.isOnline)}
       />
     </Layout>
   );
