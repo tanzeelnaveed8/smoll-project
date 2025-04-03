@@ -1,8 +1,4 @@
-import {
-  colorErrorText,
-  colorPrimary,
-  colorTextPrimary,
-} from "@/constant/constant";
+import { colorErrorText, colorPrimary, colorTextPrimary } from "@/constant/constant";
 import { useSound } from "@/functions/useSound";
 import { useUserStore } from "@/store/modules/user";
 import {
@@ -18,12 +14,7 @@ import * as ImagePicker from "expo-image-picker";
 import React, { useRef, useState } from "react";
 import { ActivityIndicator, Platform, TouchableOpacity } from "react-native";
 import { showMessage } from "react-native-flash-message";
-import {
-  IMessage,
-  InputToolbar,
-  InputToolbarProps,
-  SendProps,
-} from "react-native-gifted-chat";
+import { IMessage, InputToolbar, InputToolbarProps, SendProps } from "react-native-gifted-chat";
 import { Div, Input, Text } from "react-native-magnus";
 
 interface Props extends InputToolbarProps<IMessage> {
@@ -40,9 +31,7 @@ const ChatComposer: React.FC<Props> = (props) => {
 
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [text, setText] = useState("");
-  const [image, setImage] = useState<ImagePicker.ImagePickerResult | null>(
-    null
-  );
+  const [image, setImage] = useState<ImagePicker.ImagePickerResult | null>(null);
   const [isRecording, setIsRecording] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [recordingDuration, setRecordingDuration] = useState(0);
@@ -60,17 +49,12 @@ const ChatComposer: React.FC<Props> = (props) => {
       if (image?.assets) {
         const fileUri = image.assets[0].uri;
         const fileSize = image.assets[0].fileSize ?? 0;
-        const fileType =
-          (image.assets[0].mimeType || image.assets[0].type) ?? "image";
+        const fileType = (image.assets[0].mimeType || image.assets[0].type) ?? "image";
 
         // Check file size
         const isImage = fileType.startsWith("image");
         const isVideo = fileType.startsWith("video");
-        const maxSize = isImage
-          ? 10 * 1024 * 1024
-          : isVideo
-          ? 100 * 1024 * 1024
-          : 0;
+        const maxSize = isImage ? 10 * 1024 * 1024 : isVideo ? 100 * 1024 * 1024 : 0;
 
         if (fileSize > maxSize) {
           showMessage({
@@ -254,9 +238,7 @@ const ChatComposer: React.FC<Props> = (props) => {
 
     const replyingTo = props.replyingTo;
     const isMyMessage = replyingTo.user._id === user?.id;
-    const replyingToName = isMyMessage
-      ? "Yourself"
-      : props.expertName || "User";
+    const replyingToName = isMyMessage ? "Yourself" : props.expertName || "User";
 
     const getMessagePreview = () => {
       if (replyingTo.text) return replyingTo.text;
@@ -303,14 +285,7 @@ const ChatComposer: React.FC<Props> = (props) => {
   return (
     <>
       {isRecording ? (
-        <Div
-          bg="#fff"
-          pt={16}
-          pb={24}
-          px={16}
-          borderTopWidth={1}
-          borderTopColor="#eaeaea"
-        >
+        <Div bg="#fff" pt={16} px={16} borderTopWidth={1} borderTopColor="#eaeaea">
           <Div row alignItems="center" justifyContent="space-between" mb={10}>
             <Text fontSize={16} fontWeight="500">
               Recording...{" "}
@@ -338,27 +313,12 @@ const ChatComposer: React.FC<Props> = (props) => {
               onPress={() => cancelRecording()}
               style={{ flex: 1, marginRight: 10 }}
             >
-              <Div
-                bg="#f3f3f3"
-                py={12}
-                px={15}
-                rounded="lg"
-                alignItems="center"
-              >
+              <Div bg="#f3f3f3" py={12} px={15} rounded="lg" alignItems="center">
                 <Text color="#666">Cancel</Text>
               </Div>
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => handleOnSend(undefined, true)}
-              style={{ flex: 1 }}
-            >
-              <Div
-                bg={colorPrimary}
-                py={12}
-                px={15}
-                rounded="lg"
-                alignItems="center"
-              >
+            <TouchableOpacity onPress={() => handleOnSend(undefined, true)} style={{ flex: 1 }}>
+              <Div bg={colorPrimary} py={12} px={15} rounded="lg" alignItems="center">
                 <Text color="#fff">Send</Text>
               </Div>
             </TouchableOpacity>
@@ -371,7 +331,7 @@ const ChatComposer: React.FC<Props> = (props) => {
             backgroundColor: "#fff",
             paddingTop: 8,
             paddingBottom: Platform.OS === "ios" ? 24 : 8,
-            paddingHorizontal: 16,
+            paddingHorizontal: 12,
             borderTopWidth: 1,
             borderTopColor: "#eaeaea",
           }}
@@ -397,10 +357,7 @@ const ChatComposer: React.FC<Props> = (props) => {
                   }}
                 />
                 <Div row alignItems="center" ml={8} mb={4}>
-                  <TouchableOpacity
-                    onPress={pickImage}
-                    style={{ marginRight: 6 }}
-                  >
+                  <TouchableOpacity onPress={pickImage} style={{ marginRight: 6 }}>
                     <Div
                       h={38}
                       w={38}
@@ -409,18 +366,11 @@ const ChatComposer: React.FC<Props> = (props) => {
                       alignItems="center"
                       bg="#f3f3f3"
                     >
-                      <IconPaperclip
-                        color={colorTextPrimary}
-                        strokeWidth={1.5}
-                        size={22}
-                      />
+                      <IconPaperclip color={colorTextPrimary} strokeWidth={1.5} size={22} />
                     </Div>
                   </TouchableOpacity>
                   {text.length > 0 ? (
-                    <TouchableOpacity
-                      onPress={() => handleOnSend()}
-                      disabled={props.isSending}
-                    >
+                    <TouchableOpacity onPress={() => handleOnSend()} disabled={props.isSending}>
                       <Div
                         h={38}
                         w={38}
@@ -446,11 +396,7 @@ const ChatComposer: React.FC<Props> = (props) => {
                         alignItems="center"
                         bg={colorPrimary}
                       >
-                        <IconMicrophone
-                          color="#fff"
-                          strokeWidth={1.5}
-                          size={18}
-                        />
+                        <IconMicrophone color="#fff" strokeWidth={1.5} size={18} />
                       </Div>
                     </TouchableOpacity>
                   )}

@@ -322,7 +322,14 @@ const Chat: React.FC<Props> = (props) => {
   };
 
   return (
-    <Div flex={1}>
+    <Div
+      flex={1}
+      style={{
+        width: "111%",
+        position: "relative",
+        left: -20,
+      }}
+    >
       <GiftedChat
         messages={(conversations.get(props.recipientId) as IMessage[]).sort(
           (a, b) => +b.createdAt - +a.createdAt
@@ -354,8 +361,8 @@ const Chat: React.FC<Props> = (props) => {
             <View
               style={{
                 marginBottom: 14,
-                marginLeft: isUserMessage ? -10 : 0,
-                marginRight: isUserMessage ? 0 : -10,
+                marginLeft: isUserMessage ? -10 : 4,
+                marginRight: isUserMessage ? 4 : -10,
                 position: "relative",
               }}
             >
@@ -403,7 +410,7 @@ const Chat: React.FC<Props> = (props) => {
             expertName={chatWithName}
           />
         )}
-        renderChatFooter={() => <Div h={24}></Div>}
+        renderChatFooter={() => <Div></Div>}
         renderChatEmpty={ChatEmptyView}
       />
       {showNewMessageChip && (
@@ -412,7 +419,7 @@ const Chat: React.FC<Props> = (props) => {
           style={{
             position: "absolute",
             bottom: 80,
-            right: 20,
+            right: 16,
             backgroundColor: colorPrimary,
             paddingHorizontal: 16,
             paddingVertical: 8,
