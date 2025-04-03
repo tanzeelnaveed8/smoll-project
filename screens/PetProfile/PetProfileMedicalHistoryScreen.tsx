@@ -1,14 +1,12 @@
 import Layout from "@/components/app/Layout";
 import HealthHistoryModal from "@/components/app/pet/HealthHistoryModal";
+import AddButton from "@/components/partials/AddButton";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import { fontCooper, fontHauoraMedium, fontHeading } from "@/constant/constant";
 import { usePetStore } from "@/store/modules/pet";
 import { NavigationType } from "@/store/types";
 import { useRoute } from "@react-navigation/native";
-import {
-  IconChevronRight,
-  IconSquareRoundedPlus,
-} from "@tabler/icons-react-native";
+import { IconChevronRight, IconSquareRoundedPlus } from "@tabler/icons-react-native";
 import React, { useEffect, useState } from "react";
 import { Button, Div, Text } from "react-native-magnus";
 
@@ -31,8 +29,7 @@ const PetProfileMedicalHistoryScreen: React.FC<Props> = (props) => {
   const selectedTime = (route.params as Record<string, string>)?.selectedTime;
   const selectedDate = (route.params as Record<string, string>)?.selectedDate;
 
-  const consultationId = (route.params as Record<string, string>)
-    ?.consultationId;
+  const consultationId = (route.params as Record<string, string>)?.consultationId;
 
   const { petsDetailMap } = usePetStore();
   const [open, setOpen] = useState(false);
@@ -85,13 +82,7 @@ const PetProfileMedicalHistoryScreen: React.FC<Props> = (props) => {
       navigation={props.navigation}
     >
       <Div flex={1}>
-        <Text
-          fontSize={"6xl"}
-          lineHeight={40}
-          color="#222222"
-          mb={4}
-          fontFamily={fontHeading}
-        >
+        <Text fontSize={"6xl"} lineHeight={40} color="#222222" mb={4} fontFamily={fontHeading}>
           Add medical history
         </Text>
         <Text
@@ -120,9 +111,7 @@ const PetProfileMedicalHistoryScreen: React.FC<Props> = (props) => {
             lineHeight={24}
             px={16}
             py={12}
-            suffix={
-              <IconChevronRight size={24} color="#494949" strokeWidth={1.5} />
-            }
+            suffix={<IconChevronRight size={24} color="#494949" strokeWidth={1.5} />}
             onPress={() => {
               setOpen(true);
               setHealthHistoryId(item.id || "");
@@ -131,29 +120,11 @@ const PetProfileMedicalHistoryScreen: React.FC<Props> = (props) => {
             {item.name}
           </Button>
         ))}
-
-        {/* <TouchableOpacity>
-        </TouchableOpacity>  */}
-        <Button
-          mt={16}
-          bg="transparent"
-          color="#427594"
-          fontFamily={fontHauoraMedium}
-          fontSize="lg"
-          lineHeight={24}
-          px={0}
-          py={0}
+        <AddButton
+          text="Add Health History"
           onPress={() => setOpen(true)}
-          prefix={
-            <IconSquareRoundedPlus
-              size={18}
-              color="#427594"
-              style={{ marginTop: 2, marginRight: 4 }}
-            />
-          }
-        >
-          Add Health History
-        </Button>
+          styles={{ marginTop: 20 }}
+        />
       </Div>
 
       <Div>

@@ -28,20 +28,17 @@ export const useCaseStore = create<CasesState>((set, get) => ({
     const response = await api.get("/member/cases", {
       params: {
         page: page,
-        limit: 10,
+        limit: 1000,
         isEscalated,
       },
     });
-
-    console.log("fetch cases response==", response.data);
 
     const existingCases = reset ? [] : get().cases || [];
     const data = response.data.data;
 
     if (isEscalated) {
       set(() => ({
-        escalatedCases:
-          existingCases.length > 0 ? [...existingCases, ...data] : data,
+        escalatedCases: existingCases.length > 0 ? [...existingCases, ...data] : data,
       }));
     } else {
       set(() => ({

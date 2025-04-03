@@ -12,12 +12,9 @@ import { Div, Text } from "react-native-magnus";
 
 const windowHeight = Dimensions.get("window").height;
 
-const ExpertsListScreen: React.FC<{ navigation: NavigationType }> = ({
-  navigation,
-}) => {
+const ExpertsListScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
   const socket = useSocket();
-  const { fetchExperts, updateExpertStatus, experts, expertDetailMap } =
-    useExpertStore();
+  const { fetchExperts, updateExpertStatus, experts, expertDetailMap } = useExpertStore();
 
   // const [experts, setExperts] = useState<Expert[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -26,20 +23,20 @@ const ExpertsListScreen: React.FC<{ navigation: NavigationType }> = ({
     handleFetchRequests();
   }, []);
 
-  useEffect(() => {
-    if (socket) {
-      socket.on(SocketEventEnum.VET_ONLINE_STATUS_CHANGE, async (data) => {
-        const vetId = data?.vetId;
-        const isOnline = data?.isOnline;
+  // useEffect(() => {
+  //   if (socket) {
+  //     socket.on(SocketEventEnum.VET_ONLINE_STATUS_CHANGE, async (data) => {
+  //       const vetId = data?.vetId;
+  //       const isOnline = data?.isOnline;
 
-        updateExpertStatus(vetId, isOnline);
-      });
-    }
+  //       updateExpertStatus(vetId, isOnline);
+  //     });
+  //   }
 
-    return () => {
-      socket?.off(SocketEventEnum.VET_ONLINE_STATUS_CHANGE);
-    };
-  }, []);
+  //   return () => {
+  //     socket?.off(SocketEventEnum.VET_ONLINE_STATUS_CHANGE);
+  //   };
+  // }, []);
 
   const handleFetchRequests = async () => {
     try {

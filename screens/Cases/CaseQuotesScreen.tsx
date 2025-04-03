@@ -1,6 +1,8 @@
 import Layout from "@/components/app/Layout";
 import StarRating from "@/components/partials/StarRating";
 import {
+  colorErrorText,
+  colorGray49,
   colorPrimary,
   fontHauoraBold,
   fontHauoraMedium,
@@ -14,32 +16,24 @@ import { CaseQuotesDto } from "@/store/types/case";
 import { useRoute } from "@react-navigation/native";
 import { IconHome } from "@tabler/icons-react-native";
 import React, { useEffect, useMemo, useState } from "react";
-import {
-  ActivityIndicator,
-  FlatList,
-  RefreshControl,
-  TouchableOpacity,
-} from "react-native";
-import { Div, Image, Text } from "react-native-magnus";
+import { ActivityIndicator, FlatList, RefreshControl, TouchableOpacity } from "react-native";
+import { Div, Image, Tag, Text } from "react-native-magnus";
 import { IconArrowRight } from "@tabler/icons-react-native";
+import { useUserStore } from "@/store/modules/user";
 
-const CaseQuotesScreen: React.FC<{ navigation: NavigationType }> = ({
-  navigation,
-}) => {
+const CaseQuotesScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
   const route = useRoute();
   const caseId = (route.params as Record<string, string>)?.id;
-  const hasPartnerBooking = (route.params as Record<string, string>)
-    ?.hasPartnerBooking;
+  const hasPartnerBooking = (route.params as Record<string, string>)?.hasPartnerBooking;
 
   const { fetchCaseQuotes, casesQuotes } = useCaseStore();
 
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setRefresh] = useState(false);
 
-  const caseQuotes = useMemo(
-    () => casesQuotes.get(caseId),
-    [caseId, casesQuotes]
-  );
+  const caseQuotes = useMemo(() => casesQuotes.get(caseId), [caseId, casesQuotes]);
+
+  const { readQuotation, SET_NAV_NOTIF, navNotif } = useUserStore();
 
   useEffect(() => {
     handleFetchRequests();
@@ -85,7 +79,15 @@ const CaseQuotesScreen: React.FC<{ navigation: NavigationType }> = ({
     }
   };
 
-  console.log(JSON.stringify(caseQuotes, null, 2));
+  const handleQuotationPress = (quotation: CaseQuotesDto) => {
+    SET_NAV_NOTIF(navNotif ? Number(navNotif) - 1 : null);
+    navigation.navigate("CaseQuoteDescriptionScreen", {
+      id: quotation.partner.id,
+      caseId,
+      hasPartnerBooking,
+    });
+    readQuotation(caseId, quotation.id);
+  };
 
   return (
     <Layout
@@ -107,10 +109,7 @@ const CaseQuotesScreen: React.FC<{ navigation: NavigationType }> = ({
               return <Text>No quotes yet. :(</Text>;
             }}
             refreshControl={
-              <RefreshControl
-                refreshing={isRefreshing}
-                onRefresh={handleFetchRequests}
-              />
+              <RefreshControl refreshing={isRefreshing} onRefresh={handleFetchRequests} />
             }
             renderItem={({ item }) => {
               return (
@@ -130,28 +129,19 @@ const CaseQuotesScreen: React.FC<{ navigation: NavigationType }> = ({
                   position="relative"
                   overflow="hidden"
                 >
-                  {hasPartnerBooking !== undefined &&
-                    hasPartnerBooking !== item.partner.id && (
-                      <Div
-                        position="absolute"
-                        w={"120%"}
-                        h={"150%"}
-                        bg="#eeeeee50"
-                        top={0}
-                        left={0}
-                        zIndex={10}
-                        pointerEvents="none"
-                      />
-                    )}
-                  <TouchableOpacity
-                    onPress={() => {
-                      navigation.navigate("CaseQuoteDescriptionScreen", {
-                        id: item.partner.id,
-                        caseId,
-                        hasPartnerBooking,
-                      });
-                    }}
-                  >
+                  {hasPartnerBooking !== undefined && hasPartnerBooking !== item.partner.id && (
+                    <Div
+                      position="absolute"
+                      w={"120%"}
+                      h={"150%"}
+                      bg="#eeeeee50"
+                      top={0}
+                      left={0}
+                      zIndex={10}
+                      pointerEvents="none"
+                    />
+                  )}
+                  <TouchableOpacity onPress={() => handleQuotationPress(item)}>
                     <Div flexDir="row" justifyContent="space-between">
                       <Div maxW={"70%"}>
                         <TouchableOpacity
@@ -161,13 +151,29 @@ const CaseQuotesScreen: React.FC<{ navigation: NavigationType }> = ({
                             });
                           }}
                         >
-                          <Text
-                            fontSize={"xl"}
-                            mb={4}
-                            fontFamily={fontHauoraSemiBold}
-                          >
-                            {item.partner.name}
-                          </Text>
+                          <Div row alignItems="center">
+                            <Text
+                              fontSize={"xl"}
+                              mb={4}
+                              fontFamily={fontHauoraSemiBold}
+                              style={{
+                                borderBottomWidth: 1,
+                              }}
+                            >
+                              {item.partner.name}
+                            </Text>
+                            {!item.isViewed && (
+                              <Tag ml={6} mt={2} bg={colorErrorText} py={2} px={6}>
+                                <Text
+                                  textTransform="capitalize"
+                                  color="#fff"
+                                  fontFamily={fontHauoraSemiBold}
+                                >
+                                  NEW
+                                </Text>
+                              </Tag>
+                            )}
+                          </Div>
                         </TouchableOpacity>
 
                         {/* <PartnerVetStarRating rating={4} color="" /> */}
@@ -208,17 +214,9 @@ const CaseQuotesScreen: React.FC<{ navigation: NavigationType }> = ({
                       </Text>
                     </Div>
 
-                    <Div
-                      flexDir="row"
-                      justifyContent="space-between"
-                      alignItems="center"
-                    >
+                    <Div flexDir="row" justifyContent="space-between" alignItems="center">
                       <Div flexDir="row" alignItems="flex-end">
-                        <Text
-                          fontSize={"md"}
-                          fontFamily={fontHauoraMedium}
-                          mb={3}
-                        >
+                        <Text fontSize={"md"} fontFamily={fontHauoraMedium} mb={3}>
                           Max{"  "}
                         </Text>
                         <Text fontSize={"2xl"} fontFamily={fontHauoraBold}>

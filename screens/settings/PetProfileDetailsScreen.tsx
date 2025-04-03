@@ -9,14 +9,7 @@ import {
 import { NavigationType } from "@/store/types";
 import React, { useEffect, useRef, useState } from "react";
 import { ActivityIndicator, FlatList, TouchableOpacity } from "react-native";
-import {
-  Button,
-  Div,
-  DropdownRef,
-  Image,
-  Tag,
-  Text,
-} from "react-native-magnus";
+import { Button, Div, DropdownRef, Image, Tag, Text } from "react-native-magnus";
 import ProfileOptionButton from "./ProfileOptionButton";
 import AddButton from "@/components/partials/AddButton";
 import { useRoute } from "@react-navigation/native";
@@ -34,19 +27,12 @@ const btns = ["Basic Details", "Health History"];
 
 type RouteType = { petId: string };
 
-const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
-  navigation,
-}) => {
+const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
   const route = useRoute();
   const toast = useToast();
   const id = (route.params as RouteType)?.petId;
-  const {
-    petsDetailMap,
-    fetchPetDetails,
-    updatePet,
-    deleteHealthHistory,
-    deletePet,
-  } = usePetStore();
+  const { petsDetailMap, fetchPetDetails, updatePet, deleteHealthHistory, deletePet } =
+    usePetStore();
   // const [healthHistoryDataState, setHealthHistoryDataState] = useState<
   //   HealthHistory[] | null
   // >(null);
@@ -55,8 +41,7 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
   const [profileImg, setProfileImg] = useState("");
   const [loading, setLoading] = useState(false);
   const [imageLoading, setImageLoading] = useState(false);
-  const [deleteHealthHistoryLoading, setDeleteHealthHistoryLoading] =
-    useState("");
+  const [deleteHealthHistoryLoading, setDeleteHealthHistoryLoading] = useState("");
   const [showDeleteModal, setShowDeleteModal] = useState("");
   const [showDeletePetModal, setShowDeletePetModal] = useState(false);
   const [deletePetLoading, setDeletePetLoading] = useState(false);
@@ -141,6 +126,22 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
   };
   // deleteHealthHistoryHandler(`${item.id}`);
 
+  function calculateAge(dateOfBirth: string): string {
+    const dob = new Date(dateOfBirth);
+    const today = new Date();
+
+    let years = today.getFullYear() - dob.getFullYear();
+    let months = today.getMonth() - dob.getMonth();
+
+    if (months < 0) {
+      years--;
+      months += 12;
+    }
+
+    if (years <= 0) return `${months} ${months === 1 ? "month" : "months"}`;
+    return `${years} ${years === 1 ? "yr" : "yrs"} ${months > 0 ? `${months} ${months === 1 ? "month" : "months"}` : ""}`;
+  }
+
   const petDetails = [
     {
       title: "Name",
@@ -150,7 +151,7 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
     },
     {
       title: "Age",
-      value: petDetailsData?.age,
+      value: petDetailsData?.dob ? calculateAge(petDetailsData?.dob) : 0,
       link: "PetEditInfoScreen",
       fileName: "dob",
     },
@@ -251,12 +252,7 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
       {!loading && (
         <Div flex={1}>
           <Div flexDir="row" alignItems="center" mb={35}>
-            <Div
-              w={118}
-              h={115}
-              justifyContent="flex-end"
-              alignItems="flex-end"
-            >
+            <Div w={118} h={115} justifyContent="flex-end" alignItems="flex-end">
               <Div mx={"auto"}>
                 <ImageUpload
                   h={92}
@@ -277,13 +273,7 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
               </Text>
 
               {petDetailsData?.isDeceased && (
-                <Tag
-                  fontSize={"md"}
-                  mt={8}
-                  p={0}
-                  bg={colorErrorText}
-                  color="#fff"
-                >
+                <Tag fontSize={"md"} mt={8} p={0} bg={colorErrorText} color="#fff">
                   Deceased
                 </Tag>
               )}
@@ -416,9 +406,7 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                         //   historyId: item.id,
                         // });
                       }}
-                      isLoading={
-                        item.id?.toString() === deleteHealthHistoryLoading
-                      }
+                      isLoading={item.id?.toString() === deleteHealthHistoryLoading}
                       name={item.name}
                       onDelete={() => setShowDeleteModal(`${item.id}`)}
                       mb={index + 1 === healthHistoryDataState.length ? 0 : 12}
