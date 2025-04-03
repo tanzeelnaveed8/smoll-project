@@ -96,7 +96,7 @@ const options: GroupType[] = [
   // },
   {
     id: 3,
-    groupName: "Billing and Security",
+    groupName: "Privacy & Help",
     options: [
       {
         id: 2,
@@ -119,9 +119,7 @@ const options: GroupType[] = [
 // Todos:
 // 1. Person icon needs to be changed
 // 2. Remaining icons needs to be added
-const SettingsMainScreen: React.FC<{ navigation: NavigationType }> = ({
-  navigation,
-}) => {
+const SettingsMainScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
   const [pushNotificationEnabled, setPushNotificationEnabled] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
@@ -133,10 +131,7 @@ const SettingsMainScreen: React.FC<{ navigation: NavigationType }> = ({
   const { version, buildNumber } = useAppVersion();
 
   useEffect(() => {
-    const subscription = AppState.addEventListener(
-      "change",
-      handleAppStateChange
-    );
+    const subscription = AppState.addEventListener("change", handleAppStateChange);
 
     // Check status on initial mount
     checkPushNotificationStatus();
@@ -195,13 +190,7 @@ const SettingsMainScreen: React.FC<{ navigation: NavigationType }> = ({
       <ScrollDiv showsVerticalScrollIndicator={false}>
         {options.map((group) => (
           <React.Fragment key={`${group?.id}`}>
-            <Text
-              fontWeight="400"
-              fontSize={"xl"}
-              fontFamily={fontHauora}
-              lineHeight={24}
-              mb={8}
-            >
+            <Text fontWeight="400" fontSize={"xl"} fontFamily={fontHauora} lineHeight={24} mb={8}>
               {group.groupName}
             </Text>
             <Div mb={24}>
@@ -223,9 +212,7 @@ const SettingsMainScreen: React.FC<{ navigation: NavigationType }> = ({
                     }
                   }}
                   toggleValue={
-                    option.title === "Push Notification"
-                      ? pushNotificationEnabled
-                      : undefined
+                    option.title === "Push Notification" ? pushNotificationEnabled : undefined
                   }
                 />
               ))}
@@ -234,10 +221,7 @@ const SettingsMainScreen: React.FC<{ navigation: NavigationType }> = ({
         ))}
 
         <Div mt="auto" my={20}>
-          <TouchableOpacity
-            onPress={() => setShowLogoutModal(true)}
-            style={{ marginBottom: 10 }}
-          >
+          <TouchableOpacity onPress={() => setShowLogoutModal(true)} style={{ marginBottom: 10 }}>
             <Text
               fontWeight="400"
               fontSize={"xl"}
