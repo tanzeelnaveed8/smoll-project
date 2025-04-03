@@ -67,8 +67,6 @@ const PetProfileScreen: React.FC<Props> = (props) => {
         return !pet.gender.length;
       case 4:
         return !pet.breed.length;
-      case 6:
-        return !pet.weight;
       case 7:
         return (
           !pet.photos.length ||
