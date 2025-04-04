@@ -220,7 +220,7 @@ const CaseDetailScreen: React.FC<{
         />
         <ReadonlyItem
           field="Weight"
-          value={caseDetail?.pet?.weight.toString() + " Kg" ?? ""}
+          value={caseDetail?.pet?.weight?.toString() + " Kg" ?? ""}
           mb={12}
         />
         <ReadonlyItem

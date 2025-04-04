@@ -13,7 +13,7 @@ interface Props {
 
 const PetProfileBasicDetailScreens: React.FC<Props> = (props) => {
   const [weight, setWeight] = useState(
-    props.pet.weight ? props.pet.weight.toString() : ""
+    props.pet.weight ? props.pet.weight?.toString() : ""
   );
   const [chipNumber, setChipNumber] = useState(
     props.pet.chipNumber ? props.pet.chipNumber.toString() : ""
@@ -46,7 +46,7 @@ const PetProfileBasicDetailScreens: React.FC<Props> = (props) => {
           setWeight(text);
           props.setPet({ ...props.pet, weight: parseInt(text) });
         }}
-        placeholder="Weight (Kg)"
+        placeholder="Weight (Kg) (Optional)"
         marginBottom={20}
         inputStyle={{ borderRadius: 12 }}
         keyboardType="numeric"
