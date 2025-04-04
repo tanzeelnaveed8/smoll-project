@@ -157,7 +157,7 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
     },
     {
       title: "Weight",
-      value: !petDetailsData?.weight || `${petDetailsData?.weight} kg`,
+      value: petDetailsData?.weight ? `${petDetailsData?.weight} kg` : 0,
       link: "EditInfoScreen",
       heading: "Please enter pet's Weight",
       placeholder: "Weight",
