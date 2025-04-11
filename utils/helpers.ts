@@ -1,13 +1,17 @@
-import {
-  colorErrorText,
-  colorPrimary,
-  colorSuccessText,
-} from "@/constant/constant";
+import { colorErrorText, colorPrimary, colorSuccessText } from "@/constant/constant";
 import { CaseDetail, CaseStatusEnum } from "@/store/types/case.d";
 import { AxiosError } from "axios";
 import dayjs from "dayjs";
 import { IMessage } from "react-native-gifted-chat";
-import { ZIMAudioMessage, ZIMFileMessage, ZIMImageMessage, ZIMMessage, ZIMMessageType, ZIMTextMessage, ZIMVideoMessage } from "zego-zim-react-native";
+import {
+  ZIMAudioMessage,
+  ZIMFileMessage,
+  ZIMImageMessage,
+  ZIMMessage,
+  ZIMMessageType,
+  ZIMTextMessage,
+  ZIMVideoMessage,
+} from "zego-zim-react-native";
 
 export const getCountryCode = (input: string) => {
   // Use a regular expression to match the country code
@@ -40,10 +44,7 @@ export const getCaseStatusLabel = (
     const currentTime = dayjs();
     const scheduledTime = dayjs(scheduledAt);
 
-    if (
-      currentTime.isBefore(scheduledTime) &&
-      status === CaseStatusEnum.CLOSED
-    ) {
+    if (currentTime.isBefore(scheduledTime) && status === CaseStatusEnum.CLOSED) {
       return "Scheduled Cancelled";
     }
 
@@ -87,10 +88,7 @@ export const getCaseStatusColor = (
       return colorErrorText;
     }
 
-    if (
-      currentTime.isBefore(scheduledTime) &&
-      status === CaseStatusEnum.CLOSED
-    ) {
+    if (currentTime.isBefore(scheduledTime) && status === CaseStatusEnum.CLOSED) {
       return colorErrorText;
     }
 
@@ -112,10 +110,7 @@ export const getCaseStatusColor = (
   }
 };
 
-export const hasAvailabilityDateTimePassed = (
-  date: string,
-  time: string
-): boolean => {
+export const hasAvailabilityDateTimePassed = (date: string, time: string): boolean => {
   // const dateTime = dayjs(`${date}T${time}Z`); // need to test it
   // const timeOnly = dateTime.format("HH:mm");
   // const currentTimeOnly = dayjs().format("HH:mm");
@@ -157,19 +152,18 @@ export const getUserTimezoneOffset = () => {
   return gmtOffset;
 };
 
-
-export const transformMessages = (data: ZIMMessage[], props:{recipientId:string,chatWithName:string}) => {
-  const transformedMessages = data.map((msg:any) => {
+export const transformMessages = (
+  data: ZIMMessage[],
+  props: { recipientId: string; chatWithName: string }
+) => {
+  const transformedMessages = data.map((msg: any) => {
     const obj: IMessage = {
       _id: msg.messageID,
       text: "",
       createdAt: new Date(msg.timestamp),
       user: {
         _id: msg.senderUserID,
-        name:
-          msg.senderUserID === props.recipientId
-            ? props.chatWithName
-            : undefined,
+        name: msg.senderUserID === props.recipientId ? props.chatWithName : undefined,
         avatar: undefined,
       },
     };
@@ -182,10 +176,7 @@ export const transformMessages = (data: ZIMMessage[], props:{recipientId:string,
         text: msg.repliedInfo.messageInfo.message,
         user: {
           _id: msg.repliedInfo.senderUserID,
-          name:
-            msg.repliedInfo.senderUserID === props.recipientId
-              ? props.chatWithName
-              : undefined,
+          name: msg.repliedInfo.senderUserID === props.recipientId ? props.chatWithName : undefined,
           avatar: undefined,
         },
         audio:
@@ -218,18 +209,15 @@ export const transformMessages = (data: ZIMMessage[], props:{recipientId:string,
               avatar: undefined,
             },
             image:
-              extendedData.repliedInfo.messageInfo.type ===
-              ZIMMessageType.Image
+              extendedData.repliedInfo.messageInfo.type === ZIMMessageType.Image
                 ? extendedData.repliedInfo.messageInfo.fileDownloadUrl
                 : undefined,
             video:
-              extendedData.repliedInfo.messageInfo.type ===
-              ZIMMessageType.Video
+              extendedData.repliedInfo.messageInfo.type === ZIMMessageType.Video
                 ? extendedData.repliedInfo.messageInfo.fileDownloadUrl
                 : undefined,
             audio:
-              extendedData.repliedInfo.messageInfo.type ===
-              ZIMMessageType.Audio
+              extendedData.repliedInfo.messageInfo.type === ZIMMessageType.Audio
                 ? extendedData.repliedInfo.messageInfo.fileDownloadUrl
                 : undefined,
           };
@@ -265,4 +253,16 @@ export const transformMessages = (data: ZIMMessage[], props:{recipientId:string,
   });
 
   return transformedMessages;
+};
+
+export const truncateFileName = (filename: string, maxBaseLength = 12) => {
+  const parts = filename.split(".");
+  if (parts.length < 2) return filename; // no extension
+
+  const ext = parts.pop(); // get the extension
+  const base = parts.join(".");
+
+  const truncatedBase = base.length > maxBaseLength ? base.slice(0, maxBaseLength) + ".." : base;
+
+  return `${truncatedBase}.${ext}`;
 };

@@ -1,13 +1,8 @@
 import BottomSheet from "@/components/partials/BottomSheet";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import ImageUpload from "@/components/partials/ImageUpload";
-import {
-  fontCooper,
-  fontHauoraMedium,
-  fontHauoraSemiBold,
-  fontHeading,
-} from "@/constant/constant";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { fontCooper, fontHauoraMedium, fontHauoraSemiBold, fontHeading } from "@/constant/constant";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Text, Div, Button, ScrollDiv } from "react-native-magnus";
 import InputField from "@/components/partials/InputField";
 import DatePickerComponent from "@/components/partials/DatePickerComponent";
@@ -16,8 +11,9 @@ import { UploadedFile } from "@/store/types/file";
 import { usePetStore } from "@/store/modules/pet";
 import { useToast } from "react-native-toast-notifications";
 import TextAreaField from "@/components/partials/TextAreaField";
-import { Keyboard, View } from "react-native";
-import DocumentPicker from "react-native-document-picker";
+import { Keyboard, Linking, TouchableOpacity } from "react-native";
+import { IconFile, IconVideo, IconX } from "@tabler/icons-react-native";
+import { truncateFileName } from "@/utils/helpers";
 
 type PropTypes = {
   open: boolean;
@@ -34,8 +30,7 @@ const initialState = {
 };
 
 const HealthHistoryModal = (props: PropTypes) => {
-  const { addHealthHistory, petsDetailMap, updateHealthHistory } =
-    usePetStore();
+  const { addHealthHistory, petsDetailMap, updateHealthHistory } = usePetStore();
   const toast = useToast();
 
   const { open, onClose } = props;
@@ -68,10 +63,7 @@ const HealthHistoryModal = (props: PropTypes) => {
     }
   }, [open]);
 
-  const handleFormChange = (
-    key: keyof typeof form,
-    value: string | UploadedFile[]
-  ) => {
+  const handleFormChange = (key: keyof typeof form, value: string | UploadedFile[]) => {
     console.log("form ===", form);
 
     const formCopy = { ...form };
@@ -110,15 +102,16 @@ const HealthHistoryModal = (props: PropTypes) => {
 
   const handleUnSelectDocument = (uri: string) => {
     const formCopy = { ...form };
-    formCopy.documents = formCopy.documents.filter(
-      (document) => document.url !== uri
-    );
+    formCopy.documents = formCopy.documents.filter((document) => document.url !== uri);
     setForm(formCopy);
   };
 
   const isDisabled = useMemo(() => {
     return !form.name || !form.date || !form.description;
   }, [form]);
+
+  const isVideo = (mimetype: string) => mimetype.startsWith("video/");
+  const isImage = (mimetype: string) => mimetype.startsWith("image/");
 
   return (
     <BottomSheet
@@ -136,13 +129,7 @@ const HealthHistoryModal = (props: PropTypes) => {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
-          <Text
-            fontSize={"6xl"}
-            lineHeight={40}
-            color="#222222"
-            mb={4}
-            fontFamily={fontHeading}
-          >
+          <Text fontSize={"6xl"} lineHeight={40} color="#222222" mb={4} fontFamily={fontHeading}>
             Details
           </Text>
           <Text
@@ -153,8 +140,8 @@ const HealthHistoryModal = (props: PropTypes) => {
             maxW={350}
             mb={24}
           >
-            Please enter the details of your pet’s medical history, including
-            past illnesses, treatments, and any ongoing conditions
+            Please enter the details of your pet’s medical history, including past illnesses,
+            treatments, and any ongoing conditions
           </Text>
 
           <Div mb={24} style={{ gap: 8 }}>
@@ -244,29 +231,100 @@ const HealthHistoryModal = (props: PropTypes) => {
                 }}
               />
 
-              {form.documents.map((item, i) => (
-                <>
-                  <ImageUpload
-                    key={i}
-                    plusIcon={false}
-                    w={139}
-                    h={150}
-                    disabled
-                    showDownloadBtn
-                    openImageOnTab
-                    // mr={12}
-                    docType={item.mimetype}
-                    documentName={item.filename}
-                    onUnSelect={handleUnSelectDocument}
-                    uri={item?.url || ""}
+              {form.documents.map((item, i) => {
+                const mime = item.mimetype;
 
-                    // onChange={(file) => {
-                    //   handleFormChange("documents", file);
-                    // }}
-                  />
-                  <Div w={12}></Div>
-                </>
-              ))}
+                return (
+                  <React.Fragment key={i}>
+                    {isVideo(mime) ? (
+                      <TouchableOpacity
+                        onPress={() => Linking.openURL(item.url)}
+                        style={{
+                          width: 139,
+                          height: 150,
+                          borderRadius: 12,
+                          backgroundColor: "#f0f0f0",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          padding: 12,
+                          position: "relative",
+                        }}
+                      >
+                        <Button
+                          position="absolute"
+                          zIndex={50}
+                          top={2}
+                          right={2}
+                          p={2}
+                          onPress={() => handleUnSelectDocument(item.url)}
+                          bg="#00000061"
+                        >
+                          <IconX width={24} height={24} color={"#fff"} />
+                        </Button>
+                        <IconVideo
+                          height={24}
+                          width={24}
+                          color="#444"
+                          style={{ paddingBottom: 4 }}
+                        />
+                        <Text style={{ textAlign: "center", paddingBottom: 10 }}>
+                          {truncateFileName(item.filename, 10)}
+                        </Text>
+                        <Text style={{ fontSize: 12, color: "#555" }}>Tap to download</Text>
+                      </TouchableOpacity>
+                    ) : isImage(mime) ? (
+                      <ImageUpload
+                        plusIcon={false}
+                        w={139}
+                        h={150}
+                        disabled
+                        showDownloadBtn
+                        openImageOnTab
+                        docType={item.mimetype}
+                        documentName={item.filename}
+                        onUnSelect={handleUnSelectDocument}
+                        uri={item?.url || ""}
+                      />
+                    ) : (
+                      <TouchableOpacity
+                        onPress={() => Linking.openURL(item.url)}
+                        style={{
+                          width: 139,
+                          height: 150,
+                          borderRadius: 12,
+                          backgroundColor: "#f0f0f0",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          position: "relative",
+                        }}
+                      >
+                        <Button
+                          position="absolute"
+                          zIndex={50}
+                          top={2}
+                          right={2}
+                          p={2}
+                          onPress={() => handleUnSelectDocument(item.url)}
+                          bg="#00000061"
+                        >
+                          <IconX width={24} height={24} color={"#fff"} />
+                        </Button>
+                        <IconFile
+                          height={24}
+                          width={24}
+                          color="#444"
+                          style={{ paddingBottom: 4 }}
+                        />
+                        <Text style={{ textAlign: "center", paddingBottom: 10 }}>
+                          {truncateFileName(item.filename, 12)}
+                        </Text>
+                        <Text style={{ fontSize: 12, color: "#555" }}>Tap to download</Text>
+                      </TouchableOpacity>
+                    )}
+                    <Div w={12} />
+                  </React.Fragment>
+                );
+              })}
             </ScrollDiv>
           </Div>
         </ScrollDiv>
