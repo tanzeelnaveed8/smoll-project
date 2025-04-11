@@ -6,7 +6,7 @@ import { fontHauoraSemiBold, fontHeading } from "@/constant/constant";
 import { useExpertStore } from "@/store/modules/expert";
 import { NavigationType } from "@/store/types";
 import { useRoute } from "@react-navigation/native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Div, ScrollDiv, Text } from "react-native-magnus";
 
 interface Props {
@@ -42,6 +42,14 @@ const ConsultationFeedbackScreen: React.FC<Props> = ({ navigation }) => {
       setActionLoading(false);
     }
   };
+
+  useEffect(() => {
+    return () => {
+      navigation.navigate("HomeScreen", {
+        from: "ConsultationFeedbackScreen",
+      });
+    };
+  }, []);
 
   return (
     <Layout title="Feedback" navigation={navigation} preventBackGesture={true}>
