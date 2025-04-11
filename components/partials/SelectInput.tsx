@@ -1,13 +1,7 @@
 import { colorTextPrimary } from "@/constant/constant";
 import { IconChevronDown, IconSearch } from "@tabler/icons-react-native";
 import React, { ReactElement, useEffect, useState } from "react";
-import {
-  StyleProp,
-  TextStyle,
-  TouchableOpacity,
-  Keyboard,
-  FlatList,
-} from "react-native";
+import { StyleProp, TextStyle, TouchableOpacity, Keyboard, FlatList } from "react-native";
 import { Div, Text } from "react-native-magnus";
 import BottomSheet from "./BottomSheet";
 import InputField from "./InputField";
@@ -37,11 +31,7 @@ interface Props {
   onClose?: () => void;
   onOpen?: () => void;
   renderNoOptions?: () => React.ReactNode;
-  renderLabel?: (
-    option: OptionDto,
-    onClick: (arg: Option) => void,
-    index: number
-  ) => ReactElement;
+  renderLabel?: (option: OptionDto, onClick: (arg: Option) => void, index: number) => ReactElement;
   mainInputStyle?: StyleProp<TextStyle>;
   disableKeyboardDismissOnSelect?: boolean;
   value?: string;
@@ -49,9 +39,7 @@ interface Props {
 
 const SelectInput: React.FC<Props> = (props) => {
   const { renderLabel, mainInputStyle } = props;
-  const [selectedValue, setSelectedValue] = useState<Nullable<Option>>(
-    props.selectedValue ?? null
-  );
+  const [selectedValue, setSelectedValue] = useState<Nullable<Option>>(props.selectedValue ?? null);
   const [searchQuery, setSearchQuery] = useState("");
   const [showMenu, setShowMenu] = useState(false);
 
@@ -68,9 +56,7 @@ const SelectInput: React.FC<Props> = (props) => {
   useEffect(() => {
     if (!props.value || !props.options) return;
 
-    const storedValue = props.options
-      .filter((item) => item.label === props.value)
-      ?.pop();
+    const storedValue = props.options.filter((item) => item.label === props.value)?.pop();
 
     if (storedValue && selectedValue?.label !== storedValue.label) {
       setSelectedValue(storedValue);
@@ -135,9 +121,6 @@ const SelectInput: React.FC<Props> = (props) => {
           scrollEventThrottle={16}
           removeClippedSubviews={true}
           bounces={true}
-          onStartShouldSetResponderCapture={() => true}
-          onStartShouldSetResponder={() => true}
-          onMoveShouldSetResponder={() => true}
           directionalLockEnabled={true}
           renderItem={({ item, index }) =>
             renderLabel ? (
