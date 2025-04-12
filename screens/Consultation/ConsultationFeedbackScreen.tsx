@@ -8,6 +8,7 @@ import { NavigationType } from "@/store/types";
 import { useRoute } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { Div, ScrollDiv, Text } from "react-native-magnus";
+import { BackHandler } from "react-native";
 
 interface Props {
   navigation: NavigationType;
@@ -44,11 +45,14 @@ const ConsultationFeedbackScreen: React.FC<Props> = ({ navigation }) => {
   };
 
   useEffect(() => {
-    return () => {
-      navigation.navigate("HomeScreen", {
-        from: "ConsultationFeedbackScreen",
-      });
+    const onBackPress = () => {
+      // Prevent going back
+      return true;
     };
+
+    const backHandler = BackHandler.addEventListener("hardwareBackPress", onBackPress);
+
+    return () => backHandler.remove();
   }, []);
 
   return (
