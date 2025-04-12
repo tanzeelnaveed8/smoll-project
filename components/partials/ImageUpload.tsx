@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import * as ImagePicker from "expo-image-picker";
 import {
+  IconClick,
   IconDownload,
   IconEditCircle,
   IconPaperclip,
@@ -9,21 +10,11 @@ import {
   IconProps,
   IconStarFilled,
   IconUser,
+  IconVideo,
   IconX,
 } from "@tabler/icons-react-native";
-import {
-  Button,
-  Div,
-  DropdownRef,
-  Image,
-  Modal,
-  Text,
-} from "react-native-magnus";
-import {
-  colorPrimary,
-  fontHauoraMedium,
-  fontHauoraSemiBold,
-} from "@/constant/constant";
+import { Button, Div, DropdownRef, Image, Modal, Text } from "react-native-magnus";
+import { colorPrimary, fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
 import { useFileStore } from "@/store/modules/file";
 import { UploadedFile } from "@/store/types/file";
 import DocumentPicker from "react-native-document-picker";
@@ -39,11 +30,15 @@ import {
   StyleProp,
   StyleSheet,
   TouchableOpacity,
+  View,
   ViewStyle,
 } from "react-native";
 import { useToast } from "react-native-toast-notifications";
 import DocumentTypeDropdown from "./DocumentTypeDropdown";
 import { showMessage } from "react-native-flash-message";
+import Video from "react-native-video";
+import { truncateFileName } from "@/utils/helpers";
+import Pdf from "react-native-pdf";
 
 interface Props {
   isPrimary?: boolean;
@@ -68,7 +63,7 @@ interface Props {
   onLoading?: (isLoading: boolean) => void;
   disableDownload?: boolean;
   singleImage?: boolean;
-  aspectRatio?: number[] | 'auto'
+  aspectRatio?: number[] | "auto";
   disableCropping?: boolean;
 }
 
@@ -107,23 +102,24 @@ const ImageUpload: React.FC<Props> = ({
   const [modalVisible, setModalVisible] = useState(false);
   const [downloadLoading, setDownloadLoading] = useState(false);
   const optionMenuRef = useRef<DropdownRef>(null);
-  const [newAspectRatio,setNewAspectRatio] = useState<any>()
- 
-  useEffect(()=>{
-    if(!aspectRatio) {
-      setNewAspectRatio([4,3]) 
-      return
-     }
-    setNewAspectRatio(aspectRatio === 'auto' ? undefined : aspectRatio)
-  },[])
+  const [newAspectRatio, setNewAspectRatio] = useState<any>();
+  const [docLoading, setDocLoading] = useState(false);
+  const [docError, setDocError] = useState(false);
+
+  useEffect(() => {
+    if (!aspectRatio) {
+      setNewAspectRatio([4, 3]);
+      return;
+    }
+    setNewAspectRatio(aspectRatio === "auto" ? undefined : aspectRatio);
+  }, []);
 
   const pickImage = async () => {
     if (disabled) return;
 
     try {
       // Request permission first
-      const { status } =
-        await ImagePicker.requestMediaLibraryPermissionsAsync();
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
       if (status !== "granted") {
         // If permission is denied, show an alert and ask to open settings
@@ -289,8 +285,7 @@ const ImageUpload: React.FC<Props> = ({
     if (!uri) return;
 
     const { dirs } = RNFetchBlob.fs;
-    const dirToSave =
-      Platform.OS === "ios" ? dirs.DocumentDir : dirs.DownloadDir;
+    const dirToSave = Platform.OS === "ios" ? dirs.DocumentDir : dirs.DownloadDir;
     const configfb = {
       fileCache: true,
       addAndroidDownloads: {
@@ -358,6 +353,10 @@ const ImageUpload: React.FC<Props> = ({
     }
   };
 
+  const isVideo = (mimetype: string) => mimetype.startsWith("video/");
+  const isImage = (mimetype: string) => mimetype.startsWith("image/");
+  const isDoc = (docType: string) => !isVideo(docType) && !isImage(docType);
+
   return (
     <Div alignItems="flex-start">
       <Div position="relative" mr={mr ? mr : 0}>
@@ -388,7 +387,7 @@ const ImageUpload: React.FC<Props> = ({
               justifyContent="center"
               overflow="hidden"
             >
-              {documentName && docType && !docType.includes("image") && (
+              {documentName && docType && !isImage(docType) && (
                 <Div
                   position="absolute"
                   top={0}
@@ -401,7 +400,11 @@ const ImageUpload: React.FC<Props> = ({
                   p={10}
                 >
                   <Div justifyContent="center" alignItems="center">
-                    <IconPaperclip size={44} color="#fff" />
+                    {isVideo(docType) ? (
+                      <IconVideo size={44} color="#fff" />
+                    ) : (
+                      <IconPaperclip size={44} color="#fff" />
+                    )}
                     {documentName && (
                       <Text
                         fontFamily={fontHauoraSemiBold}
@@ -410,9 +413,7 @@ const ImageUpload: React.FC<Props> = ({
                         fontSize={"sm"}
                         px={2}
                       >
-                        {documentName.length > 22
-                          ? `${documentName.slice(0, 22)}...`
-                          : documentName}
+                        {truncateFileName(documentName, 10)}
                       </Text>
                     )}
                   </Div>
@@ -462,9 +463,7 @@ const ImageUpload: React.FC<Props> = ({
                 />
               )}
 
-              {loading && (
-                <ActivityIndicator size="large" color={colorPrimary} />
-              )}
+              {loading && <ActivityIndicator size="large" color={colorPrimary} />}
             </Div>
           </Button>
         ) : (
@@ -494,11 +493,7 @@ const ImageUpload: React.FC<Props> = ({
                 ) : userIcon ? (
                   <IconUser size={64} color="#222222" strokeWidth={1.5} />
                 ) : (
-                  <Text
-                    fontFamily={fontHauoraSemiBold}
-                    fontSize="xl"
-                    lineHeight={24}
-                  >
+                  <Text fontFamily={fontHauoraSemiBold} fontSize="xl" lineHeight={24}>
                     Upload
                   </Text>
                 )}
@@ -561,27 +556,121 @@ const ImageUpload: React.FC<Props> = ({
         isVisible={modalVisible}
         // h={"100%"}
         bg="transparent"
-        onSwipeCancel={() => setModalVisible(false)}
-        onSwipeMove={() => setModalVisible(false)}
-        swipeDirection={"down"}
+        onSwipeCancel={isDoc(docType || "") ? undefined : () => setModalVisible(false)}
+        onSwipeMove={isDoc(docType || "") ? undefined : () => setModalVisible(false)}
+        swipeDirection={isDoc(docType || "") ? undefined : "down"}
       >
-        <Div flex={1}>
-          {image && (
-            <Div
-              style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center",
-                position: "relative",
-              }}
-            >
-              <Image
-                source={{ uri: image }} // Display the selected image
-                style={{ width: "100%", height: "100%", resizeMode: "contain" }}
-              />
+        <>
+          {(docError || docLoading) && (
+            <Div flex={1} justifyContent="center" alignItems="center">
+              <TouchableOpacity
+                onPress={() => setModalVisible(false)}
+                style={{
+                  position: "absolute",
+                  top: 10,
+                  right: 10,
+                  zIndex: 10,
+                  backgroundColor: "#00000061",
+                  borderRadius: 10,
+                  padding: 6,
+                }}
+              >
+                <IconX width={24} height={24} color={"#fff"} />
+              </TouchableOpacity>
+              {docLoading && <ActivityIndicator size="large" color="#888" />}
+              {docError && <Text style={{ color: "red" }}>Failed to load content.</Text>}
             </Div>
           )}
-        </Div>
+
+          {!docLoading && !docError && (
+            <Div flex={1}>
+              {docType && isImage(docType) && (
+                <Div
+                  style={{
+                    flex: 1,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    position: "relative",
+                  }}
+                >
+                  <Image
+                    source={{ uri: image }} // Display the selected image
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      resizeMode: "contain",
+                    }}
+                    onLoadEnd={() => setDocLoading(false)}
+                    onError={() => {
+                      setDocLoading(false);
+                      setDocError(true);
+                    }}
+                  />
+                </Div>
+              )}
+              {docType && isVideo(docType) && (
+                <View style={{ flex: 1, position: "relative" }}>
+                  <TouchableOpacity
+                    onPress={() => setModalVisible(false)}
+                    style={{
+                      position: "absolute",
+                      top: 10,
+                      right: 10,
+                      zIndex: 10,
+                      backgroundColor: "#00000061",
+                      borderRadius: 10,
+                      padding: 6,
+                    }}
+                  >
+                    <IconX width={24} height={24} color={"#fff"} />
+                  </TouchableOpacity>
+
+                  <Video
+                    source={{ uri: uri }}
+                    style={{ width: "100%", height: "100%", backgroundColor: "#000" }}
+                    resizeMode="contain"
+                    controls={true} // adds play/pause controls
+                    paused={false}
+                    onLoadEnd={() => setDocLoading(false)}
+                    onError={() => {
+                      setDocLoading(false);
+                      setDocError(true);
+                    }}
+                  />
+                </View>
+              )}
+
+              {docType && isDoc(docType) && (
+                <View style={{ flex: 1, position: "relative" }}>
+                  <TouchableOpacity
+                    onPress={() => setModalVisible(false)}
+                    style={{
+                      position: "absolute",
+                      top: 10,
+                      right: 10,
+                      zIndex: 10,
+                      backgroundColor: "#00000061",
+                      borderRadius: 10,
+                      padding: 6,
+                    }}
+                  >
+                    <IconX width={24} height={24} color={"#fff"} />
+                  </TouchableOpacity>
+
+                  <Pdf
+                    source={{ uri, cache: true }}
+                    style={{ flex: 1 }}
+                    onLoadComplete={() => setDocLoading(false)}
+                    onError={() => {
+                      setDocLoading(false);
+                      setDocError(true);
+                    }}
+                  />
+                </View>
+              )}
+            </Div>
+          )}
+        </>
       </Modal>
     </Div>
   );

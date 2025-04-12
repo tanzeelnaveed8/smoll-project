@@ -110,9 +110,6 @@ const HealthHistoryModal = (props: PropTypes) => {
     return !form.name || !form.date || !form.description;
   }, [form]);
 
-  const isVideo = (mimetype: string) => mimetype.startsWith("video/");
-  const isImage = (mimetype: string) => mimetype.startsWith("image/");
-
   return (
     <BottomSheet
       isVisible={open}
@@ -236,91 +233,19 @@ const HealthHistoryModal = (props: PropTypes) => {
 
                 return (
                   <React.Fragment key={i}>
-                    {isVideo(mime) ? (
-                      <TouchableOpacity
-                        onPress={() => Linking.openURL(item.url)}
-                        style={{
-                          width: 139,
-                          height: 150,
-                          borderRadius: 12,
-                          backgroundColor: "#f0f0f0",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          padding: 12,
-                          position: "relative",
-                        }}
-                      >
-                        <Button
-                          position="absolute"
-                          zIndex={50}
-                          top={2}
-                          right={2}
-                          p={2}
-                          onPress={() => handleUnSelectDocument(item.url)}
-                          bg="#00000061"
-                        >
-                          <IconX width={24} height={24} color={"#fff"} />
-                        </Button>
-                        <IconVideo
-                          height={24}
-                          width={24}
-                          color="#444"
-                          style={{ paddingBottom: 4 }}
-                        />
-                        <Text style={{ textAlign: "center", paddingBottom: 10 }}>
-                          {truncateFileName(item.filename, 10)}
-                        </Text>
-                        <Text style={{ fontSize: 12, color: "#555" }}>Tap to download</Text>
-                      </TouchableOpacity>
-                    ) : isImage(mime) ? (
-                      <ImageUpload
-                        plusIcon={false}
-                        w={139}
-                        h={150}
-                        disabled
-                        showDownloadBtn
-                        openImageOnTab
-                        docType={item.mimetype}
-                        documentName={item.filename}
-                        onUnSelect={handleUnSelectDocument}
-                        uri={item?.url || ""}
-                      />
-                    ) : (
-                      <TouchableOpacity
-                        onPress={() => Linking.openURL(item.url)}
-                        style={{
-                          width: 139,
-                          height: 150,
-                          borderRadius: 12,
-                          backgroundColor: "#f0f0f0",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          position: "relative",
-                        }}
-                      >
-                        <Button
-                          position="absolute"
-                          zIndex={50}
-                          top={2}
-                          right={2}
-                          p={2}
-                          onPress={() => handleUnSelectDocument(item.url)}
-                          bg="#00000061"
-                        >
-                          <IconX width={24} height={24} color={"#fff"} />
-                        </Button>
-                        <IconFile
-                          height={24}
-                          width={24}
-                          color="#444"
-                          style={{ paddingBottom: 4 }}
-                        />
-                        <Text style={{ textAlign: "center", paddingBottom: 10 }}>
-                          {truncateFileName(item.filename, 12)}
-                        </Text>
-                        <Text style={{ fontSize: 12, color: "#555" }}>Tap to download</Text>
-                      </TouchableOpacity>
-                    )}
+                    <ImageUpload
+                      plusIcon={false}
+                      w={139}
+                      h={150}
+                      disabled
+                      showDownloadBtn
+                      openImageOnTab
+                      docType={item.mimetype}
+                      documentName={item.filename}
+                      onUnSelect={handleUnSelectDocument}
+                      uri={item?.url || ""}
+                    />
+
                     <Div w={12} />
                   </React.Fragment>
                 );
