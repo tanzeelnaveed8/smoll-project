@@ -2,7 +2,7 @@ import { colorPrimary, fontHauoraSemiBold } from "@/constant/constant";
 import { useSound } from "@/functions/useSound";
 import { useExpertStore } from "@/store/modules/expert";
 import { useUserStore } from "@/store/modules/user";
-import { getMessages, sendMessage, zim } from "@/utils/chat.v2";
+import { getMessages, initializeChat, sendMessage, zim } from "@/utils/chat.v2";
 import { transformMessages } from "@/utils/helpers";
 import { useIsFocused } from "@react-navigation/native";
 import { activateKeepAwakeAsync, deactivateKeepAwake } from "expo-keep-awake";
@@ -18,6 +18,7 @@ import {
 } from "zego-zim-react-native";
 import ChatBubble from "./ChatBubble";
 import ChatComposer from "./ChatComposer";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface Props {
   initialMessages: IMessage[];
@@ -130,6 +131,21 @@ const Chat: React.FC<Props> = (props) => {
 
       if (lastMessage?.timestamp && isLoadingEarlier) {
         config.nextMessage = lastMessage as ZIMMessage;
+      }
+
+      if (!zim) {
+        const storedEnvs = await AsyncStorage.getItem("envs");
+        if (!storedEnvs) throw new Error("Missing envs");
+
+        const parsedEnvs = JSON.parse(storedEnvs);
+        await initializeChat(
+          parsedEnvs?.ZEGO_APP_ID as string,
+          parsedEnvs?.ZEGO_APP_SIGN as string,
+          user.id,
+          user.playerId,
+          user.name || "",
+          user?.profileImg?.url ?? ""
+        );
       }
 
       const messageList = await getMessages(props.recipientId, ZIMConversationType.Peer, config);
