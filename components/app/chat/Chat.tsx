@@ -367,7 +367,7 @@ const Chat: React.FC<Props> = (props) => {
         renderAvatar={(avatarProps) => {
           const isUserMessage = user?.id === avatarProps.currentMessage.user._id;
           const avatar = isUserMessage
-            ? { name: user?.name || "", avatar: user.profileImg.url }
+            ? { name: user?.name || "", avatar: user?.profileImg?.url ?? "" }
             : {
                 avatar: expertDetailMap.get(props.recipientId)?.profileImg?.url,
                 name: expertDetailMap.get(props.recipientId)?.name,
