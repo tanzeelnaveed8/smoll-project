@@ -6,8 +6,9 @@ import { fontHauoraSemiBold, fontHeading } from "@/constant/constant";
 import { useExpertStore } from "@/store/modules/expert";
 import { NavigationType } from "@/store/types";
 import { useRoute } from "@react-navigation/native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Div, ScrollDiv, Text } from "react-native-magnus";
+import { BackHandler } from "react-native";
 
 interface Props {
   navigation: NavigationType;
@@ -42,6 +43,17 @@ const ConsultationFeedbackScreen: React.FC<Props> = ({ navigation }) => {
       setActionLoading(false);
     }
   };
+
+  useEffect(() => {
+    const onBackPress = () => {
+      // Prevent going back
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener("hardwareBackPress", onBackPress);
+
+    return () => backHandler.remove();
+  }, []);
 
   return (
     <Layout title="Feedback" navigation={navigation} preventBackGesture={true}>
