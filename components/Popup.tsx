@@ -31,9 +31,9 @@ const Popup: React.FC = () => {
 
   useEffect(() => {
     if (user) {
-      if (user.popups.emergency) {
+      if (user.popups?.emergency) {
         setActivePopup({ data: { ...user.popups.emergency }, type: "emergency" });
-      } else if (user.popups.quotation) {
+      } else if (user.popups?.quotation) {
         setActivePopup({ data: { ...user.popups.quotation }, type: "quotation" });
       }
     }

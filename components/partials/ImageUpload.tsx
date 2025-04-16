@@ -19,7 +19,7 @@ import { useFileStore } from "@/store/modules/file";
 import { UploadedFile } from "@/store/types/file";
 import DocumentPicker from "react-native-document-picker";
 
-import RNFetchBlob from "rn-fetch-blob";
+import RNFetchBlob from "react-native-blob-util";
 
 import {
   ActivityIndicator,
