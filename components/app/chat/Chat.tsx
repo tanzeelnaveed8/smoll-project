@@ -42,7 +42,7 @@ const Chat: React.FC<Props> = (props) => {
   const [hasMoreMessages, setHasMoreMessages] = useState(true);
   const [lastMessage, setLastMessage] = useState<ZIMMessage | null>(null);
   const [showNewMessageChip, setShowNewMessageChip] = useState(false);
-  const [isAtBottomRef, setIsAtBottomRef] = useState(true);
+  const [isAtBottom, setIsAtBottom] = useState(true);
 
   const isFocused = useIsFocused();
   const listViewRef = useRef<GiftedChatProps<IMessage>["listViewProps"]>(null);
@@ -107,7 +107,7 @@ const Chat: React.FC<Props> = (props) => {
       play("messageReceived");
 
       setTimeout(() => {
-        if (isAtBottomRef) {
+        if (isAtBottom) {
           setShowNewMessageChip(false);
         } else {
           setShowNewMessageChip(true);
@@ -200,7 +200,7 @@ const Chat: React.FC<Props> = (props) => {
     const paddingToTop = 100; // because GiftedChat is inverted
     const isCloseToBottom = contentOffset.y <= paddingToTop;
 
-    setIsAtBottomRef(isCloseToBottom);
+    setIsAtBottom(isCloseToBottom);
 
     if (isCloseToBottom) {
       setShowNewMessageChip(false); // hide chip when user scrolls down (to bottom)
