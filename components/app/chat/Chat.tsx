@@ -42,7 +42,7 @@ const Chat: React.FC<Props> = (props) => {
   const [hasMoreMessages, setHasMoreMessages] = useState(true);
   const [lastMessage, setLastMessage] = useState<ZIMMessage | null>(null);
   const [showNewMessageChip, setShowNewMessageChip] = useState(false);
-  const isAtBottomRef = useRef(true);
+  const [isAtBottomRef, setIsAtBottomRef] = useState(true);
 
   const isFocused = useIsFocused();
   const listViewRef = useRef<GiftedChatProps<IMessage>["listViewProps"]>(null);
@@ -92,26 +92,33 @@ const Chat: React.FC<Props> = (props) => {
     }
   };
 
+  const lastMessageKey = conversations.get(props.recipientId)?.[0]?.createdAt;
+
   useEffect(() => {
-    if (!noNewMessage) {
-      const handlePageNewMessageUI = async () => {
-        if (isAtBottomRef.current) {
-          await new Promise((resolve) => setTimeout(resolve, 400));
-          scrollToBottom();
+    const messages = conversations.get(props.recipientId) || [];
+    const lastMessage = messages[0];
+
+    // If no message yet, skip
+    if (!lastMessage) return;
+
+    const isIncoming = lastMessage.user._id === props.recipientId;
+
+    if (!noNewMessage && isIncoming) {
+      play("messageReceived");
+
+      setTimeout(() => {
+        if (isAtBottomRef) {
+          setShowNewMessageChip(false);
         } else {
           setShowNewMessageChip(true);
         }
-      };
-      const newConversations = conversations.get(props.recipientId) as IMessage[];
-      const lastMessage = newConversations[0] as IMessage;
-      if (lastMessage?.user?._id === props.recipientId) {
-        play("messageReceived");
-        handlePageNewMessageUI();
-      }
-    } else {
+      }, 50);
+    }
+
+    if (noNewMessage) {
       setNoNewMessage(false);
     }
-  }, [conversations.get(props.recipientId)?.length]);
+  }, [lastMessageKey]);
 
   // fetch messages
   const fetchMessages = async (isLoadingEarlier = false) => {
@@ -189,11 +196,14 @@ const Chat: React.FC<Props> = (props) => {
 
   const handleScroll = (event: any) => {
     const { contentOffset } = event.nativeEvent;
-    const isCloseToBottom = contentOffset.y <= 20;
 
-    isAtBottomRef.current = isCloseToBottom;
+    const paddingToTop = 100; // because GiftedChat is inverted
+    const isCloseToBottom = contentOffset.y <= paddingToTop;
+
+    setIsAtBottomRef(isCloseToBottom);
+
     if (isCloseToBottom) {
-      setShowNewMessageChip(false);
+      setShowNewMessageChip(false); // hide chip when user scrolls down (to bottom)
     }
   };
 
@@ -405,7 +415,7 @@ const Chat: React.FC<Props> = (props) => {
           showsVerticalScrollIndicator: false,
           ref: listViewRef,
           onScroll: handleScroll,
-          scrollEventThrottle: 400,
+          scrollEventThrottle: 16,
           onLayout: () => {
             if (listViewRef.current) {
               // @ts-ignore
