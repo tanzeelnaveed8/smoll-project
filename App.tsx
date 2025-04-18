@@ -101,6 +101,7 @@ import BottomPopup from "./components/app/BottomPopup";
 import { SocketEventEnum } from "./socket/events";
 import Popup from "./components/Popup";
 import SocketListener from "./components/SocketListener";
+import OnboardingUserModal from "./components/app/onboarding/OnboardingUserModal";
 
 Sentry.init({
   dsn: Config.SENTRY_DSN,
@@ -185,15 +186,19 @@ const Tab = createBottomTabNavigator();
 
 const TabNavigation = () => {
   const [allUnreadMessageCount, setAllUnreadMessageCount] = useState(0);
+  const [showNameModal, setShowNameModal] = useState(false);
   const { unreadMessages } = useExpertStore();
-  const { user, navNotif, SET_NAV_NOTIF } = useUserStore();
-  const socket = useSocket();
+  const { navNotif, user } = useUserStore();
 
   useEffect(() => {
     let countMessage = 0;
     Array.from(unreadMessages.values()).forEach((count) => (countMessage += count));
     setAllUnreadMessageCount(countMessage);
   }, [unreadMessages.values()]);
+
+  useEffect(() => {
+    if (!user?.name) setShowNameModal(true);
+  }, []);
 
   const TabButton: React.FC<{
     focused: boolean;
@@ -222,37 +227,38 @@ const TabNavigation = () => {
   };
 
   return (
-    <Tab.Navigator
-      screenOptions={{
-        tabBarStyle: {
-          height: 62,
-          paddingBottom: 8,
-          paddingTop: 2,
-          backgroundColor: "#FAF8F5",
-        },
-        tabBarLabelStyle: {
-          fontSize: 14,
-          fontFamily: fontHauoraSemiBold,
-        },
-        tabBarInactiveTintColor: "#494949",
-        tabBarActiveTintColor: "#222",
-      }}
-    >
-      <Tab.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{
-          headerShown: false,
-          tabBarIcon: ({ focused }) => (
-            <TabButton
-              focused={focused}
-              icon={<IconWindow width={28} height={28} color={focused ? "#000" : "#494949"} />}
-            />
-          ),
+    <>
+      <Tab.Navigator
+        screenOptions={{
+          tabBarStyle: {
+            height: 62,
+            paddingBottom: 8,
+            paddingTop: 2,
+            backgroundColor: "#FAF8F5",
+          },
+          tabBarLabelStyle: {
+            fontSize: 14,
+            fontFamily: fontHauoraSemiBold,
+          },
+          tabBarInactiveTintColor: "#494949",
+          tabBarActiveTintColor: "#222",
         }}
-      />
+      >
+        <Tab.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{
+            headerShown: false,
+            tabBarIcon: ({ focused }) => (
+              <TabButton
+                focused={focused}
+                icon={<IconWindow width={28} height={28} color={focused ? "#000" : "#494949"} />}
+              />
+            ),
+          }}
+        />
 
-      {/* <Tab.Screen
+        {/* <Tab.Screen
         name="HumanCounsellingMessage"
         component={HumanCounsellingMessageScreen}
         options={{
@@ -268,36 +274,38 @@ const TabNavigation = () => {
         }}
       /> */}
 
-      <Tab.Screen
-        name="Chats"
-        component={ExpertsInboxScreen}
-        options={{
-          headerShown: false,
-          tabBarIcon: ({ focused }) => (
-            <TabButton
-              focused={focused}
-              icon={<IconMessage width={28} height={28} color={focused ? "#000" : "#494949"} />}
-              isNotification={Boolean(allUnreadMessageCount)}
-            />
-          ),
-        }}
-      />
+        <Tab.Screen
+          name="Chats"
+          component={ExpertsInboxScreen}
+          options={{
+            headerShown: false,
+            tabBarIcon: ({ focused }) => (
+              <TabButton
+                focused={focused}
+                icon={<IconMessage width={28} height={28} color={focused ? "#000" : "#494949"} />}
+                isNotification={Boolean(allUnreadMessageCount)}
+              />
+            ),
+          }}
+        />
 
-      <Tab.Screen
-        name="Quotations"
-        component={CasesQuotesListScreen}
-        options={{
-          headerShown: false,
-          tabBarIcon: ({ focused }) => (
-            <TabButton
-              focused={focused}
-              icon={<IconChecklist width={28} height={28} color={focused ? "#000" : "#494949"} />}
-              isNotification={Boolean(navNotif)}
-            />
-          ),
-        }}
-      />
-    </Tab.Navigator>
+        <Tab.Screen
+          name="Quotations"
+          component={CasesQuotesListScreen}
+          options={{
+            headerShown: false,
+            tabBarIcon: ({ focused }) => (
+              <TabButton
+                focused={focused}
+                icon={<IconChecklist width={28} height={28} color={focused ? "#000" : "#494949"} />}
+                isNotification={Boolean(navNotif)}
+              />
+            ),
+          }}
+        />
+      </Tab.Navigator>
+      <OnboardingUserModal isVisible={showNameModal} onSuccess={() => setShowNameModal(false)} />
+    </>
   );
 };
 
