@@ -109,6 +109,7 @@ const Chat: React.FC<Props> = (props) => {
       setTimeout(() => {
         if (isAtBottom) {
           setShowNewMessageChip(false);
+          scrollToBottom();
         } else {
           setShowNewMessageChip(true);
         }
