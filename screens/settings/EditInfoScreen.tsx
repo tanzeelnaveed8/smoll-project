@@ -23,13 +23,10 @@ type DataType = {
   petId?: string;
 };
 
-const EditInfoScreen: React.FC<{ navigation: NavigationType }> = ({
-  navigation,
-}) => {
+const EditInfoScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
   const { updateUser, user } = useUserStore();
   const { updatePet } = usePetStore();
-  const { heading, placeholder, fieldKey, value, petId } = useRoute()
-    .params as DataType;
+  const { heading, placeholder, fieldKey, value, petId } = useRoute().params as DataType;
   const [form, setForm] = useState(value);
   const [loading, setLoading] = useState(false);
   const toast = useToast();
@@ -63,6 +60,11 @@ const EditInfoScreen: React.FC<{ navigation: NavigationType }> = ({
     }
   };
 
+  const isFormValid = (fieldKey: string, value: string | number) => {
+    if (typeof value === "string" && value.trim() === "") return false;
+    return true;
+  };
+
   return (
     <Layout
       showBack
@@ -87,6 +89,7 @@ const EditInfoScreen: React.FC<{ navigation: NavigationType }> = ({
               setForm(name);
             }}
             returnKeyType="done"
+            disabled={loading}
           />
         </Div>
       </ScrollDiv>
@@ -94,6 +97,7 @@ const EditInfoScreen: React.FC<{ navigation: NavigationType }> = ({
       <ButtonPrimary
         loading={loading}
         onPress={handleConfirm}
+        disabled={!isFormValid(fieldKey, form)}
         // bgColor="primary"
       >
         Confirm
