@@ -28,7 +28,7 @@ export interface ClinicDetails {
       filesize: number;
       mimetype: string;
       url: string;
-    }
+    },
   ];
   address: string;
   country: string;
@@ -40,7 +40,7 @@ export interface ClinicDetails {
     {
       id: string;
       name: string;
-    }
+    },
   ];
   vets: {
     designation: string;
@@ -66,10 +66,7 @@ export interface State {
   fetchPartnerVets: (partnerId: string) => Promise<void>;
   fetchClinicDetails: (id: string) => Promise<ClinicDetails>;
 
-  fetchPartnerVetDetails: (
-    id: string,
-    partnerId: string
-  ) => Promise<PartnerVetDetails>;
+  fetchPartnerVetDetails: (id: string, partnerId: string) => Promise<PartnerVetDetails>;
   fetchPartnerVetAvailability: (
     id: string,
     partnerId: string,

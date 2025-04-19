@@ -21,9 +21,7 @@ const SelectCountryDropdown: React.FC<{
     flag: "",
   });
 
-  const [codes, setCodes] = useState<
-    { label: string; value: string; flag: string }[]
-  >([]);
+  const [codes, setCodes] = useState<{ label: string; value: string; flag: string }[]>([]);
 
   useEffect(() => {
     (async function () {
@@ -88,13 +86,7 @@ const Country: React.FC<{
         px={16}
       >
         {/* <Div h={18} w={18} bgImg={{ uri: flag }} mr={16} /> */}
-        <Image
-          src={flag}
-          w={24}
-          h={20}
-          mr={16}
-          style={{ objectFit: "contain" }}
-        />
+        <Image src={flag} w={24} h={20} mr={16} style={{ objectFit: "contain" }} />
         <Text fontSize="lg">{label}</Text>
       </Div>
     </TouchableOpacity>

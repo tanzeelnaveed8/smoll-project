@@ -9,12 +9,12 @@ export const useExpertStore = create<ExpertState>((set, get) => ({
   expertDetailMap: new Map(),
   experts: null,
   unreadMessages: new Map(),
-  conversations:new Map(),
+  conversations: new Map(),
   activeConvo: null,
 
   fetchExperts: async () => {
     const response = await api.get("/member/vets");
-   
+
     set(() => ({
       experts: response.data,
     }));
@@ -72,10 +72,7 @@ export const useExpertStore = create<ExpertState>((set, get) => ({
     return { id: res.data.id };
   },
   scheduleConsultation: async (id, payload) => {
-    const { data } = await api.post(
-      `/member/vets/${id}/consultations/schedule`,
-      payload
-    );
+    const { data } = await api.post(`/member/vets/${id}/consultations/schedule`, payload);
 
     return { id: data.id };
   },
@@ -107,31 +104,33 @@ export const useExpertStore = create<ExpertState>((set, get) => ({
     return res.data;
   },
 
-  getUnreadMessage: async ()=> {
-    const queryConfig:ZIMConversationQueryConfig = {
-      count: 9999, 
+  getUnreadMessage: async () => {
+    const queryConfig: ZIMConversationQueryConfig = {
+      count: 9999,
     };
-    const {conversationList} = await zim.queryConversationList(queryConfig)
-     conversationList.forEach((conv)=> set((state) => ({
-      unreadMessages: state.unreadMessages.set(conv.conversationID, conv.unreadMessageCount),
-    })))
+    const { conversationList } = await zim.queryConversationList(queryConfig);
+    conversationList.forEach((conv) =>
+      set((state) => ({
+        unreadMessages: state.unreadMessages.set(conv.conversationID, conv.unreadMessageCount),
+      }))
+    );
   },
 
-  setUnreadMessage:(value:Map<string,number>)=>{
-    set((state)=>({
-      unreadMessages: value
-    }))
+  setUnreadMessage: (value: Map<string, number>) => {
+    set((state) => ({
+      unreadMessages: value,
+    }));
   },
 
-  setConversations:(value:Map<string,IMessage[]>)=>{
-    set((state)=>({
-      conversations: value
-    }))
+  setConversations: (value: Map<string, IMessage[]>) => {
+    set((state) => ({
+      conversations: value,
+    }));
   },
-  
-  setActiveConvo:(value:string | null)=>{
-    set((state)=>({
-      activeConvo: value
-    }))
-  }
+
+  setActiveConvo: (value: string | null) => {
+    set((state) => ({
+      activeConvo: value,
+    }));
+  },
 }));

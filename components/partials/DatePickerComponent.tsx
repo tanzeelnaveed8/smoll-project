@@ -10,11 +10,7 @@ interface DatePickerComponentProps {
   py?: number;
 }
 
-const DatePickerComponent: React.FC<DatePickerComponentProps> = ({
-  value,
-  onChange,
-  py,
-}) => {
+const DatePickerComponent: React.FC<DatePickerComponentProps> = ({ value, onChange, py }) => {
   const [date, setDate] = useState(new Date(value));
   const [open, setOpen] = useState(false);
 

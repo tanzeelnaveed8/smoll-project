@@ -97,10 +97,7 @@ export const usePetStore = create<PetState>((set, get) => ({
   },
 
   addHealthHistory: async (petId, payload) => {
-    const response = await api.post(
-      `/member/pets/${petId}/health-history`,
-      payload
-    );
+    const response = await api.post(`/member/pets/${petId}/health-history`, payload);
 
     console.log("addHealthHistory response", response);
     const petDetailData = get().petsDetailMap.get(petId) as PetDetail;
@@ -164,14 +161,10 @@ export const usePetStore = create<PetState>((set, get) => ({
   },
 
   deleteHealthHistory: async (petId, healthHistoryId) => {
-    const response = await api.delete(
-      `/member/pets/${petId}/health-history/${healthHistoryId}`
-    );
+    const response = await api.delete(`/member/pets/${petId}/health-history/${healthHistoryId}`);
 
     const petDetail = get().petsDetailMap.get(petId) as PetDetail;
-    const healthHistoryData = petDetail.healthHistory
-      ? [...petDetail.healthHistory]
-      : [];
+    const healthHistoryData = petDetail.healthHistory ? [...petDetail.healthHistory] : [];
 
     const udpatedHealthHistory = healthHistoryData?.filter(
       (item) => item.id?.toString() !== healthHistoryId.toString()

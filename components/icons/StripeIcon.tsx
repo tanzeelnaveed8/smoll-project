@@ -1,25 +1,10 @@
 import React from "react";
 
-import Svg, {
-  Path,
-  G,
-  Defs,
-  ClipPath,
-  Rect,
-  Text,
-  TSpan,
-} from "react-native-svg";
+import Svg, { Path, G, Defs, ClipPath, Rect, Text, TSpan } from "react-native-svg";
 
-const StripeIcon: React.FC<{ width?: number; height?: number }> = ({
-  width,
-  height,
-}) => {
+const StripeIcon: React.FC<{ width?: number; height?: number }> = ({ width, height }) => {
   return (
-    <Svg
-      width={width ? width : "235"}
-      height={height ? height : "30"}
-      viewBox="0 0 235 30"
-    >
+    <Svg width={width ? width : "235"} height={height ? height : "30"} viewBox="0 0 235 30">
       <G id="Group_4160" data-name="Group 4160" transform="translate(-87 -700)">
         <G
           id="Rectangle_4864"

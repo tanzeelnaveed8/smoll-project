@@ -8,11 +8,7 @@ import Layout from "@/components/app/Layout";
 import { useRoute } from "@react-navigation/native";
 import { NavigationType } from "@/store/types";
 
-const PetProfileCongratulationsScreen = ({
-  navigation,
-}: {
-  navigation: NavigationType;
-}) => {
+const PetProfileCongratulationsScreen = ({ navigation }: { navigation: NavigationType }) => {
   const route = useRoute();
 
   const petName = (route.params as Record<string, string>)?.petName;
@@ -24,8 +20,7 @@ const PetProfileCongratulationsScreen = ({
   const selectedTime = (route.params as Record<string, string>)?.selectedTime;
   const selectedDate = (route.params as Record<string, string>)?.selectedDate;
 
-  const consultationId = (route.params as Record<string, string>)
-    ?.consultationId;
+  const consultationId = (route.params as Record<string, string>)?.consultationId;
 
   return (
     <Layout>

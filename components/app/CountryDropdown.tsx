@@ -19,13 +19,7 @@ interface Props {
   isDisabled?: boolean;
 }
 
-const CountryDropdown: React.FC<Props> = ({
-  style,
-  onChange,
-  value,
-  onSelect,
-  isDisabled,
-}) => {
+const CountryDropdown: React.FC<Props> = ({ style, onChange, value, onSelect, isDisabled }) => {
   const [show, setShow] = useState(false);
   const [countryCode, setCountryCode] = useState("");
   const externalStyles: {} = style ? style : {};

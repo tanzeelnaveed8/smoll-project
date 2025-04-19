@@ -1,42 +1,25 @@
 import Layout from "@/components/app/Layout";
-import {
-  colorPrimary,
-  fontCooper,
-  fontHauoraBold,
-  fontHauoraSemiBold,
-} from "@/constant/constant";
-import {
-  appointmentFormatedTime,
-  useAppointmentStore,
-} from "@/store/modules/appointments";
+import { colorPrimary, fontCooper, fontHauoraBold, fontHauoraSemiBold } from "@/constant/constant";
+import { appointmentFormatedTime, useAppointmentStore } from "@/store/modules/appointments";
 import { NavigationType } from "@/store/types";
 import { AppointmentListResponseDto } from "@/store/types/appointments";
 import { useFocusEffect } from "@react-navigation/native";
 import { IconChevronRight, IconUser } from "@tabler/icons-react-native";
 import dayjs from "dayjs";
 import React, { useCallback, useEffect, useState } from "react";
-import {
-  ActivityIndicator,
-  RefreshControl,
-  TouchableOpacity,
-} from "react-native";
+import { ActivityIndicator, RefreshControl, TouchableOpacity } from "react-native";
 import { FlatList } from "react-native-bidirectional-infinite-scroll";
 
 import { Div, Image, Tag, Text } from "react-native-magnus";
 
-const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
-  navigation,
-}) => {
-  const { fetchAppointments, appointment: appointmentData } =
-    useAppointmentStore();
+const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
+  const { fetchAppointments, appointment: appointmentData } = useAppointmentStore();
 
   const [isLoading, setIsLoading] = useState(false);
   const [nextPageId, setNextPageId] = useState(1);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [activeTab, setActiveTab] = useState("Upcoming");
-  const [appointment, setAppointment] = useState<
-    null | AppointmentListResponseDto[]
-  >(null);
+  const [appointment, setAppointment] = useState<null | AppointmentListResponseDto[]>(null);
 
   // const appointmentData = dummyDataArray;
 
@@ -84,10 +67,7 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
     }, [])
   );
 
-  const handleFetchAppointments = async (
-    isRefresh?: boolean,
-    reset?: boolean
-  ) => {
+  const handleFetchAppointments = async (isRefresh?: boolean, reset?: boolean) => {
     try {
       if (isRefresh) {
         setIsRefreshing(true);
@@ -145,10 +125,8 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
                 style={{
                   width: item === activeTab ? "50%" : "50%",
                   // borderWidth: 1,
-                  borderRightWidth:
-                    item === activeTab && activeTab === "Upcoming" ? 1 : 0,
-                  borderLeftWidth:
-                    item === activeTab && activeTab === "Past" ? 1 : 0,
+                  borderRightWidth: item === activeTab && activeTab === "Upcoming" ? 1 : 0,
+                  borderLeftWidth: item === activeTab && activeTab === "Past" ? 1 : 0,
                   borderColor: "#ccc",
                   borderRadius: 12,
                   alignItems: "center",
@@ -190,8 +168,7 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
                     mx={"auto"}
                     lineHeight={36}
                   >
-                    You don't have any{" "}
-                    {activeTab === "Upcoming" ? "upcoming" : "archived"}{" "}
+                    You don't have any {activeTab === "Upcoming" ? "upcoming" : "archived"}{" "}
                     appointments
                   </Text>
                 </Div>
@@ -204,19 +181,13 @@ const AppointmentsScreen: React.FC<{ navigation: NavigationType }> = ({
               renderItem={({ item, index }) => (
                 <AppointmentCard
                   isEmergency={item.isEmergency}
-                  img={
-                    item.partner?.clinicImg?.url ?? item.vet?.profileImg?.url
-                  }
+                  img={item.partner?.clinicImg?.url ?? item.vet?.profileImg?.url}
                   pet={item.pet.name}
                   text={`Your upcoming ${
                     item.type === "in-clinic" ? "visit" : "consultation"
                   } with ${item.partner?.name ?? item.vet?.name}`}
                   scheduledTime={item.scheduledAt}
-                  type={
-                    item.type === "in-clinic"
-                      ? "Clinic Visit"
-                      : "Video Consultation"
-                  }
+                  type={item.type === "in-clinic" ? "Clinic Visit" : "Video Consultation"}
                   alert={item.isEmergency ? "Emergency" : ""}
                   onPress={() => {
                     if (!item.scheduledAt && item.type === "in-clinic") {
@@ -318,43 +289,22 @@ const AppointmentCard: React.FC<{
             )}
           </Div>
 
-          <Text
-            fontSize={"lg"}
-            fontFamily={fontHauoraSemiBold}
-            mb={4}
-            lineHeight={24}
-          >
+          <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold} mb={4} lineHeight={24}>
             {props.text}
           </Text>
 
-          <Text
-            fontSize={"md"}
-            fontFamily={fontHauoraBold}
-            color="darkGreyText"
-            mb={4}
-          >
+          <Text fontSize={"md"} fontFamily={fontHauoraBold} color="darkGreyText" mb={4}>
             Pet: {props.pet}
           </Text>
 
           {props.scheduledTime ? (
-            <Text
-              fontSize={"xl"}
-              fontFamily={fontHauoraSemiBold}
-              lineHeight={24}
-              color="primary"
-            >
+            <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold} lineHeight={24} color="primary">
               {dayjs(props.scheduledTime).format(
                 `DD MMM YYYY ${props.isEmergency ? "" : ", hh:mm A"}`
               )}
             </Text>
           ) : (
-            <Tag
-              fontSize={"sm"}
-              fontFamily={fontHauoraSemiBold}
-              px={8}
-              py={6}
-              rounded={37}
-            >
+            <Tag fontSize={"sm"} fontFamily={fontHauoraSemiBold} px={8} py={6} rounded={37}>
               Pending reschedule
             </Tag>
           )}

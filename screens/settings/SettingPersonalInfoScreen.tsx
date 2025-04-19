@@ -4,7 +4,7 @@ import {
   fontHauora,
   fontHauoraMedium,
   fontHauoraSemiBold,
-  colorErrorText
+  colorErrorText,
 } from "@/constant/constant";
 import SettingBackButton from "@/components/settings/SettingBackButton";
 import { IconUser, IconEditCircle } from "@tabler/icons-react-native";
@@ -22,15 +22,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { logout } from "@/utils/chat.v2";
 import { useAuthStore } from "@/store/modules/auth";
 
-const SettingPersonalInfoScreen: React.FC<{ navigation: NavigationType }> = ({
-  navigation,
-}) => {
+const SettingPersonalInfoScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
   const toast = useToast();
   const { user, updateUser } = useUserStore();
-  const {deactivateAccount} = useAuthStore();
+  const { deactivateAccount } = useAuthStore();
   // const [ImageLoading, setImageLoading] = useState(false);
-  const [showDeactivateAccountModal , setShowDeactivateAccountModal ] = useState(false)
-  const [isLoading , setIsLoading] = useState(false)
+  const [showDeactivateAccountModal, setShowDeactivateAccountModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleUpdateImage = async (file: UploadedFile[]) => {
     if (!user) return;
@@ -47,22 +45,21 @@ const SettingPersonalInfoScreen: React.FC<{ navigation: NavigationType }> = ({
     }
   };
 
-  const handleDeactivateAccount =async () =>{
-    try{
-      setIsLoading(true)
-    await deactivateAccount()
+  const handleDeactivateAccount = async () => {
+    try {
+      setIsLoading(true);
+      await deactivateAccount();
 
-    await AsyncStorage.setItem("accessToken", "");
-    AsyncStorage.removeItem("hideAccountSetupBtn");
-    navigation.navigate("NewOnboardingScreen");
+      await AsyncStorage.setItem("accessToken", "");
+      AsyncStorage.removeItem("hideAccountSetupBtn");
+      navigation.navigate("NewOnboardingScreen");
 
-    logout();
-
-    }finally{
-      setIsLoading(false)
+      logout();
+    } finally {
+      setIsLoading(false);
       setShowDeactivateAccountModal(false);
     }
-  }
+  };
 
   return (
     <Layout
@@ -133,19 +130,10 @@ const SettingPersonalInfoScreen: React.FC<{ navigation: NavigationType }> = ({
                 });
               }}
             />
-            <ProfileOptionButton
-              title="Phone number"
-              value={user?.phone}
-              varified
-            />
+            <ProfileOptionButton title="Phone number" value={user?.phone} varified />
           </Div>
 
-          <Div
-            mb={4}
-            flexDir="row"
-            justifyContent="space-between"
-            alignItems="center"
-          >
+          <Div mb={4} flexDir="row" justifyContent="space-between" alignItems="center">
             <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold}>
               Address
             </Text>
@@ -163,20 +151,11 @@ const SettingPersonalInfoScreen: React.FC<{ navigation: NavigationType }> = ({
           </Div>
 
           <Div>
-            <ProfileOptionButton
-              title="Flat/Villa No"
-              value={user?.villa ?? "-"}
-            />
-            <ProfileOptionButton
-              title="Street address"
-              value={user?.address ?? "-"}
-            />
+            <ProfileOptionButton title="Flat/Villa No" value={user?.villa ?? "-"} />
+            <ProfileOptionButton title="Street address" value={user?.address ?? "-"} />
             <ProfileOptionButton title="City" value={user?.city ?? "-"} />
             <ProfileOptionButton title="Country" value={user?.country ?? "-"} />
-            <ProfileOptionButton
-              title="Postal code"
-              value={user?.postalCode ?? "-"}
-            />
+            <ProfileOptionButton title="Postal code" value={user?.postalCode ?? "-"} />
           </Div>
           <TouchableOpacity
             onPress={() => setShowDeactivateAccountModal(true)}

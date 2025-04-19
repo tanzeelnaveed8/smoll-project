@@ -1,21 +1,9 @@
 import React from "react";
 // import { Image } from "react-native-magnus";
 
-import Svg, {
-  Path,
-  G,
-  Defs,
-  ClipPath,
-  Rect,
-  Pattern,
-  Image,
-  Use,
-} from "react-native-svg";
+import Svg, { Path, G, Defs, ClipPath, Rect, Pattern, Image, Use } from "react-native-svg";
 
-const HomeScreenBoyIcon: React.FC<{ width?: number; height?: number }> = ({
-  width,
-  height,
-}) => {
+const HomeScreenBoyIcon: React.FC<{ width?: number; height?: number }> = ({ width, height }) => {
   return (
     <Svg
       width={width ? width : "182"}
@@ -25,16 +13,8 @@ const HomeScreenBoyIcon: React.FC<{ width?: number; height?: number }> = ({
     >
       <Rect width="182" height="163" fill="url(#pattern0_1_314)" />
       <Defs>
-        <Pattern
-          id="pattern0_1_314"
-          patternContentUnits="objectBoundingBox"
-          width="1"
-          height="1"
-        >
-          <Use
-            xlinkHref="#image0_1_314"
-            transform="matrix(0.00188946 0 0 0.0021097 0.106047 0)"
-          />
+        <Pattern id="pattern0_1_314" patternContentUnits="objectBoundingBox" width="1" height="1">
+          <Use xlinkHref="#image0_1_314" transform="matrix(0.00188946 0 0 0.0021097 0.106047 0)" />
         </Pattern>
         <Image
           id="image0_1_314"

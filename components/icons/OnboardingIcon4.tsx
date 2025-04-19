@@ -2,10 +2,7 @@ import React from "react";
 
 import Svg, { Path, G, Defs, ClipPath, Rect } from "react-native-svg";
 
-const OnboardingIcon4: React.FC<{ width?: number; height?: number }> = ({
-  width,
-  height,
-}) => {
+const OnboardingIcon4: React.FC<{ width?: number; height?: number }> = ({ width, height }) => {
   return (
     <Svg
       width={width ? width : "214.828"}

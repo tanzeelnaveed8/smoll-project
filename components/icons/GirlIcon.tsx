@@ -1,21 +1,9 @@
 import React from "react";
 // import { Image } from "react-native-magnus";
 
-import Svg, {
-  Path,
-  G,
-  Defs,
-  ClipPath,
-  Rect,
-  Pattern,
-  Image,
-  Use,
-} from "react-native-svg";
+import Svg, { Path, G, Defs, ClipPath, Rect, Pattern, Image, Use } from "react-native-svg";
 
-const GirlIcon: React.FC<{ width?: number; height?: number }> = ({
-  width,
-  height,
-}) => {
+const GirlIcon: React.FC<{ width?: number; height?: number }> = ({ width, height }) => {
   return (
     <Svg
       width={width ? width : "74"}
@@ -25,12 +13,7 @@ const GirlIcon: React.FC<{ width?: number; height?: number }> = ({
     >
       <Rect width="74" height="74" fill="url(#pattern0_1_316)" />
       <Defs>
-        <Pattern
-          id="pattern0_1_316"
-          patternContentUnits="objectBoundingBox"
-          width="1"
-          height="1"
-        >
+        <Pattern id="pattern0_1_316" patternContentUnits="objectBoundingBox" width="1" height="1">
           <Use xlinkHref="#image0_1_316" transform="scale(0.00438596)" />
         </Pattern>
         <Image

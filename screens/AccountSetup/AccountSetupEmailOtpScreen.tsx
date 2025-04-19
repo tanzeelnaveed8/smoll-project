@@ -1,11 +1,7 @@
 import Layout from "@/components/app/Layout";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import InputField from "@/components/partials/InputField";
-import {
-  colorPrimary,
-  fontHauora,
-  fontHauoraSemiBold,
-} from "@/constant/constant";
+import { colorPrimary, fontHauora, fontHauoraSemiBold } from "@/constant/constant";
 import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
 import { getAxiosErrMsg } from "@/utils/helpers";
@@ -24,8 +20,7 @@ interface Props {
 
 const AccountSetupEmailOtpScreen: React.FC<Props> = (props) => {
   const route = useRoute();
-  const isUpdatingEmail = (route.params as { updatingEmail: string })
-    ?.updatingEmail;
+  const isUpdatingEmail = (route.params as { updatingEmail: string })?.updatingEmail;
 
   const toast = useToast();
   const { user, verifyEmail, sendVerificationEmail } = useUserStore();

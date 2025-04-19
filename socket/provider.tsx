@@ -8,9 +8,7 @@ export const useSocket = () => {
   return useContext(SocketContext);
 };
 
-export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [socket, setSocket] = useState<Socket | null>(null);
 
   useEffect(() => {
@@ -27,7 +25,5 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({
     };
   }, []);
 
-  return (
-    <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>
-  );
+  return <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>;
 };

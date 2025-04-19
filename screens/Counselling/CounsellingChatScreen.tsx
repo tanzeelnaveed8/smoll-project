@@ -15,8 +15,7 @@ const CounsellingChatScreen: React.FC<Props> = (props) => {
   const route = useRoute();
 
   const counsellorId = (route.params as Record<string, string>).counsellorId;
-  const counsellorName = (route.params as Record<string, string>)
-    .counsellorName;
+  const counsellorName = (route.params as Record<string, string>).counsellorName;
 
   // TODO: This need to be send from the counsellor side
   // const messages: IMessage[] = [

@@ -5,10 +5,7 @@ import { Div, Text } from "react-native-magnus";
 
 const arr = [1, 2, 3, 4, 5];
 
-const PartnerVetStarRating: React.FC<{ rating: number; color?: string }> = ({
-  rating,
-  color,
-}) => {
+const PartnerVetStarRating: React.FC<{ rating: number; color?: string }> = ({ rating, color }) => {
   return (
     <Div py={6} flexDir="row" alignItems="center">
       <Div flexDir="row" style={{ gap: 4 }} mt={3}>
@@ -17,19 +14,12 @@ const PartnerVetStarRating: React.FC<{ rating: number; color?: string }> = ({
             width={12}
             height={12}
             color={color ? color : "#427594"}
-            fill={
-              rating && rating >= item ? (color ? color : "#427594") : "#fff"
-            }
+            fill={rating && rating >= item ? (color ? color : "#427594") : "#fff"}
           />
         ))}
       </Div>
 
-      <Text
-        fontSize={"md"}
-        fontFamily={fontHauoraMedium}
-        color="darkGreyText"
-        ml={8}
-      >
+      <Text fontSize={"md"} fontFamily={fontHauoraMedium} color="darkGreyText" ml={8}>
         {rating}/5 Rating
       </Text>
     </Div>

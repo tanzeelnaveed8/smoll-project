@@ -1,21 +1,9 @@
 import React from "react";
 // import { Image } from "react-native-magnus";
 
-import Svg, {
-  Path,
-  G,
-  Defs,
-  ClipPath,
-  Rect,
-  Pattern,
-  Image,
-  Use,
-} from "react-native-svg";
+import Svg, { Path, G, Defs, ClipPath, Rect, Pattern, Image, Use } from "react-native-svg";
 
-const DogIcon: React.FC<{ width?: number; height?: number }> = ({
-  width,
-  height,
-}) => {
+const DogIcon: React.FC<{ width?: number; height?: number }> = ({ width, height }) => {
   return (
     <Svg width={width ? width : "67"} height={height ? height : "73"}>
       <Path
@@ -188,21 +176,9 @@ const DogIcon: React.FC<{ width?: number; height?: number }> = ({
         fill="#B6B2AD"
         transform="translate(11,18)"
       />
-      <Path
-        d="M0 0 C4 1 4 1 4 1 Z "
-        fill="#000000"
-        transform="translate(43,71)"
-      />
-      <Path
-        d="M0 0 C4 1 4 1 4 1 Z "
-        fill="#000000"
-        transform="translate(51,70)"
-      />
-      <Path
-        d="M0 0 C2 1 2 1 2 1 Z "
-        fill="#000000"
-        transform="translate(65,67)"
-      />
+      <Path d="M0 0 C4 1 4 1 4 1 Z " fill="#000000" transform="translate(43,71)" />
+      <Path d="M0 0 C4 1 4 1 4 1 Z " fill="#000000" transform="translate(51,70)" />
+      <Path d="M0 0 C2 1 2 1 2 1 Z " fill="#000000" transform="translate(65,67)" />
       <Path d="" fill="#000000" transform="translate(0,0)" />
       <Path d="" fill="#000000" transform="translate(0,0)" />
     </Svg>

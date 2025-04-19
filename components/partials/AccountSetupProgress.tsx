@@ -34,12 +34,7 @@ const AccountSetupProgress: React.FC<Props> = (props) => {
           />
         </Div>
         <Div flexDir="row" style={{ gap: 4, alignItems: "center" }}>
-          <Image
-            w={24}
-            h={24}
-            mx={"auto"}
-            source={require("../../assets/images/flag-icon.png")}
-          />
+          <Image w={24} h={24} mx={"auto"} source={require("../../assets/images/flag-icon.png")} />
           <Text fontFamily={fontHauoraMedium} fontSize={"xl"} color="#222222">
             {props.completedStepCount}/3
           </Text>

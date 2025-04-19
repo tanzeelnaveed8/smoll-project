@@ -26,19 +26,13 @@ import { IconVideoOff } from "@tabler/icons-react-native";
 import { ZegoRemoteDeviceState } from "zego-express-engine-reactnative";
 import { useIsFocused } from "@react-navigation/native";
 import { useUIStore } from "@/store/modules/ui";
-import {
-  activateKeepAwake,
-  activateKeepAwakeAsync,
-  deactivateKeepAwake,
-} from "expo-keep-awake";
+import { activateKeepAwake, activateKeepAwakeAsync, deactivateKeepAwake } from "expo-keep-awake";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 let zg: ZegoExpressEngine | null = null;
 let isInRoom = false; // Add this line to track room status
 
-const ConsultationVideoScreen: React.FC<{ navigation: NavigationType }> = ({
-  navigation,
-}) => {
+const ConsultationVideoScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
   const route = useRoute();
   const { user } = useUserStore();
   const [localStream, setLocalStream] = useState<string | null>(null);
@@ -72,11 +66,7 @@ const ConsultationVideoScreen: React.FC<{ navigation: NavigationType }> = ({
         leaveRoom();
       }
     },
-    roomStreamUpdate: (
-      roomID: string,
-      updateType: ZegoUpdateType,
-      streamList: any[]
-    ) => {
+    roomStreamUpdate: (roomID: string, updateType: ZegoUpdateType, streamList: any[]) => {
       if (updateType === ZegoUpdateType.Add) {
         const remoteStream = streamList[0];
         setRemoteStream(remoteStream.streamID);
@@ -86,10 +76,7 @@ const ConsultationVideoScreen: React.FC<{ navigation: NavigationType }> = ({
         endHandler();
       }
     },
-    remoteCameraStateUpdate: (
-      streamID: string,
-      state: ZegoRemoteDeviceState
-    ) => {
+    remoteCameraStateUpdate: (streamID: string, state: ZegoRemoteDeviceState) => {
       setIsRemoteVideoEnabled(state === ZegoRemoteDeviceState.Open);
     },
     remoteMicStateUpdate: (streamID: string, state: ZegoRemoteDeviceState) => {
@@ -126,31 +113,16 @@ const ConsultationVideoScreen: React.FC<{ navigation: NavigationType }> = ({
         scenario: ZegoScenario.StandardVideoCall,
       });
 
-      ZegoExpressEngine.instance().setVideoSource(
-        ZegoVideoSourceType.Camera,
-        undefined
-      );
-      ZegoExpressEngine.instance().setAudioSource(
-        ZegoAudioSourceType.Microphone,
-        undefined
-      );
+      ZegoExpressEngine.instance().setVideoSource(ZegoVideoSourceType.Camera, undefined);
+      ZegoExpressEngine.instance().setAudioSource(ZegoAudioSourceType.Microphone, undefined);
 
-      ZegoExpressEngine.instance().on(
-        "roomStateUpdate",
-        eventHandler.roomStateUpdate
-      );
-      ZegoExpressEngine.instance().on(
-        "roomStreamUpdate",
-        eventHandler.roomStreamUpdate
-      );
+      ZegoExpressEngine.instance().on("roomStateUpdate", eventHandler.roomStateUpdate);
+      ZegoExpressEngine.instance().on("roomStreamUpdate", eventHandler.roomStreamUpdate);
       ZegoExpressEngine.instance().on(
         "remoteCameraStateUpdate",
         eventHandler.remoteCameraStateUpdate
       );
-      ZegoExpressEngine.instance().on(
-        "remoteMicStateUpdate",
-        eventHandler.remoteMicStateUpdate
-      );
+      ZegoExpressEngine.instance().on("remoteMicStateUpdate", eventHandler.remoteMicStateUpdate);
 
       joinRoom();
     };
@@ -172,10 +144,7 @@ const ConsultationVideoScreen: React.FC<{ navigation: NavigationType }> = ({
   const toggleVideo = () => {
     const _isVideoEnabled = !isVideoEnabled;
 
-    ZegoExpressEngine.instance().mutePublishStreamVideo(
-      !_isVideoEnabled,
-      undefined
-    );
+    ZegoExpressEngine.instance().mutePublishStreamVideo(!_isVideoEnabled, undefined);
 
     setIsVideoEnabled(_isVideoEnabled);
 
@@ -314,10 +283,7 @@ const ConsultationVideoScreen: React.FC<{ navigation: NavigationType }> = ({
           style={[
             styles.videoView,
             {
-              display:
-                isRemoteStreamLoading || !isRemoteVideoEnabled
-                  ? "none"
-                  : "flex",
+              display: isRemoteStreamLoading || !isRemoteVideoEnabled ? "none" : "flex",
               borderRadius: 12,
               overflow: "hidden",
             },
@@ -325,14 +291,7 @@ const ConsultationVideoScreen: React.FC<{ navigation: NavigationType }> = ({
         />
 
         {(isRemoteStreamLoading || !isRemoteVideoEnabled) && (
-          <Div
-            justifyContent="center"
-            alignItems="center"
-            flex={1}
-            w="100%"
-            h="100%"
-            bg="#000"
-          >
+          <Div justifyContent="center" alignItems="center" flex={1} w="100%" h="100%" bg="#000">
             {isRemoteStreamLoading ? (
               <ActivityIndicator size="large" color="#fff" />
             ) : (
@@ -354,20 +313,10 @@ const ConsultationVideoScreen: React.FC<{ navigation: NavigationType }> = ({
       <Div style={styles.localView}>
         <ZegoTextureView
           ref={localViewRef}
-          style={[
-            styles.videoView,
-            { display: isVideoEnabled ? "flex" : "none" },
-          ]}
+          style={[styles.videoView, { display: isVideoEnabled ? "flex" : "none" }]}
         />
         {!isVideoEnabled && (
-          <Div
-            justifyContent="center"
-            alignItems="center"
-            w="100%"
-            h="100%"
-            flex={1}
-            bg="#000"
-          >
+          <Div justifyContent="center" alignItems="center" w="100%" h="100%" flex={1} bg="#000">
             <IconVideoOff size={40} color="white" />
           </Div>
         )}
@@ -411,33 +360,11 @@ const ConsultationVideoScreen: React.FC<{ navigation: NavigationType }> = ({
               fontSize={"2xl"}
             />
           </Button>
-          <Button
-            bg="blue500"
-            h={50}
-            w={50}
-            rounded="circle"
-            onPress={switchCamera}
-          >
-            <Icon
-              name="refresh-cw"
-              color="white"
-              fontFamily="Feather"
-              fontSize={"2xl"}
-            />
+          <Button bg="blue500" h={50} w={50} rounded="circle" onPress={switchCamera}>
+            <Icon name="refresh-cw" color="white" fontFamily="Feather" fontSize={"2xl"} />
           </Button>
-          <Button
-            bg="red500"
-            h={50}
-            w={50}
-            rounded="circle"
-            onPress={endHandler}
-          >
-            <Icon
-              name="phone-off"
-              color="white"
-              fontFamily="Feather"
-              fontSize={"2xl"}
-            />
+          <Button bg="red500" h={50} w={50} rounded="circle" onPress={endHandler}>
+            <Icon name="phone-off" color="white" fontFamily="Feather" fontSize={"2xl"} />
           </Button>
         </Div>
       </Div>

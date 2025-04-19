@@ -20,24 +20,20 @@ import { ActivityIndicator, Platform, TouchableOpacity } from "react-native";
 import { hideMessage, showMessage } from "react-native-flash-message";
 import { Div, Image, Text } from "react-native-magnus";
 
-const ConsultationWaitingScreen: React.FC<{ navigation: NavigationType }> = ({
-  navigation,
-}) => {
+const ConsultationWaitingScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
   const route = useRoute();
   const socket = useSocket();
 
   const { findOneConsultation } = useExpertStore();
   const { cancelConsultation } = useAppointmentStore();
 
-  const consultationId = (route.params as Record<string, string>)
-    ?.consultationId;
+  const consultationId = (route.params as Record<string, string>)?.consultationId;
   const petName = (route.params as Record<string, string>)?.petName;
 
   const [loading, setLoading] = useState(true);
   const [consultation, setConsultation] = useState<FindOneConsultationResDto>();
   const [cancelLoading, setCancelLoading] = useState(false);
-  const [showCancelConsultationModal, setShowCancelConsultationModal] =
-    useState(false);
+  const [showCancelConsultationModal, setShowCancelConsultationModal] = useState(false);
   const [showCancelMessage, setShowCancelMessage] = useState(false);
 
   useEffect(() => {
@@ -115,21 +111,14 @@ const ConsultationWaitingScreen: React.FC<{ navigation: NavigationType }> = ({
           h={130}
           rounded={130}
           source={{
-            uri:
-              consultation?.vet.profileImg?.url ??
-              "https://via.placeholder.com/87",
+            uri: consultation?.vet.profileImg?.url ?? "https://via.placeholder.com/87",
           }}
           mb={12}
         />
         <Text fontSize={"xl"} fontFamily={fontHauoraMedium}>
           {consultation?.vet.name}
         </Text>
-        <Text
-          color="darkGreyText"
-          fontSize={"md"}
-          fontFamily={fontHauoraMedium}
-          mb={32}
-        >
+        <Text color="darkGreyText" fontSize={"md"} fontFamily={fontHauoraMedium} mb={32}>
           {consultation?.vet.designation}
         </Text>
 
@@ -145,18 +134,10 @@ const ConsultationWaitingScreen: React.FC<{ navigation: NavigationType }> = ({
 
       {showCancelMessage && (
         <Div mb={26}>
-          <Text
-            fontSize={"lg"}
-            fontFamily={fontHauoraMedium}
-            textAlign="center"
-          >
+          <Text fontSize={"lg"} fontFamily={fontHauoraMedium} textAlign="center">
             Taking longer than expected?
           </Text>
-          <Text
-            fontSize={"lg"}
-            fontFamily={fontHauoraMedium}
-            textAlign="center"
-          >
+          <Text fontSize={"lg"} fontFamily={fontHauoraMedium} textAlign="center">
             Cancel and book a confirmed call instead!
           </Text>
         </Div>

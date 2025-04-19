@@ -7,9 +7,7 @@ import React from "react";
 import { Linking, StyleSheet, TouchableOpacity } from "react-native";
 import { Button, Div, Input, Text } from "react-native-magnus";
 
-const LoginScreen: React.FC<{ navigation: NavigationType }> = ({
-  navigation,
-}) => {
+const LoginScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
   return (
     <Layout style={styles.layout}>
       <Div style={styles.container}>
@@ -19,24 +17,13 @@ const LoginScreen: React.FC<{ navigation: NavigationType }> = ({
           </Text>
 
           <InputField placeholder="Email address" marginBottom={16} />
-          <InputField
-            placeholder="Password"
-            marginBottom={32}
-            icon="eye-off-outline"
-          />
+          <InputField placeholder="Password" marginBottom={32} icon="eye-off-outline" />
 
-          <ButtonPrimary
-            bgColor="primary"
-            link="Confirmation"
-            navigation={navigation}
-          >
+          <ButtonPrimary bgColor="primary" link="Confirmation" navigation={navigation}>
             Login
           </ButtonPrimary>
 
-          <Div
-            mt={24}
-            style={{ flexDirection: "row", justifyContent: "center" }}
-          >
+          <Div mt={24} style={{ flexDirection: "row", justifyContent: "center" }}>
             <Text fontSize={"lg"} color="#6B6B6B" fontFamily={fontHauora}>
               Already have an account?{" "}
             </Text>
@@ -67,9 +54,7 @@ const LoginScreen: React.FC<{ navigation: NavigationType }> = ({
         >
           By signing up, I agree to Smoll{" "}
           <TouchableOpacity
-            onPress={() =>
-              Linking.openURL("https://smoll.me/terms-and-conditions")
-            }
+            onPress={() => Linking.openURL("https://smoll.me/terms-and-conditions")}
           >
             <Text lineHeight={24}>Terms & Conditions and Privacy Policy</Text>
           </TouchableOpacity>

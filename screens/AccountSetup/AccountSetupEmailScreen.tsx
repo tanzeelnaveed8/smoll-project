@@ -17,8 +17,7 @@ interface Props {
 
 const AccountSetupEmailScreen: React.FC<Props> = (props) => {
   const route = useRoute();
-  const isUpdatingEmail = (route.params as { updateEmail: string })
-    ?.updateEmail;
+  const isUpdatingEmail = (route.params as { updateEmail: string })?.updateEmail;
 
   const { updateUser, sendVerificationEmail } = useUserStore();
 
@@ -73,9 +72,7 @@ const AccountSetupEmailScreen: React.FC<Props> = (props) => {
             value={email}
             placeholder="Email address"
             floatingPlaceholder
-            suffix={
-              isValidEmail ? <IconCircleCheck color="#2F6E20" /> : undefined
-            }
+            suffix={isValidEmail ? <IconCircleCheck color="#2F6E20" /> : undefined}
             keyboardType="email-address"
             onChangeText={(text) => setEmail(text)}
             disabled={loading}

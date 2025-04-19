@@ -162,20 +162,11 @@ const checkFileExists = async (filePath: string): Promise<boolean> => {
   }
 };
 
-const sendTextMessage = async (
-  zim: ZIM,
-  message: ZIMMessageBase,
-  toUserId: string
-) => {
+const sendTextMessage = async (zim: ZIM, message: ZIMMessageBase, toUserId: string) => {
   const config = { priority: ZIMMessagePriority.Low };
 
   try {
-    const result = await zim.sendMessage(
-      message,
-      toUserId,
-      ZIMConversationType.Peer,
-      config
-    );
+    const result = await zim.sendMessage(message, toUserId, ZIMConversationType.Peer, config);
 
     return result.message;
   } catch (error) {
@@ -183,11 +174,7 @@ const sendTextMessage = async (
   }
 };
 
-const sendMediaMessage = async (
-  zim: ZIM,
-  message: ZIMMediaMessageBase,
-  toUserId: string
-) => {
+const sendMediaMessage = async (zim: ZIM, message: ZIMMediaMessageBase, toUserId: string) => {
   const config = { priority: ZIMMessagePriority.Low };
 
   // const notification: ZIMMessageSendNotification = {
@@ -229,11 +216,7 @@ export const getMessages = async (
   }
 
   try {
-    const result = await zim.queryHistoryMessage(
-      conversationID,
-      conversationType,
-      config
-    );
+    const result = await zim.queryHistoryMessage(conversationID, conversationType, config);
 
     return result.messageList;
   } catch (error) {
@@ -247,11 +230,4 @@ const logout = () => {
   zim.destroy();
 };
 
-export {
-  zim,
-  initializeChat,
-  sendMessage,
-  sendTypingStatus,
-  requestPermissions,
-  logout,
-};
+export { zim, initializeChat, sendMessage, sendTypingStatus, requestPermissions, logout };

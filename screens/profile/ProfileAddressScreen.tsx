@@ -9,9 +9,7 @@ import { NavigationType } from "@/store/types";
 import React from "react";
 import { Button, Div, Modal, Text } from "react-native-magnus";
 
-const ProfileAddressScreen: React.FC<{ navigation: NavigationType }> = ({
-  navigation,
-}) => {
+const ProfileAddressScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
   return (
     <Layout>
       <BackButton
@@ -27,8 +25,7 @@ const ProfileAddressScreen: React.FC<{ navigation: NavigationType }> = ({
             What’s your address?
           </Text>
           <Text fontSize={"xl"} mb={20}>
-            We need your address to suggest the nearest vet clinic for in-clinic
-            visits
+            We need your address to suggest the nearest vet clinic for in-clinic visits
           </Text>
 
           <Div style={{ gap: 16 }}>

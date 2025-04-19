@@ -42,30 +42,13 @@ const DoctorCard: React.FC<PropTypes> = (props) => {
               borderColor="#fff"
             >
               {image ? (
-                <Image
-                  source={{ uri: image }}
-                  w={100}
-                  h={100}
-                  rounded={100}
-                  bg="#eeeeee"
-                />
+                <Image source={{ uri: image }} w={100} h={100} rounded={100} bg="#eeeeee" />
               ) : (
                 <IconUser size={24} />
               )}
             </Badge>
-            <Div
-              bg="#17d34a"
-              rounded={15}
-              px={10}
-              py={2}
-              alignSelf="center"
-              mt={10}
-            >
-              <Text
-                fontSize={"sm"}
-                color="#fff"
-                fontFamily={fontHauoraSemiBold}
-              >
+            <Div bg="#17d34a" rounded={15} px={10} py={2} alignSelf="center" mt={10}>
+              <Text fontSize={"sm"} color="#fff" fontFamily={fontHauoraSemiBold}>
                 I'm Online!
               </Text>
             </Div>
@@ -87,12 +70,7 @@ const DoctorCard: React.FC<PropTypes> = (props) => {
         <Div w="full" flexDir="row" justifyContent="space-between">
           <Div style={{ gap: 4 }}>
             <Div row alignItems="center" style={{ gap: 6 }}>
-              <Text
-                fontFamily={fontHauoraSemiBold}
-                fontSize="xl"
-                lineHeight={24}
-                color="#222222"
-              >
+              <Text fontFamily={fontHauoraSemiBold} fontSize="xl" lineHeight={24} color="#222222">
                 {name}
               </Text>
 
@@ -102,23 +80,14 @@ const DoctorCard: React.FC<PropTypes> = (props) => {
                 </Div>
               )}
             </Div>
-            <Text
-              fontSize="md"
-              fontFamily={fontHauoraMedium}
-              color="#494949"
-              lineHeight={20}
-            >
+            <Text fontSize="md" fontFamily={fontHauoraMedium} color="#494949" lineHeight={20}>
               {speciality}
             </Text>
-            {experience !== undefined && <Text
-              fontSize="md"
-              fontFamily={fontHauoraMedium}
-              color="#494949"
-              lineHeight={20}
-            >
-              {experience} yrs of experience
-            </Text>
-}
+            {experience !== undefined && (
+              <Text fontSize="md" fontFamily={fontHauoraMedium} color="#494949" lineHeight={20}>
+                {experience} yrs of experience
+              </Text>
+            )}
             {about && (
               <Text
                 fontSize="md"

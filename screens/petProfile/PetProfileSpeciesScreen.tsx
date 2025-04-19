@@ -13,9 +13,7 @@ interface Props {
 const data = [PetSpeciesEnum.CAT, PetSpeciesEnum.DOG];
 
 const PetProfileSpeciesScreen: React.FC<Props> = (props) => {
-  const [selectedOption, setSelectedOption] = useState(
-    props.pet.species || PetSpeciesEnum.DOG
-  );
+  const [selectedOption, setSelectedOption] = useState(props.pet.species || PetSpeciesEnum.DOG);
 
   return (
     <Div>

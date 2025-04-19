@@ -1,10 +1,5 @@
 import React, { useEffect } from "react";
-import {
-  ActivityIndicator,
-  StyleProp,
-  StyleSheet,
-  ViewStyle,
-} from "react-native";
+import { ActivityIndicator, StyleProp, StyleSheet, ViewStyle } from "react-native";
 import { Div, Text, WINDOW_HEIGHT } from "react-native-magnus";
 import BackButton from "../partials/BackButton";
 import { colorPrimary, fontHauoraSemiBold } from "@/constant/constant";
@@ -51,11 +46,7 @@ const Layout: React.FC<Props> = ({
         >
           {(showBack || showCloseIcon) && (
             <Div top={2}>
-              <BackButton
-                onPress={onBackPress}
-                text={backBtnText}
-                showCloseIcon={showCloseIcon}
-              />
+              <BackButton onPress={onBackPress} text={backBtnText} showCloseIcon={showCloseIcon} />
             </Div>
           )}
           {/* <Div flex={1} minH={34}> */}

@@ -30,9 +30,7 @@ interface Props {
   onSuccess: (isNewUser?: boolean) => void;
 }
 
-const SignupScreen: React.FC<{ navigation: NavigationType }> = ({
-  navigation,
-}) => {
+const SignupScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
   const toastRef = useRef<ToastContainer>(null);
   const { login } = useAuthStore();
 
@@ -46,9 +44,7 @@ const SignupScreen: React.FC<{ navigation: NavigationType }> = ({
     value: "",
   });
   const [phone, setPhone] = useState("");
-  const [codes, setCodes] = useState<
-    { label: string; value: string; flag: string }[]
-  >([
+  const [codes, setCodes] = useState<{ label: string; value: string; flag: string }[]>([
     // {
     //   flag: "https://flagcdn.com/w320/in.png",
     //   label: "(+91) India",
@@ -105,13 +101,7 @@ const SignupScreen: React.FC<{ navigation: NavigationType }> = ({
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <Div justifyContent="space-between" pb={24} pt={20} h="100%">
           <Div>
-            <Text
-              fontWeight="600"
-              fontSize={"5xl"}
-              fontFamily={fontHauora}
-              lineHeight={36}
-              mb={20}
-            >
+            <Text fontWeight="600" fontSize={"5xl"} fontFamily={fontHauora} lineHeight={36} mb={20}>
               Login/Signup
             </Text>
 
@@ -148,9 +138,7 @@ const SignupScreen: React.FC<{ navigation: NavigationType }> = ({
 
             <InputField
               onChangeText={handlePhoneChange}
-              placeholder={
-                country.value ? `05XXXXXXX` : "Select a country first"
-              }
+              placeholder={country.value ? `05XXXXXXX` : "Select a country first"}
               marginBottom={32}
               borderColor="#222222"
               keyboardType="phone-pad"
@@ -164,9 +152,7 @@ const SignupScreen: React.FC<{ navigation: NavigationType }> = ({
               value={phone}
               focus={isFocused}
               maxLength={17}
-              textContentType={
-                Platform.OS === "ios" ? "telephoneNumber" : undefined
-              }
+              textContentType={Platform.OS === "ios" ? "telephoneNumber" : undefined}
             />
 
             <ButtonPrimary
@@ -190,13 +176,9 @@ const SignupScreen: React.FC<{ navigation: NavigationType }> = ({
             >
               By signing up, I agree to Smoll{" "}
               <TouchableOpacity
-                onPress={() =>
-                  Linking.openURL("https://smoll.me/terms-and-conditions")
-                }
+                onPress={() => Linking.openURL("https://smoll.me/terms-and-conditions")}
               >
-                <Text lineHeight={24}>
-                  Terms & Conditions and Privacy Policy
-                </Text>
+                <Text lineHeight={24}>Terms & Conditions and Privacy Policy</Text>
               </TouchableOpacity>
             </Text>
           </Div>
@@ -217,11 +199,7 @@ const SignupScreen: React.FC<{ navigation: NavigationType }> = ({
         label={country.value + " " + phone}
       />
 
-      <Toast
-        ref={toastRef}
-        placement="top"
-        textStyle={{ textTransform: "capitalize" }}
-      />
+      <Toast ref={toastRef} placement="top" textStyle={{ textTransform: "capitalize" }} />
     </Layout>
   );
 };
@@ -243,13 +221,7 @@ const Country: React.FC<{
         px={16}
       >
         {/* <Div h={18} w={18} bgImg={{ uri: flag }} mr={16} /> */}
-        <Image
-          src={flag}
-          h={18}
-          w={26}
-          mr={16}
-          style={{ objectFit: "contain" }}
-        />
+        <Image src={flag} h={18} w={26} mr={16} style={{ objectFit: "contain" }} />
         <Text fontSize="lg">{label}</Text>
       </Div>
     </TouchableOpacity>

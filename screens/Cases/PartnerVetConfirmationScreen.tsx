@@ -22,8 +22,7 @@ import { Button, Div, Image, ScrollDiv, Text } from "react-native-magnus";
 const faqData = [
   {
     question: "Should I arrive exactly on time?",
-    answer:
-      "Please arrive 10 minutes earlier to fill up any information needed.",
+    answer: "Please arrive 10 minutes earlier to fill up any information needed.",
   },
   {
     question: "Who should I talk to at clinic?",
@@ -49,8 +48,7 @@ const PartnerVetConfirmationScreen: React.FC<{
   const { partnerVetDetails, bookPartnerVet } = usePartnerStore();
   const { casesQuotes } = useCaseStore();
 
-  const bookingId = (route.params as Record<string, string | undefined>)
-    ?.bookingId;
+  const bookingId = (route.params as Record<string, string | undefined>)?.bookingId;
 
   const partnerId = (route.params as Record<string, string>)?.partnerId;
   const partnerName = (route.params as Record<string, string>)?.partnerName;
@@ -64,25 +62,20 @@ const PartnerVetConfirmationScreen: React.FC<{
       selectedServices: { id: string; label: string; price: number }[];
     }
   )?.selectedServices;
-  const paymentIntentId = (route.params as Record<string, string>)
-    ?.paymentIntentId;
+  const paymentIntentId = (route.params as Record<string, string>)?.paymentIntentId;
   const isReschedule = (route.params as Record<string, boolean>)?.isReschedule;
 
   const [actionLoading, setActionLoading] = useState(false);
 
   const quote = useMemo(() => {
-    return casesQuotes
-      .get(caseId)
-      ?.find((quote) => quote.partner.id === partnerId);
+    return casesQuotes.get(caseId)?.find((quote) => quote.partner.id === partnerId);
   }, [casesQuotes, partnerId, caseId]);
 
   const partner = useMemo(() => {
     return quote?.partner;
   }, [quote]);
 
-  const parsedSelectedTime = JSON.parse(
-    selectedTime
-  ) as ExpertAvailability["intervals"][number];
+  const parsedSelectedTime = JSON.parse(selectedTime) as ExpertAvailability["intervals"][number];
   const parsedSelectedDate = new Date(selectedDate);
 
   const partnerDetails = useMemo(() => {
@@ -92,9 +85,7 @@ const PartnerVetConfirmationScreen: React.FC<{
   const scheduledTime = useMemo(() => {
     const date = dayjs(parsedSelectedDate).format("YYYY-MM-DD");
 
-    const fromTime = dayjs(`${date}T${parsedSelectedTime.from}Z`).format(
-      "hh:mm A"
-    );
+    const fromTime = dayjs(`${date}T${parsedSelectedTime.from}Z`).format("hh:mm A");
 
     const toTime = dayjs(`${date}T${parsedSelectedTime.to}Z`).format("hh:mm A");
 
@@ -152,19 +143,13 @@ const PartnerVetConfirmationScreen: React.FC<{
           field="Veterinarian"
           value={
             <Div row>
-              <Text
-                fontFamily={fontHauoraSemiBold}
-                fontSize="xl"
-                lineHeight={24}
-              >
+              <Text fontFamily={fontHauoraSemiBold} fontSize="xl" lineHeight={24}>
                 {partnerDetails?.name}
               </Text>
 
               <Image
                 source={{
-                  uri:
-                    partnerDetails?.profileImg?.url ??
-                    "https://via.placeholder.com/150",
+                  uri: partnerDetails?.profileImg?.url ?? "https://via.placeholder.com/150",
                 }}
                 w={50}
                 h={50}
@@ -186,19 +171,13 @@ const PartnerVetConfirmationScreen: React.FC<{
           field="Clinic"
           value={
             <Div row>
-              <Text
-                fontFamily={fontHauoraSemiBold}
-                fontSize="xl"
-                lineHeight={24}
-              >
+              <Text fontFamily={fontHauoraSemiBold} fontSize="xl" lineHeight={24}>
                 {partnerDetails?.partnerName}
               </Text>
 
               <Image
                 source={{
-                  uri:
-                    partner?.clinicImg?.url ??
-                    "https://via.placeholder.com/150",
+                  uri: partner?.clinicImg?.url ?? "https://via.placeholder.com/150",
                 }}
                 w={50}
                 h={50}
@@ -254,12 +233,7 @@ const PartnerVetConfirmationScreen: React.FC<{
         </Div>
 
         <Div mt={24}>
-          <Text
-            fontFamily={fontHauoraSemiBold}
-            fontSize="lg"
-            lineHeight={24}
-            color="#222222"
-          >
+          <Text fontFamily={fontHauoraSemiBold} fontSize="lg" lineHeight={24} color="#222222">
             (FAQ) Frequently Asked Questions
           </Text>
 
@@ -267,12 +241,7 @@ const PartnerVetConfirmationScreen: React.FC<{
             {faqData.map((item, i) => (
               <Accordion key={i}>
                 <Accordion.title>
-                  <Text
-                    fontFamily={fontCooper}
-                    fontSize="lg"
-                    lineHeight={20}
-                    color="#494949"
-                  >
+                  <Text fontFamily={fontCooper} fontSize="lg" lineHeight={20} color="#494949">
                     {item.question}
                   </Text>
                 </Accordion.title>
@@ -349,24 +318,14 @@ const RowText: React.FC<{
   mb?: number;
 }> = ({ name, percent, value, fontFamily, mb }) => {
   return (
-    <Div
-      flexDir="row"
-      justifyContent="space-between"
-      alignItems="center"
-      mb={mb ? mb : 0}
-    >
+    <Div flexDir="row" justifyContent="space-between" alignItems="center" mb={mb ? mb : 0}>
       <Div flexDir="row" alignItems="center">
         <Text fontSize={"xl"} fontFamily={fontFamily}>
           {name}
         </Text>
 
         {percent && (
-          <Text
-            ml={8}
-            color="primary"
-            fontSize={"md"}
-            fontFamily={fontHauoraMedium}
-          >
+          <Text ml={8} color="primary" fontSize={"md"} fontFamily={fontHauoraMedium}>
             {percent}
           </Text>
         )}

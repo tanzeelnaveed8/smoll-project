@@ -38,23 +38,18 @@ const actionBtn = [
     text: "Reschedule",
   },
   {
-    icon: (color?: string) => (
-      <IconUserX width={30} height={30} color={colorPrimary} />
-    ),
+    icon: (color?: string) => <IconUserX width={30} height={30} color={colorPrimary} />,
     text: "Cancel",
   },
 ];
 
-const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
-  navigation,
-}) => {
+const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
   const route = useRoute();
 
   const id = (route.params as { id: string })?.id;
   const type = (route.params as { type: string })?.type;
 
-  const { fetchAppointmentDetail, cancelAppointment, cancelConsultation } =
-    useAppointmentStore();
+  const { fetchAppointmentDetail, cancelAppointment, cancelConsultation } = useAppointmentStore();
 
   const [isLoading, setIsLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
@@ -69,8 +64,9 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
   const [showRescheduleModal, setShowRescheduleModal] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
 
-  const [appointmentDetail, setAppointmentDetail] =
-    useState<AppointmentDetailResponseDto | null>(null);
+  const [appointmentDetail, setAppointmentDetail] = useState<AppointmentDetailResponseDto | null>(
+    null
+  );
 
   const selectedServicesAmount = useMemo(() => {
     return (
@@ -153,10 +149,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
     try {
       setIsLoading(true);
 
-      const data = await fetchAppointmentDetail(
-        id,
-        type as "in-clinic" | "video"
-      );
+      const data = await fetchAppointmentDetail(id, type as "in-clinic" | "video");
 
       console.log(JSON.stringify(data, null, 2));
 
@@ -224,19 +217,9 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
             </Text>
           </Div>
 
-          <Div
-            flexDir="row"
-            justifyContent="space-between"
-            alignItems="flex-start"
-            pb={10}
-          >
+          <Div flexDir="row" justifyContent="space-between" alignItems="flex-start" pb={10}>
             <Div>
-              <Text
-                fontSize={"sm"}
-                fontFamily={fontHauoraBold}
-                mb={3}
-                color="#959594"
-              >
+              <Text fontSize={"sm"} fontFamily={fontHauoraBold} mb={3} color="#959594">
                 Call us on 08:00 ~ 19:00
               </Text>
               <TouchableOpacity
@@ -261,12 +244,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                   Linking.openURL("mailto:care@smoll.me");
                 }}
               >
-                <Text
-                  fontSize={"sm"}
-                  fontFamily={fontHauoraBold}
-                  mb={3}
-                  color="#959594"
-                >
+                <Text fontSize={"sm"} fontFamily={fontHauoraBold} mb={3} color="#959594">
                   Send us an email
                 </Text>
                 <Text fontSize={"xl"} fontFamily={fontHauoraBold}>
@@ -291,14 +269,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
         {!isLoading && appointmentDetail && (
           <ScrollDiv showsVerticalScrollIndicator={false}>
             <Div flex={1}>
-              <Div
-                alignSelf="center"
-                bg="#EFE9DB"
-                px={25}
-                py={7}
-                rounded={20}
-                mb={20}
-              >
+              <Div alignSelf="center" bg="#EFE9DB" px={25} py={7} rounded={20} mb={20}>
                 <Text fontFamily={fontHauoraMedium} fontSize={"md"}>
                   {appointmentDetail?.caseId}
                 </Text>
@@ -345,23 +316,17 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                       </Div>
                     )}
 
-                    <Text
-                      fontSize={"xl"}
-                      fontFamily={fontHauoraSemiBold}
-                      lineHeight={24}
-                      mb={4}
-                    >
+                    <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold} lineHeight={24} mb={4}>
                       {appointmentDetail?.isEmergency
                         ? "Emergency Appointment"
                         : appointmentDetail?.vet?.name}
                     </Text>
 
-                    {appointmentDetail?.type !== "video" &&
-                      !appointmentDetail?.isEmergency && (
-                        <Text fontSize={"sm"} fontFamily={fontHauoraSemiBold}>
-                          {appointmentDetail?.vet?.designation ?? "-"}
-                        </Text>
-                      )}
+                    {appointmentDetail?.type !== "video" && !appointmentDetail?.isEmergency && (
+                      <Text fontSize={"sm"} fontFamily={fontHauoraSemiBold}>
+                        {appointmentDetail?.vet?.designation ?? "-"}
+                      </Text>
+                    )}
 
                     <Div mb={16} mt={12} flexDir="row" justifyContent="center">
                       <Tag
@@ -397,11 +362,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                       )}
                     </Div>
 
-                    <Text
-                      fontSize={"sm"}
-                      fontFamily={fontHauoraSemiBold}
-                      mb={8}
-                    >
+                    <Text fontSize={"sm"} fontFamily={fontHauoraSemiBold} mb={8}>
                       Appointment On
                     </Text>
 
@@ -413,9 +374,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                     >
                       {appointmentDetail?.scheduledAt &&
                         dayjs(appointmentDetail?.scheduledAt).format(
-                          `DD MMM YYYY ${
-                            appointmentDetail?.isEmergency ? "" : ", hh:mm A"
-                          }`
+                          `DD MMM YYYY ${appointmentDetail?.isEmergency ? "" : ", hh:mm A"}`
                         )}
                     </Text>
 
@@ -437,23 +396,11 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                     )}
                   </Div>
 
-                  <Div
-                    pb={25}
-                    mb={18}
-                    borderBottomWidth={1}
-                    borderColor="#D0D7DC"
-                  >
+                  <Div pb={25} mb={18} borderBottomWidth={1} borderColor="#D0D7DC">
                     {!isLoading &&
                       appointmentDetail &&
-                      appointmentDetail?.type
-                        .toLowerCase()
-                        .includes("clinic") && (
-                        <Div
-                          pb={16}
-                          mb={24}
-                          borderBottomWidth={1}
-                          borderColor="#D0D7DC"
-                        >
+                      appointmentDetail?.type.toLowerCase().includes("clinic") && (
+                        <Div pb={16} mb={24} borderBottomWidth={1} borderColor="#D0D7DC">
                           <Text
                             fontSize={"sm"}
                             fontFamily={fontHauoraSemiBold}
@@ -464,11 +411,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                           </Text>
 
                           <Div flexDir="row" alignItems="flex-start">
-                            <Div
-                              w={"50%"}
-                              mb={8}
-                              justifyContent="space-between"
-                            >
+                            <Div w={"50%"} mb={8} justifyContent="space-between">
                               <TouchableOpacity
                                 style={{
                                   flexDirection: "row",
@@ -481,11 +424,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                                   });
                                 }}
                               >
-                                <Text
-                                  fontSize={"lg"}
-                                  mb={8}
-                                  fontFamily={fontHauoraSemiBold}
-                                >
+                                <Text fontSize={"lg"} mb={8} fontFamily={fontHauoraSemiBold}>
                                   {appointmentDetail?.partner?.name ?? "-"}
                                 </Text>
 
@@ -497,21 +436,12 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                                 />
                               </TouchableOpacity>
 
-                              <Text
-                                fontSize={"md"}
-                                fontFamily={fontHauoraMedium}
-                              >
+                              <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
                                 {appointmentDetail?.partner?.address ?? "-"}
                               </Text>
                             </Div>
 
-                            <Div
-                              w={"50%"}
-                              flexDir="row"
-                              mt={-4}
-                              pr={30}
-                              style={{ gap: 20 }}
-                            >
+                            <Div w={"50%"} flexDir="row" mt={-4} pr={30} style={{ gap: 20 }}>
                               {contactBtns.map((item, i) => (
                                 <TouchableOpacity
                                   key={i}
@@ -525,10 +455,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                                     alignItems="center"
                                   >
                                     {item.icon}
-                                    <Text
-                                      fontSize={"sm"}
-                                      fontFamily={fontHauoraSemiBold}
-                                    >
+                                    <Text fontSize={"sm"} fontFamily={fontHauoraSemiBold}>
                                       {item.text}
                                     </Text>
                                   </Div>
@@ -578,13 +505,10 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                         }
 
                         if (
-                          (appointmentDetail?.isEmergency &&
-                            item.text === "Reschedule") ||
+                          (appointmentDetail?.isEmergency && item.text === "Reschedule") ||
                           (item.text === "Reschedule" &&
                             appointmentDetail.scheduledAt &&
-                            dayjs().isAfter(
-                              dayjs(appointmentDetail.scheduledAt)
-                            ))
+                            dayjs().isAfter(dayjs(appointmentDetail.scheduledAt)))
                         ) {
                           return null;
                         }
@@ -601,10 +525,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                         return (
                           <Div
                             mx={
-                              !appointmentDetail.isEmergency &&
-                              item.text === "Cancel"
-                                ? "auto"
-                                : 0
+                              !appointmentDetail.isEmergency && item.text === "Cancel" ? "auto" : 0
                             }
                             key={item.text}
                           >
@@ -655,13 +576,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                           });
                         }}
                       >
-                        <Div
-                          pl={2}
-                          flexDir="row"
-                          alignItems="center"
-                          style={{ gap: 6 }}
-                          mb={20}
-                        >
+                        <Div pl={2} flexDir="row" alignItems="center" style={{ gap: 6 }} mb={20}>
                           <IconReceipt width={20} height={20} color="#222" />
                           <Text fontSize={"sm"} fontFamily={fontHauoraBold}>
                             Approved Quotation
@@ -675,27 +590,11 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                         </Div>
                       </TouchableOpacity>
 
-                      <Div
-                        bg="#EFE9DB"
-                        rounded={22}
-                        px={22}
-                        py={18}
-                        flex={1}
-                        maxW={"50%"}
-                        mb={20}
-                      >
-                        <Text
-                          mb={6}
-                          fontSize={"sm"}
-                          fontFamily={fontHauoraMedium}
-                        >
+                      <Div bg="#EFE9DB" rounded={22} px={22} py={18} flex={1} maxW={"50%"} mb={20}>
+                        <Text mb={6} fontSize={"sm"} fontFamily={fontHauoraMedium}>
                           You have paid
                         </Text>
-                        <Text
-                          fontSize={"5xl"}
-                          fontFamily={fontHauoraBold}
-                          lineHeight={30}
-                        >
+                        <Text fontSize={"5xl"} fontFamily={fontHauoraBold} lineHeight={30}>
                           {bookingCharges?.toFixed(2)}
                           <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
                             {" "}
@@ -719,28 +618,14 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                         justifyContent="space-around"
                         style={{ gap: 20 }}
                       >
-                        <Div
-                          pl={16}
-                          flexDir="row"
-                          alignItems="flex-end"
-                          mb={20}
-                        >
+                        <Div pl={16} flexDir="row" alignItems="flex-end" mb={20}>
                           <Div>
                             <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
                               To be paid at clinic
                             </Text>
-                            <Text
-                              fontSize={"5xl"}
-                              fontFamily={fontHauoraBold}
-                              lineHeight={36}
-                            >
-                              {(
-                                selectedServicesAmount - bookingCharges
-                              ).toFixed(2)}
-                              <Text
-                                fontSize={"md"}
-                                fontFamily={fontHauoraMedium}
-                              >
+                            <Text fontSize={"5xl"} fontFamily={fontHauoraBold} lineHeight={36}>
+                              {(selectedServicesAmount - bookingCharges).toFixed(2)}
+                              <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
                                 {" "}
                                 AED
                               </Text>
@@ -756,8 +641,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                             fontFamily={fontHauoraSemiBold}
                             maxW={180}
                           >
-                            Final balance to be paid at the clinic, depending on
-                            services received.
+                            Final balance to be paid at the clinic, depending on services received.
                           </Text>
                         </Div>
                       </Div>
@@ -769,9 +653,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
 
             <Div h={10} />
 
-            {!isLoading &&
-              appointmentDetail?.type === "in-clinic" &&
-              renderBottomContent()}
+            {!isLoading && appointmentDetail?.type === "in-clinic" && renderBottomContent()}
           </ScrollDiv>
         )}
 
@@ -797,8 +679,8 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
           </Text>
 
           <Text fontSize={"md"} fontFamily={fontHauoraMedium} mb={16}>
-            Are you sure you want to cancel your appointment with Dr.{" "}
-            {appointmentDetail?.vet?.name}?
+            Are you sure you want to cancel your appointment with Dr. {appointmentDetail?.vet?.name}
+            ?
           </Text>
 
           <ButtonPrimary

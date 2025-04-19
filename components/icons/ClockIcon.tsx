@@ -1,21 +1,9 @@
 import React from "react";
 // import { Image } from "react-native-magnus";
 
-import Svg, {
-  Path,
-  G,
-  Defs,
-  ClipPath,
-  Rect,
-  Pattern,
-  Image,
-  Use,
-} from "react-native-svg";
+import Svg, { Path, G, Defs, ClipPath, Rect, Pattern, Image, Use } from "react-native-svg";
 
-const ClockIcon: React.FC<{ width?: number; height?: number }> = ({
-  width,
-  height,
-}) => {
+const ClockIcon: React.FC<{ width?: number; height?: number }> = ({ width, height }) => {
   return (
     <Svg
       width={width ? width : "74"}
@@ -25,12 +13,7 @@ const ClockIcon: React.FC<{ width?: number; height?: number }> = ({
     >
       <Rect width="74" height="72" fill="url(#pattern0_1_319)" />
       <Defs>
-        <Pattern
-          id="pattern0_1_319"
-          patternContentUnits="objectBoundingBox"
-          width="1"
-          height="1"
-        >
+        <Pattern id="pattern0_1_319" patternContentUnits="objectBoundingBox" width="1" height="1">
           <Use
             xlinkHref="#image0_1_319"
             transform="matrix(0.00506757 0 0 0.00520833 -0.00168919 0)"

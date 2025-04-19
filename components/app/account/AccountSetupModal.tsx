@@ -9,12 +9,7 @@ import {
 import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
 import React, { useEffect, useMemo, useState } from "react";
-import {
-  Dimensions,
-  FlatList,
-  StyleSheet,
-  TouchableOpacity,
-} from "react-native";
+import { Dimensions, FlatList, StyleSheet, TouchableOpacity } from "react-native";
 import { Button, Div, Icon, Image, Text } from "react-native-magnus";
 
 interface Props {
@@ -99,12 +94,7 @@ const AccountSetupModal: React.FC<Props> = (props) => {
   };
 
   return (
-    <BottomSheet
-      showCloseIcon
-      onCloseIconClick={props.onBack}
-      isVisible={props.isVisible}
-      h="92%"
-    >
+    <BottomSheet showCloseIcon onCloseIconClick={props.onBack} isVisible={props.isVisible} h="92%">
       <Div>
         <Text fontSize={"6xl"} mb={12} fontFamily={fontHeading}>
           {user?.name}, let’s finish setting up your account
@@ -137,9 +127,7 @@ const AccountSetupModal: React.FC<Props> = (props) => {
                       fontSize={"xl"}
                       fontFamily={fontHauoraSemiBold}
                       style={{
-                        ...(completedSteps[item.value]
-                          ? styles.completedStepStyle
-                          : {}),
+                        ...(completedSteps[item.value] ? styles.completedStepStyle : {}),
                       }}
                     >
                       {item.name}

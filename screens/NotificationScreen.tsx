@@ -1,30 +1,17 @@
 import Layout from "@/components/app/Layout";
-import {
-  colorPrimary,
-  fontCooper,
-  fontHauoraBold,
-  fontHauoraMedium,
-} from "@/constant/constant";
+import { colorPrimary, fontCooper, fontHauoraBold, fontHauoraMedium } from "@/constant/constant";
 import { useNotificationStore } from "@/store/modules/notification";
 import { NavigationType } from "@/store/types";
 import { IconAlertCircle } from "@tabler/icons-react-native";
 import React, { useEffect, useState } from "react";
-import {
-  Dimensions,
-  RefreshControl,
-  StyleSheet,
-  TouchableOpacity,
-} from "react-native";
+import { Dimensions, RefreshControl, StyleSheet, TouchableOpacity } from "react-native";
 import { FlatList } from "react-native-bidirectional-infinite-scroll";
 import { Div, Text } from "react-native-magnus";
 
 const windowHeight = Dimensions.get("window").height;
 
-const NotificationScreen: React.FC<{ navigation: NavigationType }> = ({
-  navigation,
-}) => {
-  const { fetchNotifications, notifications, readAllNotification } =
-    useNotificationStore();
+const NotificationScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
+  const { fetchNotifications, notifications, readAllNotification } = useNotificationStore();
 
   const [page, setPage] = useState(1);
   const [nextPageId, setNextPageid] = useState(1);
@@ -157,9 +144,7 @@ const NotificationScreen: React.FC<{ navigation: NavigationType }> = ({
               mb={20}
               borderBottomWidth={1}
               borderBottomColor={
-                index + 1 === notifications?.data.length
-                  ? "transparent"
-                  : "#D0D7DC"
+                index + 1 === notifications?.data.length ? "transparent" : "#D0D7DC"
               }
             >
               <Div
@@ -184,11 +169,7 @@ const NotificationScreen: React.FC<{ navigation: NavigationType }> = ({
                   {item.message}
                 </Text>
 
-                <Text
-                  fontSize={"md"}
-                  fontFamily={fontHauoraMedium}
-                  color="#7B7B7B"
-                >
+                <Text fontSize={"md"} fontFamily={fontHauoraMedium} color="#7B7B7B">
                   {timeAgo(item.createdAt)}
                 </Text>
               </Div>

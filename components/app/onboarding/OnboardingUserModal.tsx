@@ -36,12 +36,7 @@ const OnboardingUserModal: React.FC<Props> = (props) => {
   };
 
   return (
-    <BottomSheet
-      showCloseIcon={false}
-      isVisible={props.isVisible}
-      h="95%"
-      barMb={28}
-    >
+    <BottomSheet showCloseIcon={false} isVisible={props.isVisible} h="95%" barMb={28}>
       <Div>
         <Text fontSize={"4xl"} mb={20} fontFamily={fontHeading}>
           What should we call you?
@@ -73,11 +68,7 @@ const OnboardingUserModal: React.FC<Props> = (props) => {
           maxLength={12}
         />
 
-        <ButtonPrimary
-          onPress={handleConfirm}
-          loading={loading}
-          disabled={loading || !firstName}
-        >
+        <ButtonPrimary onPress={handleConfirm} loading={loading} disabled={loading || !firstName}>
           Continue
         </ButtonPrimary>
       </Div>

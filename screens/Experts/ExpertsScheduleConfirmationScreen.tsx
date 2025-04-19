@@ -60,9 +60,7 @@ const ExpertsScheduleConfirmationScreen: React.FC<{
   const expert = expertDetailMap.get(expertId);
   const pet = petsDetailMap.get(petId);
 
-  const parsedSelectedTime = JSON.parse(
-    selectedTime
-  ) as ExpertAvailability["intervals"][number];
+  const parsedSelectedTime = JSON.parse(selectedTime) as ExpertAvailability["intervals"][number];
   const parsedSelectedDate = new Date(selectedDate);
   const parsedCase = JSON.parse(caseData) as CreateCasePayloadDto;
 
@@ -78,9 +76,7 @@ const ExpertsScheduleConfirmationScreen: React.FC<{
   const scheduledTime = useMemo(() => {
     const date = dayjs(parsedSelectedDate).format("YYYY-MM-DD");
 
-    const fromTime = dayjs(`${date}T${parsedSelectedTime.from}Z`).format(
-      "hh:mm A"
-    );
+    const fromTime = dayjs(`${date}T${parsedSelectedTime.from}Z`).format("hh:mm A");
 
     const toTime = dayjs(`${date}T${parsedSelectedTime.to}Z`).format("hh:mm A");
 
@@ -117,10 +113,7 @@ const ExpertsScheduleConfirmationScreen: React.FC<{
     } catch (err) {
       const error = err as AxiosError<any, any>;
 
-      if (
-        error?.response?.data?.message?.includes("already scheduled") &&
-        caseId
-      ) {
+      if (error?.response?.data?.message?.includes("already scheduled") && caseId) {
         await removeCase(caseId);
       }
 
@@ -149,11 +142,7 @@ const ExpertsScheduleConfirmationScreen: React.FC<{
         <ReadonlyItem field="Expert" value={expert?.name ?? ""} mb={16} />
 
         <ReadonlyItem field="Pet" value={pet?.name ?? ""} mb={12} />
-        <ReadonlyItem
-          field="Case Brief"
-          value={parsedCase.description ?? ""}
-          mb={12}
-        />
+        <ReadonlyItem field="Case Brief" value={parsedCase.description ?? ""} mb={12} />
 
         <Div flexDir="row" justifyContent="space-between" mb={24}>
           <Div flexDir="row" alignItems="center">
@@ -189,12 +178,7 @@ const ExpertsScheduleConfirmationScreen: React.FC<{
         </Div>
 
         <Div mt={24}>
-          <Text
-            fontFamily={fontHauoraSemiBold}
-            fontSize="lg"
-            lineHeight={24}
-            color="#222222"
-          >
+          <Text fontFamily={fontHauoraSemiBold} fontSize="lg" lineHeight={24} color="#222222">
             (FAQ) Frequently Asked Questions
           </Text>
 
@@ -202,12 +186,7 @@ const ExpertsScheduleConfirmationScreen: React.FC<{
             {faqData.map((item, i) => (
               <Accordion key={i}>
                 <Accordion.title>
-                  <Text
-                    fontFamily={fontCooper}
-                    fontSize="lg"
-                    lineHeight={20}
-                    color="#494949"
-                  >
+                  <Text fontFamily={fontCooper} fontSize="lg" lineHeight={20} color="#494949">
                     {item.question}
                   </Text>
                 </Accordion.title>
@@ -231,15 +210,7 @@ const ExpertsScheduleConfirmationScreen: React.FC<{
   );
 };
 
-const ReadonlyItem = ({
-  field,
-  value,
-  mb,
-}: {
-  field: string;
-  value: string;
-  mb?: number;
-}) => {
+const ReadonlyItem = ({ field, value, mb }: { field: string; value: string; mb?: number }) => {
   return (
     <Div pb={16} borderBottomWidth={1} borderColor="#E0E0E0" mb={mb ? mb : 0}>
       <Text

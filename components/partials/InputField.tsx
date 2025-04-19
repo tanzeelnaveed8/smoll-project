@@ -5,13 +5,7 @@ import {
   colorTextPrimary,
   fontHauora,
 } from "@/constant/constant";
-import React, {
-  useEffect,
-  useRef,
-  useState,
-  forwardRef,
-  useImperativeHandle,
-} from "react";
+import React, { useEffect, useRef, useState, forwardRef, useImperativeHandle } from "react";
 import {
   Animated,
   KeyboardTypeOptions,
@@ -20,14 +14,7 @@ import {
   StyleSheet,
   TextStyle,
 } from "react-native";
-import {
-  Button,
-  Div,
-  Icon,
-  Image,
-  Input,
-  InputProps,
-} from "react-native-magnus";
+import { Button, Div, Icon, Image, Input, InputProps } from "react-native-magnus";
 import { iconFontFamilyType } from "react-native-magnus/lib/typescript/src/ui/icon/icon.type";
 import { Keyboard } from "react-native";
 
@@ -56,10 +43,7 @@ interface InputFieldProps extends Omit<rest, keyof InputProps>, InputProps {
 }
 
 const InputField = forwardRef<any, InputFieldProps>(
-  (
-    { marginBottom, marginTop, borderRadius, multiline, countryFlag, ...rest },
-    ref
-  ) => {
+  ({ marginBottom, marginTop, borderRadius, multiline, countryFlag, ...rest }, ref) => {
     const [isFocused, setIsFocused] = useState(false);
     const { floatingPlaceholder, onChangeText, value } = rest;
     const [valueExist, setValueExist] = useState(value ? true : false);
@@ -139,14 +123,7 @@ const InputField = forwardRef<any, InputFieldProps>(
         )}
 
         {countryFlag && (
-          <Image
-            w={30}
-            h={22}
-            src={countryFlag}
-            position="absolute"
-            top={18}
-            left={10}
-          />
+          <Image w={30} h={22} src={countryFlag} position="absolute" top={18} left={10} />
         )}
 
         <Input
@@ -160,9 +137,7 @@ const InputField = forwardRef<any, InputFieldProps>(
           placeholder={floatingPlaceholder ? "" : rest.placeholder}
           fontFamily={fontHauora}
           placeholderTextColor={colorTextPrimary}
-          bg={
-            rest.disabled ? colorDisableBg : rest.bg ? rest.bg : "transparent"
-          }
+          bg={rest.disabled ? colorDisableBg : rest.bg ? rest.bg : "transparent"}
           color={rest.disabled ? colorDisableText : colorTextPrimary}
           fontSize={"xl"}
           h={rest.h ? rest.h : multiline ? "unset" : 56}
@@ -174,11 +149,7 @@ const InputField = forwardRef<any, InputFieldProps>(
           // pb={floatingPlaceholder ? 8 : 16}
           focusBorderColor="#427594"
           borderColor={
-            rest.disabled
-              ? colorDisableBorder
-              : rest.borderColor
-              ? rest.borderColor
-              : "#222222"
+            rest.disabled ? colorDisableBorder : rest.borderColor ? rest.borderColor : "#222222"
           }
           onFocus={handleFocus}
           onBlur={handleBlur}

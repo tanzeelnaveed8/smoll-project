@@ -25,8 +25,7 @@ const OnboardingCongratsModal: React.FC<Props> = (props) => {
           </Text>
           <Div flexDir="row" justifyContent="center">
             <Text fontSize={"lg"} textAlign="center" maxW={314}>
-              To enjoy Smoll's services, you need to build your profile and your
-              pet's profile.
+              To enjoy Smoll's services, you need to build your profile and your pet's profile.
             </Text>
           </Div>
         </Div>

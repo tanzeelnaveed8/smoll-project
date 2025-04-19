@@ -7,9 +7,7 @@ import { IconArrowRight } from "@tabler/icons-react-native";
 import { Div, Text } from "react-native-magnus";
 import React from "react";
 
-const EmergencyScreen: React.FC<{ navigation: NavigationType }> = ({
-  navigation,
-}) => {
+const EmergencyScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
   const route = useRoute() as {
     params: {
       isEmergency?: boolean;
@@ -48,22 +46,11 @@ const EmergencyScreen: React.FC<{ navigation: NavigationType }> = ({
         navigation.goBack();
       }}
     >
-      <Div
-        flex={1}
-        justifyContent="center"
-        alignItems="center"
-        maxW={320}
-        mx={"auto"}
-      >
+      <Div flex={1} justifyContent="center" alignItems="center" maxW={320} mx={"auto"}>
         <Text fontSize={"6xl"} fontFamily={fontCooper} mb={10}>
           {isEmergency ? "Emergency" : "Direct Escalation"}
         </Text>
-        <Text
-          fontSize={"lg"}
-          lineHeight={22}
-          textAlign="center"
-          fontFamily={fontHauoraMedium}
-        >
+        <Text fontSize={"lg"} lineHeight={22} textAlign="center" fontFamily={fontHauoraMedium}>
           {isEmergency
             ? `Due to the conditions of ${petName} case you will be booked immediately
           with the vet on duty at ${partnerName}`

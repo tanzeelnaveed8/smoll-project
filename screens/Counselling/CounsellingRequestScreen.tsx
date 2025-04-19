@@ -9,9 +9,7 @@ import { ActivityIndicator } from "react-native";
 import { Div, Text } from "react-native-magnus";
 import StartNewConversationActionModal from "./StartNewConversationActionModal";
 
-const CounsellingRequestScreen: React.FC<{ navigation: NavigationType }> = ({
-  navigation,
-}) => {
+const CounsellingRequestScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
   const { fetchSessions, requestSession } = useCounsellorStore();
   const socket = useSocket();
 
@@ -41,8 +39,8 @@ const CounsellingRequestScreen: React.FC<{ navigation: NavigationType }> = ({
               Welcome to Human Counselling
             </Text>
             <Text textAlign="center" maxW={347} mx={"auto"}>
-              Our counselors are here to help you navigate challenges, achieve
-              your goals, and enhance your well-being.
+              Our counselors are here to help you navigate challenges, achieve your goals, and
+              enhance your well-being.
             </Text>
           </Div>
 

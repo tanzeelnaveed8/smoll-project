@@ -12,11 +12,7 @@ const CounsellingInboxScreen: React.FC<Props> = (props) => {
   const { sessions } = useCounsellorStore();
 
   return (
-    <Layout
-      showBack
-      title="Inbox"
-      onBackPress={() => props.navigation.navigate("HomeScreen")}
-    >
+    <Layout showBack title="Inbox" onBackPress={() => props.navigation.navigate("HomeScreen")}>
       <Div flex={1}>
         {sessions?.map((session) => (
           <ChatInboxItem

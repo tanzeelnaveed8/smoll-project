@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  StyleProp,
-  StyleSheet,
-  TouchableOpacity,
-  ViewStyle,
-} from "react-native";
+import { StyleProp, StyleSheet, TouchableOpacity, ViewStyle } from "react-native";
 import { Button, Div, Text } from "react-native-magnus";
 
 interface Props {
@@ -44,11 +39,7 @@ const RadioButton: React.FC<Props> = ({
             ...styles.radioCircle,
           }}
         >
-          {value === selectedValue ? (
-            <Div style={styles.activeRadioCircle} />
-          ) : (
-            ""
-          )}
+          {value === selectedValue ? <Div style={styles.activeRadioCircle} /> : ""}
         </Div>
       </Button>
     </TouchableOpacity>

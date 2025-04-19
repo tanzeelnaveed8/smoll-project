@@ -13,10 +13,7 @@ import { useCaseStore } from "@/store/modules/case";
 import { NavigationType } from "@/store/types";
 import { CaseQuotesDto } from "@/store/types/case";
 import { useRoute } from "@react-navigation/native";
-import {
-  IconArrowRight,
-  IconInfoCircleFilled,
-} from "@tabler/icons-react-native";
+import { IconArrowRight, IconInfoCircleFilled } from "@tabler/icons-react-native";
 import React, { useEffect, useMemo, useState } from "react";
 import { Platform, TouchableOpacity } from "react-native";
 import { Button, Div, ScrollDiv, Text } from "react-native-magnus";
@@ -32,29 +29,22 @@ const serviceTypes = [
   {
     title: "Contingent",
     text: "Subject to an essential service and can not be deselected",
-    icon: (
-      <EssentialCheckIcon fill="#FFC433" color="#222" width={13} height={14} />
-    ),
+    icon: <EssentialCheckIcon fill="#FFC433" color="#222" width={13} height={14} />,
   },
   {
     title: "Recommended",
     text: "Vet recommended up to you to decide and you can deselect it if you want",
-    icon: (
-      <EssentialCheckIcon fill="#014EF7" color="#fff" width={13} height={14} />
-    ),
+    icon: <EssentialCheckIcon fill="#014EF7" color="#fff" width={13} height={14} />,
   },
 ];
 
-const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
-  navigation,
-}) => {
+const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
   const route = useRoute();
   const { casesQuotes, fetchCaseQuotes } = useCaseStore();
 
   const id = (route.params as Record<string, string>)?.id;
   const caseId = (route.params as Record<string, string>)?.caseId;
-  const hasPartnerBooking = (route.params as Record<string, string>)
-    ?.hasPartnerBooking;
+  const hasPartnerBooking = (route.params as Record<string, string>)?.hasPartnerBooking;
 
   const [loading, setLoading] = useState(false);
   const [selectedServices, setSelectedServices] = useState<
@@ -86,9 +76,7 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
       const updatedServices = selectedServices.filter((item) => item.id !== id);
       setSelectedServices(updatedServices);
     } else {
-      const newService = clinicQuote?.services
-        .filter((item) => item.id === id)
-        ?.pop();
+      const newService = clinicQuote?.services.filter((item) => item.id === id)?.pop();
 
       if (!newService) return;
       const serviceObj = {
@@ -111,10 +99,7 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
   };
 
   const getTotalQuote = () => {
-    return selectedServices.reduce(
-      (total, service) => total + service.price,
-      0
-    );
+    return selectedServices.reduce((total, service) => total + service.price, 0);
   };
 
   const getMinQuote = (caseQuotes?: CaseQuotesDto) => {
@@ -143,15 +128,7 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
         Service Details
       </Text>
 
-      <Div
-        flex={1}
-        py={16}
-        px={20}
-        borderWidth={1}
-        borderColor="#222"
-        rounded={28}
-        mb={20}
-      >
+      <Div flex={1} py={16} px={20} borderWidth={1} borderColor="#222" rounded={28} mb={20}>
         <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold}>
           {clinicQuote?.partner?.name}
         </Text>
@@ -168,12 +145,7 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
           {clinicQuote?.partner?.address}
         </Text>
 
-        <Div
-          mb={24}
-          flexDir="row"
-          justifyContent="space-between"
-          alignItems="center"
-        >
+        <Div mb={24} flexDir="row" justifyContent="space-between" alignItems="center">
           <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold}>
             Service
           </Text>
@@ -181,12 +153,7 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
           {!hasPartnerBooking && (
             <Div flexDir="row" alignItems="center" style={{ gap: 12 }}>
               {serviceTypes.map((item) => (
-                <Div
-                  key={item.title}
-                  flexDir="row"
-                  alignItems="center"
-                  style={{ gap: 4 }}
-                >
+                <Div key={item.title} flexDir="row" alignItems="center" style={{ gap: 4 }}>
                   {item.icon}
 
                   <Text fontSize={9} fontFamily={fontHauoraSemiBold}>
@@ -226,22 +193,13 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
           </ScrollDiv>
 
           <Div>
-            <Div
-              pt={15}
-              flexDir="row"
-              justifyContent="space-between"
-              alignItems="center"
-            >
+            <Div pt={15} flexDir="row" justifyContent="space-between" alignItems="center">
               <Div flexDir="row" alignItems="flex-end" mb={8}>
                 <Div>
                   <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
                     Minimum
                   </Text>
-                  <Text
-                    fontSize={"5xl"}
-                    fontFamily={fontHauoraBold}
-                    lineHeight={36}
-                  >
+                  <Text fontSize={"5xl"} fontFamily={fontHauoraBold} lineHeight={36}>
                     {getMinQuote(clinicQuote)}
                     <Text fontSize={"lg"} fontFamily={fontHauoraMedium}>
                       {" "}
@@ -257,11 +215,7 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
                     Maximum
                   </Text>
 
-                  <Text
-                    fontSize={"5xl"}
-                    fontFamily={fontHauoraBold}
-                    lineHeight={36}
-                  >
+                  <Text fontSize={"5xl"} fontFamily={fontHauoraBold} lineHeight={36}>
                     {getTotalQuote()}
                     <Text fontSize={"lg"} fontFamily={fontHauoraMedium}>
                       {" "}
@@ -346,13 +300,7 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({
           />
         )}
       </Button>
-      <Div
-        flexDir="row"
-        alignItems="center"
-        justifyContent="center"
-        style={{ gap: 1 }}
-        mt={8}
-      >
+      <Div flexDir="row" alignItems="center" justifyContent="center" style={{ gap: 1 }} mt={8}>
         {/* <IconCircleCheckFilled
           width={16}
           height={16}
@@ -471,13 +419,7 @@ const ProposalDetailCard: React.FC<{
               {selectedServices.find((item) => item.id === id) ? (
                 <EssentialCheckIcon fill="#014EF7" color="#fff" />
               ) : (
-                <Div
-                  w={16}
-                  h={17}
-                  rounded={100}
-                  borderWidth={1.5}
-                  borderColor="#014EF7"
-                />
+                <Div w={16} h={17} rounded={100} borderWidth={1.5} borderColor="#014EF7" />
               )}
             </>
           )}

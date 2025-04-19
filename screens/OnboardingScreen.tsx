@@ -6,13 +6,7 @@ import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useRef, useState } from "react";
-import {
-  FlatList,
-  ImageSourcePropType,
-  ScrollView,
-  StyleSheet,
-  View,
-} from "react-native";
+import { FlatList, ImageSourcePropType, ScrollView, StyleSheet, View } from "react-native";
 import { showMessage } from "react-native-flash-message";
 import { Button, Div, Image, Text } from "react-native-magnus";
 
@@ -25,14 +19,7 @@ const OnboardingCard: React.FC<{
 
   return (
     <View style={{ maxWidth: "100%", width: "100%" }}>
-      <Image
-        w={350}
-        h={345}
-        mb={24}
-        mx={"auto"}
-        source={img}
-        style={styles.slideCardImg}
-      />
+      <Image w={350} h={345} mb={24} mx={"auto"} source={img} style={styles.slideCardImg} />
 
       <Div px={15.5} maxW={350} mx={"auto"}>
         <Text
@@ -45,12 +32,7 @@ const OnboardingCard: React.FC<{
         >
           {heading}
         </Text>
-        <Text
-          fontFamily={fontHauora}
-          textAlign="center"
-          fontSize={"xl"}
-          fontWeight={"normal"}
-        >
+        <Text fontFamily={fontHauora} textAlign="center" fontSize={"xl"} fontWeight={"normal"}>
           {text}
         </Text>
       </Div>
@@ -60,9 +42,7 @@ const OnboardingCard: React.FC<{
 
 const dot = [1, 2, 3];
 
-const OnboardingScreen: React.FC<{ navigation: NavigationType }> = ({
-  navigation,
-}) => {
+const OnboardingScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
   const [activeCard, setActiveCard] = useState(0);
   const cardContainerRef = useRef<ScrollView | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -85,13 +65,7 @@ const OnboardingScreen: React.FC<{ navigation: NavigationType }> = ({
 
   return (
     <Layout>
-      <Image
-        w={143}
-        h={40}
-        mb={24}
-        mx={"auto"}
-        source={require("./../assets/logo.png")}
-      />
+      <Image w={143} h={40} mb={24} mx={"auto"} source={require("./../assets/logo.png")} />
 
       <View style={styles.cardContainer}>
         <OnboardingCard
@@ -123,9 +97,7 @@ const OnboardingScreen: React.FC<{ navigation: NavigationType }> = ({
         ))}
       </Div>
 
-      <ButtonPrimary onTouchEnd={() => setIsModalVisible(true)}>
-        Get Started
-      </ButtonPrimary>
+      <ButtonPrimary onTouchEnd={() => setIsModalVisible(true)}>Get Started</ButtonPrimary>
 
       <Div style={styles.linkContainer}>
         <Text fontSize={"xl"} fontFamily={fontHauora} color="#494949">

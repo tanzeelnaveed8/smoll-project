@@ -1,10 +1,6 @@
 import Layout from "@/components/app/Layout";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
-import {
-  fontHauoraMedium,
-  fontHauoraSemiBold,
-  fontHeading,
-} from "@/constant/constant";
+import { fontHauoraMedium, fontHauoraSemiBold, fontHeading } from "@/constant/constant";
 import { IconCalendarClock, IconUserX } from "@tabler/icons-react-native";
 import React, { useState } from "react";
 import { ActivityIndicator, FlatList, TouchableOpacity } from "react-native";
@@ -49,18 +45,15 @@ const PartnerVetSuccessfullScreen: React.FC<Props> = ({ navigation }) => {
   const caseId = (route.params as Record<string, string>)?.caseId;
   const vetId = (route.params as Record<string, string>)?.vetId;
 
-  const selectedServices = (
-    route.params as { selectedServices: { id: string; label: string }[] }
-  )?.selectedServices;
+  const selectedServices = (route.params as { selectedServices: { id: string; label: string }[] })
+    ?.selectedServices;
 
   const handleCancelClick = async () => {
     try {
       setIsLoading(true);
 
       showMessage({
-        renderCustomContent: () => (
-          <FlashCustomContent loader message="Cancelling..." />
-        ),
+        renderCustomContent: () => <FlashCustomContent loader message="Cancelling..." />,
         message: "",
         type: "info",
         autoHide: false,

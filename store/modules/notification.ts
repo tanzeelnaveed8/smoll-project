@@ -7,9 +7,7 @@ export const useNotificationStore = create<NotificationState>((set, get) => ({
   notifications: null,
 
   fetchNotifications: async (page: number, limit: number) => {
-    const response = await api.get(
-      `/notifications?page=${page}&limit=${limit}`
-    );
+    const response = await api.get(`/notifications?page=${page}&limit=${limit}`);
 
     const result = response.data;
 

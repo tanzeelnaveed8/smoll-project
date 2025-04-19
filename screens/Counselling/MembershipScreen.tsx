@@ -5,15 +5,7 @@ import { NavigationType } from "@/store/types";
 import { IconMessages, IconVideo } from "@tabler/icons-react-native";
 import React from "react";
 import { FlatList, StyleSheet } from "react-native";
-import {
-  Button,
-  Div,
-  Icon,
-  Image,
-  Modal,
-  ScrollDiv,
-  Text,
-} from "react-native-magnus";
+import { Button, Div, Icon, Image, Modal, ScrollDiv, Text } from "react-native-magnus";
 
 const cardData = [
   {
@@ -28,9 +20,7 @@ const cardData = [
   },
 ];
 
-const MembershipScreen: React.FC<{ navigation: NavigationType }> = ({
-  navigation,
-}) => {
+const MembershipScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
   return (
     <Modal isVisible>
       <ScrollDiv>
@@ -57,24 +47,12 @@ const MembershipScreen: React.FC<{ navigation: NavigationType }> = ({
           />
 
           <Div px={22}>
-            <Text
-              fontSize={"6xl"}
-              textAlign="center"
-              maxW={317}
-              mx={"auto"}
-              mb={4}
-            >
+            <Text fontSize={"6xl"} textAlign="center" maxW={317} mx={"auto"} mb={4}>
               Upgrade to use human counselling
             </Text>
-            <Text
-              fontSize={"lg"}
-              textAlign="center"
-              maxW={347}
-              mx={"auto"}
-              mb={32}
-            >
-              Therapy can help you manage emotional struggles that are hindering
-              your daily functioning.
+            <Text fontSize={"lg"} textAlign="center" maxW={347} mx={"auto"} mb={32}>
+              Therapy can help you manage emotional struggles that are hindering your daily
+              functioning.
             </Text>
 
             <FlatList
@@ -88,11 +66,7 @@ const MembershipScreen: React.FC<{ navigation: NavigationType }> = ({
                 >
                   {item.icon}
                   <Div>
-                    <Text
-                      fontSize={"lg"}
-                      fontFamily={fontHauoraSemiBold}
-                      mb={4}
-                    >
+                    <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold} mb={4}>
                       {item.heading}
                     </Text>
                     <Text
@@ -109,21 +83,11 @@ const MembershipScreen: React.FC<{ navigation: NavigationType }> = ({
               keyExtractor={(item) => item.heading}
             />
 
-            <Text
-              fontFamily={fontHauoraMedium}
-              fontSize={"md"}
-              textAlign="center"
-              mt={24}
-              mb={56}
-            >
-              *Separate charges apply for booking a counsellor and for each
-              individual session.
+            <Text fontFamily={fontHauoraMedium} fontSize={"md"} textAlign="center" mt={24} mb={56}>
+              *Separate charges apply for booking a counsellor and for each individual session.
             </Text>
 
-            <ButtonPrimary
-              navigation={navigation}
-              link="HumanCounsellingMessage"
-            >
+            <ButtonPrimary navigation={navigation} link="HumanCounsellingMessage">
               Try it now
             </ButtonPrimary>
           </Div>

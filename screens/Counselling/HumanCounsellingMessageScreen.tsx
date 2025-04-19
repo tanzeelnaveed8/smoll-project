@@ -10,9 +10,7 @@ import { NavigationType } from "@/store/types";
 
 const btns = ["Human Counselling", "Ask a Vet"];
 
-const HumanCounsellingMessage: React.FC<{ navigation: NavigationType }> = ({
-  navigation,
-}) => {
+const HumanCounsellingMessage: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
   const [activeTab, setActiveTab] = useState("Human Counselling");
 
   return (
@@ -52,8 +50,8 @@ const HumanCounsellingMessage: React.FC<{ navigation: NavigationType }> = ({
               Welcome to Human Counselling
             </Text>
             <Text textAlign="center" maxW={347} mx={"auto"}>
-              Our counselors are here to help you navigate challenges, achieve
-              your goals, and enhance your well-being.
+              Our counselors are here to help you navigate challenges, achieve your goals, and
+              enhance your well-being.
             </Text>
           </Div>
 

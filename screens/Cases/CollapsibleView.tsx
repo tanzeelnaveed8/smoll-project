@@ -91,13 +91,7 @@ const CollapsibleView: React.FC<{
             </Animated.View>
           </Div>
 
-          <Div
-            flexDir="row"
-            flex={1}
-            justifyContent="flex-end"
-            style={{ gap: 8 }}
-            ml={"auto"}
-          >
+          <Div flexDir="row" flex={1} justifyContent="flex-end" style={{ gap: 8 }} ml={"auto"}>
             <Tag
               fontSize={"xs"}
               fontFamily={fontHauoraSemiBold}

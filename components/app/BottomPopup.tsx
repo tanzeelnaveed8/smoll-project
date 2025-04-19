@@ -2,7 +2,12 @@ import React, { useState } from "react";
 import { Button, Div, Image, Modal, Text } from "react-native-magnus";
 import ButtonPrimary from "../partials/ButtonPrimary";
 import { IconArrowRight } from "@tabler/icons-react-native";
-import { fontHauoraBold, fontHauoraMedium, fontHauoraSemiBold, fontHeadingBold } from "@/constant/constant";
+import {
+  fontHauoraBold,
+  fontHauoraMedium,
+  fontHauoraSemiBold,
+  fontHeadingBold,
+} from "@/constant/constant";
 import blueWatch from "@/assets/images/blue-watch.png";
 import receiptSlip from "@/assets/images/receipt-slip.png";
 import important from "@/assets/images/important.png";
