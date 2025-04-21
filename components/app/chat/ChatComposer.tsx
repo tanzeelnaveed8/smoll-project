@@ -97,7 +97,6 @@ const ChatComposer: React.FC<Props> = (props) => {
           });
         }
       } else if (audio && recording) {
-        await recording.stopAndUnloadAsync();
         const uri = recording.getURI() ?? "";
 
         setAudioUri(uri);
@@ -147,12 +146,23 @@ const ChatComposer: React.FC<Props> = (props) => {
     try {
       play("message");
 
-      await Audio.requestPermissionsAsync();
+      // Check permission before requesting
+      const permissionStatus = await Audio.getPermissionsAsync();
+      if (!permissionStatus.granted) {
+        const permissionResponse = await Audio.requestPermissionsAsync();
+        if (!permissionResponse.granted) {
+          console.log("Audio permission denied");
+          return; // Exit if permission is denied
+        }
+      }
+
+      // Set audio mode for recording
       await Audio.setAudioModeAsync({
         allowsRecordingIOS: true,
         playsInSilentModeIOS: true,
       });
 
+      // Create a new recording instance
       const { recording } = await Audio.Recording.createAsync(
         Audio.RecordingOptionsPresets.HIGH_QUALITY
       );
@@ -164,6 +174,7 @@ const ChatComposer: React.FC<Props> = (props) => {
         setRecordingDuration((prev) => prev + 1);
       }, 1000);
 
+      // Update recording status
       recording.setOnRecordingStatusUpdate((status) => {
         if (status.isDoneRecording) {
           if (intervalRef.current) {
