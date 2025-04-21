@@ -153,7 +153,7 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ naviga
             },
           },
           colors: {
-            primary: "#fcfdff",
+            primary: "#000000",
             background: "#ffffff",
             componentBackground: "#f3f8fa",
             componentBorder: "#f3f8fa",
