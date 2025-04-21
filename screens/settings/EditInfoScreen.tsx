@@ -60,6 +60,11 @@ const EditInfoScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }
     }
   };
 
+  const isFormValid = (fieldKey: string, value: string | number) => {
+    if (typeof value === "string" && value.trim() === "") return false;
+    return true;
+  };
+
   return (
     <Layout
       showBack
@@ -84,6 +89,7 @@ const EditInfoScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }
               setForm(name);
             }}
             returnKeyType="done"
+            disabled={loading}
           />
         </Div>
       </ScrollDiv>
@@ -91,6 +97,7 @@ const EditInfoScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }
       <ButtonPrimary
         loading={loading}
         onPress={handleConfirm}
+        disabled={!isFormValid(fieldKey, form)}
         // bgColor="primary"
       >
         Confirm
