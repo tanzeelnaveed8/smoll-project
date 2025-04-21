@@ -1,19 +1,8 @@
 import React from "react";
 
-import Svg, {
-  Path,
-  G,
-  Defs,
-  ClipPath,
-  Rect,
-  Text,
-  TSpan,
-} from "react-native-svg";
+import Svg, { Path, G, Defs, ClipPath, Rect, Text, TSpan } from "react-native-svg";
 
-const AedoIcon: React.FC<{ width?: number; height?: number }> = ({
-  width,
-  height,
-}) => {
+const AedoIcon: React.FC<{ width?: number; height?: number }> = ({ width, height }) => {
   return (
     <Svg
       width={width ? width : "43"}

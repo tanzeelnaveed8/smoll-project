@@ -1,10 +1,4 @@
-import {
-  Dropdown as MagnusDropdown,
-  Button,
-  Div,
-  DropdownRef,
-  Text,
-} from "react-native-magnus";
+import { Dropdown as MagnusDropdown, Button, Div, DropdownRef, Text } from "react-native-magnus";
 
 import React, { forwardRef } from "react";
 

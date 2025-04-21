@@ -1,10 +1,6 @@
 import Layout from "@/components/app/Layout";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
-import {
-  colorPrimary,
-  fontHauoraBold,
-  fontHauoraSemiBold,
-} from "@/constant/constant";
+import { colorPrimary, fontHauoraBold, fontHauoraSemiBold } from "@/constant/constant";
 import { useCaseStore } from "@/store/modules/case";
 import { NavigationType } from "@/store/types";
 import { CaseDetail, CaseStatusEnum } from "@/store/types/case.d";
@@ -98,11 +94,7 @@ const CaseDetailScreen: React.FC<{
           mb={12}
         />
 
-        <ReadonlyItem
-          field="Description"
-          value={caseDetail?.description ?? ""}
-          mb={16}
-        />
+        <ReadonlyItem field="Description" value={caseDetail?.description ?? ""} mb={16} />
 
         {caseDetail?.scheduleAt && (
           <ReadonlyItem
@@ -120,13 +112,7 @@ const CaseDetailScreen: React.FC<{
           pb={28}
         />
 
-        <Text
-          fontFamily={fontHauoraBold}
-          fontSize="xl"
-          lineHeight={24}
-          mb={24}
-          mt={26}
-        >
+        <Text fontFamily={fontHauoraBold} fontSize="xl" lineHeight={24} mb={24} mt={26}>
           Expert Details
         </Text>
 
@@ -134,19 +120,14 @@ const CaseDetailScreen: React.FC<{
           field="Name"
           value={
             <Div row>
-              <Text
-                fontFamily={fontHauoraSemiBold}
-                fontSize="xl"
-                lineHeight={24}
-              >
+              <Text fontFamily={fontHauoraSemiBold} fontSize="xl" lineHeight={24}>
                 {caseDetail?.assignedVet?.name}
               </Text>
 
               <Image
                 source={{
                   uri:
-                    caseDetail?.assignedVet?.profileImg?.url ??
-                    "https://via.placeholder.com/150",
+                    caseDetail?.assignedVet?.profileImg?.url ?? "https://via.placeholder.com/150",
                 }}
                 w={50}
                 h={50}
@@ -176,13 +157,7 @@ const CaseDetailScreen: React.FC<{
           pb={26}
         />
 
-        <Text
-          fontFamily={fontHauoraBold}
-          fontSize="xl"
-          lineHeight={24}
-          mb={24}
-          mt={26}
-        >
+        <Text fontFamily={fontHauoraBold} fontSize="xl" lineHeight={24} mb={24} mt={26}>
           Pet Details
         </Text>
 
@@ -190,11 +165,7 @@ const CaseDetailScreen: React.FC<{
           field="Name"
           value={
             <Div row>
-              <Text
-                fontFamily={fontHauoraSemiBold}
-                fontSize="xl"
-                lineHeight={24}
-              >
+              <Text fontFamily={fontHauoraSemiBold} fontSize="xl" lineHeight={24}>
                 {caseDetail?.pet?.name}
               </Text>
 
@@ -213,21 +184,13 @@ const CaseDetailScreen: React.FC<{
           }
           mb={12}
         />
-        <ReadonlyItem
-          field="Age"
-          value={caseDetail?.pet?.age.toString() ?? ""}
-          mb={12}
-        />
+        <ReadonlyItem field="Age" value={caseDetail?.pet?.age.toString() ?? ""} mb={12} />
         <ReadonlyItem
           field="Weight"
           value={caseDetail?.pet?.weight?.toString() + " Kg" ?? ""}
           mb={12}
         />
-        <ReadonlyItem
-          field="Breed"
-          value={caseDetail?.pet?.breed ?? ""}
-          mb={32}
-        />
+        <ReadonlyItem field="Breed" value={caseDetail?.pet?.breed ?? ""} mb={32} />
       </ScrollDiv>
 
       <ButtonPrimary onPress={() => navigation.goBack()}>Go Back</ButtonPrimary>
@@ -249,12 +212,7 @@ const ReadonlyItem = ({
   pb?: number;
 }) => {
   return (
-    <Div
-      pb={pb || 16}
-      borderBottomWidth={borderWidth || 0}
-      borderColor="#E0E0E0"
-      mb={mb ? mb : 0}
-    >
+    <Div pb={pb || 16} borderBottomWidth={borderWidth || 0} borderColor="#E0E0E0" mb={mb ? mb : 0}>
       <Text
         fontFamily={fontHauoraBold}
         fontSize={"xl"}

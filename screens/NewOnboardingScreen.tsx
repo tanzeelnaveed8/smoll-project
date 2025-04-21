@@ -1,17 +1,8 @@
 import Layout from "@/components/app/Layout";
-import {
-  fontHauora,
-  fontHauoraMedium,
-  fontHauoraSemiBold,
-} from "@/constant/constant";
+import { fontHauora, fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
 import { NavigationType } from "@/store/types";
 import React, { useEffect, useRef, useState } from "react";
-import {
-  Dimensions,
-  FlatList,
-  ImageResolvedAssetSource,
-  TouchableOpacity,
-} from "react-native";
+import { Dimensions, FlatList, ImageResolvedAssetSource, TouchableOpacity } from "react-native";
 import { Button, Div, Text, Image } from "react-native-magnus";
 import { useWindowDimensions } from "react-native";
 import { Image as RNImage } from "react-native";
@@ -51,9 +42,7 @@ const images = [
 
 const windowWidth = Dimensions.get("window").width;
 
-const NewOnboardingScreen: React.FC<{ navigation: NavigationType }> = ({
-  navigation,
-}) => {
+const NewOnboardingScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
   const { height } = useWindowDimensions();
   const fontSize = height < 900 ? 44 : 50;
   const flatListRef = useRef<FlatList>(null);
@@ -179,14 +168,7 @@ const NewOnboardingScreen: React.FC<{ navigation: NavigationType }> = ({
         />
 
         {/* Dots Indicator */}
-        <Div
-          flexDir="row"
-          justifyContent="flex-start"
-          alignItems="center"
-          pl={20}
-          pb={30}
-          pt={20}
-        >
+        <Div flexDir="row" justifyContent="flex-start" alignItems="center" pl={20} pb={30} pt={20}>
           {images.map((_, index) => (
             <Div
               key={index}
@@ -196,8 +178,7 @@ const NewOnboardingScreen: React.FC<{ navigation: NavigationType }> = ({
                 borderRadius: 8,
                 borderWidth: 1,
                 borderColor: "#222",
-                backgroundColor:
-                  currentIndex === index ? "#222" : "transparent",
+                backgroundColor: currentIndex === index ? "#222" : "transparent",
                 margin: 3,
               }}
             />

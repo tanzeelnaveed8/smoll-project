@@ -13,12 +13,7 @@ import { NavigationType } from "@/store/types";
 import { useRoute } from "@react-navigation/native";
 import { IconCircleCheck, IconPhone } from "@tabler/icons-react-native";
 import React, { useEffect, useMemo, useState } from "react";
-import {
-  ActivityIndicator,
-  FlatList,
-  Linking,
-  TouchableOpacity,
-} from "react-native";
+import { ActivityIndicator, FlatList, Linking, TouchableOpacity } from "react-native";
 import { Div, Image, ScrollDiv, Text } from "react-native-magnus";
 
 const TimeTab: React.FC<{ heading: string; time: string; mb?: number }> = ({
@@ -29,21 +24,11 @@ const TimeTab: React.FC<{ heading: string; time: string; mb?: number }> = ({
   return (
     <Div flexDir="row" alignItems="center" mb={mb || 0}>
       <Div px={8} py={6} bg="#F4F6F8" rounded={12} mr={8}>
-        <Text
-          fontSize={"md"}
-          mb={-1}
-          fontFamily={fontHauoraSemiBold}
-          lineHeight={14}
-        >
+        <Text fontSize={"md"} mb={-1} fontFamily={fontHauoraSemiBold} lineHeight={14}>
           {heading}
         </Text>
       </Div>
-      <Text
-        fontSize={"md"}
-        fontFamily={fontHauoraSemiBold}
-        lineHeight={24}
-        color="primary"
-      >
+      <Text fontSize={"md"} fontFamily={fontHauoraSemiBold} lineHeight={24} color="primary">
         {time}
       </Text>
     </Div>
@@ -73,9 +58,7 @@ const images = [
   },
 ];
 
-const ClinicDetailScreen: React.FC<{ navigation: NavigationType }> = ({
-  navigation,
-}) => {
+const ClinicDetailScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
   const route = useRoute();
   const { id } = route.params as { id: string };
   const { clinicDetails, fetchClinicDetails } = usePartnerStore();
@@ -130,8 +113,7 @@ const ClinicDetailScreen: React.FC<{ navigation: NavigationType }> = ({
   }, [id]);
 
   const openingHours =
-    data?.openingHours &&
-    (JSON.parse(data?.openingHours) as { from: string; to: string });
+    data?.openingHours && (JSON.parse(data?.openingHours) as { from: string; to: string });
 
   return (
     <Layout
@@ -162,12 +144,7 @@ const ClinicDetailScreen: React.FC<{ navigation: NavigationType }> = ({
               )}
 
               <Div>
-                <Text
-                  fontSize={"xl"}
-                  fontFamily={fontHauoraBold}
-                  lineHeight={24}
-                  mb={4}
-                >
+                <Text fontSize={"xl"} fontFamily={fontHauoraBold} lineHeight={24} mb={4}>
                   {data?.name}
                 </Text>
                 <Div flexDir="row" alignItems="center" mb={4}>
@@ -191,12 +168,7 @@ const ClinicDetailScreen: React.FC<{ navigation: NavigationType }> = ({
                     rounded={20}
                     mr={8}
                   />
-                  <Text
-                    fontSize={"md"}
-                    fontFamily={fontHauoraBold}
-                    lineHeight={20}
-                    color="#494949"
-                  >
+                  <Text fontSize={"md"} fontFamily={fontHauoraBold} lineHeight={20} color="#494949">
                     {data?.country}
                   </Text>
                 </Div>
@@ -206,11 +178,7 @@ const ClinicDetailScreen: React.FC<{ navigation: NavigationType }> = ({
             <Div mb={16}>
               <TimeTab
                 heading={"Opening Hours:"}
-                time={
-                  openingHours
-                    ? `${openingHours.from} - ${openingHours.to}`
-                    : "-"
-                }
+                time={openingHours ? `${openingHours.from} - ${openingHours.to}` : "-"}
                 mb={2}
               />
               {/* <TimeTab heading={"Eves"} time={"16:00pm - 20:00pm"} /> */}
@@ -219,19 +187,8 @@ const ClinicDetailScreen: React.FC<{ navigation: NavigationType }> = ({
             {data.specialities.length > 0 && (
               <Div flexDir="row" flexWrap="wrap" style={{ gap: 8 }} mb={16}>
                 {data.specialities.map((item, i) => (
-                  <Div
-                    key={i}
-                    px={8}
-                    py={6}
-                    rounded={32}
-                    borderWidth={1.2}
-                    borderColor="#222"
-                  >
-                    <Text
-                      fontSize={"md"}
-                      fontFamily={fontHauoraSemiBold}
-                      lineHeight={20}
-                    >
+                  <Div key={i} px={8} py={6} rounded={32} borderWidth={1.2} borderColor="#222">
+                    <Text fontSize={"md"} fontFamily={fontHauoraSemiBold} lineHeight={20}>
                       {item.name}
                     </Text>
                   </Div>
@@ -241,21 +198,14 @@ const ClinicDetailScreen: React.FC<{ navigation: NavigationType }> = ({
 
             {data?.imgCollections?.length > 0 && (
               <Div mb={16}>
-                <Text
-                  fontSize={"sm"}
-                  fontFamily={fontHauora}
-                  mb={8}
-                  color="#494949"
-                >
+                <Text fontSize={"sm"} fontFamily={fontHauora} mb={8} color="#494949">
                   Inside clinic
                 </Text>
 
                 <FlatList
                   data={data?.imgCollections}
                   renderItem={({ item, index }) => (
-                    <Div
-                      pr={index + 1 === data?.imgCollections?.length ? 0 : 8}
-                    >
+                    <Div pr={index + 1 === data?.imgCollections?.length ? 0 : 8}>
                       {/* <Image source={item.url} w={120} h={100} rounded={8} /> */}
                       <ImageUpload
                         h={120}
@@ -276,18 +226,8 @@ const ClinicDetailScreen: React.FC<{ navigation: NavigationType }> = ({
               </Div>
             )}
 
-            <Div
-              pb={24}
-              borderBottomWidth={1}
-              borderBottomColor="#D0D7DC"
-              mb={24}
-            >
-              <Text
-                fontSize={"xl"}
-                fontFamily={fontHauoraSemiBold}
-                lineHeight={24}
-                mb={4}
-              >
+            <Div pb={24} borderBottomWidth={1} borderBottomColor="#D0D7DC" mb={24}>
+              <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold} lineHeight={24} mb={4}>
                 Address - {data.name}
               </Text>
 
@@ -307,12 +247,7 @@ const ClinicDetailScreen: React.FC<{ navigation: NavigationType }> = ({
                   }}
                 >
                   <Div flexDir="row" alignItems="center">
-                    <IconPhone
-                      width={24}
-                      height={24}
-                      color={"#427594"}
-                      strokeWidth={1.5}
-                    />
+                    <IconPhone width={24} height={24} color={"#427594"} strokeWidth={1.5} />
                     <Text
                       fontSize={"lg"}
                       fontFamily={fontHauoraMedium}
@@ -328,12 +263,7 @@ const ClinicDetailScreen: React.FC<{ navigation: NavigationType }> = ({
             </Div>
 
             <Div>
-              <Text
-                fontSize={"sm"}
-                fontFamily={fontHauoraSemiBold}
-                color="#494949"
-                mb={24}
-              >
+              <Text fontSize={"sm"} fontFamily={fontHauoraSemiBold} color="#494949" mb={24}>
                 Veterinarian
               </Text>
 
@@ -347,13 +277,7 @@ const ClinicDetailScreen: React.FC<{ navigation: NavigationType }> = ({
                   flexDir="row"
                 >
                   {item?.profileImg?.url ? (
-                    <Image
-                      src={item?.profileImg?.url}
-                      w={32}
-                      h={32}
-                      rounded={32}
-                      mr={16}
-                    />
+                    <Image src={item?.profileImg?.url} w={32} h={32} rounded={32} mr={16} />
                   ) : (
                     <Image
                       source={require("@/assets/images/no-image.png")}
@@ -364,12 +288,7 @@ const ClinicDetailScreen: React.FC<{ navigation: NavigationType }> = ({
                     />
                   )}
                   <Div>
-                    <Text
-                      fontSize={"lg"}
-                      fontFamily={fontHauoraSemiBold}
-                      lineHeight={24}
-                      mb={4}
-                    >
+                    <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold} lineHeight={24} mb={4}>
                       {item.name}
                     </Text>
                     <Text
@@ -392,17 +311,9 @@ const ClinicDetailScreen: React.FC<{ navigation: NavigationType }> = ({
                     </Text>
                     <Div flexDir="row" alignItems="center">
                       <Div p={2}>
-                        <IconCircleCheck
-                          size={12}
-                          color={"#2F6E20"}
-                          strokeWidth={1.5}
-                        />
+                        <IconCircleCheck size={12} color={"#2F6E20"} strokeWidth={1.5} />
                       </Div>
-                      <Text
-                        fontSize={"sm"}
-                        fontFamily={fontHauoraMedium}
-                        lineHeight={16}
-                      >
+                      <Text fontSize={"sm"} fontFamily={fontHauoraMedium} lineHeight={16}>
                         Verified
                       </Text>
                     </Div>

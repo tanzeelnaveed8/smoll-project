@@ -29,8 +29,7 @@ const initialState = {
 };
 
 const PetDetailsModal = (props: PropTypes) => {
-  const { addHealthHistory, petsDetailMap, updateHealthHistory } =
-    usePetStore();
+  const { addHealthHistory, petsDetailMap, updateHealthHistory } = usePetStore();
   const toast = useToast();
 
   const { open, onClose } = props;
@@ -62,10 +61,7 @@ const PetDetailsModal = (props: PropTypes) => {
     }
   }, [open]);
 
-  const handleFormChange = (
-    key: keyof typeof form,
-    value: string | UploadedFile[]
-  ) => {
+  const handleFormChange = (key: keyof typeof form, value: string | UploadedFile[]) => {
     const formCopy = { ...form };
     if (typeof value === "string" && key !== "documents") {
       formCopy[key] = value;
@@ -101,13 +97,7 @@ const PetDetailsModal = (props: PropTypes) => {
   };
 
   return (
-    <BottomSheet
-      isVisible={open}
-      onCloseIconClick={onClose}
-      h="95%"
-      px={0}
-      showCloseIcon
-    >
+    <BottomSheet isVisible={open} onCloseIconClick={onClose} h="95%" px={0} showCloseIcon>
       <ScrollDiv style={{}} showsVerticalScrollIndicator={false}>
         <Div flex={1} px={20} pb={30}>
           <Text fontSize={"6xl"} lineHeight={40} color="#222222" mb={4}>
@@ -121,8 +111,8 @@ const PetDetailsModal = (props: PropTypes) => {
             maxW={350}
             mb={24}
           >
-            Please enter the details of your pet’s medical history, including
-            past illnesses, treatments, and any ongoing conditions
+            Please enter the details of your pet’s medical history, including past illnesses,
+            treatments, and any ongoing conditions
           </Text>
 
           <Div mb={24} style={{ gap: 8 }}>
@@ -219,12 +209,7 @@ function Add({ title, onAdd }: { title: string; onAdd?: () => void }) {
       justifyContent="space-between"
       alignItems="center"
     >
-      <Text
-        fontFamily={fontHauoraSemiBold}
-        fontSize="xl"
-        lineHeight={24}
-        color="#494949"
-      >
+      <Text fontFamily={fontHauoraSemiBold} fontSize="xl" lineHeight={24} color="#494949">
         {title}
       </Text>
 

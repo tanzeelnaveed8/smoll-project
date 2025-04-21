@@ -22,15 +22,7 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
-import {
-  Button,
-  Div,
-  Image,
-  ScrollDiv,
-  Tag,
-  Text,
-  WINDOW_WIDTH,
-} from "react-native-magnus";
+import { Button, Div, Image, ScrollDiv, Tag, Text, WINDOW_WIDTH } from "react-native-magnus";
 
 import AccountSetupModal from "@/components/app/account/AccountSetupModal";
 import OnboardingCongratsModal from "@/components/app/onboarding/OnboardingCongratsModal";
@@ -125,9 +117,7 @@ const HomeScreen: React.FC<Props> = (props) => {
 
     // handling showAccountSetupButton
     const checkAccountSetupStatus = async () => {
-      const hideAccountSetupBtn = await AsyncStorage.getItem(
-        "hideAccountSetupBtn"
-      );
+      const hideAccountSetupBtn = await AsyncStorage.getItem("hideAccountSetupBtn");
 
       if (hideAccountSetupBtn) {
         setShowAccountSetupButton(false);
@@ -140,11 +130,9 @@ const HomeScreen: React.FC<Props> = (props) => {
   }, []);
 
   useEffect(() => {
-    const showSetupModal =
-      (route.params as Record<string, string>)?.showSetupModal === "true";
+    const showSetupModal = (route.params as Record<string, string>)?.showSetupModal === "true";
 
-    const isNewUser =
-      (route.params as Record<string, string>)?.isNewUser === "true";
+    const isNewUser = (route.params as Record<string, string>)?.isNewUser === "true";
 
     if (isNewUser) {
       setTimeout(() => {
@@ -208,13 +196,7 @@ const HomeScreen: React.FC<Props> = (props) => {
         }}
       >
         <ScrollDiv showsVerticalScrollIndicator={false}>
-          <Div
-            mb={40}
-            mt={5}
-            flexDir="row"
-            justifyContent="space-between"
-            alignItems="center"
-          >
+          <Div mb={40} mt={5} flexDir="row" justifyContent="space-between" alignItems="center">
             <Div flexDir="row" alignItems="center" style={{ gap: 12 }}>
               <Image w={100} h={27} source={require("../assets/logo.png")} />
             </Div>
@@ -222,13 +204,7 @@ const HomeScreen: React.FC<Props> = (props) => {
             <Div flexDir="row" alignItems="center" style={{ gap: 8 }}>
               <Div position="relative">
                 {notifications && notifications.count > 0 && (
-                  <Div
-                    w={20}
-                    h={20}
-                    rounded={100}
-                    bg="#F44336"
-                    style={styles.notificationCount}
-                  >
+                  <Div w={20} h={20} rounded={100} bg="#F44336" style={styles.notificationCount}>
                     <Text color="#fff">{notifications?.count}</Text>
                   </Div>
                 )}
@@ -242,12 +218,7 @@ const HomeScreen: React.FC<Props> = (props) => {
                     props.navigation.navigate("NotificationScreen");
                   }}
                 >
-                  <IconBell
-                    width={32}
-                    height={32}
-                    color={"#222222"}
-                    strokeWidth={1.5}
-                  />
+                  <IconBell width={32} height={32} color={"#222222"} strokeWidth={1.5} />
                 </IconButton>
               </Div>
               <IconButton
@@ -256,12 +227,7 @@ const HomeScreen: React.FC<Props> = (props) => {
                   props.navigation.navigate("SettingsMainScreen");
                 }}
               >
-                <IconSettings
-                  width={32}
-                  height={32}
-                  color={"#222222"}
-                  strokeWidth={1.5}
-                />
+                <IconSettings width={32} height={32} color={"#222222"} strokeWidth={1.5} />
               </IconButton>
             </Div>
           </Div>
@@ -289,27 +255,14 @@ const HomeScreen: React.FC<Props> = (props) => {
           >
             <Div px={20} pr={0} h={191}>
               <Div mb={30} mt={34}>
-                <Text
-                  fontSize={"4xl"}
-                  fontFamily={fontHauoraBold}
-                  lineHeight={27}
-                >
+                <Text fontSize={"4xl"} fontFamily={fontHauoraBold} lineHeight={27}>
                   Chat with pet
                 </Text>
-                <Text
-                  fontSize={"4xl"}
-                  fontFamily={fontHauoraBold}
-                  lineHeight={27}
-                  mb={3}
-                >
+                <Text fontSize={"4xl"} fontFamily={fontHauoraBold} lineHeight={27} mb={3}>
                   wellness expert
                 </Text>
 
-                <Text
-                  fontFamily={fontHauoraSemiBold}
-                  fontSize="lg"
-                  lineHeight={20}
-                >
+                <Text fontFamily={fontHauoraSemiBold} fontSize="lg" lineHeight={20}>
                   Completly Free!
                 </Text>
               </Div>
@@ -404,29 +357,15 @@ const HomeScreen: React.FC<Props> = (props) => {
                 bg="transparent"
                 underlayColor="#f3f3f3"
               >
-                <Div
-                  flex={1}
-                  flexDir="row"
-                  alignItems="center"
-                  style={{ gap: 12 }}
-                >
+                <Div flex={1} flexDir="row" alignItems="center" style={{ gap: 12 }}>
                   {item.icon ? (
                     item.icon
                   ) : (
-                    <Image
-                      source={item.img}
-                      w={item.width}
-                      h={item.height}
-                      style={item.style}
-                    />
+                    <Image source={item.img} w={item.width} h={item.height} style={item.style} />
                   )}
 
                   <Div flex={1}>
-                    <Text
-                      fontSize={"xl"}
-                      fontFamily={fontHauoraBold}
-                      lineHeight={20}
-                    >
+                    <Text fontSize={"xl"} fontFamily={fontHauoraBold} lineHeight={20}>
                       {item.name}
                     </Text>
                     <Text

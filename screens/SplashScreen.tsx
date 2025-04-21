@@ -4,9 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect } from "react";
 import { Div, Image } from "react-native-magnus";
 
-const SplashScreen: React.FC<{ navigation: NavigationType }> = ({
-  navigation,
-}) => {
+const SplashScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
   const { findUser } = useUserStore();
 
   useEffect(() => {

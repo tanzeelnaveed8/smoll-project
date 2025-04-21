@@ -20,11 +20,7 @@ import { useUserStore } from "@/store/modules/user";
 import { NavigationType, PaymentPageRoute } from "@/store/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRoute } from "@react-navigation/native";
-import {
-  initPaymentSheet,
-  presentPaymentSheet,
-  StripeProvider,
-} from "@stripe/stripe-react-native";
+import { initPaymentSheet, presentPaymentSheet, StripeProvider } from "@stripe/stripe-react-native";
 import { SetupParams } from "@stripe/stripe-react-native/lib/typescript/src/types/PaymentSheet";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { TouchableOpacity } from "react-native";
@@ -65,9 +61,7 @@ const howPaymentWorks = [
   },
 ];
 
-const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
-  navigation,
-}) => {
+const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
   const route = useRoute();
   const {
     caseId,
@@ -93,9 +87,7 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
   const [envs, setEnvs] = useState<any>(null);
 
   const quote = useMemo(() => {
-    return casesQuotes
-      .get(caseId)
-      ?.find((quote) => quote.partner.id === partnerId);
+    return casesQuotes.get(caseId)?.find((quote) => quote.partner.id === partnerId);
   }, [casesQuotes, partnerId, caseId]);
 
   const totalSelectedAmount = useMemo(() => {
@@ -127,12 +119,11 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
     await new Promise((resolve) => setTimeout(resolve, 500));
 
     try {
-      const { ephemeralKey, paymentIntent, paymentIntentClientSecret } =
-        await createPaymentIntent(
-          user!.stripeCustomerId,
-          Math.round(bookingCharges * 100), // Ensure the amount is in cents and rounded
-          "AED"
-        );
+      const { ephemeralKey, paymentIntent, paymentIntentClientSecret } = await createPaymentIntent(
+        user!.stripeCustomerId,
+        Math.round(bookingCharges * 100), // Ensure the amount is in cents and rounded
+        "AED"
+      );
 
       paymentIntentRef.current = paymentIntent;
 
@@ -320,21 +311,12 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
           </Text>
         </Div> */}
 
-            <Div
-              flexDir="row"
-              justifyContent="space-between"
-              alignItems="flex-end"
-              mb={40}
-            >
+            <Div flexDir="row" justifyContent="space-between" alignItems="flex-end" mb={40}>
               <Text fontSize={"2xl"} fontFamily={fontHauoraSemiBold}>
                 Payment Details
               </Text>
 
-              <Text
-                fontSize={"lg"}
-                fontFamily={fontHauoraSemiBold}
-                color="#afafaf"
-              >
+              <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold} color="#afafaf">
                 {caseId}
               </Text>
             </Div>
@@ -343,44 +325,20 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
               Your final bill at
             </Text>
 
-            <Text
-              fontSize={"6xl"}
-              fontFamily={fontCooper}
-              mb={30}
-              lineHeight={40}
-            >
+            <Text fontSize={"6xl"} fontFamily={fontCooper} mb={30} lineHeight={40}>
               {clinicName || partnerName}
             </Text>
 
-            <Div
-              borderWidth={2}
-              rounded={25}
-              borderColor="#ccc"
-              px={16}
-              pb={14}
-              pt={16}
-              mb={10}
-            >
+            <Div borderWidth={2} rounded={25} borderColor="#ccc" px={16} pb={14} pt={16} mb={10}>
               <Div px={2}>
                 <Div flexDir="row" alignItems="flex-end" mb={30}>
                   {/* <Div w={80} h={1} ml={30} mr={10} mb={8} bg="#222" /> */}
 
-                  <Div
-                    bg="#EFE9DB"
-                    rounded={22}
-                    px={22}
-                    pl={17}
-                    py={18}
-                    ml={22}
-                  >
+                  <Div bg="#EFE9DB" rounded={22} px={22} pl={17} py={18} ml={22}>
                     <Text mb={5} fontSize={"sm"} fontFamily={fontHauoraMedium}>
                       Due now
                     </Text>
-                    <Text
-                      fontSize={"5xl"}
-                      fontFamily={fontHauoraBold}
-                      lineHeight={30}
-                    >
+                    <Text fontSize={"5xl"} fontFamily={fontHauoraBold} lineHeight={30}>
                       {bookingCharges.toFixed(2)}
                       <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
                         {" "}
@@ -416,11 +374,7 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
                     To pay at clinic
                   </Text>
 
-                  <Text
-                    fontSize={"5xl"}
-                    fontFamily={fontHauoraBold}
-                    lineHeight={36}
-                  >
+                  <Text fontSize={"5xl"} fontFamily={fontHauoraBold} lineHeight={36}>
                     {(totalSelectedAmount - bookingCharges).toFixed(2)}
                     <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
                       {" "}
@@ -431,14 +385,8 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
 
                 <Div style={{ gap: 2 }}>
                   <WalletIcon mb={4} width={30} height={30} />
-                  <Text
-                    fontSize={"xs"}
-                    lineHeight={15}
-                    fontFamily={fontHauoraSemiBold}
-                    maxW={130}
-                  >
-                    Final balance to be paid at the clinic, depending on
-                    services received.
+                  <Text fontSize={"xs"} lineHeight={15} fontFamily={fontHauoraSemiBold} maxW={130}>
+                    Final balance to be paid at the clinic, depending on services received.
                   </Text>
                 </Div>
               </Div>
@@ -484,8 +432,7 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({
               maxW={"70%"}
               mx={"auto"}
             >
-              You’ll recieve appointment confirmation after payment is
-              successful
+              You’ll recieve appointment confirmation after payment is successful
             </Text>
           </Div>
 

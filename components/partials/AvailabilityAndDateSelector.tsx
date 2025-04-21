@@ -24,9 +24,7 @@ const CalendarHeader = ({ date }: { date: string }) => {
 };
 
 const AvailabilityAndDateSelector: React.FC<Props> = ({ onSelect }) => {
-  const [selectedDate, setSelectedDate] = useState(
-    dayjs().format("YYYY-MM-DD")
-  );
+  const [selectedDate, setSelectedDate] = useState(dayjs().format("YYYY-MM-DD"));
 
   const handleDateSelect = useCallback(
     (date: string) => {
@@ -66,8 +64,7 @@ const AvailabilityAndDateSelector: React.FC<Props> = ({ onSelect }) => {
           )}
           renderArrow={(direction) => (
             <Div>
-              {direction === "left" &&
-              dayjs(selectedDate).isAfter(dayjs(), "day") ? (
+              {direction === "left" && dayjs(selectedDate).isAfter(dayjs(), "day") ? (
                 <IconChevronLeft size={24} color="#494949" strokeWidth={1.5} />
               ) : direction === "right" ? (
                 <IconChevronRight size={24} color="#494949" strokeWidth={1.5} />

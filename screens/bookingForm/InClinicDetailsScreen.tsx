@@ -10,29 +10,13 @@ const InClinicDetailsScreen = () => {
   return (
     <Div flex={1}>
       {/* header */}
-      <Div
-        flexDir="row"
-        justifyContent="space-between"
-        alignItems="center"
-        py={2}
-        mb={20}
-      >
+      <Div flexDir="row" justifyContent="space-between" alignItems="center" py={2} mb={20}>
         <Button bg="transparent" px={0}>
-          <Icon
-            fontSize={"4xl"}
-            color="#222222"
-            name="arrow-back-outline"
-            fontFamily="Ionicons"
-          />
+          <Icon fontSize={"4xl"} color="#222222" name="arrow-back-outline" fontFamily="Ionicons" />
         </Button>
         <Text fontSize={"xl"}>Details</Text>
         <Button bg="transparent" px={0}>
-          <Icon
-            fontSize={"4xl"}
-            color="#222222"
-            name="questioncircleo"
-            fontFamily="AntDesign"
-          />
+          <Icon fontSize={"4xl"} color="#222222" name="questioncircleo" fontFamily="AntDesign" />
         </Button>
       </Div>
 
@@ -66,13 +50,7 @@ const InClinicDetailsScreen = () => {
           Address
         </Text>
 
-        <Button
-          bg="transparent"
-          px={0}
-          py={0}
-          mb={12}
-          style={styles.addressContainer}
-        >
+        <Button bg="transparent" px={0} py={0} mb={12} style={styles.addressContainer}>
           <Text fontSize={"xl"} color={colorGray49}>
             Villa 12, Street 24, Jumeirah 3, Dubai, United Arab Emirates
           </Text>

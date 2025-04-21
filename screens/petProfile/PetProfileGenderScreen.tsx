@@ -13,9 +13,7 @@ interface Props {
 const data = [PetGenderEnum.MALE, PetGenderEnum.FEMALE];
 
 const PetProfileGenderScreen: React.FC<Props> = (props) => {
-  const [selectedOption, setSelectedOption] = useState(
-    props.pet.gender || PetGenderEnum.MALE
-  );
+  const [selectedOption, setSelectedOption] = useState(props.pet.gender || PetGenderEnum.MALE);
 
   return (
     <Div>

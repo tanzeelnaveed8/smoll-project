@@ -1,26 +1,11 @@
 import React from "react";
 // import { Image } from "react-native-magnus";
 
-import Svg, {
-  Path,
-  G,
-  Defs,
-  ClipPath,
-  Rect,
-  Pattern,
-  Image,
-} from "react-native-svg";
+import Svg, { Path, G, Defs, ClipPath, Rect, Pattern, Image } from "react-native-svg";
 
-const OnboardingIcon3: React.FC<{ width?: number; height?: number }> = ({
-  width,
-  height,
-}) => {
+const OnboardingIcon3: React.FC<{ width?: number; height?: number }> = ({ width, height }) => {
   return (
-    <Svg
-      width={width ? width : "291"}
-      height={height ? height : "291"}
-      viewBox="0 0 291 291"
-    >
+    <Svg width={width ? width : "291"} height={height ? height : "291"} viewBox="0 0 291 291">
       <Image
         id="Image_10"
         data-name="Image 10"

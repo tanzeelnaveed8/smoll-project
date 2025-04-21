@@ -2,10 +2,7 @@ import React from "react";
 
 import Svg, { Path, G, Defs, ClipPath, Rect } from "react-native-svg";
 
-const OnboardingIcon1: React.FC<{ width?: number; height?: number }> = ({
-  width,
-  height,
-}) => {
+const OnboardingIcon1: React.FC<{ width?: number; height?: number }> = ({ width, height }) => {
   return (
     <Svg
       //   xmlns="http://www.w3.org/2000/svg"
@@ -24,24 +21,11 @@ const OnboardingIcon1: React.FC<{ width?: number; height?: number }> = ({
           />
         </ClipPath>
         <ClipPath id="clip-path-2">
-          <Rect
-            id="Rectangle_964"
-            data-name="Rectangle 964"
-            width="49.456"
-            height="72.472"
-          />
+          <Rect id="Rectangle_964" data-name="Rectangle 964" width="49.456" height="72.472" />
         </ClipPath>
       </Defs>
-      <G
-        id="Group_3666"
-        data-name="Group 3666"
-        transform="translate(-7753.689 -10671.682)"
-      >
-        <G
-          id="Group_3661"
-          data-name="Group 3661"
-          transform="translate(7753.689 10671.682)"
-        >
+      <G id="Group_3666" data-name="Group 3666" transform="translate(-7753.689 -10671.682)">
+        <G id="Group_3661" data-name="Group 3661" transform="translate(7753.689 10671.682)">
           <G id="Group_3429" data-name="Group 3429" clip-path="url(#clip-path)">
             <Path
               id="Path_88526"
@@ -123,11 +107,7 @@ const OnboardingIcon1: React.FC<{ width?: number; height?: number }> = ({
             />
           </G>
         </G>
-        <G
-          id="Group_3662"
-          data-name="Group 3662"
-          transform="translate(7788.747 10872.807)"
-        >
+        <G id="Group_3662" data-name="Group 3662" transform="translate(7788.747 10872.807)">
           <G id="Group_3431" data-name="Group 3431" transform="translate(0 0)">
             <G
               id="Group_2817"

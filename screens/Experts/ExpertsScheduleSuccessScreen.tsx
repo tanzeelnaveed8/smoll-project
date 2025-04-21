@@ -1,10 +1,6 @@
 import Layout from "@/components/app/Layout";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
-import {
-  fontHauoraMedium,
-  fontHauoraSemiBold,
-  fontHeading,
-} from "@/constant/constant";
+import { fontHauoraMedium, fontHauoraSemiBold, fontHeading } from "@/constant/constant";
 import { IconCalendarClock } from "@tabler/icons-react-native";
 import React, { useState } from "react";
 import { ActivityIndicator, FlatList, TouchableOpacity } from "react-native";
@@ -37,17 +33,14 @@ const ExpertsScheduleSuccessScreen: React.FC<Props> = ({ navigation }) => {
   const { cancelConsultation } = useAppointmentStore();
   const [isLoading, setIsLoading] = useState(false);
 
-  const consultationId = (route.params as Record<string, string>)
-    ?.consultationId;
+  const consultationId = (route.params as Record<string, string>)?.consultationId;
 
   const handleCancelClick = async () => {
     try {
       setIsLoading(true);
 
       showMessage({
-        renderCustomContent: () => (
-          <FlashCustomContent loader message="Cancelling..." />
-        ),
+        renderCustomContent: () => <FlashCustomContent loader message="Cancelling..." />,
         message: "",
         type: "info",
         autoHide: false,

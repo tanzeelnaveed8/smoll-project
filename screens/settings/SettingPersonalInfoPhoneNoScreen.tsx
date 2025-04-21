@@ -32,15 +32,9 @@ const SettingPersonalInfoPhoneNoScreen = () => {
 
         <ButtonPrimary bgColor="primary">Save</ButtonPrimary>
 
-        <Text
-          fontWeight="400"
-          fontSize="md"
-          lineHeight={20}
-          color="#494949"
-          mt={24}
-        >
-          *If you change your Phone Number, you need to verify it and make sure
-          the email belongs to you.
+        <Text fontWeight="400" fontSize="md" lineHeight={20} color="#494949" mt={24}>
+          *If you change your Phone Number, you need to verify it and make sure the email belongs to
+          you.
         </Text>
       </Div>
     </Container>

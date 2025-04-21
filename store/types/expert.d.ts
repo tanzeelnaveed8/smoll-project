@@ -54,17 +54,14 @@ export interface FindOneConsultationResDto {
 interface ExpertState {
   expertDetailMap: Map<string, Expert>;
   experts: Nullable<Expert[]>;
-  unreadMessages:Map<string, number>;
-  conversations:Map<string,IMessage[]>
-  activeConvo:string | null
+  unreadMessages: Map<string, number>;
+  conversations: Map<string, IMessage[]>;
+  activeConvo: string | null;
 
   fetchExperts: () => Promise<Expert[]>;
   fetchExpertDetail: (id: string) => Promise<void>;
   updateExpertStatus: (id: string, status: boolean) => void;
-  fetchExpertAvailability: (
-    id: string,
-    date?: Date
-  ) => Promise<ExpertAvailability[]>;
+  fetchExpertAvailability: (id: string, date?: Date) => Promise<ExpertAvailability[]>;
   findOneConsultation: (id: string) => Promise<FindOneConsultationResDto>;
   requestConsultation: (id: string) => Promise<{ id: string }>;
   scheduleConsultation: (
@@ -75,14 +72,10 @@ interface ExpertState {
       scheduleAt: string;
     }
   ) => Promise<{ id: string }>;
-  updateConsultation: (payload: {
-    id: string;
-    caseId: string;
-  }) => Promise<void>;
+  updateConsultation: (payload: { id: string; caseId: string }) => Promise<void>;
   rateExpert: (payload: RateExpertPayloadDto) => Promise<void>;
-  getUnreadMessage: ()=>Promise<void>;
-  setUnreadMessage:(value:Map<string,number>)=>void
-  setConversations:(value:Map<string,IMessage[]>)=>void
-  setActiveConvo:(value:string | null)=>void
-
+  getUnreadMessage: () => Promise<void>;
+  setUnreadMessage: (value: Map<string, number>) => void;
+  setConversations: (value: Map<string, IMessage[]>) => void;
+  setActiveConvo: (value: string | null) => void;
 }

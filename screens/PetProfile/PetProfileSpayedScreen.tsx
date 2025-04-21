@@ -13,9 +13,7 @@ interface Props {
 const data = ["Yes", "No"];
 
 const PetProfileSpayedScreen: React.FC<Props> = (props) => {
-  const [selectedOption, setSelectedOption] = useState(
-    props.pet.spayedOrNeutered ? "Yes" : "No"
-  );
+  const [selectedOption, setSelectedOption] = useState(props.pet.spayedOrNeutered ? "Yes" : "No");
 
   return (
     <Div>

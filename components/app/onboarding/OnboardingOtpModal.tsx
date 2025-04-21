@@ -14,12 +14,7 @@ import { Button, Div, Text } from "react-native-magnus";
 import Toast from "react-native-toast-notifications";
 import ToastContainer from "react-native-toast-notifications/lib/typescript/toast-container";
 import OnboardingUserModal from "./OnboardingUserModal";
-import {
-  ActivityIndicator,
-  Keyboard,
-  Linking,
-  TouchableWithoutFeedback,
-} from "react-native";
+import { ActivityIndicator, Keyboard, Linking, TouchableWithoutFeedback } from "react-native";
 
 interface Props {
   navigation: NavigationType;
@@ -99,12 +94,9 @@ const OnboardingOtpModal: React.FC<Props> = (props) => {
 
       setResendOtpWating(30);
 
-      toastRef.current?.show(
-        "The code has been successfully sent to your number.",
-        {
-          type: "dark",
-        }
-      );
+      toastRef.current?.show("The code has been successfully sent to your number.", {
+        type: "dark",
+      });
     } finally {
       setResendOtpLoading(false);
     }
@@ -112,12 +104,7 @@ const OnboardingOtpModal: React.FC<Props> = (props) => {
 
   return (
     <>
-      <BottomSheet
-        isVisible={props.isVisible}
-        h="95%"
-        showCloseIcon={false}
-        barMb={28}
-      >
+      <BottomSheet isVisible={props.isVisible} h="95%" showCloseIcon={false} barMb={28}>
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
           <Div h="100%">
             <BackButton onPress={props.onBack} mb={20} />
@@ -155,9 +142,7 @@ const OnboardingOtpModal: React.FC<Props> = (props) => {
                 onPress={handleResend}
                 position="relative"
               >
-                <Text color={resendOtpLoading ? "#ddd" : "#0189F9"}>
-                  Resend Code
-                </Text>
+                <Text color={resendOtpLoading ? "#ddd" : "#0189F9"}>Resend Code</Text>
                 {resendOtpLoading && (
                   <Div position="absolute" top={4}>
                     <ActivityIndicator size={16} color={colorPrimary} />
@@ -181,10 +166,7 @@ const OnboardingOtpModal: React.FC<Props> = (props) => {
               Confirm
             </ButtonPrimary>
 
-            <Div
-              mt={24}
-              style={{ flexDirection: "row", justifyContent: "center" }}
-            >
+            <Div mt={24} style={{ flexDirection: "row", justifyContent: "center" }}>
               <Text fontSize={16} color="#6B6B6B" fontFamily={fontHauora}>
                 Can't find the code?{" "}
               </Text>
@@ -203,16 +185,9 @@ const OnboardingOtpModal: React.FC<Props> = (props) => {
           </Div>
         </TouchableWithoutFeedback>
 
-        <OnboardingUserModal
-          isVisible={showNameModal}
-          onSuccess={props.onSuccess}
-        />
+        <OnboardingUserModal isVisible={showNameModal} onSuccess={props.onSuccess} />
 
-        <Toast
-          ref={toastRef}
-          placement="top"
-          textStyle={{ textTransform: "capitalize" }}
-        />
+        <Toast ref={toastRef} placement="top" textStyle={{ textTransform: "capitalize" }} />
       </BottomSheet>
     </>
   );

@@ -1,10 +1,6 @@
 import { fontHauoraSemiBold } from "@/constant/constant";
 import { useRoute } from "@react-navigation/native";
-import {
-  IconChecklist,
-  IconMessage,
-  IconWindow,
-} from "@tabler/icons-react-native";
+import { IconChecklist, IconMessage, IconWindow } from "@tabler/icons-react-native";
 import React from "react";
 import { TouchableOpacity } from "react-native";
 import { Div, Text } from "react-native-magnus";
@@ -30,11 +26,7 @@ const tabList = [
     link: "CasesQuotesListScreen",
     // link: "PartnerVetDetailScreen",
     icon: (active?: boolean) => (
-      <IconChecklist
-        width={28}
-        height={28}
-        color={active ? "#000" : "#494949"}
-      />
+      <IconChecklist width={28} height={28} color={active ? "#000" : "#494949"} />
     ),
   },
 ];
@@ -46,13 +38,7 @@ const TabNavigationBar: React.FC<{
 
   return (
     <Div borderTopWidth={0} borderColor="#dcdcdc14">
-      <Div
-        flexDir="row"
-        justifyContent="space-around"
-        bg="transparent"
-        px={25}
-        pb={10}
-      >
+      <Div flexDir="row" justifyContent="space-around" bg="transparent" px={25} pb={10}>
         {tabList.map((item) => (
           <TouchableOpacity
             key={item.name}

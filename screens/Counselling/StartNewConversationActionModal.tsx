@@ -35,23 +35,13 @@ const StartNewConversationActionModal = () => {
         <FlatList
           data={cardData}
           renderItem={({ item, index }) => (
-            <Div
-              flexDir="row"
-              alignItems="center"
-              style={{ gap: 24 }}
-              mb={index === 0 ? 24 : 0}
-            >
+            <Div flexDir="row" alignItems="center" style={{ gap: 24 }} mb={index === 0 ? 24 : 0}>
               {item.icon}
               <Div>
                 <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold} mb={4}>
                   {item.heading}
                 </Text>
-                <Text
-                  fontSize={"lg"}
-                  color="darkGreyText"
-                  fontFamily={fontHauoraMedium}
-                  maxW={294}
-                >
+                <Text fontSize={"lg"} color="darkGreyText" fontFamily={fontHauoraMedium} maxW={294}>
                   {item.text}
                 </Text>
               </Div>

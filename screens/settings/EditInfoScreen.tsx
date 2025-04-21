@@ -23,13 +23,10 @@ type DataType = {
   petId?: string;
 };
 
-const EditInfoScreen: React.FC<{ navigation: NavigationType }> = ({
-  navigation,
-}) => {
+const EditInfoScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
   const { updateUser, user } = useUserStore();
   const { updatePet } = usePetStore();
-  const { heading, placeholder, fieldKey, value, petId } = useRoute()
-    .params as DataType;
+  const { heading, placeholder, fieldKey, value, petId } = useRoute().params as DataType;
   const [form, setForm] = useState(value);
   const [loading, setLoading] = useState(false);
   const toast = useToast();

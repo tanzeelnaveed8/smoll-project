@@ -1,8 +1,7 @@
 export const dummyNotificationList = [
   {
     id: 0,
-    message:
-      "Your appointment is confirmed for 01 July 2024 at 11:25 with Dr. Abbas Sheikh",
+    message: "Your appointment is confirmed for 01 July 2024 at 11:25 with Dr. Abbas Sheikh",
     isRead: true,
     meta: {},
     createdAt: "2024-07-20T06:02:44.124Z",
@@ -16,8 +15,7 @@ export const dummyNotificationList = [
   },
   {
     id: 0,
-    message:
-      "Your appointment is confirmed for 01 July 2024 at 11:25 with Dr. Abbas Sheikh",
+    message: "Your appointment is confirmed for 01 July 2024 at 11:25 with Dr. Abbas Sheikh",
     isRead: true,
     meta: {},
     createdAt: "2024-07-20T06:02:44.124Z",
@@ -31,8 +29,7 @@ export const dummyNotificationList = [
   },
   {
     id: 0,
-    message:
-      "Your appointment is confirmed for 01 July 2024 at 11:25 with Dr. Abbas Sheikh",
+    message: "Your appointment is confirmed for 01 July 2024 at 11:25 with Dr. Abbas Sheikh",
     isRead: true,
     meta: {},
     createdAt: "2024-07-20T06:02:44.124Z",
@@ -46,8 +43,7 @@ export const dummyNotificationList = [
   },
   {
     id: 0,
-    message:
-      "Your appointment is confirmed for 01 July 2024 at 11:25 with Dr. Abbas Sheikh",
+    message: "Your appointment is confirmed for 01 July 2024 at 11:25 with Dr. Abbas Sheikh",
     isRead: true,
     meta: {},
     createdAt: "2024-07-20T06:02:44.124Z",
@@ -61,8 +57,7 @@ export const dummyNotificationList = [
   },
   {
     id: 0,
-    message:
-      "Your appointment is confirmed for 01 July 2024 at 11:25 with Dr. Abbas Sheikh",
+    message: "Your appointment is confirmed for 01 July 2024 at 11:25 with Dr. Abbas Sheikh",
     isRead: true,
     meta: {},
     createdAt: "2024-07-20T06:02:44.124Z",
@@ -76,8 +71,7 @@ export const dummyNotificationList = [
   },
   {
     id: 0,
-    message:
-      "Your appointment is confirmed for 01 July 2024 at 11:25 with Dr. Abbas Sheikh",
+    message: "Your appointment is confirmed for 01 July 2024 at 11:25 with Dr. Abbas Sheikh",
     isRead: true,
     meta: {},
     createdAt: "2024-07-20T06:02:44.124Z",
@@ -91,8 +85,7 @@ export const dummyNotificationList = [
   },
   {
     id: 0,
-    message:
-      "Your appointment is confirmed for 01 July 2024 at 11:25 with Dr. Abbas Sheikh",
+    message: "Your appointment is confirmed for 01 July 2024 at 11:25 with Dr. Abbas Sheikh",
     isRead: true,
     meta: {},
     createdAt: "2024-07-20T06:02:44.124Z",
@@ -106,8 +99,7 @@ export const dummyNotificationList = [
   },
   {
     id: 0,
-    message:
-      "Your appointment is confirmed for 01 July 2024 at 11:25 with Dr. Abbas Sheikh",
+    message: "Your appointment is confirmed for 01 July 2024 at 11:25 with Dr. Abbas Sheikh",
     isRead: true,
     meta: {},
     createdAt: "2024-07-20T06:02:44.124Z",
@@ -121,8 +113,7 @@ export const dummyNotificationList = [
   },
   {
     id: 0,
-    message:
-      "Your appointment is confirmed for 01 July 2024 at 11:25 with Dr. Abbas Sheikh",
+    message: "Your appointment is confirmed for 01 July 2024 at 11:25 with Dr. Abbas Sheikh",
     isRead: true,
     meta: {},
     createdAt: "2024-07-20T06:02:44.124Z",
@@ -136,8 +127,7 @@ export const dummyNotificationList = [
   },
   {
     id: 0,
-    message:
-      "Your appointment is confirmed for 01 July 2024 at 11:25 with Dr. Abbas Sheikh",
+    message: "Your appointment is confirmed for 01 July 2024 at 11:25 with Dr. Abbas Sheikh",
     isRead: true,
     meta: {},
     createdAt: "2024-07-20T06:02:44.124Z",

@@ -50,8 +50,7 @@ export interface AppointmentListResponseDto {
   type: "in-clinic" | "video";
 }
 
-export interface AppointmentDetailResponseDto
-  extends AppointmentListResponseDto {
+export interface AppointmentDetailResponseDto extends AppointmentListResponseDto {
   paymentIntentId?: string;
   pet: {
     name: string;

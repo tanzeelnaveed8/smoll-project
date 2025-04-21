@@ -15,11 +15,7 @@ const HumanCounsellingMessageCard: React.FC<{
       style={{ gap: 24 }}
       onPress={onPress}
     >
-      <Image
-        w={72}
-        h={72}
-        source={require("../../assets/images/user-img.png")}
-      />
+      <Image w={72} h={72} source={require("../../assets/images/user-img.png")} />
       <Div flexDir="row" alignItems="center" style={{ gap: 36 }}>
         <Div>
           <Text fontSize={"xl"} mb={4} lineHeight={24}>

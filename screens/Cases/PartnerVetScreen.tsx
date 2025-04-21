@@ -8,9 +8,7 @@ import { useEffect, useMemo, useState } from "react";
 import { FlatList, RefreshControl } from "react-native";
 import { Text } from "react-native-magnus";
 
-const PartnerVetScreen: React.FC<{ navigation: NavigationType }> = ({
-  navigation,
-}) => {
+const PartnerVetScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
   const route = useRoute();
   const { partnerVets, fetchPartnerVets } = usePartnerStore();
 
@@ -29,10 +27,7 @@ const PartnerVetScreen: React.FC<{ navigation: NavigationType }> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const vets = useMemo(
-    () => partnerVets.get(partnerId),
-    [partnerVets, partnerId]
-  );
+  const vets = useMemo(() => partnerVets.get(partnerId), [partnerVets, partnerId]);
 
   useEffect(() => {
     handleFetchRequests();
@@ -79,12 +74,7 @@ const PartnerVetScreen: React.FC<{ navigation: NavigationType }> = ({
           />
         }
         ListHeaderComponent={
-          <Text
-            fontSize="xl"
-            fontFamily={fontHauoraSemiBold}
-            lineHeight={24}
-            mb={16}
-          >
+          <Text fontSize="xl" fontFamily={fontHauoraSemiBold} lineHeight={24} mb={16}>
             Find your Doctor
           </Text>
         }

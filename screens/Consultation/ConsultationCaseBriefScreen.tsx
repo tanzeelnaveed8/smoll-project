@@ -1,10 +1,6 @@
 import Layout from "@/components/app/Layout";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
-import {
-  fontHauoraMedium,
-  fontHauoraSemiBold,
-  fontHeading,
-} from "@/constant/constant";
+import { fontHauoraMedium, fontHauoraSemiBold, fontHeading } from "@/constant/constant";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { TouchableOpacity } from "react-native";
 import { Div, ScrollDiv, Text } from "react-native-magnus";
@@ -68,9 +64,7 @@ const NoPetOptions = ({
   );
 };
 
-const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
-  navigation,
-}) => {
+const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
   const { createCase } = useCaseStore();
   const { updateConsultation } = useExpertStore();
   const { cancelConsultation } = useAppointmentStore();
@@ -90,8 +84,7 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
   const petId = (route.params as Record<string, string>)?.petId;
   const petName = (route.params as Record<string, string>)?.petName;
   const expertId = (route.params as Record<string, string>)?.expertId;
-  const consultationId = (route.params as Record<string, string>)
-    ?.consultationId;
+  const consultationId = (route.params as Record<string, string>)?.consultationId;
 
   const [documents, setDocuments] = useState<UploadedFile[]>([]);
   const [description, setDescription] = useState("");
@@ -223,30 +216,15 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
   };
 
   return (
-    <Layout
-      showBack
-      title="Case Brief"
-      loading={loading}
-      onBackPress={handleCancelConsultation}
-    >
-      <ScrollDiv
-        flex={1}
-        keyboardShouldPersistTaps="handled"
-        showsVerticalScrollIndicator={false}
-      >
+    <Layout showBack title="Case Brief" loading={loading} onBackPress={handleCancelConsultation}>
+      <ScrollDiv flex={1} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
         <Text fontSize={"4xl"} mb={12} fontFamily={fontHeading}>
           Tell the expert your pet's condition
         </Text>
 
-        <Text
-          mb={24}
-          fontFamily={fontHauoraMedium}
-          color="darkGreyText"
-          fontSize={"lg"}
-        >
-          Please describe your pet's symptoms, including any changes in
-          behaviour, appetite, energy, or physical signs like vomiting,
-          diarrhoea, coughing, or unusual discharge.
+        <Text mb={24} fontFamily={fontHauoraMedium} color="darkGreyText" fontSize={"lg"}>
+          Please describe your pet's symptoms, including any changes in behaviour, appetite, energy,
+          or physical signs like vomiting, diarrhoea, coughing, or unusual discharge.
         </Text>
 
         <Div mb={12}>
@@ -286,21 +264,11 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
         <Text fontFamily={fontHauoraSemiBold} fontSize="xl" mb={8}>
           Documents
         </Text>
-        <Text
-          fontSize={"lg"}
-          fontFamily={fontHauoraMedium}
-          color="darkGreyText"
-          mb={4}
-        >
+        <Text fontSize={"lg"} fontFamily={fontHauoraMedium} color="darkGreyText" mb={4}>
           Upload supportive documents
         </Text>
 
-        <Text
-          fontSize={"lg"}
-          fontFamily={fontHauoraMedium}
-          color="darkGreyText"
-          mb={16}
-        >
+        <Text fontSize={"lg"} fontFamily={fontHauoraMedium} color="darkGreyText" mb={16}>
           (Image, Video, Doc)
         </Text>
 
@@ -319,7 +287,7 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
             document
             noImage
             disableCropping
-            aspectRatio={'auto'}
+            aspectRatio={"auto"}
             onLoading={(item) => {
               setUploading(item);
             }}
@@ -358,9 +326,7 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
         onPress={handleCreateCase}
         loading={actionLoading}
       >
-        {comingFrom === "ExpertsListDetailScreen" || scheduleAt
-          ? "Confirm"
-          : "Connect"}
+        {comingFrom === "ExpertsListDetailScreen" || scheduleAt ? "Confirm" : "Connect"}
       </ButtonPrimary>
     </Layout>
   );

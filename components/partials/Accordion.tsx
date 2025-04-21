@@ -5,11 +5,7 @@ import { TouchableOpacity } from "react-native";
 
 const AccordionContext = createContext({ open: false, toggle: () => {} });
 
-const AccordionTitle = ({
-  children,
-}: {
-  children: ReactElement | ReactElement[];
-}) => {
+const AccordionTitle = ({ children }: { children: ReactElement | ReactElement[] }) => {
   const { open, toggle } = useContext(AccordionContext);
   return (
     <TouchableOpacity onPress={toggle} activeOpacity={1}>

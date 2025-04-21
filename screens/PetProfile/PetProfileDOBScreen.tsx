@@ -17,10 +17,7 @@ const PetProfileDOBScreen: React.FC<Props> = (props) => {
     let age = today.year() - birthDate.year();
     const monthDifference = today.month() - birthDate.month();
 
-    if (
-      monthDifference < 0 ||
-      (monthDifference === 0 && today.date() < birthDate.date())
-    ) {
+    if (monthDifference < 0 || (monthDifference === 0 && today.date() < birthDate.date())) {
       age--;
     }
     return age;

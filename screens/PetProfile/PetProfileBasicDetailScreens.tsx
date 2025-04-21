@@ -12,15 +12,11 @@ interface Props {
 }
 
 const PetProfileBasicDetailScreens: React.FC<Props> = (props) => {
-  const [weight, setWeight] = useState(
-    props.pet.weight ? props.pet.weight?.toString() : ""
-  );
+  const [weight, setWeight] = useState(props.pet.weight ? props.pet.weight?.toString() : "");
   const [chipNumber, setChipNumber] = useState(
     props.pet.chipNumber ? props.pet.chipNumber.toString() : ""
   );
-  const [age, setAge] = useState(
-    props.pet.age > 0 ? props.pet.age.toString() : ""
-  );
+  const [age, setAge] = useState(props.pet.age > 0 ? props.pet.age.toString() : "");
 
   return (
     <Div>

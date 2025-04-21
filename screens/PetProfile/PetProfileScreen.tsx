@@ -3,11 +3,7 @@ import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import { usePetStore } from "@/store/modules/pet";
 import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
-import {
-  PetGenderEnum,
-  PetPayloadDto,
-  PetSpeciesEnum,
-} from "@/store/types/pet.d";
+import { PetGenderEnum, PetPayloadDto, PetSpeciesEnum } from "@/store/types/pet.d";
 import { useRoute } from "@react-navigation/native";
 import React, { useMemo, useState } from "react";
 import { Dimensions, StyleSheet } from "react-native";
@@ -53,10 +49,7 @@ const PetProfileScreen: React.FC<Props> = (props) => {
     preExistingConditions: "",
   });
 
-  const progress = useMemo(
-    () => (currentStep + 1) / totalSteps - 0.2,
-    [currentStep]
-  );
+  const progress = useMemo(() => (currentStep + 1) / totalSteps - 0.2, [currentStep]);
 
   const isActionDisabled = useMemo(() => {
     console.log("pet", pet.photos);
@@ -68,10 +61,7 @@ const PetProfileScreen: React.FC<Props> = (props) => {
       case 4:
         return !pet.breed.length;
       case 7:
-        return (
-          !pet.photos.length ||
-          pet.photos.every((photo) => typeof photo === "undefined")
-        );
+        return !pet.photos.length || pet.photos.every((photo) => typeof photo === "undefined");
     }
 
     return false;
@@ -84,8 +74,7 @@ const PetProfileScreen: React.FC<Props> = (props) => {
     const selectedTime = (route.params as Record<string, string>)?.selectedTime;
     const selectedDate = (route.params as Record<string, string>)?.selectedDate;
 
-    const consultationId = (route.params as Record<string, string>)
-      ?.consultationId;
+    const consultationId = (route.params as Record<string, string>)?.consultationId;
 
     if (currentStep === 7) {
       try {
@@ -135,11 +124,7 @@ const PetProfileScreen: React.FC<Props> = (props) => {
   };
 
   return (
-    <Layout
-      showBack={currentStep !== 8}
-      onBackPress={handleBack}
-      style={styles.container}
-    >
+    <Layout showBack={currentStep !== 8} onBackPress={handleBack} style={styles.container}>
       <ScrollDiv style={{ flex: 1 }} keyboardShouldPersistTaps="handled">
         {/* progress bar */}
         <Progress.Bar
@@ -155,31 +140,15 @@ const PetProfileScreen: React.FC<Props> = (props) => {
           color="#222"
         />
         {/* screens */}
-        {currentStep === 0 && (
-          <PetProfileNameScreen pet={pet} setPet={setPet} />
-        )}
+        {currentStep === 0 && <PetProfileNameScreen pet={pet} setPet={setPet} />}
         {currentStep === 1 && <PetProfileDOBScreen pet={pet} setPet={setPet} />}
-        {currentStep === 2 && (
-          <PetProfileGenderScreen pet={pet} setPet={setPet} />
-        )}
-        {currentStep === 3 && (
-          <PetProfileSpeciesScreen pet={pet} setPet={setPet} />
-        )}
-        {currentStep === 4 && (
-          <PetProfileBreedScreen pet={pet} setPet={setPet} />
-        )}
-        {currentStep === 5 && (
-          <PetProfileSpayedScreen pet={pet} setPet={setPet} />
-        )}
-        {currentStep === 6 && (
-          <PetProfileBasicDetailScreens pet={pet} setPet={setPet} />
-        )}
+        {currentStep === 2 && <PetProfileGenderScreen pet={pet} setPet={setPet} />}
+        {currentStep === 3 && <PetProfileSpeciesScreen pet={pet} setPet={setPet} />}
+        {currentStep === 4 && <PetProfileBreedScreen pet={pet} setPet={setPet} />}
+        {currentStep === 5 && <PetProfileSpayedScreen pet={pet} setPet={setPet} />}
+        {currentStep === 6 && <PetProfileBasicDetailScreens pet={pet} setPet={setPet} />}
         {currentStep === 7 && (
-          <PetImageUploadScreen
-            navigation={props.navigation}
-            pet={pet}
-            setPet={setPet}
-          />
+          <PetImageUploadScreen navigation={props.navigation} pet={pet} setPet={setPet} />
         )}
 
         {/* {currentStep === 0 && (

@@ -4,11 +4,7 @@ import { G, Path, Svg } from "react-native-svg";
 const VerifiedIcon = () => {
   return (
     <Svg width="12.912" height="15.852" viewBox="0 0 12.912 15.852">
-      <G
-        id="Group_4420"
-        data-name="Group 4420"
-        transform="translate(-128.921 -797.5)"
-      >
+      <G id="Group_4420" data-name="Group 4420" transform="translate(-128.921 -797.5)">
         <Path
           id="Path_9043"
           data-name="Path 9043"

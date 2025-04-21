@@ -32,7 +32,7 @@ export interface Pet {
   id: string;
   name: string;
   photos: UploadedFile[];
-  isDeceased?:boolean
+  isDeceased?: boolean;
 }
 
 export type HealthHistory = {
@@ -61,20 +61,14 @@ export interface PetState {
   addPet: (pet: PetPayloadDto) => Promise<PetDetail>;
   updatePet: (id: string, payload: Partial<PetDetail>) => Promise<PetDetail>;
 
-  addHealthHistory: (
-    petId: string,
-    payload: HealthHistory
-  ) => Promise<HealthHistory>;
+  addHealthHistory: (petId: string, payload: HealthHistory) => Promise<HealthHistory>;
   updateHealthHistory: (
     petId: string,
     healthHistoryId: string,
     payload: HealthHistory
   ) => Promise<PetDetail>;
 
-  deleteHealthHistory: (
-    petId: string,
-    healthHistoryId: string
-  ) => Promise<void>;
+  deleteHealthHistory: (petId: string, healthHistoryId: string) => Promise<void>;
 
   deletePet: (petId: string) => Promise<void>;
 }

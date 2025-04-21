@@ -3,9 +3,7 @@ import * as AsyncStorageService from "./async-storage";
 import { CountryApiResDto, CountryCodeDto } from "./types";
 
 export async function getCountryCodes(): Promise<CountryCodeDto[]> {
-  const codes = await AsyncStorageService.getItem<CountryCodeDto[] | null>(
-    "countryCodes"
-  );
+  const codes = await AsyncStorageService.getItem<CountryCodeDto[] | null>("countryCodes");
 
   if (codes === null) {
     const { data } = await api.get<CountryApiResDto[]>(

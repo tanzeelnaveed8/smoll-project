@@ -26,17 +26,8 @@ const ModalCard: React.FC<{
       swipeDirection={["down"]}
     >
       <Div flexDir="row" position="relative">
-        <Button
-          bg="transparent"
-          px={0}
-          onPress={onClose}
-          style={{ alignItems: "center" }}
-        >
-          <Icon
-            fontSize={"5xl"}
-            color="#222222"
-            name={backBtn ? "arrowleft" : "close"}
-          />
+        <Button bg="transparent" px={0} onPress={onClose} style={{ alignItems: "center" }}>
+          <Icon fontSize={"5xl"} color="#222222" name={backBtn ? "arrowleft" : "close"} />
           {backBtn && (
             <Text fontSize="xl" fontWeight="500" ml={4}>
               Back
@@ -44,11 +35,7 @@ const ModalCard: React.FC<{
           )}
         </Button>
         {title && (
-          <Text
-            fontFamily={fontHauoraSemiBold}
-            fontSize={"xl"}
-            style={styles.title}
-          >
+          <Text fontFamily={fontHauoraSemiBold} fontSize={"xl"} style={styles.title}>
             {title}
           </Text>
         )}

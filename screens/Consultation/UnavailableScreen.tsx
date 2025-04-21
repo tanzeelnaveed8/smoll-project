@@ -8,9 +8,7 @@ import { IconAlertCircle, IconUser } from "@tabler/icons-react-native";
 import React from "react";
 import { Div, Image, Text } from "react-native-magnus";
 
-const UnavailableScreen: React.FC<{ navigation: NavigationType }> = ({
-  navigation,
-}) => {
+const UnavailableScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
   const { expertDetailMap } = useExpertStore();
   const route = useRoute();
   const expertId = (route.params as Record<string, string>)?.expertId;
@@ -36,24 +34,14 @@ const UnavailableScreen: React.FC<{ navigation: NavigationType }> = ({
 
         <Div alignItems="center" mb={12}>
           {expert?.profileImg ? (
-            <Image
-              w={84}
-              h={84}
-              rounded={84}
-              source={{ uri: expert?.profileImg.url }}
-              mb={12}
-            />
+            <Image w={84} h={84} rounded={84} source={{ uri: expert?.profileImg.url }} mb={12} />
           ) : (
             <IconUser size={84} />
           )}
           <Text fontSize={"xl"} fontFamily={fontHauoraMedium}>
             {expert?.name}
           </Text>
-          <Text
-            fontSize={"md"}
-            fontFamily={fontHauoraMedium}
-            color="darkGreyText"
-          >
+          <Text fontSize={"md"} fontFamily={fontHauoraMedium} color="darkGreyText">
             {expert?.designation}
           </Text>
         </Div>
@@ -66,8 +54,8 @@ const UnavailableScreen: React.FC<{ navigation: NavigationType }> = ({
           maxW={350}
           mx={"auto"}
         >
-          Your expert is temporarily unavailable. Please submit another request,
-          and your pet will be contacted as soon as possible.
+          Your expert is temporarily unavailable. Please submit another request, and your pet will
+          be contacted as soon as possible.
         </Text>
       </Div>
 

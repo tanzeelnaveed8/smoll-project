@@ -1,10 +1,7 @@
 import { create } from "zustand";
 import api from "@/utils/api";
 import { CasesState } from "../types/case";
-import {
-  AppointmentListResponseDto,
-  AppointmentState,
-} from "../types/appointments";
+import { AppointmentListResponseDto, AppointmentState } from "../types/appointments";
 
 export const useAppointmentStore = create<AppointmentState>((set, get) => ({
   appointment: null,
@@ -56,10 +53,7 @@ export const useAppointmentStore = create<AppointmentState>((set, get) => ({
     console.log("fetchAppointmentDetail", response.data);
 
     set(() => ({
-      appointmentDetails: new Map([
-        ...get().appointmentDetails,
-        [id, response.data],
-      ]),
+      appointmentDetails: new Map([...get().appointmentDetails, [id, response.data]]),
     }));
 
     return response.data;
@@ -67,9 +61,7 @@ export const useAppointmentStore = create<AppointmentState>((set, get) => ({
   cancelAppointment: async (bookingId) => {
     await api.delete(`/member/partners/appointments/${bookingId}`);
 
-    const updatedAppointments = get().appointment?.filter(
-      (item) => item.id !== bookingId
-    );
+    const updatedAppointments = get().appointment?.filter((item) => item.id !== bookingId);
 
     set(() => ({
       appointment: updatedAppointments,
@@ -79,9 +71,7 @@ export const useAppointmentStore = create<AppointmentState>((set, get) => ({
   cancelConsultation: async (id: string) => {
     await api.delete(`/member/vets/consultations/${id}`);
 
-    const updatedAppointments = get().appointment?.filter(
-      (item) => item.id !== id
-    );
+    const updatedAppointments = get().appointment?.filter((item) => item.id !== id);
 
     set(() => ({
       appointment: updatedAppointments,

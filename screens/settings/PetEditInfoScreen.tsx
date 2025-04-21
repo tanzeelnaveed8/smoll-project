@@ -19,9 +19,7 @@ import { showMessage } from "react-native-flash-message";
 
 type RouteType = { petId: string; fileName: string };
 
-const PetEditInfoScreen: React.FC<{ navigation: NavigationType }> = ({
-  navigation,
-}) => {
+const PetEditInfoScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
   const toast = useToast();
   const route = useRoute();
   const petId = (route.params as RouteType)?.petId;
@@ -67,25 +65,15 @@ const PetEditInfoScreen: React.FC<{ navigation: NavigationType }> = ({
       {form && (
         <>
           <Div flex={1}>
-            {fileName === "name" && (
-              <PetProfileNameScreen pet={form} setPet={setForm} />
-            )}
+            {fileName === "name" && <PetProfileNameScreen pet={form} setPet={setForm} />}
 
-            {fileName === "dob" && (
-              <PetProfileDOBScreen pet={form} setPet={setForm} />
-            )}
+            {fileName === "dob" && <PetProfileDOBScreen pet={form} setPet={setForm} />}
 
-            {fileName === "species" && (
-              <PetProfileSpeciesScreen pet={form} setPet={setForm} />
-            )}
+            {fileName === "species" && <PetProfileSpeciesScreen pet={form} setPet={setForm} />}
 
-            {fileName === "gender" && (
-              <PetProfileGenderScreen pet={form} setPet={setForm} />
-            )}
+            {fileName === "gender" && <PetProfileGenderScreen pet={form} setPet={setForm} />}
 
-            {fileName === "breed" && (
-              <PetProfileBreedScreen pet={form} setPet={setForm} />
-            )}
+            {fileName === "breed" && <PetProfileBreedScreen pet={form} setPet={setForm} />}
 
             {fileName === "spayed/neutered" && (
               <PetProfileSpayedScreen pet={form} setPet={setForm} />

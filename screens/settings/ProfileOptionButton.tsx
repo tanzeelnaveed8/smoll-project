@@ -25,20 +25,10 @@ const ProfileOptionButton = (props: OptionPropTypes) => {
         borderBottomColor="#E0E0E0"
       >
         <Div>
-          <Text
-            color="#494949"
-            fontSize="sm"
-            fontFamily={fontHauoraMedium}
-            lineHeight={16}
-          >
+          <Text color="#494949" fontSize="sm" fontFamily={fontHauoraMedium} lineHeight={16}>
             {title}
           </Text>
-          <Text
-            color="#222222"
-            fontSize={"xl"}
-            lineHeight={24}
-            fontFamily={fontHauoraMedium}
-          >
+          <Text color="#222222" fontSize={"xl"} lineHeight={24} fontFamily={fontHauoraMedium}>
             {value}
           </Text>
         </Div>
@@ -52,13 +42,7 @@ const ProfileOptionButton = (props: OptionPropTypes) => {
         )}
       </Div>
       {varified && (
-        <Text
-          fontSize="md"
-          lineHeight={20}
-          color="#2F6E20"
-          fontFamily={fontHauoraMedium}
-          mt={4}
-        >
+        <Text fontSize="md" lineHeight={20} color="#2F6E20" fontFamily={fontHauoraMedium} mt={4}>
           Verified
         </Text>
       )}

@@ -27,18 +27,12 @@ const windowWidth = Dimensions.get("window").width;
 type TimeBtnType = "morning" | "noon" | "evening";
 const timeTabBtns = ["morning", "noon", "evening"];
 
-const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
-  navigation,
-}) => {
+const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
   const route = useRoute();
-  const {
-    partnerVetDetails,
-    fetchPartnerVetDetails,
-    fetchPartnerVetAvailability,
-  } = usePartnerStore();
+  const { partnerVetDetails, fetchPartnerVetDetails, fetchPartnerVetAvailability } =
+    usePartnerStore();
 
-  const bookingId = (route.params as Record<string, string | undefined>)
-    ?.bookingId;
+  const bookingId = (route.params as Record<string, string | undefined>)?.bookingId;
   const caseId = (route.params as Record<string, string>)?.caseId;
   const partnerId = (route.params as Record<string, string>)?.partnerId;
   const partnerName = (route.params as Record<string, string>)?.partnerName;
@@ -64,12 +58,8 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
   const [availabilityLoading, setAvailabilityLoading] = useState(false);
   const [isRequesting, setIsRequesting] = useState(false);
 
-  const [activeTimeTab, setActiveTimeTab] = useState<TimeBtnType>(
-    timeTabBtns[0] as TimeBtnType
-  );
-  const [intervalData, setIntervalData] = useState<IntervalStateType | null>(
-    null
-  );
+  const [activeTimeTab, setActiveTimeTab] = useState<TimeBtnType>(timeTabBtns[0] as TimeBtnType);
+  const [intervalData, setIntervalData] = useState<IntervalStateType | null>(null);
 
   const partnerDetails = useMemo(() => {
     return partnerVetDetails.get(vetId);
@@ -102,19 +92,13 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
       setAvailabilityLoading(true);
       setSelectedDate(date);
 
-      const _availability = await fetchPartnerVetAvailability(
-        vetId,
-        partnerId,
-        new Date(date)
-      );
+      const _availability = await fetchPartnerVetAvailability(vetId, partnerId, new Date(date));
 
       const getHour = (time: string) => {
         const dateTime = dayjs(`2025-01-21T${time}Z`);
         return dateTime.hour();
       };
-      const morningTimings = _availability[0].intervals.filter(
-        (item) => getHour(item.from) < 12
-      );
+      const morningTimings = _availability[0].intervals.filter((item) => getHour(item.from) < 12);
       const noonTimings = _availability[0].intervals.filter((item) => {
         const time = getHour(item.from);
 
@@ -122,9 +106,7 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
           return item;
         }
       });
-      const eveningTimings = _availability[0].intervals.filter(
-        (item) => getHour(item.from) > 17
-      );
+      const eveningTimings = _availability[0].intervals.filter((item) => getHour(item.from) > 17);
 
       if (morningTimings.length > 0) {
         setActiveTimeTab("morning");
@@ -147,10 +129,7 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
   };
 
   const formatTime = useCallback(
-    (
-      availability: ExpertAvailability,
-      interval: { from: string; to: string }
-    ) => {
+    (availability: ExpertAvailability, interval: { from: string; to: string }) => {
       const date = availability.dayOfWeek
         ? dayjs().day(dayOfWeekMap[availability.dayOfWeek]).format("YYYY-MM-DD")
         : "";
@@ -171,9 +150,7 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
     const _date = dayjs(selectedDate).format("YYYY-MM-DD");
 
     const scheduleAt = dayjs(
-      _date.toString() +
-        "T" +
-        dayjs(`${_date}T${selectedTime.value.from}Z`).format("HH:mm")
+      _date.toString() + "T" + dayjs(`${_date}T${selectedTime.value.from}Z`).format("HH:mm")
     )
       .utc()
       .format();
@@ -193,36 +170,18 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
     });
   };
 
-  const TimeBtnText: React.FC<{ time: string; color: string }> = ({
-    time,
-    color,
-  }) => {
+  const TimeBtnText: React.FC<{ time: string; color: string }> = ({ time, color }) => {
     const font = windowWidth > 390 ? 15 : 14;
 
     return (
       <Div flexDir="row" w={"100%"} justifyContent="center" flexWrap="wrap">
-        <Text
-          color={color}
-          fontFamily={fontHauoraMedium}
-          lineHeight={20}
-          fontSize={font}
-        >
+        <Text color={color} fontFamily={fontHauoraMedium} lineHeight={20} fontSize={font}>
           {time.split(" - ")[0]}
         </Text>
-        <Text
-          color={color}
-          fontFamily={fontHauoraMedium}
-          lineHeight={20}
-          fontSize={font}
-        >
+        <Text color={color} fontFamily={fontHauoraMedium} lineHeight={20} fontSize={font}>
           -
         </Text>
-        <Text
-          color={color}
-          fontFamily={fontHauoraMedium}
-          lineHeight={20}
-          fontSize={font}
-        >
+        <Text color={color} fontFamily={fontHauoraMedium} lineHeight={20} fontSize={font}>
           {time.split(" - ")[1]}
         </Text>
       </Div>
@@ -269,8 +228,7 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
                   borderColor="#E0E0E0"
                   rounded={8}
                   bg={
-                    selectedTime?.label ===
-                    `${index}:${a.dayOfWeek ?? a.date}:${time}`
+                    selectedTime?.label === `${index}:${a.dayOfWeek ?? a.date}:${time}`
                       ? "#222"
                       : "transparent"
                   }
@@ -285,8 +243,7 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
                   <TimeBtnText
                     time={time}
                     color={
-                      selectedTime?.label ===
-                      `${index}:${a.dayOfWeek ?? a.date}:${time}`
+                      selectedTime?.label === `${index}:${a.dayOfWeek ?? a.date}:${time}`
                         ? "#fff"
                         : "#494949"
                     }
@@ -298,13 +255,7 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
           })}
 
         {data.length === 0 && (
-          <Div
-            w={"100%"}
-            flexDir="row"
-            py={15}
-            flexWrap="wrap"
-            style={{ gap: 8 }}
-          >
+          <Div w={"100%"} flexDir="row" py={15} flexWrap="wrap" style={{ gap: 8 }}>
             <Text mx={"auto"}>No available slots</Text>
           </Div>
         )}
@@ -340,12 +291,7 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
           <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold} mb={4}>
             Address - {partnerDetails?.partnerName}
           </Text>
-          <Text
-            color="darkGreyText"
-            mb={6}
-            fontSize={"lg"}
-            fontFamily={fontHauoraMedium}
-          >
+          <Text color="darkGreyText" mb={6} fontSize={"lg"} fontFamily={fontHauoraMedium}>
             {partnerDetails?.partnerAddress}
           </Text>
         </Div>
@@ -401,12 +347,7 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
                     </Text>
 
                     {a.intervals.length > 0 && (
-                      <Div
-                        flexDir="row"
-                        flexWrap="wrap"
-                        justifyContent="center"
-                        style={{ gap: 8 }}
-                      >
+                      <Div flexDir="row" flexWrap="wrap" justifyContent="center" style={{ gap: 8 }}>
                         <Div
                           w={"100%"}
                           rounded={40}
@@ -425,11 +366,7 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
                               }}
                             >
                               <Button
-                                bg={
-                                  activeTimeTab === item
-                                    ? "#222"
-                                    : "transparent"
-                                }
+                                bg={activeTimeTab === item ? "#222" : "transparent"}
                                 borderWidth={1.5}
                                 borderColor={"#222"}
                                 rounded={100}
@@ -449,9 +386,7 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
                           <TimeButton
                             a={a}
                             data={
-                              intervalData[
-                                activeTimeTab.toLowerCase() as keyof IntervalStateType
-                              ]
+                              intervalData[activeTimeTab.toLowerCase() as keyof IntervalStateType]
                             }
                           />
                         )}
@@ -472,9 +407,7 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({
                   </Div>
                 ))}
 
-              {!availabilityLoading && availability.length === 0 && (
-                <Text>No availability</Text>
-              )}
+              {!availabilityLoading && availability.length === 0 && <Text>No availability</Text>}
             </Div>
           </Div>
         </Div>

@@ -17,24 +17,13 @@ const CaseForwardedScreen = () => {
           mb={12}
         />
 
-        <Text
-          fontSize={"6xl"}
-          mb={12}
-          maxW={320}
-          mx={"auto"}
-          textAlign="center"
-        >
+        <Text fontSize={"6xl"} mb={12} maxW={320} mx={"auto"} textAlign="center">
           Your pet needs immediate physical attention,
         </Text>
-        <Text
-          fontSize={"lg"}
-          fontFamily={fontHauoraMedium}
-          mb={20}
-          textAlign="center"
-        >
-          Your doctor has forwarded your case to the physical clinic for an
-          in-clinic visit and review. Our clinic will review the case and send
-          pricing and availability for your pet's needs.
+        <Text fontSize={"lg"} fontFamily={fontHauoraMedium} mb={20} textAlign="center">
+          Your doctor has forwarded your case to the physical clinic for an in-clinic visit and
+          review. Our clinic will review the case and send pricing and availability for your pet's
+          needs.
         </Text>
 
         <Text fontSize={"lg"} fontFamily={fontHauoraMedium} textAlign="center">

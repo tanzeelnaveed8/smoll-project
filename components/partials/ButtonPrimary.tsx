@@ -34,25 +34,14 @@ const ButtonPrimary: React.FC<ButtonPrimaryProps> = ({
         }
       }}
       py={16}
-      bg={
-        bgColor === "dark"
-          ? "#222222"
-          : bgColor === "danger"
-          ? "#E02A2A"
-          : "#427594"
-      }
+      bg={bgColor === "dark" ? "#222222" : bgColor === "danger" ? "#E02A2A" : "#427594"}
       rounded="circle"
       ripple
       style={{ width: "100%", columnGap: 10 }}
       {...restProps}
     >
       {icon && icon}
-      <Text
-        color={textColor ?? "white"}
-        mb={2}
-        fontSize={"xl"}
-        fontFamily={fontHauoraMedium}
-      >
+      <Text color={textColor ?? "white"} mb={2} fontSize={"xl"} fontFamily={fontHauoraMedium}>
         {children}
       </Text>
     </Button>

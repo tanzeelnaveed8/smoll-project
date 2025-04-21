@@ -6,9 +6,7 @@ import React from "react";
 import { StyleSheet } from "react-native";
 import { Div, Image, Text } from "react-native-magnus";
 
-const WelcomeMessageScreen: React.FC<{ navigation: NavigationType }> = ({
-  navigation,
-}) => {
+const WelcomeMessageScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
   return (
     <Layout>
       <Div style={styles.imageContainer}></Div>
@@ -18,15 +16,11 @@ const WelcomeMessageScreen: React.FC<{ navigation: NavigationType }> = ({
       </Text>
 
       <Text fontSize={"xl"} textAlign="center" color="#494949" mb={32}>
-        Begin the journey of building not just your own profile, but also
-        crafting a profile for your beloved pet.
+        Begin the journey of building not just your own profile, but also crafting a profile for
+        your beloved pet.
       </Text>
 
-      <ButtonPrimary
-        link="UserProfileForm"
-        params={{ tab: "userName" }}
-        navigation={navigation}
-      >
+      <ButtonPrimary link="UserProfileForm" params={{ tab: "userName" }} navigation={navigation}>
         Build Profile
       </ButtonPrimary>
     </Layout>

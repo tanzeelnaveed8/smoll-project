@@ -9,5 +9,5 @@ export interface VerifyOtpPayloadDto extends AuthPayloadDto {
 export interface AuthState {
   login: (payload: AuthPayloadDto) => Promise<void>;
   verifyOtp: (payload: VerifyOtpPayloadDto) => Promise<void>;
-  deactivateAccount:()=>Promise<void>
+  deactivateAccount: () => Promise<void>;
 }

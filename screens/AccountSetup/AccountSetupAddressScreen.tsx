@@ -42,11 +42,7 @@ const AccountSetupAddressScreen: React.FC<Props> = (props) => {
   console.log("address==", address);
 
   const disableConfirm =
-    !address.street ||
-    !address.city ||
-    !address.country ||
-    !address.postalCode ||
-    !address.villa;
+    !address.street || !address.city || !address.country || !address.postalCode || !address.villa;
 
   const handleConfirm = async () => {
     try {
@@ -100,12 +96,9 @@ const AccountSetupAddressScreen: React.FC<Props> = (props) => {
   const scrollViewRef = useRef<any>(null);
 
   const scrollToInput = (inputRef: React.RefObject<any>) => {
-    inputRef.current?.measureLayout(
-      scrollViewRef.current,
-      (_x: number, y: number) => {
-        scrollViewRef.current?.scrollTo({ y: y, animated: true });
-      }
-    );
+    inputRef.current?.measureLayout(scrollViewRef.current, (_x: number, y: number) => {
+      scrollViewRef.current?.scrollTo({ y: y, animated: true });
+    });
   };
 
   return (
@@ -138,8 +131,7 @@ const AccountSetupAddressScreen: React.FC<Props> = (props) => {
               What's your address?
             </Text>
             <Text fontSize={"xl"} mb={20}>
-              We need your address to suggest the nearest vet clinic for
-              in-clinic visits
+              We need your address to suggest the nearest vet clinic for in-clinic visits
             </Text>
 
             <Div style={{ gap: 16 }} mb={40}>
@@ -147,9 +139,7 @@ const AccountSetupAddressScreen: React.FC<Props> = (props) => {
                 ref={villaRef}
                 placeholder="Flat/Villa No"
                 value={address.villa}
-                onChangeText={(text) =>
-                  setAddress((s) => ({ ...s, villa: text }))
-                }
+                onChangeText={(text) => setAddress((s) => ({ ...s, villa: text }))}
                 inputStyle={{
                   borderRadius: 12,
                 }}
@@ -165,9 +155,7 @@ const AccountSetupAddressScreen: React.FC<Props> = (props) => {
                 ref={streetRef}
                 placeholder="Street address"
                 value={address.street}
-                onChangeText={(text) =>
-                  setAddress((s) => ({ ...s, street: text }))
-                }
+                onChangeText={(text) => setAddress((s) => ({ ...s, street: text }))}
                 inputStyle={{
                   borderRadius: 12,
                 }}
@@ -182,9 +170,7 @@ const AccountSetupAddressScreen: React.FC<Props> = (props) => {
                 ref={cityRef}
                 placeholder="City"
                 value={address.city}
-                onChangeText={(text) =>
-                  setAddress((s) => ({ ...s, city: text }))
-                }
+                onChangeText={(text) => setAddress((s) => ({ ...s, city: text }))}
                 inputStyle={{
                   borderRadius: 12,
                 }}
@@ -217,9 +203,7 @@ const AccountSetupAddressScreen: React.FC<Props> = (props) => {
                 ref={postalCodeRef}
                 placeholder="Postal code"
                 value={address.postalCode}
-                onChangeText={(text) =>
-                  setAddress((s) => ({ ...s, postalCode: text }))
-                }
+                onChangeText={(text) => setAddress((s) => ({ ...s, postalCode: text }))}
                 inputStyle={{
                   borderRadius: 12,
                 }}

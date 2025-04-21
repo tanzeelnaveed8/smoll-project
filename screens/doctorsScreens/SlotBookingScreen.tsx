@@ -43,21 +43,11 @@ const SlotBookingScreen = () => {
             <AvailabilityAndDateSelector />
 
             <Div mt={16}>
-              <Text
-                fontFamily={fontHauoraSemiBold}
-                fontSize="xl"
-                lineHeight={24}
-                color="#222222"
-              >
+              <Text fontFamily={fontHauoraSemiBold} fontSize="xl" lineHeight={24} color="#222222">
                 Availability
               </Text>
               {availabTime.map((t) => (
-                <Div
-                  key={t.id}
-                  py={12}
-                  borderBottomWidth={1}
-                  borderColor="#E0E0E0"
-                >
+                <Div key={t.id} py={12} borderBottomWidth={1} borderColor="#E0E0E0">
                   <Text
                     fontFamily={fontHauoraSemiBold}
                     fontSize="xl"

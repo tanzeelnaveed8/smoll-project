@@ -18,45 +18,28 @@ export const usePartnerStore = create<PartnerState>((set, get) => ({
     const response = await api.get(`/member/partners/${partnerId}/vets/${id}`);
 
     set({
-      partnerVetDetails: new Map([
-        ...get().partnerVetDetails,
-        [id, response.data],
-      ]),
+      partnerVetDetails: new Map([...get().partnerVetDetails, [id, response.data]]),
     });
 
     return response.data;
   },
   fetchPartnerVetAvailability: async (id, partnerId, date) => {
-    const response = await api.get(
-      `/member/partners/${partnerId}/vets/${id}/availabilities`,
-      {
-        params: {
-          date,
-        },
-      }
-    );
+    const response = await api.get(`/member/partners/${partnerId}/vets/${id}/availabilities`, {
+      params: {
+        date,
+      },
+    });
 
     return response.data;
   },
-  bookPartnerVet: async (
-    id,
-    partnerId,
-    caseId,
-    date,
-    services,
-    paymentIntentId,
-    bookingId
-  ) => {
-    const res = await api.post(
-      `/member/partners/${partnerId}/vets/${id}/book`,
-      {
-        scheduleAt: date,
-        caseId,
-        services,
-        paymentIntentId,
-        bookingId,
-      }
-    );
+  bookPartnerVet: async (id, partnerId, caseId, date, services, paymentIntentId, bookingId) => {
+    const res = await api.post(`/member/partners/${partnerId}/vets/${id}/book`, {
+      scheduleAt: date,
+      caseId,
+      services,
+      paymentIntentId,
+      bookingId,
+    });
 
     return { id: res.data.id };
   },

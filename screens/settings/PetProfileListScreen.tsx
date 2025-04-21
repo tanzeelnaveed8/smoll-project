@@ -10,27 +10,15 @@ import {
 import { usePetStore } from "@/store/modules/pet";
 import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
-import {
-  IconChevronRight,
-  IconSquareRoundedPlus,
-} from "@tabler/icons-react-native";
+import { IconChevronRight, IconSquareRoundedPlus } from "@tabler/icons-react-native";
 import { FlatList, TouchableOpacity } from "react-native";
-import {
-  Button,
-  Div,
-  Image,
-  ScrollDiv,
-  Skeleton,
-  Text,
-} from "react-native-magnus";
+import { Button, Div, Image, ScrollDiv, Skeleton, Text } from "react-native-magnus";
 import { Pet } from "@/store/types/pet";
 import { useFocusEffect } from "@react-navigation/native";
-import rainbowImage from '../../assets//images/rainbow.png'
+import rainbowImage from "../../assets//images/rainbow.png";
 import AddButton from "@/components/partials/AddButton";
 
-const PetProfileListScreen: React.FC<{ navigation: NavigationType }> = ({
-  navigation,
-}) => {
+const PetProfileListScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
   const { fetchPets } = usePetStore();
   const [loading, setLoading] = useState(false);
   const [pets, setPets] = useState<Pet[]>([]);
@@ -96,9 +84,9 @@ const PetProfileListScreen: React.FC<{ navigation: NavigationType }> = ({
           <AddButton
             text="Add New Pet"
             onPress={() => {
-                navigation.navigate("PetProfileScreen", {
-                    navigateTo: "PetProfileListScreen",
-                });
+              navigation.navigate("PetProfileScreen", {
+                navigateTo: "PetProfileListScreen",
+              });
             }}
           />
         </Div>
@@ -111,17 +99,11 @@ const ProfileCard: React.FC<{
   name: string;
   onPress: () => void;
   image?: string;
-  isDeceased?:boolean
-}> = ({ name, onPress, image ,isDeceased }) => {
+  isDeceased?: boolean;
+}> = ({ name, onPress, image, isDeceased }) => {
   return (
     <TouchableOpacity onPress={onPress}>
-      <Div
-        flexDir="row"
-        alignItems="center"
-        py={12}
-        borderBottomWidth={1}
-        borderColor="#D0D7DC"
-      >
+      <Div flexDir="row" alignItems="center" py={12} borderBottomWidth={1} borderColor="#D0D7DC">
         <Div w={68} h={62} justifyContent="flex-end" alignItems="center">
           {/* <Image
             source={require("../../assets/images/pet-profile-bg.png")}
@@ -147,16 +129,11 @@ const ProfileCard: React.FC<{
         <Text fontSize={"xl"} fontFamily={fontHauoraMedium} ml={8}>
           {name}
         </Text>
-        
-        <Div flex={1} row={true} alignItems="center">
-          {isDeceased && <Image ml='auto' mr={10}  source={rainbowImage} h={60} w={110}/>}
-          <IconChevronRight
-            width={24}
-            height={24}
-            color={"#222222"}
-          />
-        </Div>
 
+        <Div flex={1} row={true} alignItems="center">
+          {isDeceased && <Image ml="auto" mr={10} source={rainbowImage} h={60} w={110} />}
+          <IconChevronRight width={24} height={24} color={"#222222"} />
+        </Div>
       </Div>
     </TouchableOpacity>
   );

@@ -38,13 +38,7 @@ const PetProfileImageScreen: React.FC<Props> = (props) => {
 
   return (
     <Div>
-      <Text
-        fontSize={"6xl"}
-        lineHeight={40}
-        color="#222222"
-        mb={16}
-        fontFamily={fontHeading}
-      >
+      <Text fontSize={"6xl"} lineHeight={40} color="#222222" mb={16} fontFamily={fontHeading}>
         Upload {props.pet.name ?? "your pet"} photo
       </Text>
       <Div mb={24} flexDir="row" style={{ gap: 12 }}>
@@ -57,15 +51,8 @@ const PetProfileImageScreen: React.FC<Props> = (props) => {
           disableDownload
         />
       </Div>
-      <Text
-        fontFamily={fontHauoraMedium}
-        fontSize="md"
-        lineHeight={20}
-        color="#494949"
-        maxW={350}
-      >
-        Please make sure to upload a pretty and clear photo in JPEG or PNG
-        format
+      <Text fontFamily={fontHauoraMedium} fontSize="md" lineHeight={20} color="#494949" maxW={350}>
+        Please make sure to upload a pretty and clear photo in JPEG or PNG format
       </Text>
     </Div>
   );
