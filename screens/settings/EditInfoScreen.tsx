@@ -61,7 +61,18 @@ const EditInfoScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }
   };
 
   const isFormValid = (fieldKey: string, value: string | number) => {
-    if (typeof value === "string" && value.trim() === "") return false;
+    if (typeof value === "string") {
+      const trimmed = value.trim();
+      if (trimmed === "") return false;
+
+      // Regex to match emojis and special characters (excluding letters, numbers, and basic punctuation)
+      const hasInvalidChars =
+        /[\p{Emoji_Presentation}\p{Extended_Pictographic}~`!@#$%^&*()_+=[\]{}|\\:;"'<>,.?/]/gu.test(
+          trimmed
+        );
+      if (hasInvalidChars) return false;
+    }
+
     return true;
   };
 

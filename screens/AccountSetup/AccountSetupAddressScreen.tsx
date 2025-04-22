@@ -7,7 +7,7 @@ import SelectCountryDropdown from "@/components/partials/SelectCountryDropdown";
 import SelectInput from "@/components/partials/SelectInput";
 import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
-import { getAxiosErrMsg } from "@/utils/helpers";
+import { getAxiosErrMsg, isValidText } from "@/utils/helpers";
 import { useRoute } from "@react-navigation/native";
 import { AxiosError } from "axios";
 import React, { createRef, useEffect, useRef, useState } from "react";
@@ -41,8 +41,16 @@ const AccountSetupAddressScreen: React.FC<Props> = (props) => {
   });
   console.log("address==", address);
 
+  const isNumeric = (value: string | undefined) => {
+    return !!value && /^\d+$/.test(value);
+  };
+
   const disableConfirm =
-    !address.street || !address.city || !address.country || !address.postalCode || !address.villa;
+    !isValidText(address.street) ||
+    !isValidText(address.city) ||
+    !isValidText(address.country) ||
+    !isValidText(address.villa) ||
+    !isNumeric(address.postalCode);
 
   const handleConfirm = async () => {
     try {
