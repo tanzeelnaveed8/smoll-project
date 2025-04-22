@@ -20,6 +20,7 @@ import dayjs from "dayjs";
 import { CreateCasePayloadDto } from "@/store/types/case";
 import { useCaseStore } from "@/store/modules/case";
 import { AxiosError } from "axios";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 const faqData = [
   {
@@ -43,9 +44,24 @@ const faqData = [
   },
 ];
 
-const ExpertsScheduleConfirmationScreen: React.FC<{
-  navigation: NavigationType;
-}> = ({ navigation }) => {
+// Define the params type for your stack navigator
+type RootStackParamList = {
+  ExpertsListDetailScreen: {
+    expertId: string;
+    caseData: string;
+    petId: string;
+  };
+  ExpertsScheduleSuccessScreen: {
+    consultationId: string;
+  };
+  // ... other screens
+};
+
+type Props = {
+  navigation: NativeStackNavigationProp<RootStackParamList>;
+};
+
+const ExpertsScheduleConfirmationScreen: React.FC<Props> = ({ navigation }) => {
   const route = useRoute();
 
   const { selectedTime, selectedDate, caseData, petId, expertId, scheduleAt } =
@@ -166,7 +182,7 @@ const ExpertsScheduleConfirmationScreen: React.FC<{
             lineHeight={24}
             color="#0189F9"
             onPress={() => {
-              navigation.navigate("ExpertsListDetailScreen", {
+              navigation.push("ExpertsListDetailScreen", {
                 expertId,
                 caseData: caseData,
                 petId,
