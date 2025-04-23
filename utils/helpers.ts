@@ -266,3 +266,15 @@ export const truncateFileName = (filename: string, maxBaseLength = 12) => {
 
   return `${truncatedBase}.${ext}`;
 };
+
+export const isValidText = (value: string | undefined) => {
+  if (!value) return false;
+
+  const trimmed = value.trim();
+  const hasInvalidChars =
+    /[\p{Emoji_Presentation}\p{Extended_Pictographic}~`!@#$%^&*()_+=[\]{}|\\:;"'<>,.?/]/gu.test(
+      trimmed
+    );
+
+  return trimmed !== "" && !hasInvalidChars;
+};

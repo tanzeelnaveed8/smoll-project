@@ -4,6 +4,7 @@ import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import InputField from "@/components/partials/InputField";
 import { fontCooper, fontHeading } from "@/constant/constant";
 import { useUserStore } from "@/store/modules/user";
+import { isValidText } from "@/utils/helpers";
 import React, { useRef, useState } from "react";
 import { Div, Text } from "react-native-magnus";
 
@@ -68,7 +69,11 @@ const OnboardingUserModal: React.FC<Props> = (props) => {
           maxLength={12}
         />
 
-        <ButtonPrimary onPress={handleConfirm} loading={loading} disabled={loading || !firstName}>
+        <ButtonPrimary
+          onPress={handleConfirm}
+          loading={loading}
+          disabled={loading || !isValidText(firstName)}
+        >
           Continue
         </ButtonPrimary>
       </Div>
