@@ -26,7 +26,10 @@ const AccountSetupEmailScreen: React.FC<Props> = (props) => {
 
   const isValidEmail = useMemo(() => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+    const forbiddenCharsRegex =
+      /[\p{Emoji_Presentation}\p{Extended_Pictographic}~`!#$%^&*()+=[\]{}|\\:;"'<>,?/]/gu;
+
+    return emailRegex.test(email) && !forbiddenCharsRegex.test(email);
   }, [email]);
 
   const handleNext = async () => {
