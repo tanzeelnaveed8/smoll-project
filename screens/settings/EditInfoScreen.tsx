@@ -67,7 +67,7 @@ const EditInfoScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }
 
       // Regex to match emojis and special characters (excluding letters, numbers, and basic punctuation)
       const hasInvalidChars =
-        /[\p{Emoji_Presentation}\p{Extended_Pictographic}~`!@#$%^&*()_+=[\]{}|\\:;"'<>,.?/]/gu.test(
+        /[\p{Emoji_Presentation}\p{Extended_Pictographic}0-9~`!@#$%^&*()_+\-=\[\]{}|\\:;"'<>,.?/]/gu.test(
           trimmed
         );
       if (hasInvalidChars) return false;
