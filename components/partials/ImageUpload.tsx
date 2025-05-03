@@ -65,6 +65,7 @@ interface Props {
   singleImage?: boolean;
   aspectRatio?: number[] | "auto";
   disableCropping?: boolean;
+  mediaType?: "Images" | "Videos";
 }
 
 const ImageUpload: React.FC<Props> = ({
@@ -92,6 +93,7 @@ const ImageUpload: React.FC<Props> = ({
   singleImage,
   aspectRatio,
   disableCropping = false,
+  mediaType,
 }) => {
   const { uploadFile } = useFileStore();
   const toast = useToast();
@@ -138,7 +140,7 @@ const ImageUpload: React.FC<Props> = ({
       }
 
       const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        mediaTypes: (mediaType as ImagePicker.MediaTypeOptions) || ImagePicker.MediaTypeOptions.All,
         allowsEditing: !disableCropping,
         aspect: disableCropping ? undefined : newAspectRatio,
         quality: 1,
