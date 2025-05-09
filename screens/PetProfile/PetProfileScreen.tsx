@@ -52,10 +52,9 @@ const PetProfileScreen: React.FC<Props> = (props) => {
   const progress = useMemo(() => (currentStep + 1) / totalSteps - 0.2, [currentStep]);
 
   const isActionDisabled = useMemo(() => {
-    console.log("pet", pet.photos);
     switch (currentStep) {
       case 0:
-        return !pet.name.length;
+        return !pet.name.trim().length || !/^[A-Za-z\s]+$/.test(pet.name.trim());
       case 2:
         return !pet.gender.length;
       case 4:

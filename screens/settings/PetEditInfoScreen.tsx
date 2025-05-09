@@ -54,6 +54,9 @@ const PetEditInfoScreen: React.FC<{ navigation: NavigationType }> = ({ navigatio
 
   console.log("update info pet form=", form);
 
+  const isNameInvalid =
+    fileName === "name" && (!form?.name?.trim() || !/^[\p{L}\s]+$/u.test(form.name.trim()));
+
   return (
     <Layout
       showBack
@@ -84,7 +87,7 @@ const PetEditInfoScreen: React.FC<{ navigation: NavigationType }> = ({ navigatio
             // bgColor="primary"
             onPress={handleUpdateDetails}
             loading={loading}
-            disabled={loading}
+            disabled={loading || isNameInvalid}
           >
             Confirm
           </ButtonPrimary>
