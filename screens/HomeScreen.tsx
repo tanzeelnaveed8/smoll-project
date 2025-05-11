@@ -204,7 +204,14 @@ const HomeScreen: React.FC<Props> = (props) => {
             <Div flexDir="row" alignItems="center" style={{ gap: 8 }}>
               <Div position="relative">
                 {notifications && notifications.count > 0 && (
-                  <Div w={20} h={20} rounded={100} bg="#F44336" style={styles.notificationCount}>
+                  <Div
+                    w={20}
+                    h={20}
+                    rounded={100}
+                    bg="#F44336"
+                    style={styles.notificationCount}
+                    pointerEvents="none"
+                  >
                     <Text color="#fff">{notifications?.count}</Text>
                   </Div>
                 )}
