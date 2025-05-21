@@ -102,6 +102,7 @@ import { SocketEventEnum } from "./socket/events";
 import Popup from "./components/Popup";
 import SocketListener from "./components/SocketListener";
 import OnboardingUserModal from "./components/app/onboarding/OnboardingUserModal";
+import SubscriptionScreen from "./screens/Subscription/SubscriptionScreen";
 
 Sentry.init({
   dsn: Config.SENTRY_DSN,
@@ -616,6 +617,7 @@ const App = () => {
                   <Stack.Screen name="CounsellingInboxScreen" component={CounsellingInboxScreen} />
                   <Stack.Screen name="CounsellingChatScreen" component={CounsellingChatScreen} />
                   <Stack.Screen name="ExpertsListScreen" component={ExpertsListScreen} />
+                  <Stack.Screen name="SubscriptionScreen" component={SubscriptionScreen} />
                   <Stack.Screen
                     name="ExpertsListDetailScreen"
                     component={ExpertsListDetailScreen}

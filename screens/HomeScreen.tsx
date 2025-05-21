@@ -11,6 +11,7 @@ import {
   IconArrowRight,
   IconBell,
   IconChevronRight,
+  IconCrown,
   IconSettings,
   IconX,
 } from "@tabler/icons-react-native";
@@ -36,6 +37,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRoute } from "@react-navigation/native";
 import React, { useEffect, useMemo, useState } from "react";
 import { showMessage } from "react-native-flash-message";
+import HomeScreenBanner from "@/components/app/HomeScreenBanner";
 
 interface Props {
   navigation: NavigationType;
@@ -202,6 +204,21 @@ const HomeScreen: React.FC<Props> = (props) => {
             </Div>
 
             <Div flexDir="row" alignItems="center" style={{ gap: 8 }}>
+              <IconButton
+                bg="bgColor"
+                style={{
+                  overflow: "visible",
+                }}
+                onPress={() => {}}
+              >
+                <IconCrown
+                  width={38}
+                  height={38}
+                  color={"#fcbe38"}
+                  fill={"#fcbe38"}
+                  strokeWidth={1.5}
+                />
+              </IconButton>
               <Div position="relative">
                 {notifications && notifications.count > 0 && (
                   <Div w={20} h={20} rounded={100} bg="#F44336" style={styles.notificationCount}>
@@ -239,87 +256,7 @@ const HomeScreen: React.FC<Props> = (props) => {
             <Text fontSize={"lg"}>How can we help you today?</Text>
           </Div>
 
-          <TouchableOpacity
-            style={{
-              borderWidth: 1.4,
-              borderColor: "#222",
-              borderRadius: 40,
-              paddingVertical: 15,
-              flexDirection: "row",
-              marginBottom: 20,
-              alignItems: "center",
-            }}
-            onPress={() => {
-              props.navigation.navigate("ExpertsListScreen");
-            }}
-          >
-            <Div px={20} pr={0} h={191}>
-              <Div mb={30} mt={34}>
-                <Text fontSize={"4xl"} fontFamily={fontHauoraBold} lineHeight={27}>
-                  Chat with pet
-                </Text>
-                <Text fontSize={"4xl"} fontFamily={fontHauoraBold} lineHeight={27} mb={3}>
-                  wellness expert
-                </Text>
-
-                <Text fontFamily={fontHauoraSemiBold} fontSize="lg" lineHeight={20}>
-                  Completly Free!
-                </Text>
-              </Div>
-
-              <Div
-                style={{
-                  paddingVertical: 2,
-                  flexDirection: "row",
-                  gap: 10,
-                }}
-              >
-                <Tag
-                  fontFamily={fontHauoraSemiBold}
-                  fontSize={"md"}
-                  bg="#222"
-                  color="#fff"
-                  rounded={25}
-                  pb={9.48}
-                  pt={7.52}
-                  px={25}
-                  pointerEvents="none"
-                >
-                  Start Now
-                </Tag>
-                <IconArrowRight
-                  width={28}
-                  height={28}
-                  strokeWidth={2.7}
-                  color="#222"
-                  style={{ alignSelf: "center" }}
-                />
-                {/* <Icon
-                  alignSelf="center"
-                  name="chevron-right"
-                  fontFamily="Feather"
-                  fontSize={24}
-                  color="#222"
-                /> */}
-              </Div>
-            </Div>
-
-            {/* <OnboardingIcon1 width={130} height={130} /> */}
-
-            <Div
-              style={{
-                transform: [{ translateX: WINDOW_WIDTH <= 375 ? -40 : -25 }],
-              }}
-            >
-              {/* <HomeScreenBoyIcon width={190} height={170} /> */}
-              <Image
-                source={require("../assets/images/homepage-boy-img.png")}
-                w={200}
-                h={190}
-                style={{ objectFit: "contain", aspectRatio: "1/1" }}
-              />
-            </Div>
-          </TouchableOpacity>
+          <HomeScreenBanner isCarePlanUser={false} navigation={props.navigation} />
 
           <Div>
             <Div flexDir="row" style={{ gap: 8 }} alignItems="center" mb={16}>
