@@ -60,6 +60,7 @@ const HomeScreenBanner: React.FC<Props> = ({ navigation, isCarePlanUser, showBut
               fontFamily={fontHauoraSemiBold}
               fontSize={"md"}
               bg="#222"
+              h={42}
               color="#fff"
               rounded={25}
               pb={9.48}

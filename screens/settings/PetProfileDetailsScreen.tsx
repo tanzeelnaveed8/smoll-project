@@ -19,7 +19,7 @@ import { UploadedFile } from "@/store/types/file";
 import { useToast } from "react-native-toast-notifications";
 import { showMessage } from "react-native-flash-message";
 import ConfirmationModal from "@/components/partials/ConfirmationModal";
-import { IconDots } from "@tabler/icons-react-native";
+import { IconCrown, IconDots } from "@tabler/icons-react-native";
 import Dropdown from "@/components/partials/Dropdown";
 import HealthHistoryModal from "@/components/app/pet/HealthHistoryModal";
 
@@ -54,6 +54,7 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
   const [open, setOpen] = useState(false);
   // const [selectedPetId, setSelectedPetId] = useState("");
   const [healthHistoryId, setHealthHistoryId] = useState("");
+  const isCareUserPet = true; //For Dev
 
   useEffect(() => {
     if (!id) return;
@@ -268,9 +269,20 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
               </Div>
             </Div>
             <Div ml={14}>
-              <Text fontSize={"4xl"} fontFamily={fontHauoraMedium}>
-                {petDetailsData?.name}
-              </Text>
+              <Div flexDir="row" alignItems="center">
+                <Text fontSize={"4xl"} fontFamily={fontHauoraMedium}>
+                  {petDetailsData?.name}
+                </Text>
+                {isCareUserPet && (
+                  <IconCrown
+                    color="#fcbe38"
+                    fill="#fcbe38"
+                    width={35}
+                    height={30}
+                    style={{ marginLeft: 14 }}
+                  />
+                )}
+              </Div>
 
               {petDetailsData?.isDeceased && (
                 <Tag fontSize={"md"} mt={8} p={0} bg={colorErrorText} color="#fff">
@@ -350,36 +362,73 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
           </Div>
 
           {activeTab === btns[0] && (
-            <FlatList
-              data={petDetails}
-              showsVerticalScrollIndicator={false}
-              renderItem={({ item }) => (
-                <ProfileOptionButton
-                  title={item.title}
-                  value={item.value}
-                  editable
-                  onEdit={() => {
-                    if (item.fileName) {
-                      navigation.navigate(item.link, {
-                        petId: id,
-                        fileName: item.fileName,
-                      });
-                    }
+            <>
+              <Div
+                style={{
+                  padding: 16,
+                  borderWidth: 1,
+                  borderColor: "#D7E7F4",
+                  flexDirection: "row",
+                  marginBottom: 16,
+                }}
+                rounded={20}
+                bg="#EEF7FE"
+              >
+                <Text
+                  maxW={146}
+                  w={"100%"}
+                  fontSize={"lg"}
+                  color="#121212"
+                  fontFamily={fontHauoraSemiBold}
+                >
+                  {petDetailsData?.name.toLocaleUpperCase()}{" "}
+                  {isCareUserPet ? "is already enrolled in the plan" : "isn’t enrolled in the plan"}
+                </Text>
+                <Button
+                  bg="#222"
+                  rounded={100}
+                  h={42}
+                  pt={13}
+                  pb={13}
+                  lineHeight={18}
+                  w={134}
+                  ml={"auto"}
+                  fontFamily={fontHauoraMedium}
+                >
+                  {isCareUserPet ? "View benefits" : `Enroll ${petDetailsData?.name}`}
+                </Button>
+              </Div>
+              <FlatList
+                data={petDetails}
+                showsVerticalScrollIndicator={false}
+                renderItem={({ item }) => (
+                  <ProfileOptionButton
+                    title={item.title}
+                    value={item.value}
+                    editable
+                    onEdit={() => {
+                      if (item.fileName) {
+                        navigation.navigate(item.link, {
+                          petId: id,
+                          fileName: item.fileName,
+                        });
+                      }
 
-                    if (item.heading) {
-                      navigation.navigate(item.link, {
-                        heading: item.heading,
-                        placeholder: item.placeholder,
-                        fieldKey: item.fieldKey,
-                        value: `${item.dataValue || ""}`,
-                        petId: id,
-                      });
-                    }
-                  }}
-                />
-              )}
-              keyExtractor={(item, i) => `${i}`}
-            />
+                      if (item.heading) {
+                        navigation.navigate(item.link, {
+                          heading: item.heading,
+                          placeholder: item.placeholder,
+                          fieldKey: item.fieldKey,
+                          value: `${item.dataValue || ""}`,
+                          petId: id,
+                        });
+                      }
+                    }}
+                  />
+                )}
+                keyExtractor={(item, i) => `${i}`}
+              />
+            </>
           )}
 
           {activeTab === btns[1] && (
