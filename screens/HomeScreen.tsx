@@ -47,7 +47,7 @@ interface Props {
 interface OptionTab {
   name: string;
   description: string;
-  value: "counselling" | "petProfileScreen" | "appointments";
+  value: "chat" | "petProfileScreen" | "appointments";
   loading: boolean;
   icon?: React.JSX.Element;
   img?: ImageSourcePropType;
@@ -64,6 +64,22 @@ const HomeScreen: React.FC<Props> = (props) => {
 
   const [options, setOptions] = useState<OptionTab[]>([
     {
+      name: "Chat with Expert",
+      value: "chat",
+      description: "Quick and Easy",
+      loading: false,
+      icon: (
+        <Div style={{ marginRight: 10, transform: [{ translateX: 2 }] }}>
+          <Image
+            source={require("../assets/images/homepage-boy-img.png")}
+            w={60}
+            h={60}
+            style={{ objectFit: "contain" }}
+          />
+        </Div>
+      ),
+    },
+    {
       name: "Appointments",
       value: "appointments",
       description: "All your appointment shows here",
@@ -72,24 +88,6 @@ const HomeScreen: React.FC<Props> = (props) => {
       icon: (
         <Div style={{ transform: [{ translateY: 3 }] }}>
           <ClockIcon width={70} height={70} />
-        </Div>
-      ),
-    },
-    {
-      name: "Human Counselling",
-      value: "counselling",
-      description: "Talk to somone knows how it feels loosing a pet",
-      loading: false,
-      // icon: <OnboardingIcon4 width={55} height={55} />,
-      icon: (
-        <Div style={{ marginLeft: -10, transform: [{ translateX: 15 }] }}>
-          {/* <GirlIcon width={72} height={72} /> */}
-          <Image
-            source={require("../assets/images/home-human-counseling.png")}
-            w={80}
-            h={80}
-            style={{ objectFit: "contain" }}
-          />
         </Div>
       ),
     },
@@ -160,13 +158,8 @@ const HomeScreen: React.FC<Props> = (props) => {
   }, [user]);
 
   const handleOptionTabPress = async (item: OptionTab) => {
-    if (item.value === "counselling") {
-      showMessage({
-        message: "Coming Soon!",
-        // description: "Get ready for some pawsome counselling! 🐾",
-        backgroundColor: "#222",
-        color: "#fff",
-      });
+    if (item.value === "chat") {
+      props.navigation.navigate("ExpertsListScreen");
     } else if (item.value === "petProfileScreen") {
       props.navigation.navigate("PetProfileListScreen", {
         navigateTo: "HomeScreen",
@@ -204,21 +197,6 @@ const HomeScreen: React.FC<Props> = (props) => {
             </Div>
 
             <Div flexDir="row" alignItems="center" style={{ gap: 8 }}>
-              <IconButton
-                bg="bgColor"
-                style={{
-                  overflow: "visible",
-                }}
-                onPress={() => {}}
-              >
-                <IconCrown
-                  width={38}
-                  height={38}
-                  color={"#fcbe38"}
-                  fill={"#fcbe38"}
-                  strokeWidth={1.5}
-                />
-              </IconButton>
               <Div position="relative">
                 {notifications && notifications.count > 0 && (
                   <Div w={20} h={20} rounded={100} bg="#F44336" style={styles.notificationCount}>

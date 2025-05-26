@@ -3,6 +3,7 @@ import Layout from "@/components/app/Layout";
 import {
   fontCooper,
   fontCooperBold,
+  fontHauoraBold,
   fontHauoraMedium,
   fontHauoraSemiBold,
   fontHeading,
@@ -70,10 +71,16 @@ const PetProfileListScreen: React.FC<{ navigation: NavigationType }> = ({ naviga
                     image={image}
                     key={i}
                     name={item.name}
+                    isCarePet={i === 0 && true}
                     isDeceased={item.isDeceased}
                     onPress={() => {
                       navigation.navigate("PetProfileDetailsScreen", {
                         petId: item.id,
+                      });
+                    }}
+                    onEnrollPress={() => {
+                      navigation.navigate("PetProfileBenefitsScreen", {
+                        petId: item?.id,
                       });
                     }}
                   />
@@ -100,7 +107,9 @@ const ProfileCard: React.FC<{
   onPress: () => void;
   image?: string;
   isDeceased?: boolean;
-}> = ({ name, onPress, image, isDeceased }) => {
+  isCarePet?: boolean;
+  onEnrollPress?: () => void;
+}> = ({ name, onPress, image, isDeceased, isCarePet, onEnrollPress }) => {
   return (
     <TouchableOpacity onPress={onPress}>
       <Div flexDir="row" alignItems="center" py={12} borderBottomWidth={1} borderColor="#D0D7DC">
@@ -126,13 +135,41 @@ const ProfileCard: React.FC<{
             borderRadius={7}
           />
         </Div>
-        <Text fontSize={"xl"} fontFamily={fontHauoraMedium} ml={8}>
+        <Text
+          fontSize={"xl"}
+          color={isCarePet ? "#6e99f0" : "#222"}
+          fontFamily={fontHauoraMedium}
+          ml={8}
+        >
           {name}
         </Text>
 
-        <Div flex={1} row={true} alignItems="center">
+        <Div ml="auto" row={true} alignItems="center">
           {isDeceased && <Image ml="auto" mr={10} source={rainbowImage} h={60} w={110} />}
-          <IconChevronRight width={24} height={24} color={"#222222"} />
+
+          {!isDeceased &&
+            (isCarePet ? (
+              <Div bg="#6e99f0" p={12} mr={10} style={{ borderRadius: 12 }}>
+                <Image w={84} h={30} source={require("@/assets/icons/smollcare-member-logo.png")} />
+              </Div>
+            ) : (
+              <Button
+                mr={10}
+                bg="#fff"
+                color="#6e99f0"
+                borderWidth={1.5}
+                borderColor="#6e99f0"
+                fontFamily={fontHauoraBold}
+                fontSize="xl"
+                py={4}
+                rounded={24}
+                px={18}
+                onPress={onEnrollPress}
+              >
+                Enroll
+              </Button>
+            ))}
+          <IconChevronRight width={24} height={24} color={isCarePet ? "#6e99f0" : "#222222"} />
         </Div>
       </Div>
     </TouchableOpacity>

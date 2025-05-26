@@ -103,6 +103,8 @@ import Popup from "./components/Popup";
 import SocketListener from "./components/SocketListener";
 import OnboardingUserModal from "./components/app/onboarding/OnboardingUserModal";
 import SubscriptionScreen from "./screens/Subscription/SubscriptionScreen";
+import PetProfileBenefitsScreen from "./screens/PetProfile/PetProfileBenefitsScreen";
+import SmollcarePaymentSuccessScreen from "./screens/smollcarePaymentSuccess/SmollcarePaymentSuccessScreen";
 
 Sentry.init({
   dsn: Config.SENTRY_DSN,
@@ -152,10 +154,12 @@ const theme = {
     // xl: 18,
     // lg: 16,
     // md: 14,
-    "5xl": scaleFontSize(28),
-    "2xl": scaleFontSize(20),
-    "4xl": scaleFontSize(24),
+    "8xl": scaleFontSize(52),
+    "7xl": scaleFontSize(38),
     "6xl": scaleFontSize(32),
+    "5xl": scaleFontSize(28),
+    "4xl": scaleFontSize(24),
+    "2xl": scaleFontSize(20),
     xl: scaleFontSize(18),
     lg: scaleFontSize(16),
     md: scaleFontSize(14),
@@ -696,6 +700,10 @@ const App = () => {
                     name="PetProfileDetailsScreen"
                     component={PetProfileDetailsScreen}
                   />
+                  <Stack.Screen
+                    name="PetProfileBenefitsScreen"
+                    component={PetProfileBenefitsScreen}
+                  />
                   <Stack.Screen name="SettingsMainScreen" component={SettingsMainScreen} />
                   {/* Appointments Screens */}
                   <Stack.Screen name="AppointmentsScreen" component={AppointmentsScreen} />
@@ -703,7 +711,10 @@ const App = () => {
                     name="AppointmentDetailsScreen"
                     component={AppointmentDetailsScreen}
                   />
+
                   <Stack.Screen name="PaymentDetailsScreen" component={PaymentDetailsScreen} />
+                  {/* Smoll care payment success */}
+                  <Stack.Screen name="paymentSuccess" component={SmollcarePaymentSuccessScreen} />
                 </Stack.Navigator>
                 <Popup />
                 <SocketListener />

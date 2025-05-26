@@ -3,12 +3,13 @@ import ImageUpload from "@/components/partials/ImageUpload";
 import {
   colorErrorText,
   colorPrimary,
+  fontHauoraBold,
   fontHauoraMedium,
   fontHauoraSemiBold,
 } from "@/constant/constant";
 import { NavigationType } from "@/store/types";
 import React, { useEffect, useRef, useState } from "react";
-import { ActivityIndicator, FlatList, TouchableOpacity } from "react-native";
+import { ActivityIndicator, FlatList, ScrollView, TouchableOpacity } from "react-native";
 import { Button, Div, DropdownRef, Image, Tag, Text } from "react-native-magnus";
 import ProfileOptionButton from "./ProfileOptionButton";
 import AddButton from "@/components/partials/AddButton";
@@ -22,8 +23,68 @@ import ConfirmationModal from "@/components/partials/ConfirmationModal";
 import { IconCrown, IconDots } from "@tabler/icons-react-native";
 import Dropdown from "@/components/partials/Dropdown";
 import HealthHistoryModal from "@/components/app/pet/HealthHistoryModal";
+import SubscriptionBenefitsList from "@/components/app/subscription/SubscriptionBenefitsList";
 
-const btns = ["Basic Details", "Health History"];
+const btns = ["Basic Details", "Health History", "smoll® Care"];
+
+const planFeatures = [
+  {
+    label: "Grooming",
+    sessions: 4,
+    ussageCount: 2,
+  },
+  { label: "Nail Trim", sessions: 2, ussageCount: 0 },
+  {
+    label: "Expert tips",
+    sessions: 1,
+    ussageCount: 0,
+  },
+  {
+    label: "Consultations",
+    sessions: 4,
+    ussageCount: 0,
+  },
+  {
+    label: "Vet Calls",
+    sessions: 4,
+    ussageCount: 0,
+  },
+  {
+    label: "Deworming",
+    sessions: 2,
+    ussageCount: 0,
+  },
+  {
+    label: "Dental check up",
+    sessions: 3,
+    ussageCount: 0,
+  },
+  {
+    label: "Ear cleaning",
+    sessions: 3,
+    ussageCount: 0,
+  },
+  {
+    label: "Free wellness checkup",
+    sessions: 1,
+    ussageCount: 0,
+  },
+  {
+    label: "Blood test",
+    sessions: 2,
+    ussageCount: 0,
+  },
+  {
+    label: "Urine test",
+    sessions: 1,
+    ussageCount: 0,
+  },
+  {
+    label: "Microchipping",
+    sessions: 1,
+    ussageCount: 0,
+  },
+];
 
 type RouteType = { petId: string };
 
@@ -54,7 +115,10 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
   const [open, setOpen] = useState(false);
   // const [selectedPetId, setSelectedPetId] = useState("");
   const [healthHistoryId, setHealthHistoryId] = useState("");
-  const isCareUserPet = true; //For Dev
+  const isCareUserPet = false; //For Dev
+
+  const scrollRef = useRef<ScrollView>(null);
+  const itemPositions = useRef<Record<string, number>>({});
 
   useEffect(() => {
     if (!id) return;
@@ -66,6 +130,7 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
 
         if (!data) {
           await fetchPetDetails(id);
+          //IF PET IS SMOLLCARE MEMBER
         }
       } finally {
         setLoading(false);
@@ -242,6 +307,14 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
     }
   };
 
+  const handleTabPress = (item: string) => {
+    setActiveTab(item);
+    const x = itemPositions.current[item];
+    if (x !== undefined && scrollRef.current) {
+      scrollRef.current.scrollTo({ x: x - 16, animated: true });
+    }
+  };
+
   return (
     <Layout
       showBack
@@ -293,55 +366,53 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
           </Div>
 
           <Div flexDir="row" position="relative" mb={20}>
-            {btns.map((item) => (
-              <TouchableOpacity
-                key={item}
-                style={{ marginRight: 24 }}
-                onPress={() => {
-                  setActiveTab(item);
-                }}
-              >
-                <Button
+            <ScrollView ref={scrollRef} horizontal showsHorizontalScrollIndicator={false}>
+              {btns.map((item) => (
+                <TouchableOpacity
                   key={item}
-                  py={0}
-                  flexDir="column"
-                  px={4}
-                  bg="transparent"
-                  pointerEvents="none"
+                  activeOpacity={0.6}
+                  style={{ marginRight: 24 }}
+                  onPress={() => handleTabPress(item)}
+                  onLayout={(event) => {
+                    itemPositions.current[item] = event.nativeEvent.layout.x;
+                  }}
                 >
-                  <Text
-                    fontSize={"lg"}
-                    fontFamily={fontHauoraSemiBold}
-                    mb={8}
-                    color={activeTab === item ? "#222" : "darkGreyText"}
-                  >
-                    {item}
-                  </Text>
+                  <Button py={0} flexDir="column" px={4} bg="transparent" pointerEvents="none">
+                    <Text
+                      fontSize="lg"
+                      fontFamily={fontHauoraSemiBold}
+                      mb={8}
+                      color={activeTab === item ? "#222" : "darkGreyText"}
+                    >
+                      {item}
+                    </Text>
 
-                  {item === activeTab && (
-                    <Div
-                      h={7}
-                      bg={true ? "#427594" : "transparent"}
-                      w={"100%"}
-                      style={{
-                        borderTopRightRadius: 4,
-                        borderTopLeftRadius: 4,
-                      }}
-                    />
-                  )}
-                </Button>
-              </TouchableOpacity>
-            ))}
+                    {item === activeTab && (
+                      <Div
+                        h={7}
+                        bg="#427594"
+                        w="100%"
+                        style={{
+                          borderTopRightRadius: 4,
+                          borderTopLeftRadius: 4,
+                        }}
+                      />
+                    )}
+                  </Button>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
 
             <TouchableOpacity
               style={{ marginLeft: "auto" }}
+              activeOpacity={0.6}
               onPress={() => {
                 if ("current" in optionMenuRef && optionMenuRef.current) {
                   optionMenuRef.current.open();
                 }
               }}
             >
-              <IconDots width={26} height={26} color={"#222"} />
+              <IconDots style={{ marginLeft: 12 }} width={26} height={26} color={"#222"} />
             </TouchableOpacity>
 
             <Dropdown
@@ -366,26 +437,25 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
               <Div
                 style={{
                   padding: 16,
-                  borderWidth: 1,
-                  borderColor: "#D7E7F4",
+                  borderWidth: 2,
+                  borderColor: "#6e99f0",
                   flexDirection: "row",
                   marginBottom: 16,
                 }}
                 rounded={20}
-                bg="#EEF7FE"
               >
                 <Text
                   maxW={146}
                   w={"100%"}
                   fontSize={"lg"}
-                  color="#121212"
+                  color="#545454"
                   fontFamily={fontHauoraSemiBold}
                 >
                   {petDetailsData?.name.toLocaleUpperCase()}{" "}
-                  {isCareUserPet ? "is already enrolled in the plan" : "isn’t enrolled in the plan"}
+                  {isCareUserPet ? "is already enrolled in the plan" : "isn't enrolled in the plan"}
                 </Text>
                 <Button
-                  bg="#222"
+                  bg="#6e99f0"
                   rounded={100}
                   h={42}
                   pt={13}
@@ -394,6 +464,11 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
                   w={134}
                   ml={"auto"}
                   fontFamily={fontHauoraMedium}
+                  onPress={() => {
+                    navigation.navigate("PetProfileBenefitsScreen", {
+                      petId: petDetailsData?.id,
+                    });
+                  }}
                 >
                   {isCareUserPet ? "View benefits" : `Enroll ${petDetailsData?.name}`}
                 </Button>
@@ -494,6 +569,19 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
                 healthHistoryId={healthHistoryId}
               />
             </Div>
+          )}
+          {activeTab === btns[2] && (
+            <>
+              <SubscriptionBenefitsList planFeatures={planFeatures} isExpandable={true} />
+              <Div py={16} bg="#fff">
+                <Text color="primary" fontSize="xl" fontFamily={fontHauoraBold}>
+                  {petDetailsData?.name} smoll® Care plan is active until.
+                </Text>
+                <Text color="#333" fontSize="2xl" fontFamily={fontHauoraBold}>
+                  12.12.2022
+                </Text>
+              </Div>
+            </>
           )}
         </Div>
       )}

@@ -12,6 +12,7 @@ interface ButtonPrimaryProps extends ButtonProps {
   navigation?: NavigationType;
   icon?: React.ReactNode;
   textColor?: string;
+  fontFamily?: string;
 }
 
 const ButtonPrimary: React.FC<ButtonPrimaryProps> = ({
@@ -23,6 +24,7 @@ const ButtonPrimary: React.FC<ButtonPrimaryProps> = ({
   params = {},
   icon,
   textColor,
+  fontFamily,
   ...restProps
 }) => {
   return (
@@ -41,7 +43,12 @@ const ButtonPrimary: React.FC<ButtonPrimaryProps> = ({
       {...restProps}
     >
       {icon && icon}
-      <Text color={textColor ?? "white"} mb={2} fontSize={"xl"} fontFamily={fontHauoraMedium}>
+      <Text
+        color={textColor ?? "white"}
+        mb={2}
+        fontSize={"xl"}
+        fontFamily={fontFamily ? fontFamily : fontHauoraMedium}
+      >
         {children}
       </Text>
     </Button>

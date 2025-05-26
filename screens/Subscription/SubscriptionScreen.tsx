@@ -2,8 +2,13 @@ import Layout from "@/components/app/Layout";
 import HomeScreenBanner from "@/components/app/HomeScreenBanner";
 import { NavigationType } from "@/store/types";
 import React, { useState } from "react";
-import { Div, Text } from "react-native-magnus";
-import { fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
+import { Button, Div, Image, Text } from "react-native-magnus";
+import {
+  fontHauoraBold,
+  fontHauoraMedium,
+  fontHauoraSemiBold,
+  fontHeading,
+} from "@/constant/constant";
 import { FlatList } from "react-native";
 import { View } from "react-native";
 import IconCircleCheckFilled from "@/components/icons/IconCircleCheckFilled";
@@ -20,8 +25,10 @@ import {
   IconFlask,
   IconFlask2,
   IconCpu,
+  IconArrowRight,
 } from "@tabler/icons-react-native";
 import PlanCTA from "./PlanCTA";
+import SubscriptionBenefitsList from "@/components/app/subscription/SubscriptionBenefitsList";
 
 const planFeatures = [
   { label: "Grooming", sessions: 4, icon: <IconScissors size={24} color="#474747" /> },
@@ -42,107 +49,85 @@ const planFeatures = [
   { label: "Microchipping", sessions: 1, icon: <IconCpu size={24} color="#474747" /> },
 ];
 
-const renderSessionDots = (count) => {
-  const dots = [];
-  for (let i = 0; i < count; i++) {
-    dots.push(<IconCircleCheckFilled key={i} />);
-  }
-  return dots;
-};
-
-const PlanRow = ({ label, sessions, icon, styles }) => (
-  <View
-    style={{
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center",
-      ...styles,
-    }}
-  >
-    <Div style={{ display: "flex", flexDirection: "row", gap: 10, alignItems: "center" }}>
-      {icon}
-      <Text fontSize="xl" fontFamily={fontHauoraMedium} color="#000">
-        {label}
-      </Text>
-    </Div>
-
-    <View
-      style={{
-        maxWidth: 126,
-        width: "100%",
-        flexDirection: "row",
-        gap: 10,
-      }}
-    >
-      {renderSessionDots(sessions)}
-    </View>
-  </View>
-);
-
 export default function SubscriptionScreen({ navigation }: { navigation: NavigationType }) {
   return (
     <Layout
       showBack
-      title="Subscription Plan"
+      title="Smoll Care"
       onBackPress={() => {
         navigation.goBack();
       }}
-      style={{ position: "relative" }}
+      style={{ position: "relative", justifyContent: "flex-start" }}
     >
-      <Div pb={32} borderBottomWidth={1} borderColor="#DFDFDF">
-        <HomeScreenBanner isCarePlanUser={false} navigation={navigation} showButton={false} />
-        <Text color="#121212" fontSize={"lg"} mt={8} fontFamily={fontHauoraSemiBold}>
-          *Subscribe once. Covered all year around
-        </Text>
+      <Div>
+        <Div mt={12}>
+          <Text fontSize="2xl" color="#679FF0" fontFamily={fontHeading}>
+            Welcome To
+          </Text>
+          <Image w={157} h={28} mt={10} source={require("@/assets/icons/smollcare-logo.png")} />
+        </Div>
+        <Div alignItems="center" mt={32}>
+          <Image w={254} h={400} source={require("@/assets/images/smollcare-screen.png")} />
+        </Div>
+        <Div mt={24}>
+          <Div alignItems="center">
+            <Div alignItems="center">
+              <Text fontSize="xl" fontFamily={fontHauoraSemiBold} textAlign="center">
+                Your Smoll number is
+              </Text>
+              <Div bg="#d6fcff" style={{ borderRadius: 1000 }} px={30} mt={10}>
+                <Text
+                  fontSize="8xl"
+                  fontFamily={fontHauoraBold}
+                  color="#1655C8"
+                  textAlignVertical="center"
+                  lineHeight={68}
+                >
+                  179-234
+                </Text>
+              </Div>
+            </Div>
+            <Text
+              mt={32}
+              fontSize="sm"
+              maxW={202}
+              textAlign="center"
+              fontFamily={fontHauoraSemiBold}
+              lineHeight={16}
+            >
+              Present this number at any of our partner locations and enjoy your smoll® Care
+              benefits
+            </Text>
+          </Div>
+          <Button
+            fontSize={"lg"}
+            fontFamily={fontHauoraSemiBold}
+            color="primary"
+            flexDir="row"
+            alignItems="center"
+            mx={"auto"}
+            style={{ gap: 4 }}
+            p={0}
+            bg="transparent"
+            onPress={() => {
+              navigation.navigate("PetProfileListScreen");
+            }}
+            mt={32}
+            mb={24}
+          >
+            <Text color="primary" fontSize={"xl"} fontFamily={fontHauoraSemiBold}>
+              My Pets
+            </Text>
+            <IconArrowRight
+              width={24}
+              height={24}
+              color={"#427594"}
+              strokeWidth={2}
+              style={{ marginTop: 4 }}
+            />
+          </Button>
+        </Div>
       </Div>
-      <Div
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          borderColor: "red",
-          alignItems: "center",
-        }}
-        mt={32}
-      >
-        <Text
-          textAlignVertical="center"
-          color="primary"
-          fontSize={"lg"}
-          fontFamily={fontHauoraMedium}
-        >
-          Plan Inclusions
-        </Text>
-        <Text
-          textAlignVertical="center"
-          color="primary"
-          fontSize={"lg"}
-          fontFamily={fontHauoraMedium}
-          maxW={126}
-          w={"100%"}
-        >
-          Sessions
-        </Text>
-      </Div>
-      <FlatList
-        data={planFeatures}
-        keyExtractor={(item) => item.label}
-        style={{ paddingRight: 10 }}
-        renderItem={({ item, index }) => (
-          <PlanRow
-            label={item.label}
-            sessions={item.sessions}
-            icon={item.icon}
-            styles={{ marginBottom: index === planFeatures.length - 1 && 20 }}
-          />
-        )}
-        contentContainerStyle={{
-          paddingTop: 16,
-          display: "flex",
-          flexDirection: "column",
-          gap: 18,
-        }}
-      />
-      <PlanCTA />
     </Layout>
   );
 }
