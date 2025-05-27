@@ -97,8 +97,8 @@ const HomeScreen: React.FC<Props> = (props) => {
       description: "Add and track your pet’s records",
       loading: false,
       // icon: <OnboardingIcon5 width={55} height={55} />,
-      img: require("../assets/images/home-pet-img.png"),
-      width: 70,
+      img: require("@/assets/images/home-pet-img.png"),
+      width: 71,
       height: 68,
       style: {
         transform: [{ translateX: 5 }, { translateY: 2 }],

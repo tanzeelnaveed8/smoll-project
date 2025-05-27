@@ -15,7 +15,7 @@ import ProfileOptionButton from "./ProfileOptionButton";
 import AddButton from "@/components/partials/AddButton";
 import { useRoute } from "@react-navigation/native";
 import { usePetStore } from "@/store/modules/pet";
-import { HealthHistory, PetDetail } from "@/store/types/pet";
+import { Benefit, HealthHistory, PetDetail } from "@/store/types/pet";
 import { UploadedFile } from "@/store/types/file";
 import { useToast } from "react-native-toast-notifications";
 import { showMessage } from "react-native-flash-message";
@@ -25,66 +25,66 @@ import Dropdown from "@/components/partials/Dropdown";
 import HealthHistoryModal from "@/components/app/pet/HealthHistoryModal";
 import SubscriptionBenefitsList from "@/components/app/subscription/SubscriptionBenefitsList";
 
-const btns = ["Basic Details", "Health History", "smoll® Care"];
+const btns = ["Basic Details", "Health History"];
 
-const planFeatures = [
-  {
-    label: "Grooming",
-    sessions: 4,
-    ussageCount: 2,
-  },
-  { label: "Nail Trim", sessions: 2, ussageCount: 0 },
-  {
-    label: "Expert tips",
-    sessions: 1,
-    ussageCount: 0,
-  },
-  {
-    label: "Consultations",
-    sessions: 4,
-    ussageCount: 0,
-  },
-  {
-    label: "Vet Calls",
-    sessions: 4,
-    ussageCount: 0,
-  },
-  {
-    label: "Deworming",
-    sessions: 2,
-    ussageCount: 0,
-  },
-  {
-    label: "Dental check up",
-    sessions: 3,
-    ussageCount: 0,
-  },
-  {
-    label: "Ear cleaning",
-    sessions: 3,
-    ussageCount: 0,
-  },
-  {
-    label: "Free wellness checkup",
-    sessions: 1,
-    ussageCount: 0,
-  },
-  {
-    label: "Blood test",
-    sessions: 2,
-    ussageCount: 0,
-  },
-  {
-    label: "Urine test",
-    sessions: 1,
-    ussageCount: 0,
-  },
-  {
-    label: "Microchipping",
-    sessions: 1,
-    ussageCount: 0,
-  },
-];
+// const planFeatures = [
+//   {
+//     label: "Grooming",
+//     sessions: 4,
+//     ussageCount: 2,
+//   },
+//   { label: "Nail Trim", sessions: 2, ussageCount: 0 },
+//   {
+//     label: "Expert tips",
+//     sessions: 1,
+//     ussageCount: 0,
+//   },
+//   {
+//     label: "Consultations",
+//     sessions: 4,
+//     ussageCount: 0,
+//   },
+//   {
+//     label: "Vet Calls",
+//     sessions: 4,
+//     ussageCount: 0,
+//   },
+//   {
+//     label: "Deworming",
+//     sessions: 2,
+//     ussageCount: 0,
+//   },
+//   {
+//     label: "Dental check up",
+//     sessions: 3,
+//     ussageCount: 0,
+//   },
+//   {
+//     label: "Ear cleaning",
+//     sessions: 3,
+//     ussageCount: 0,
+//   },
+//   {
+//     label: "Free wellness checkup",
+//     sessions: 1,
+//     ussageCount: 0,
+//   },
+//   {
+//     label: "Blood test",
+//     sessions: 2,
+//     ussageCount: 0,
+//   },
+//   {
+//     label: "Urine test",
+//     sessions: 1,
+//     ussageCount: 0,
+//   },
+//   {
+//     label: "Microchipping",
+//     sessions: 1,
+//     ussageCount: 0,
+//   },
+// ];
 
 type RouteType = { petId: string };
 
@@ -115,7 +115,7 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
   const [open, setOpen] = useState(false);
   // const [selectedPetId, setSelectedPetId] = useState("");
   const [healthHistoryId, setHealthHistoryId] = useState("");
-  const isCareUserPet = false; //For Dev
+  const isCarePet = petDetailsData?.careId;
 
   const scrollRef = useRef<ScrollView>(null);
   const itemPositions = useRef<Record<string, number>>({});
@@ -130,7 +130,6 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
 
         if (!data) {
           await fetchPetDetails(id);
-          //IF PET IS SMOLLCARE MEMBER
         }
       } finally {
         setLoading(false);
@@ -156,6 +155,10 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
   //     setHealthHistoryDataState(petDetailsData.healthHistory);
   //   }
   // }, []);
+
+  useEffect(() => {
+    if (isCarePet) btns.push("smoll® Care");
+  }, [isCarePet]);
 
   const handleUpdateImage = async (file: UploadedFile[]) => {
     if (!petDetailsData) return;
@@ -346,15 +349,6 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
                 <Text fontSize={"4xl"} fontFamily={fontHauoraMedium}>
                   {petDetailsData?.name}
                 </Text>
-                {isCareUserPet && (
-                  <IconCrown
-                    color="#fcbe38"
-                    fill="#fcbe38"
-                    width={35}
-                    height={30}
-                    style={{ marginLeft: 14 }}
-                  />
-                )}
               </Div>
 
               {petDetailsData?.isDeceased && (
@@ -452,7 +446,7 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
                   fontFamily={fontHauoraSemiBold}
                 >
                   {petDetailsData?.name.toLocaleUpperCase()}{" "}
-                  {isCareUserPet ? "is already enrolled in the plan" : "isn't enrolled in the plan"}
+                  {isCarePet ? "is already enrolled in the plan" : "isn't enrolled in the plan"}
                 </Text>
                 <Button
                   bg="#6e99f0"
@@ -465,12 +459,16 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
                   ml={"auto"}
                   fontFamily={fontHauoraMedium}
                   onPress={() => {
-                    navigation.navigate("PetProfileBenefitsScreen", {
-                      petId: petDetailsData?.id,
-                    });
+                    if (isCarePet) {
+                      handleTabPress("smoll® Care");
+                    } else {
+                      navigation.navigate("PetProfileBenefitsScreen", {
+                        petId: petDetailsData?.id,
+                      });
+                    }
                   }}
                 >
-                  {isCareUserPet ? "View benefits" : `Enroll ${petDetailsData?.name}`}
+                  {isCarePet ? "View benefits" : `Enroll ${petDetailsData?.name}`}
                 </Button>
               </Div>
               <FlatList
@@ -572,7 +570,10 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
           )}
           {activeTab === btns[2] && (
             <>
-              <SubscriptionBenefitsList planFeatures={planFeatures} isExpandable={true} />
+              <SubscriptionBenefitsList
+                planFeatures={petDetailsData?.benefits as Benefit[]}
+                isExpandable={true}
+              />
               <Div py={16} bg="#fff">
                 <Text color="primary" fontSize="xl" fontFamily={fontHauoraBold}>
                   {petDetailsData?.name} smoll® Care plan is active until.

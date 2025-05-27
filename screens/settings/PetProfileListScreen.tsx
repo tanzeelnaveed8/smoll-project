@@ -45,7 +45,7 @@ const PetProfileListScreen: React.FC<{ navigation: NavigationType }> = ({ naviga
   return (
     <Layout
       showBack
-      title="Pet Profile"
+      title="My Pets"
       onBackPress={() => {
         navigation.goBack();
       }}
@@ -71,7 +71,7 @@ const PetProfileListScreen: React.FC<{ navigation: NavigationType }> = ({ naviga
                     image={image}
                     key={i}
                     name={item.name}
-                    isCarePet={i === 0 && true}
+                    isCarePet={Boolean(item.careId)}
                     isDeceased={item.isDeceased}
                     onPress={() => {
                       navigation.navigate("PetProfileDetailsScreen", {
@@ -111,48 +111,47 @@ const ProfileCard: React.FC<{
   onEnrollPress?: () => void;
 }> = ({ name, onPress, image, isDeceased, isCarePet, onEnrollPress }) => {
   return (
-    <TouchableOpacity onPress={onPress}>
-      <Div flexDir="row" alignItems="center" py={12} borderBottomWidth={1} borderColor="#D0D7DC">
-        <Div w={68} h={62} justifyContent="flex-end" alignItems="center">
-          {/* <Image
-            source={require("../../assets/images/pet-profile-bg.png")}
-            position="absolute"
-            w={"100%"}
-            h={"100%"}
-          /> */}
+    <TouchableOpacity onPress={onPress} activeOpacity={0.6}>
+      <Div
+        flexDir="row"
+        alignItems="center"
+        my={8}
+        rounded={24}
+        borderWidth={1}
+        overflow="hidden"
+        style={{
+          borderColor: isCarePet ? "#6e99f0" : "#c7c5c3",
+          backgroundColor: isCarePet ? "#6e99f0" : "#FAF8F5",
+        }}
+      >
+        <Div p={12} flexDir="row" justifyContent="space-between" flex={1} rounded={24} bg="#FAF8F5">
+          <Div flexDir="row">
+            <Div w={68} h={62} justifyContent="flex-end" alignItems="center">
+              <Image
+                src={
+                  image
+                    ? image
+                    : "https://static.vecteezy.com/system/resources/thumbnails/004/141/669/small/no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-coming-soon-sign-simple-nature-silhouette-in-frame-isolated-illustration-vector.jpg"
+                }
+                w={58}
+                h={58}
+                borderColor="#222"
+                borderRadius={7}
+              />
+            </Div>
+            <Text
+              fontSize={"xl"}
+              color={isCarePet ? "#6e99f0" : "#222"}
+              fontFamily={fontHauoraMedium}
+              ml={8}
+            >
+              {name}
+            </Text>
+          </Div>
 
-          <Image
-            // source={image ? "" : require("../../assets/images/dog-profile.png")}
-            src={
-              image
-                ? image
-                : "https://static.vecteezy.com/system/resources/thumbnails/004/141/669/small/no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-coming-soon-sign-simple-nature-silhouette-in-frame-isolated-illustration-vector.jpg"
-            }
-            w={58}
-            h={58}
-            // borderColor="#fff"
-            borderColor="#222"
-            borderRadius={7}
-          />
-        </Div>
-        <Text
-          fontSize={"xl"}
-          color={isCarePet ? "#6e99f0" : "#222"}
-          fontFamily={fontHauoraMedium}
-          ml={8}
-        >
-          {name}
-        </Text>
-
-        <Div ml="auto" row={true} alignItems="center">
-          {isDeceased && <Image ml="auto" mr={10} source={rainbowImage} h={60} w={110} />}
-
-          {!isDeceased &&
-            (isCarePet ? (
-              <Div bg="#6e99f0" p={12} mr={10} style={{ borderRadius: 12 }}>
-                <Image w={84} h={30} source={require("@/assets/icons/smollcare-member-logo.png")} />
-              </Div>
-            ) : (
+          <Div flexDir="row" alignItems="center">
+            {isDeceased && <Image ml="auto" mr={10} source={rainbowImage} h={60} w={110} />}
+            {!isDeceased && !isCarePet && (
               <Button
                 mr={10}
                 bg="#fff"
@@ -163,13 +162,24 @@ const ProfileCard: React.FC<{
                 fontSize="xl"
                 py={4}
                 rounded={24}
+                alignSelf="center"
                 px={18}
                 onPress={onEnrollPress}
               >
                 Enroll
               </Button>
-            ))}
-          <IconChevronRight width={24} height={24} color={isCarePet ? "#6e99f0" : "#222222"} />
+            )}
+            <IconChevronRight width={24} height={24} color={isCarePet ? "#6e99f0" : "#222222"} />
+          </Div>
+        </Div>
+
+        <Div ml="auto" row={true} alignItems="center">
+          {/* isCarPet  */}
+          {!isDeceased && isCarePet && (
+            <Div bg="#6e99f0" py={28} px={12}>
+              <Image w={84} h={30} source={require("@/assets/icons/smollcare-member-logo.png")} />
+            </Div>
+          )}
         </Div>
       </Div>
     </TouchableOpacity>

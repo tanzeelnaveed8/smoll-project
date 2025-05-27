@@ -22,17 +22,18 @@ const renderSessionDots = (count: number, usageCount?: number) => {
 
 import { Pressable } from "react-native";
 import { useState } from "react";
+import { Benefit } from "@/store/types/pet";
 
 const PlanRow = ({
-  label,
-  sessions,
-  ussageCount,
+  name,
+  totalUsageCount,
+  consumedUsageCount,
   styles,
   expandable = false,
 }: {
-  label: string;
-  sessions: number;
-  ussageCount?: number;
+  name: string;
+  totalUsageCount: number;
+  consumedUsageCount?: number;
   styles: any;
   expandable?: boolean;
 }) => {
@@ -57,7 +58,7 @@ const PlanRow = ({
             <Text>•</Text>
           )}
           <Text fontSize="lg" fontFamily={fontHauoraBold} color="#000">
-            {label}
+            {name}
           </Text>
         </Div>
 
@@ -69,7 +70,7 @@ const PlanRow = ({
             gap: 6,
           }}
         >
-          {renderSessionDots(sessions, ussageCount)}
+          {renderSessionDots(totalUsageCount, consumedUsageCount)}
         </View>
       </Div>
       {expanded && (
@@ -102,7 +103,7 @@ const PlanRow = ({
 };
 
 interface SubscriptionBenefitsListProps {
-  planFeatures: { label: string; sessions: number; ussageCount?: number }[];
+  planFeatures: Benefit[];
   isExpandable?: boolean;
 }
 
@@ -150,13 +151,13 @@ export default function SubscriptionBenefitsList({
 
       <FlatList
         data={planFeatures}
-        keyExtractor={(item) => item.label}
+        keyExtractor={(item) => item.name}
         style={{ paddingRight: 10 }}
         renderItem={({ item, index }) => (
           <PlanRow
-            label={item.label}
-            sessions={item.sessions}
-            ussageCount={item?.ussageCount}
+            name={item.name}
+            totalUsageCount={item.totalUsageCount}
+            consumedUsageCount={item?.consumedUsageCount}
             expandable={isExpandable}
             styles={{
               marginBottom: index === planFeatures.length - 1 && 20,

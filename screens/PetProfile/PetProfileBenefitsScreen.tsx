@@ -7,7 +7,7 @@ import {
   fontHauoraSemiBold,
 } from "@/constant/constant";
 import { NavigationType } from "@/store/types";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ActivityIndicator, FlatList, TouchableOpacity } from "react-native";
 import { Button, Div, DropdownRef, Image, Tag, Text } from "react-native-magnus";
 import AddButton from "@/components/partials/AddButton";
@@ -16,76 +16,89 @@ import { usePetStore } from "@/store/modules/pet";
 import { useToast } from "react-native-toast-notifications";
 import SubscriptionBenefitsList from "@/components/app/subscription/SubscriptionBenefitsList";
 import PlanCTA from "../Subscription/PlanCTA";
+import { initPaymentSheet, presentPaymentSheet, StripeProvider } from "@stripe/stripe-react-native";
+import { useUserStore } from "@/store/modules/user";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { SetupParams } from "@stripe/stripe-react-native/lib/typescript/src/types/PaymentSheet";
+import { showMessage } from "react-native-flash-message";
+import FlashCustomContent from "@/components/partials/FlashCustomContent";
 
 type RouteType = { petId: string };
 
-const planFeatures = [
-  {
-    label: "Grooming",
-    sessions: 4,
-    ussageCount: 0,
-  },
-  { label: "Nail Trim", sessions: 2, ussageCount: 0 },
-  {
-    label: "Expert tips",
-    sessions: 1,
-    ussageCount: 0,
-  },
-  {
-    label: "Consultations",
-    sessions: 4,
-    ussageCount: 0,
-  },
-  {
-    label: "Vet Calls",
-    sessions: 4,
-    ussageCount: 0,
-  },
-  {
-    label: "Deworming",
-    sessions: 2,
-    ussageCount: 0,
-  },
-  {
-    label: "Dental check up",
-    sessions: 3,
-    ussageCount: 0,
-  },
-  {
-    label: "Ear cleaning",
-    sessions: 3,
-    ussageCount: 0,
-  },
-  {
-    label: "Free wellness checkup",
-    sessions: 1,
-    ussageCount: 0,
-  },
-  {
-    label: "Blood test",
-    sessions: 2,
-    ussageCount: 0,
-  },
-  {
-    label: "Urine test",
-    sessions: 1,
-    ussageCount: 0,
-  },
-  {
-    label: "Microchipping",
-    sessions: 1,
-    ussageCount: 0,
-  },
-];
+// const planFeatures = [
+//   {
+//     label: "Grooming",
+//     sessions: 4,
+//     ussageCount: 0,
+//   },
+//   { label: "Nail Trim", sessions: 2, ussageCount: 0 },
+//   {
+//     label: "Expert tips",
+//     sessions: 1,
+//     ussageCount: 0,
+//   },
+//   {
+//     label: "Consultations",
+//     sessions: 4,
+//     ussageCount: 0,
+//   },
+//   {
+//     label: "Vet Calls",
+//     sessions: 4,
+//     ussageCount: 0,
+//   },
+//   {
+//     label: "Deworming",
+//     sessions: 2,
+//     ussageCount: 0,
+//   },
+//   {
+//     label: "Dental check up",
+//     sessions: 3,
+//     ussageCount: 0,
+//   },
+//   {
+//     label: "Ear cleaning",
+//     sessions: 3,
+//     ussageCount: 0,
+//   },
+//   {
+//     label: "Free wellness checkup",
+//     sessions: 1,
+//     ussageCount: 0,
+//   },
+//   {
+//     label: "Blood test",
+//     sessions: 2,
+//     ussageCount: 0,
+//   },
+//   {
+//     label: "Urine test",
+//     sessions: 1,
+//     ussageCount: 0,
+//   },
+//   {
+//     label: "Microchipping",
+//     sessions: 1,
+//     ussageCount: 0,
+//   },
+// ];
 
 const PetProfileBenefitsScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
   const route = useRoute();
   const toast = useToast();
   const id = (route.params as RouteType)?.petId;
+
+  const { user, createPaymentIntent } = useUserStore();
+  const paymentIntentRef = useRef<string | undefined>(undefined);
+  const [envs, setEnvs] = useState<any>(null);
+  const paymentIntentId = "";
+
   const { petsDetailMap, fetchPetDetails } = usePetStore();
   const [profileImg, setProfileImg] = useState("");
   const [loading, setLoading] = useState(false);
   const petDetailsData = petsDetailMap.get(id);
+  const { benefits } = usePetStore();
 
   useEffect(() => {
     if (!id) return;
@@ -118,63 +131,177 @@ const PetProfileBenefitsScreen: React.FC<{ navigation: NavigationType }> = ({ na
     }
   }, [petDetailsData]);
 
-  const handleOnEnrollPress = () => {
+  const initStripe = async () => {
+    setLoading(true);
+
+    setEnvs(JSON.parse((await AsyncStorage.getItem("envs")) as string));
+
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    try {
+      const { ephemeralKey, paymentIntent, paymentIntentClientSecret } = await createPaymentIntent(
+        user!.stripeCustomerId,
+        Math.round(100 * 100), // Ensure the amount is in cents and rounded //Booking charges
+        "AED"
+      );
+
+      paymentIntentRef.current = paymentIntent;
+
+      const { error } = await initPaymentSheet({
+        customerEphemeralKeySecret: ephemeralKey,
+        paymentIntentClientSecret: paymentIntentClientSecret,
+        merchantDisplayName: "Smoll",
+        customerId: user!.stripeCustomerId,
+        applePay: {
+          merchantCountryCode: "AE",
+        },
+        defaultBillingDetails: {
+          name: user?.name,
+        },
+        appearance: {
+          shapes: {
+            borderRadius: 12,
+            borderWidth: 0.5,
+          },
+          primaryButton: {
+            colors: {
+              background: "#000000",
+              text: "#ffffff",
+            },
+            shapes: {
+              borderRadius: 20,
+            },
+          },
+          colors: {
+            primary: "#000000",
+            background: "#ffffff",
+            componentBackground: "#f3f8fa",
+            componentBorder: "#f3f8fa",
+            componentDivider: "#000000",
+            primaryText: "#000000",
+            secondaryText: "#000000",
+            componentText: "#000000",
+            placeholderText: "#73757b",
+          },
+        },
+      } as SetupParams);
+
+      if (error) {
+        console.error("Stripe initialization error:", error);
+        showMessage({
+          message: "",
+          renderCustomContent: () => (
+            <FlashCustomContent message={`Stripe error: ${error.message}`} />
+          ),
+          type: "danger",
+        });
+
+        navigation.goBack();
+      }
+    } catch (error) {
+      console.error("Error initializing Stripe:", error);
+      showMessage({
+        message: "",
+        renderCustomContent: () => (
+          <FlashCustomContent message="Failed to initialize payment. Please try again." />
+        ),
+        type: "danger",
+      });
+      navigation.goBack();
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const initialize = async () => {
+    if (paymentIntentId) {
+      paymentIntentRef.current = paymentIntentId;
+    } else {
+      await initStripe();
+    }
+  };
+
+  const openPaymentSheet = async () => {
+    const { error } = await presentPaymentSheet();
+
+    if (error) {
+      showMessage({
+        message: "",
+        renderCustomContent: () => (
+          <FlashCustomContent message="Could not process payment, please try again" />
+        ),
+        type: "danger",
+      });
+
+      return;
+    }
+
+    //On Success
     navigation.navigate("paymentSuccess");
   };
 
-  return (
-    <Layout
-      showBack
-      title="Benefits"
-      onBackPress={() => {
-        navigation.goBack();
-      }}
-    >
-      {!loading && (
-        <>
-          <Div>
-            <Div flexDir="row" alignItems="center" mb={26}>
-              <Div w={118} h={115} justifyContent="flex-end" alignItems="flex-end">
-                <Div mx={"auto"}>
-                  <ImageUpload
-                    h={92}
-                    w={93}
-                    rounded={100}
-                    uri={profileImg}
-                    hideUnselectBtn
-                    openImageOnTab
-                    disableDownload
-                  />
-                </Div>
-              </Div>
-              <Div ml={14} mt={16}>
-                <Div>
-                  <Text fontSize={"4xl"} fontFamily={fontHauoraSemiBold}>
-                    {petDetailsData?.name}
-                  </Text>
-                  <Text fontSize="xl" color="#565656" fontFamily={fontHauoraSemiBold}>
-                    179-188-C23
-                  </Text>
-                </Div>
+  useEffect(() => {
+    initialize();
+  }, []);
 
-                {petDetailsData?.isDeceased && (
-                  <Tag fontSize={"md"} mt={8} p={0} bg={colorErrorText} color="#fff">
-                    Deceased
-                  </Tag>
-                )}
+  return (
+    <StripeProvider
+      publishableKey={envs?.STRIPE_PUBLISHABLE_KEY ?? ""}
+      merchantIdentifier="merchant.me.smoll.smollapp" // required for Apple Pay
+    >
+      <Layout
+        showBack
+        title="Benefits"
+        onBackPress={() => {
+          navigation.goBack();
+        }}
+      >
+        {!loading && (
+          <>
+            <Div>
+              <Div flexDir="row" alignItems="center" mb={26}>
+                <Div w={118} h={115} justifyContent="flex-end" alignItems="flex-end">
+                  <Div mx={"auto"}>
+                    <ImageUpload
+                      h={92}
+                      w={93}
+                      rounded={100}
+                      uri={profileImg}
+                      hideUnselectBtn
+                      openImageOnTab
+                      disableDownload
+                    />
+                  </Div>
+                </Div>
+                <Div ml={14} mt={16}>
+                  <Div>
+                    <Text fontSize={"4xl"} fontFamily={fontHauoraSemiBold}>
+                      {petDetailsData?.name}
+                    </Text>
+                    <Text fontSize="xl" color="#565656" fontFamily={fontHauoraSemiBold}>
+                      179-188-C23
+                    </Text>
+                  </Div>
+
+                  {petDetailsData?.isDeceased && (
+                    <Tag fontSize={"md"} mt={8} p={0} bg={colorErrorText} color="#fff">
+                      Deceased
+                    </Tag>
+                  )}
+                </Div>
               </Div>
             </Div>
+            <SubscriptionBenefitsList planFeatures={benefits} />
+            <PlanCTA petName={petDetailsData?.name} onEnrollPress={openPaymentSheet} />
+          </>
+        )}
+        {loading && (
+          <Div flex={1} justifyContent="center">
+            <ActivityIndicator size="large" color={colorPrimary} />
           </Div>
-          <SubscriptionBenefitsList planFeatures={planFeatures} />
-          <PlanCTA petName={petDetailsData?.name} onEnrollPress={handleOnEnrollPress} />
-        </>
-      )}
-      {loading && (
-        <Div flex={1} justifyContent="center">
-          <ActivityIndicator size="large" color={colorPrimary} />
-        </Div>
-      )}
-    </Layout>
+        )}
+      </Layout>
+    </StripeProvider>
   );
 };
 

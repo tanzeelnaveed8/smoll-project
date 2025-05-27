@@ -105,6 +105,7 @@ import OnboardingUserModal from "./components/app/onboarding/OnboardingUserModal
 import SubscriptionScreen from "./screens/Subscription/SubscriptionScreen";
 import PetProfileBenefitsScreen from "./screens/PetProfile/PetProfileBenefitsScreen";
 import SmollcarePaymentSuccessScreen from "./screens/smollcarePaymentSuccess/SmollcarePaymentSuccessScreen";
+import { usePetStore } from "./store/modules/pet";
 
 Sentry.init({
   dsn: Config.SENTRY_DSN,
@@ -338,6 +339,7 @@ const App = () => {
   } = useExpertStore();
   const { play } = useSound();
   const { SET_NAV_NOTIF } = useUserStore();
+  const { fetchBenefits } = usePetStore();
 
   useEffect(() => {
     (async () => {
@@ -520,6 +522,9 @@ const App = () => {
           };
 
           zim.on("receivePeerMessage", eventHandler.receivePeerMessage!);
+
+          //Fetching benefits on mount
+          await fetchBenefits();
 
           return () => {
             zim.off("receivePeerMessage");

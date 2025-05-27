@@ -7,6 +7,7 @@ export const usePetStore = create<PetState>((set, get) => ({
   petBreeds: null,
   // healthHistoryMap: new Map(),
   pets: null,
+  benefits: [],
 
   fetchPets: async (isDeceased?: boolean) => {
     const response = await api.get("/member/pets", {
@@ -192,6 +193,19 @@ export const usePetStore = create<PetState>((set, get) => ({
 
     set(() => ({
       pets: updatedPets,
+    }));
+  },
+
+  fetchBenefits: async () => {
+    const { data } = await api.get("member/smollcare/benefits");
+    set(() => ({
+      benefits: data.map(
+        (benefit: { name: string; description: string; totalUsageCount: number }) => ({
+          name: benefit.name,
+          description: benefit.description,
+          totalUsageCount: benefit.totalUsageCount,
+        })
+      ),
     }));
   },
 }));

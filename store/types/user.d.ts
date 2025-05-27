@@ -16,6 +16,7 @@ export type UpdateUserPayloadDto = Partial<{
 
 export interface User {
   id: string;
+  careId?: string;
   name: Nullable<string>;
   phone: string;
   email: Nullable<string>;

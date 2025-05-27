@@ -1,55 +1,14 @@
 import Layout from "@/components/app/Layout";
-import HomeScreenBanner from "@/components/app/HomeScreenBanner";
 import { NavigationType } from "@/store/types";
-import React, { useState } from "react";
+import React from "react";
 import { Button, Div, Image, Text } from "react-native-magnus";
-import {
-  fontHauoraBold,
-  fontHauoraMedium,
-  fontHauoraSemiBold,
-  fontHeading,
-} from "@/constant/constant";
-import { FlatList } from "react-native";
-import { View } from "react-native";
-import IconCircleCheckFilled from "@/components/icons/IconCircleCheckFilled";
-import {
-  IconScissors,
-  IconPaw,
-  IconBook,
-  IconStethoscope,
-  IconPhone,
-  IconBug,
-  IconDental,
-  IconEar,
-  IconClipboardCheck,
-  IconFlask,
-  IconFlask2,
-  IconCpu,
-  IconArrowRight,
-} from "@tabler/icons-react-native";
-import PlanCTA from "./PlanCTA";
-import SubscriptionBenefitsList from "@/components/app/subscription/SubscriptionBenefitsList";
-
-const planFeatures = [
-  { label: "Grooming", sessions: 4, icon: <IconScissors size={24} color="#474747" /> },
-  { label: "Nail Trim", sessions: 2, icon: <IconPaw size={24} color="#474747" /> },
-  { label: "Expert tips", sessions: 1, icon: <IconBook size={24} color="#474747" /> },
-  { label: "Consultations", sessions: 4, icon: <IconStethoscope size={24} color="#474747" /> },
-  { label: "Vet Calls", sessions: 4, icon: <IconPhone size={24} color="#474747" /> },
-  { label: "Deworming", sessions: 2, icon: <IconFlask size={24} color="#474747" /> },
-  { label: "Dental check up", sessions: 3, icon: <IconDental size={24} color="#474747" /> },
-  { label: "Ear cleaning", sessions: 3, icon: <IconEar size={24} color="#474747" /> },
-  {
-    label: "Free wellness checkup",
-    sessions: 1,
-    icon: <IconClipboardCheck size={24} color="#474747" />,
-  },
-  { label: "Blood test", sessions: 2, icon: <IconFlask size={24} color="#474747" /> },
-  { label: "Urine test", sessions: 1, icon: <IconFlask2 size={24} color="#474747" /> },
-  { label: "Microchipping", sessions: 1, icon: <IconCpu size={24} color="#474747" /> },
-];
+import { fontHauoraBold, fontHauoraSemiBold, fontHeading } from "@/constant/constant";
+import { IconArrowRight } from "@tabler/icons-react-native";
+import { useUserStore } from "@/store/modules/user";
 
 export default function SubscriptionScreen({ navigation }: { navigation: NavigationType }) {
+  const { user } = useUserStore();
+
   return (
     <Layout
       showBack
@@ -73,17 +32,17 @@ export default function SubscriptionScreen({ navigation }: { navigation: Navigat
           <Div alignItems="center">
             <Div alignItems="center">
               <Text fontSize="xl" fontFamily={fontHauoraSemiBold} textAlign="center">
-                Your Smoll number is
+                Your smoll number is
               </Text>
               <Div bg="#d6fcff" style={{ borderRadius: 1000 }} px={30} mt={10}>
                 <Text
-                  fontSize="8xl"
+                  fontSize="6xl"
                   fontFamily={fontHauoraBold}
                   color="#1655C8"
                   textAlignVertical="center"
                   lineHeight={68}
                 >
-                  179-234
+                  {user?.careId}
                 </Text>
               </Div>
             </Div>
