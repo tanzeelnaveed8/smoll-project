@@ -428,49 +428,51 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
 
           {activeTab === btns[0] && (
             <>
-              <Div
-                style={{
-                  padding: 16,
-                  borderWidth: 2,
-                  borderColor: "#6e99f0",
-                  flexDirection: "row",
-                  marginBottom: 16,
-                }}
-                rounded={20}
-              >
-                <Text
-                  maxW={146}
-                  w={"100%"}
-                  fontSize={"lg"}
-                  color="#545454"
-                  fontFamily={fontHauoraSemiBold}
-                >
-                  {petDetailsData?.name.toLocaleUpperCase()}{" "}
-                  {isCarePet ? "is already enrolled in the plan" : "isn't enrolled in the plan"}
-                </Text>
-                <Button
-                  bg="#6e99f0"
-                  rounded={100}
-                  h={42}
-                  pt={13}
-                  pb={13}
-                  lineHeight={18}
-                  w={134}
-                  ml={"auto"}
-                  fontFamily={fontHauoraMedium}
-                  onPress={() => {
-                    if (isCarePet) {
-                      handleTabPress("smoll® Care");
-                    } else {
-                      navigation.navigate("PetProfileBenefitsScreen", {
-                        petId: petDetailsData?.id,
-                      });
-                    }
+              {(!petDetailsData?.isDeceased || isCarePet) && (
+                <Div
+                  style={{
+                    padding: 16,
+                    borderWidth: 2,
+                    borderColor: "#6e99f0",
+                    flexDirection: "row",
+                    marginBottom: 16,
                   }}
+                  rounded={20}
                 >
-                  {isCarePet ? "View benefits" : `Enroll ${petDetailsData?.name}`}
-                </Button>
-              </Div>
+                  <Text
+                    maxW={146}
+                    w={"100%"}
+                    fontSize={"lg"}
+                    color="#545454"
+                    fontFamily={fontHauoraSemiBold}
+                  >
+                    {petDetailsData?.name.toLocaleUpperCase()}{" "}
+                    {isCarePet ? "is already enrolled in the plan" : "isn't enrolled in the plan"}
+                  </Text>
+                  <Button
+                    bg="#6e99f0"
+                    rounded={100}
+                    h={42}
+                    pt={13}
+                    pb={13}
+                    lineHeight={18}
+                    w={134}
+                    ml={"auto"}
+                    fontFamily={fontHauoraMedium}
+                    onPress={() => {
+                      if (isCarePet) {
+                        handleTabPress("smoll® Care");
+                      } else {
+                        navigation.navigate("PetProfileBenefitsScreen", {
+                          petId: petDetailsData?.id,
+                        });
+                      }
+                    }}
+                  >
+                    {isCarePet ? "View benefits" : `Enroll ${petDetailsData?.name}`}
+                  </Button>
+                </Div>
+              )}
               <FlatList
                 data={petDetails}
                 showsVerticalScrollIndicator={false}
