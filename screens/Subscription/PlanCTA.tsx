@@ -11,7 +11,15 @@ const avatars = [
   { id: 4, uri: "https://randomuser.me/api/portraits/men/4.jpg" },
 ];
 
-const PlanCTA = ({ petName, onEnrollPress }: { petName?: string; onEnrollPress: () => void }) => {
+const PlanCTA = ({
+  petName,
+  onEnrollPress,
+  loading,
+}: {
+  petName?: string;
+  onEnrollPress: () => void;
+  loading?: boolean;
+}) => {
   return (
     <View style={styles.container}>
       <View style={styles.row}>
@@ -29,7 +37,7 @@ const PlanCTA = ({ petName, onEnrollPress }: { petName?: string; onEnrollPress: 
         </Text>
       </View>
 
-      <ButtonPrimary bg="#6e99f0" onPress={onEnrollPress}>
+      <ButtonPrimary bg="#6e99f0" onPress={onEnrollPress} loading={loading}>
         Enroll {petName} in smoll® Care now!
       </ButtonPrimary>
     </View>

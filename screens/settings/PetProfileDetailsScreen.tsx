@@ -26,12 +26,13 @@ import HealthHistoryModal from "@/components/app/pet/HealthHistoryModal";
 import SubscriptionBenefitsList from "@/components/app/subscription/SubscriptionBenefitsList";
 import dayjs from "dayjs";
 
-type RouteType = { petId: string };
+type RouteType = { petId: string; activeBenefitTab: boolean };
 
 const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
   const route = useRoute();
   const toast = useToast();
   const id = (route.params as RouteType)?.petId;
+  const activeTabParam = (route.params as RouteType)?.activeBenefitTab;
   const { petsDetailMap, fetchPetDetails, updatePet, deleteHealthHistory, deletePet } =
     usePetStore();
   // const [healthHistoryDataState, setHealthHistoryDataState] = useState<
@@ -54,7 +55,6 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
 
   const btns = useMemo(() => {
     const baseBtns = ["Basic Details", "Health History"];
-    console.log(isCarePet, "TEST");
     if (Boolean(isCarePet)) {
       return [...baseBtns, "smoll® Care"];
     }
@@ -71,22 +71,19 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
   const itemPositions = useRef<Record<string, number>>({});
 
   useEffect(() => {
-    if (!id) return;
-
-    const fetchData = async () => {
-      const data = petsDetailMap.get(id);
+    const fetchPet = async () => {
       try {
         setLoading(true);
-
-        if (!data) {
-          await fetchPetDetails(id);
-        }
+        await fetchPetDetails(id);
       } finally {
         setLoading(false);
       }
     };
-    fetchData();
-  }, [id, petsDetailMap, id && petsDetailMap.get(id)]);
+    fetchPet();
+    if (activeTabParam) {
+      handleTabPress("smoll® Care");
+    }
+  }, []);
 
   useEffect(() => {
     if (!petDetailsData) return;
@@ -278,7 +275,7 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
       {!loading && (
         <Div flex={1}>
           <Div flexDir="row" alignItems="center" mb={35}>
-            <Div w={118} h={115} justifyContent="flex-end" alignItems="flex-end">
+            <Div w={118} h={115} justifyContent="center" alignItems="flex-end">
               <Div mx={"auto"}>
                 <ImageUpload
                   h={92}
@@ -294,10 +291,15 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
               </Div>
             </Div>
             <Div ml={14}>
-              <Div flexDir="row" alignItems="center">
+              <Div>
                 <Text fontSize={"4xl"} fontFamily={fontHauoraMedium}>
                   {petDetailsData?.name}
                 </Text>
+                {petDetailsData?.careId && (
+                  <Text fontSize={"lg"} mt={4} fontFamily={fontHauoraMedium} color="#494949">
+                    {petDetailsData.careId}
+                  </Text>
+                )}
               </Div>
 
               {petDetailsData?.isDeceased && (
@@ -525,7 +527,7 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
                 planFeatures={petDetailsData?.benefits as Benefit[]}
                 isExpandable={true}
               />
-              <Div py={16} bg="#fff">
+              <Div py={16} bg="#fff" px={8}>
                 <Text color="primary" fontSize="xl" fontFamily={fontHauoraBold}>
                   {petDetailsData?.name} smoll® Care plan is active until.
                 </Text>

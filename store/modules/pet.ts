@@ -210,6 +210,7 @@ export const usePetStore = create<PetState>((set, get) => ({
     }));
   },
   buySubscription: async (petId: string) => {
-    await api.post(`/member/smollcare/mock/Subscribe/${petId}`, { petId: petId, planId: 1 });
+    const { data } = await api.post(`/member/smollcare/subscribe/${petId}`);
+    return data;
   },
 }));

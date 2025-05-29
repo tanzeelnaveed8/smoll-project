@@ -28,7 +28,7 @@ export default function SubscriptionScreen({ navigation }: { navigation: Navigat
         <Div alignItems="center" mt={32}>
           <Image w={254} h={400} source={require("@/assets/images/smollcare-screen.png")} />
         </Div>
-        <Div mt={24}>
+        <Div mt={14}>
           <Div alignItems="center">
             <Div alignItems="center">
               <Text fontSize="xl" fontFamily={fontHauoraSemiBold} textAlign="center">
@@ -36,7 +36,7 @@ export default function SubscriptionScreen({ navigation }: { navigation: Navigat
               </Text>
               <Div bg="#d6fcff" style={{ borderRadius: 1000 }} px={30} mt={10}>
                 <Text
-                  fontSize="6xl"
+                  fontSize="8xl"
                   fontFamily={fontHauoraBold}
                   color="#1655C8"
                   textAlignVertical="center"
@@ -47,9 +47,9 @@ export default function SubscriptionScreen({ navigation }: { navigation: Navigat
               </Div>
             </Div>
             <Text
-              mt={32}
-              fontSize="sm"
-              maxW={202}
+              mt={24}
+              fontSize="md"
+              maxW={210}
               textAlign="center"
               fontFamily={fontHauoraSemiBold}
               lineHeight={16}
@@ -71,7 +71,7 @@ export default function SubscriptionScreen({ navigation }: { navigation: Navigat
             onPress={() => {
               navigation.navigate("PetProfileListScreen");
             }}
-            mt={32}
+            mt={42}
             mb={24}
           >
             <Text color="primary" fontSize={"xl"} fontFamily={fontHauoraSemiBold}>

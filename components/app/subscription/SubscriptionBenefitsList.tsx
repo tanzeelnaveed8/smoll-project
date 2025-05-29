@@ -9,9 +9,11 @@ import { Div, Text } from "react-native-magnus";
 const renderSessionDots = (count: number, usageCount?: number) => {
   const dots = [];
 
-  for (let i = 0; i < count; i++) {
-    let icon = <IconCircleCheckFilled key={i} color="#00D932" />;
-    if (usageCount !== undefined && i >= usageCount) {
+  for (let i = 0; i < Math.min(count, 4); i++) {
+    let icon;
+    if (i < usageCount) {
+      icon = <IconCircleCheckFilled key={i} color="#00D932" />;
+    } else {
       icon = <IconCircleCheck key={i} color="gray" />;
     }
     dots.push(icon);
@@ -61,7 +63,7 @@ const PlanRow = ({
 
         <View
           style={{
-            maxWidth: 126,
+            maxWidth: 118,
             width: "100%",
             flexDirection: "row",
             gap: 4,
@@ -164,6 +166,9 @@ export default function SubscriptionBenefitsList({
             expandable={isExpandable}
             styles={{
               marginBottom: index === planFeatures.length - 1 && 20,
+              borderBottomWidth: index !== planFeatures.length - 1 ? 1 : 0,
+              borderColor: "#c7c5c3",
+              paddingBottom: index !== planFeatures.length - 1 && 16,
             }}
           />
         )}
@@ -172,7 +177,7 @@ export default function SubscriptionBenefitsList({
           paddingHorizontal: 12,
           display: "flex",
           flexDirection: "column",
-          gap: 18,
+          gap: 14,
         }}
       />
     </>

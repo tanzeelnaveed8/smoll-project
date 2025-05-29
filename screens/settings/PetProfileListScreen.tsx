@@ -34,8 +34,6 @@ const PetProfileListScreen: React.FC<{ navigation: NavigationType }> = ({ naviga
     try {
       setLoading(true);
       const response = await fetchPets();
-
-      console.log("response", response);
       setPets(response);
     } finally {
       setLoading(false);
@@ -71,6 +69,7 @@ const PetProfileListScreen: React.FC<{ navigation: NavigationType }> = ({ naviga
                     image={image}
                     key={i}
                     name={item.name}
+                    careId={item?.careId}
                     isCarePet={Boolean(item.careId)}
                     isDeceased={item.isDeceased}
                     onPress={() => {
@@ -106,10 +105,11 @@ const ProfileCard: React.FC<{
   name: string;
   onPress: () => void;
   image?: string;
+  careId?: string | null | undefined;
   isDeceased?: boolean;
   isCarePet?: boolean;
   onEnrollPress?: () => void;
-}> = ({ name, onPress, image, isDeceased, isCarePet, onEnrollPress }) => {
+}> = ({ name, onPress, image, isDeceased, careId, isCarePet, onEnrollPress }) => {
   return (
     <TouchableOpacity onPress={onPress} activeOpacity={0.9}>
       <Div
@@ -126,7 +126,7 @@ const ProfileCard: React.FC<{
       >
         <Div p={12} flexDir="row" justifyContent="space-between" flex={1} rounded={24} bg="#FAF8F5">
           <Div flexDir="row">
-            <Div w={68} h={62} justifyContent="flex-end" alignItems="center">
+            <Div w={68} h={62} justifyContent="center" alignItems="center">
               <Image
                 src={
                   image
@@ -136,21 +136,27 @@ const ProfileCard: React.FC<{
                 w={58}
                 h={58}
                 borderColor="#222"
-                borderRadius={7}
+                borderRadius={50}
               />
             </Div>
-            <Text
-              fontSize={"xl"}
-              color={isCarePet ? "#6e99f0" : "#222"}
-              fontFamily={fontHauoraMedium}
-              ml={8}
-            >
-              {name}
-            </Text>
+            <Div ml={8} alignSelf="center">
+              <Text
+                fontSize={"2xl"}
+                color={isCarePet ? "#6e99f0" : "#222"}
+                fontFamily={fontHauoraMedium}
+              >
+                {name}
+              </Text>
+              {careId && (
+                <Text fontSize={"md"} color="gray" mt={2}>
+                  {careId}
+                </Text>
+              )}
+            </Div>
           </Div>
 
           <Div flexDir="row" alignItems="center">
-            {isDeceased && <Image ml="auto" mr={10} source={rainbowImage} h={60} w={110} />}
+            {isDeceased && <Image ml="auto" mr={10} source={rainbowImage} h={55} w={100} />}
             {!isDeceased && !isCarePet && (
               <Button
                 mr={10}

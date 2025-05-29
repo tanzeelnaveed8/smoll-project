@@ -25,71 +25,12 @@ import FlashCustomContent from "@/components/partials/FlashCustomContent";
 
 type RouteType = { petId: string };
 
-// const planFeatures = [
-//   {
-//     label: "Grooming",
-//     sessions: 4,
-//     ussageCount: 0,
-//   },
-//   { label: "Nail Trim", sessions: 2, ussageCount: 0 },
-//   {
-//     label: "Expert tips",
-//     sessions: 1,
-//     ussageCount: 0,
-//   },
-//   {
-//     label: "Consultations",
-//     sessions: 4,
-//     ussageCount: 0,
-//   },
-//   {
-//     label: "Vet Calls",
-//     sessions: 4,
-//     ussageCount: 0,
-//   },
-//   {
-//     label: "Deworming",
-//     sessions: 2,
-//     ussageCount: 0,
-//   },
-//   {
-//     label: "Dental check up",
-//     sessions: 3,
-//     ussageCount: 0,
-//   },
-//   {
-//     label: "Ear cleaning",
-//     sessions: 3,
-//     ussageCount: 0,
-//   },
-//   {
-//     label: "Free wellness checkup",
-//     sessions: 1,
-//     ussageCount: 0,
-//   },
-//   {
-//     label: "Blood test",
-//     sessions: 2,
-//     ussageCount: 0,
-//   },
-//   {
-//     label: "Urine test",
-//     sessions: 1,
-//     ussageCount: 0,
-//   },
-//   {
-//     label: "Microchipping",
-//     sessions: 1,
-//     ussageCount: 0,
-//   },
-// ];
-
 const PetProfileBenefitsScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
   const route = useRoute();
   const toast = useToast();
   const id = (route.params as RouteType)?.petId;
 
-  const { user, createPaymentIntent } = useUserStore();
+  const { user } = useUserStore();
   const paymentIntentRef = useRef<string | undefined>(undefined);
   const [envs, setEnvs] = useState<any>(null);
   const paymentIntentId = "";
@@ -99,6 +40,7 @@ const PetProfileBenefitsScreen: React.FC<{ navigation: NavigationType }> = ({ na
   const [loading, setLoading] = useState(false);
   const petDetailsData = petsDetailMap.get(id);
   const { benefits, buySubscription } = usePetStore();
+  const [btnLoader, setBtnLoader] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -139,11 +81,7 @@ const PetProfileBenefitsScreen: React.FC<{ navigation: NavigationType }> = ({ na
     await new Promise((resolve) => setTimeout(resolve, 500));
 
     try {
-      const { ephemeralKey, paymentIntent, paymentIntentClientSecret } = await createPaymentIntent(
-        user!.stripeCustomerId,
-        Math.round(100 * 100), // Ensure the amount is in cents and rounded //Booking charges
-        "AED"
-      );
+      const { ephemeralKey, paymentIntent, paymentIntentClientSecret } = await buySubscription(id);
 
       paymentIntentRef.current = paymentIntent;
 
@@ -222,9 +160,11 @@ const PetProfileBenefitsScreen: React.FC<{ navigation: NavigationType }> = ({ na
   };
 
   const openPaymentSheet = async () => {
+    setBtnLoader(true);
     const { error } = await presentPaymentSheet();
 
     if (error) {
+      setBtnLoader(false);
       showMessage({
         message: "",
         renderCustomContent: () => (
@@ -235,11 +175,20 @@ const PetProfileBenefitsScreen: React.FC<{ navigation: NavigationType }> = ({ na
 
       return;
     }
-
-    await buySubscription(petDetailsData?.id as string);
-
     //On Success
-    navigation.navigate("paymentSuccess");
+    await fetchPetDetails(id);
+
+    await new Promise((resolve: any) => {
+      setTimeout(() => {
+        resolve();
+      }, 2000);
+    });
+    setBtnLoader(false);
+
+    navigation.replace("paymentSuccess", {
+      petId: id,
+      petName: petDetailsData?.name,
+    });
   };
 
   useEffect(() => {
@@ -285,7 +234,11 @@ const PetProfileBenefitsScreen: React.FC<{ navigation: NavigationType }> = ({ na
               </Div>
             </Div>
             <SubscriptionBenefitsList planFeatures={benefits} />
-            <PlanCTA petName={petDetailsData?.name} onEnrollPress={openPaymentSheet} />
+            <PlanCTA
+              loading={btnLoader}
+              petName={petDetailsData?.name}
+              onEnrollPress={openPaymentSheet}
+            />
           </>
         )}
         {loading && (

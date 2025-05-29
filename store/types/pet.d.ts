@@ -95,5 +95,7 @@ export interface PetState {
 
   fetchBenefits: () => Promise<void>;
 
-  buySubscription: (petId: string) => Promise<void>;
+  buySubscription: (
+    petId: string
+  ) => Promise<{ paymentIntent: string; paymentIntentClientSecret: string; ephemeralKey: string }>;
 }
