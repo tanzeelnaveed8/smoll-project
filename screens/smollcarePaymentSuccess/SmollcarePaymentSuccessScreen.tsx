@@ -6,15 +6,21 @@ import {
   fontHeading,
 } from "@/constant/constant";
 import { NavigationType } from "@/store/types";
+import { useRoute } from "@react-navigation/native";
 import { IconArrowLeft } from "@tabler/icons-react-native";
 import React from "react";
 import { Div, Image, Text } from "react-native-magnus";
+
+type RouteType = { petId: string };
 
 export default function SmollcarePaymentSuccessScreen({
   navigation,
 }: {
   navigation: NavigationType;
 }) {
+  const route = useRoute();
+  const id = (route.params as RouteType)?.petId;
+
   return (
     <Div bg="#FAF8F5" flex={1} alignItems="center" justifyContent="center" px={22}>
       <Div alignItems="center">

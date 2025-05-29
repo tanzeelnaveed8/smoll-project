@@ -69,6 +69,23 @@ const Dropdown = forwardRef<DropdownRef, DropdownProps>((props, ref) => {
             {props.isDeceased ? "Alive" : "Deceased"}
           </MagnusDropdown.Option>
           <MagnusDropdown.Option
+            value={"cancelSubscription"}
+            block
+            borderBottomWidth={1}
+            borderBottomColor="gray200"
+            bg="gray100"
+            color="red500"
+            py="lg"
+            px="xl"
+            justifyContent="center"
+            roundedBottom="lg"
+            onPress={() => {
+              props.onSelect("cancelSubscription");
+            }}
+          >
+            Cancel Subscription
+          </MagnusDropdown.Option>
+          <MagnusDropdown.Option
             value={"Cancel"}
             block
             color="red500"

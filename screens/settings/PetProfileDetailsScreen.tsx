@@ -8,7 +8,7 @@ import {
   fontHauoraSemiBold,
 } from "@/constant/constant";
 import { NavigationType } from "@/store/types";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { ActivityIndicator, FlatList, ScrollView, TouchableOpacity } from "react-native";
 import { Button, Div, DropdownRef, Image, Tag, Text } from "react-native-magnus";
 import ProfileOptionButton from "./ProfileOptionButton";
@@ -24,67 +24,7 @@ import { IconCrown, IconDots } from "@tabler/icons-react-native";
 import Dropdown from "@/components/partials/Dropdown";
 import HealthHistoryModal from "@/components/app/pet/HealthHistoryModal";
 import SubscriptionBenefitsList from "@/components/app/subscription/SubscriptionBenefitsList";
-
-const btns = ["Basic Details", "Health History"];
-
-// const planFeatures = [
-//   {
-//     label: "Grooming",
-//     sessions: 4,
-//     ussageCount: 2,
-//   },
-//   { label: "Nail Trim", sessions: 2, ussageCount: 0 },
-//   {
-//     label: "Expert tips",
-//     sessions: 1,
-//     ussageCount: 0,
-//   },
-//   {
-//     label: "Consultations",
-//     sessions: 4,
-//     ussageCount: 0,
-//   },
-//   {
-//     label: "Vet Calls",
-//     sessions: 4,
-//     ussageCount: 0,
-//   },
-//   {
-//     label: "Deworming",
-//     sessions: 2,
-//     ussageCount: 0,
-//   },
-//   {
-//     label: "Dental check up",
-//     sessions: 3,
-//     ussageCount: 0,
-//   },
-//   {
-//     label: "Ear cleaning",
-//     sessions: 3,
-//     ussageCount: 0,
-//   },
-//   {
-//     label: "Free wellness checkup",
-//     sessions: 1,
-//     ussageCount: 0,
-//   },
-//   {
-//     label: "Blood test",
-//     sessions: 2,
-//     ussageCount: 0,
-//   },
-//   {
-//     label: "Urine test",
-//     sessions: 1,
-//     ussageCount: 0,
-//   },
-//   {
-//     label: "Microchipping",
-//     sessions: 1,
-//     ussageCount: 0,
-//   },
-// ];
+import dayjs from "dayjs";
 
 type RouteType = { petId: string };
 
@@ -110,12 +50,22 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
   const petDetailsData = petsDetailMap.get(id);
   const healthHistoryDataState = petsDetailMap.get(id)?.healthHistory;
 
+  const isCarePet = petDetailsData?.careId;
+
+  const btns = useMemo(() => {
+    const baseBtns = ["Basic Details", "Health History"];
+    console.log(isCarePet, "TEST");
+    if (Boolean(isCarePet)) {
+      return [...baseBtns, "smoll® Care"];
+    }
+    return baseBtns;
+  }, [isCarePet]);
+
   const [activeTab, setActiveTab] = useState(btns[0]);
 
   const [open, setOpen] = useState(false);
   // const [selectedPetId, setSelectedPetId] = useState("");
   const [healthHistoryId, setHealthHistoryId] = useState("");
-  const isCarePet = petDetailsData?.careId;
 
   const scrollRef = useRef<ScrollView>(null);
   const itemPositions = useRef<Record<string, number>>({});
@@ -155,10 +105,6 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
   //     setHealthHistoryDataState(petDetailsData.healthHistory);
   //   }
   // }, []);
-
-  useEffect(() => {
-    if (isCarePet) btns.push("smoll® Care");
-  }, [isCarePet]);
 
   const handleUpdateImage = async (file: UploadedFile[]) => {
     if (!petDetailsData) return;
@@ -285,6 +231,9 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
 
       if (value === "Deceased") {
         handleUpdateDeceased();
+      }
+      if ((value = "cancelSubscription")) {
+        console.log("TEST");
       }
     }, 500);
   };
@@ -581,7 +530,7 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
                   {petDetailsData?.name} smoll® Care plan is active until.
                 </Text>
                 <Text color="#333" fontSize="2xl" fontFamily={fontHauoraBold}>
-                  12.12.2022
+                  {dayjs(petDetailsData?.subscription?.endDate).format("DD MMM YYYY")}
                 </Text>
               </Div>
             </>

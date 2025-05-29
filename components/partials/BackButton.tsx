@@ -13,7 +13,7 @@ const BackButton = (props: PropTypes) => {
   const { text, onPress, showCloseIcon, ...restProps } = props;
 
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity onPress={onPress} activeOpacity={0.6}>
       <Button
         {...restProps}
         onPress={onPress}

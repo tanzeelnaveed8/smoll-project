@@ -98,7 +98,7 @@ const PetProfileBenefitsScreen: React.FC<{ navigation: NavigationType }> = ({ na
   const [profileImg, setProfileImg] = useState("");
   const [loading, setLoading] = useState(false);
   const petDetailsData = petsDetailMap.get(id);
-  const { benefits } = usePetStore();
+  const { benefits, buySubscription } = usePetStore();
 
   useEffect(() => {
     if (!id) return;
@@ -236,6 +236,8 @@ const PetProfileBenefitsScreen: React.FC<{ navigation: NavigationType }> = ({ na
       return;
     }
 
+    await buySubscription(petDetailsData?.id as string);
+
     //On Success
     navigation.navigate("paymentSuccess");
   };
@@ -278,16 +280,7 @@ const PetProfileBenefitsScreen: React.FC<{ navigation: NavigationType }> = ({ na
                     <Text fontSize={"4xl"} fontFamily={fontHauoraSemiBold}>
                       {petDetailsData?.name}
                     </Text>
-                    <Text fontSize="xl" color="#565656" fontFamily={fontHauoraSemiBold}>
-                      179-188-C23
-                    </Text>
                   </Div>
-
-                  {petDetailsData?.isDeceased && (
-                    <Tag fontSize={"md"} mt={8} p={0} bg={colorErrorText} color="#fff">
-                      Deceased
-                    </Tag>
-                  )}
                 </Div>
               </Div>
             </Div>

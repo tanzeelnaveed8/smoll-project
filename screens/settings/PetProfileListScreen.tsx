@@ -111,7 +111,7 @@ const ProfileCard: React.FC<{
   onEnrollPress?: () => void;
 }> = ({ name, onPress, image, isDeceased, isCarePet, onEnrollPress }) => {
   return (
-    <TouchableOpacity onPress={onPress} activeOpacity={0.6}>
+    <TouchableOpacity onPress={onPress} activeOpacity={0.9}>
       <Div
         flexDir="row"
         alignItems="center"

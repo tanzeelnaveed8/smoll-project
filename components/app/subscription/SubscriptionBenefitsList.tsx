@@ -23,25 +23,22 @@ const renderSessionDots = (count: number, usageCount?: number) => {
 import { Pressable } from "react-native";
 import { useState } from "react";
 import { Benefit } from "@/store/types/pet";
+import dayjs from "dayjs";
 
 const PlanRow = ({
-  name,
-  totalUsageCount,
-  consumedUsageCount,
+  benefit,
   styles,
   expandable = false,
 }: {
-  name: string;
-  totalUsageCount: number;
-  consumedUsageCount?: number;
+  benefit: Benefit;
   styles: any;
   expandable?: boolean;
 }) => {
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <Pressable onPress={() => expandable && setExpanded((prev) => !prev)}>
-      <Div flexDir="row" justifyContent="space-between" alignItems="center" style={{ ...styles }}>
+    <Pressable onPress={() => expandable && setExpanded((prev) => !prev)} style={{ ...styles }}>
+      <Div flexDir="row" justifyContent="space-between" alignItems="center">
         <Div
           style={{
             display: "flex",
@@ -58,7 +55,7 @@ const PlanRow = ({
             <Text>•</Text>
           )}
           <Text fontSize="lg" fontFamily={fontHauoraBold} color="#000">
-            {name}
+            {benefit.name}
           </Text>
         </Div>
 
@@ -67,35 +64,43 @@ const PlanRow = ({
             maxWidth: 126,
             width: "100%",
             flexDirection: "row",
-            gap: 6,
+            gap: 4,
           }}
         >
-          {renderSessionDots(totalUsageCount, consumedUsageCount)}
+          {renderSessionDots(benefit.totalUsageCount, benefit.consumedUsageCount)}
         </View>
       </Div>
       {expanded && (
         <Div ml={24} mr={12} my={12}>
-          <Text color="#444444" fontSize="md" fontFamily={fontHauoraSemiBold}>
-            Service Provided by
-          </Text>
-          <Div mt={4} style={{ display: "flex", gap: 12 }}>
-            {[0, 0].map((item, i) => (
-              <Div key={i}>
-                <Div flexDir="row" justifyContent="space-between">
-                  <Text fontSize="lg" fontFamily={fontHauoraSemiBold} color="#000">
-                    Euro Pet Clinic
-                  </Text>
-                  <Text fontSize="md" fontFamily={fontHauoraSemiBold} color="#000">
-                    12.12.2022
-                  </Text>
-                </Div>
-                <Text mt={4} fontFamily={fontHauoraSemiBold}>
-                  The pet require medical attention as soon as possible and must be checked in one
-                  month.
-                </Text>
+          {Boolean(benefit.history.length) && (
+            <>
+              <Text color="#444444" fontSize="md" fontFamily={fontHauoraSemiBold}>
+                Service Provided by
+              </Text>
+              <Div mt={4} style={{ display: "flex", gap: 12 }}>
+                {benefit.history.map((item) => (
+                  <Div key={item.partnerId}>
+                    <Div flexDir="row" justifyContent="space-between">
+                      <Text fontSize="lg" fontFamily={fontHauoraSemiBold} color="#000">
+                        {item.clinicName}
+                      </Text>
+                      <Text fontSize="md" fontFamily={fontHauoraSemiBold} color="#000">
+                        {dayjs(item.createdAt).format("DD-MM-YYYY")}
+                      </Text>
+                    </Div>
+                    <Text mt={4} fontFamily={fontHauoraSemiBold}>
+                      {item.note}
+                    </Text>
+                  </Div>
+                ))}
               </Div>
-            ))}
-          </Div>
+            </>
+          )}
+          {!Boolean(benefit.history.length) && (
+            <Text ml={3} fontFamily={fontHauoraMedium} color="#494949">
+              Not yet availed.
+            </Text>
+          )}
         </Div>
       )}
     </Pressable>
@@ -155,9 +160,7 @@ export default function SubscriptionBenefitsList({
         style={{ paddingRight: 10 }}
         renderItem={({ item, index }) => (
           <PlanRow
-            name={item.name}
-            totalUsageCount={item.totalUsageCount}
-            consumedUsageCount={item?.consumedUsageCount}
+            benefit={item}
             expandable={isExpandable}
             styles={{
               marginBottom: index === planFeatures.length - 1 && 20,

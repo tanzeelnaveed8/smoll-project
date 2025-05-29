@@ -41,6 +41,10 @@ export type PetDetail = {
   preExistingConditions: string;
   isDeceased?: boolean;
   benefits?: Benefit[];
+  subscription?: {
+    startDate: string;
+    endDate: string;
+  } | null;
 };
 
 export interface Pet {
@@ -90,4 +94,6 @@ export interface PetState {
   deletePet: (petId: string) => Promise<void>;
 
   fetchBenefits: () => Promise<void>;
+
+  buySubscription: (petId: string) => Promise<void>;
 }
