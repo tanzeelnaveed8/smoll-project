@@ -90,9 +90,11 @@ const PlanRow = ({
                         {dayjs(item.createdAt).format("DD-MM-YYYY")}
                       </Text>
                     </Div>
-                    <Text mt={4} fontFamily={fontHauoraSemiBold}>
-                      {item.note}
-                    </Text>
+                    {item.note && (
+                      <Text mt={4} fontFamily={fontHauoraSemiBold}>
+                        {item.note}
+                      </Text>
+                    )}
                   </Div>
                 ))}
               </Div>

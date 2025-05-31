@@ -33,8 +33,15 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
   const toast = useToast();
   const id = (route.params as RouteType)?.petId;
   const activeTabParam = (route.params as RouteType)?.activeBenefitTab;
-  const { petsDetailMap, fetchPetDetails, updatePet, deleteHealthHistory, deletePet } =
-    usePetStore();
+  const {
+    petsDetailMap,
+    fetchPetDetails,
+    updatePet,
+    deleteHealthHistory,
+    deletePet,
+    activateSubscription,
+    cancelSubscription,
+  } = usePetStore();
   // const [healthHistoryDataState, setHealthHistoryDataState] = useState<
   //   HealthHistory[] | null
   // >(null);
@@ -47,6 +54,8 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
   const [showDeleteModal, setShowDeleteModal] = useState("");
   const [showDeletePetModal, setShowDeletePetModal] = useState(false);
   const [deletePetLoading, setDeletePetLoading] = useState(false);
+
+  const [showCancelSubscriptionModal, setShowCancelSubscriptionModal] = useState(false);
 
   const petDetailsData = petsDetailMap.get(id);
   const healthHistoryDataState = petsDetailMap.get(id)?.healthHistory;
@@ -220,8 +229,40 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
     },
   ];
 
+  const handleCancelSubscription = async (petId: string) => {
+    try {
+      setShowCancelSubscriptionModal(false);
+      setLoading(true);
+      await cancelSubscription(petId);
+      await fetchPetDetails(petId);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleActivateSubscription = async (petId: string) => {
+    try {
+      setLoading(true);
+      await activateSubscription(petId);
+      await fetchPetDetails(petId);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleMenuDropdownSelect = (value: string) => {
     setTimeout(() => {
+      if (
+        petDetailsData?.subscriptionDetails?.status === "Active" &&
+        (value === "Delete Pet" || value === "Deceased")
+      ) {
+        toast.show("Please cancel your active subscription request before making changes.", {
+          placement: "top",
+          type: "danger",
+        });
+        return;
+      }
+
       if (value === "Delete Pet") {
         setShowDeletePetModal(true);
       }
@@ -229,8 +270,12 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
       if (value === "Deceased") {
         handleUpdateDeceased();
       }
-      if ((value = "cancelSubscription")) {
-        console.log("TEST");
+      if (value === "activeSubscription") {
+        handleActivateSubscription(id);
+      }
+
+      if (value === "cancelSubscription") {
+        setShowCancelSubscriptionModal(true);
       }
     }, 500);
   };
@@ -352,6 +397,7 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
               style={{ marginLeft: "auto" }}
               activeOpacity={0.6}
               onPress={() => {
+                console.log(petDetailsData);
                 if ("current" in optionMenuRef && optionMenuRef.current) {
                   optionMenuRef.current.open();
                 }
@@ -363,6 +409,9 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
             <Dropdown
               ref={optionMenuRef}
               onSelect={handleMenuDropdownSelect}
+              subscriptionStatus={
+                petDetailsData?.subscriptionDetails?.status as "Active" | "Canceled"
+              }
               isDeceased={petDetailsData?.isDeceased ?? false}
             />
 
@@ -387,6 +436,7 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
                     borderColor: "#6e99f0",
                     flexDirection: "row",
                     marginBottom: 16,
+                    alignItems: "center",
                   }}
                   rounded={20}
                 >
@@ -409,6 +459,7 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
                     lineHeight={18}
                     w={134}
                     ml={"auto"}
+                    alignSelf="center"
                     fontFamily={fontHauoraMedium}
                     onPress={() => {
                       if (isCarePet) {
@@ -527,13 +578,21 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
                 planFeatures={petDetailsData?.benefits as Benefit[]}
                 isExpandable={true}
               />
-              <Div py={16} bg="#fff" px={8}>
-                <Text color="primary" fontSize="xl" fontFamily={fontHauoraBold}>
-                  {petDetailsData?.name} smoll® Care plan is active until.
-                </Text>
-                <Text color="#333" fontSize="2xl" fontFamily={fontHauoraBold}>
-                  {dayjs(petDetailsData?.subscription?.endDate).format("DD MMM YYYY")}
-                </Text>
+
+              <Div py={16} bg="#FAF8F5" px={4}>
+                <Div>
+                  <Text color="primary" fontSize="xl" fontFamily={fontHauoraBold}>
+                    {petDetailsData?.name} smoll® Care plan is active until.
+                  </Text>
+                  <Text color="#333" fontSize="2xl" fontFamily={fontHauoraBold}>
+                    {dayjs(petDetailsData?.subscriptionDetails?.endDate).format("DD MMM YYYY")}
+                  </Text>
+                </Div>
+                {petDetailsData?.subscriptionDetails?.status === "Canceled" && (
+                  <Text mt={4} fontSize={"lg"} color="#494949" fontFamily={fontHauoraBold}>
+                    Your subscription will not auto-renew as you have canceled the subscription.
+                  </Text>
+                )}
               </Div>
             </>
           )}
@@ -560,6 +619,18 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
         showModal={showDeletePetModal}
         onClose={() => setShowDeletePetModal(false)}
         onConfirm={handleDeletePet}
+        confirmText="Confirm"
+        cancelText="Cancel"
+        confirmBgColor={colorErrorText}
+      />
+
+      <ConfirmationModal
+        heading="Cancel Subscription"
+        height={365}
+        text="Are you sure you want to cancel your subscription? You'll retain full access until your plan ends. It won't renew automatically."
+        showModal={showCancelSubscriptionModal ? true : false}
+        onClose={() => setShowCancelSubscriptionModal(false)}
+        onConfirm={() => handleCancelSubscription(id)}
         confirmText="Confirm"
         cancelText="Cancel"
         confirmBgColor={colorErrorText}

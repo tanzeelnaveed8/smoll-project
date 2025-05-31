@@ -41,9 +41,10 @@ export type PetDetail = {
   preExistingConditions: string;
   isDeceased?: boolean;
   benefits?: Benefit[];
-  subscription?: {
+  subscriptionDetails?: {
     startDate: string;
     endDate: string;
+    status?: "Canceled" | "Active";
   } | null;
 };
 
@@ -98,4 +99,7 @@ export interface PetState {
   buySubscription: (
     petId: string
   ) => Promise<{ paymentIntent: string; paymentIntentClientSecret: string; ephemeralKey: string }>;
+
+  activateSubscription: (petId: string) => Promise<void>;
+  cancelSubscription: (petId: string) => Promise<void>;
 }
