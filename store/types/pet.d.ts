@@ -11,8 +11,22 @@ export enum PetSpeciesEnum {
   CAT = "cat",
 }
 
+export interface Benefit {
+  id: number;
+  name: string;
+  totalUsageCount: number;
+  consumedUsageCount: number;
+  history: {
+    partnerId: string;
+    clinicName: string;
+    note: string;
+    createdAt: string;
+  }[];
+}
+
 export type PetDetail = {
   id?: string;
+  careId?: string | null;
   name: string;
   age: number;
   weight?: number;
@@ -26,10 +40,17 @@ export type PetDetail = {
   healthHistory?: HealthHistory[];
   preExistingConditions: string;
   isDeceased?: boolean;
+  benefits?: Benefit[];
+  subscriptionDetails?: {
+    startDate: string;
+    endDate: string;
+    status?: "Canceled" | "Active";
+  } | null;
 };
 
 export interface Pet {
   id: string;
+  careId?: string | null;
   name: string;
   photos: UploadedFile[];
   isDeceased?: boolean;
@@ -54,6 +75,7 @@ export interface PetState {
   petsDetailMap: Map<string, Nullable<PetDetail>>;
   // healthHistoryMap: Map<string, HealthHistory[]>;
   petBreeds: Nullable<PetBreeds>;
+  benefits: Benefit[];
 
   fetchPetBreeds: () => Promise<void>;
   fetchPets: (isDeceased?: boolean) => Promise<Pet[]>;
@@ -71,4 +93,13 @@ export interface PetState {
   deleteHealthHistory: (petId: string, healthHistoryId: string) => Promise<void>;
 
   deletePet: (petId: string) => Promise<void>;
+
+  fetchBenefits: () => Promise<void>;
+
+  buySubscription: (
+    petId: string
+  ) => Promise<{ paymentIntent: string; paymentIntentClientSecret: string; ephemeralKey: string }>;
+
+  activateSubscription: (petId: string) => Promise<void>;
+  cancelSubscription: (petId: string) => Promise<void>;
 }

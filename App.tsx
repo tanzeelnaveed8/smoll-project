@@ -102,6 +102,10 @@ import { SocketEventEnum } from "./socket/events";
 import Popup from "./components/Popup";
 import SocketListener from "./components/SocketListener";
 import OnboardingUserModal from "./components/app/onboarding/OnboardingUserModal";
+import SubscriptionScreen from "./screens/Subscription/SubscriptionScreen";
+import PetProfileBenefitsScreen from "./screens/PetProfile/PetProfileBenefitsScreen";
+import SmollcarePaymentSuccessScreen from "./screens/smollcarePaymentSuccess/SmollcarePaymentSuccessScreen";
+import { usePetStore } from "./store/modules/pet";
 
 Sentry.init({
   dsn: Config.SENTRY_DSN,
@@ -151,10 +155,12 @@ const theme = {
     // xl: 18,
     // lg: 16,
     // md: 14,
-    "5xl": scaleFontSize(28),
-    "2xl": scaleFontSize(20),
-    "4xl": scaleFontSize(24),
+    "8xl": scaleFontSize(48),
+    "7xl": scaleFontSize(34),
     "6xl": scaleFontSize(32),
+    "5xl": scaleFontSize(28),
+    "4xl": scaleFontSize(24),
+    "2xl": scaleFontSize(20),
     xl: scaleFontSize(18),
     lg: scaleFontSize(16),
     md: scaleFontSize(14),
@@ -333,6 +339,7 @@ const App = () => {
   } = useExpertStore();
   const { play } = useSound();
   const { SET_NAV_NOTIF } = useUserStore();
+  const { fetchBenefits } = usePetStore();
 
   useEffect(() => {
     (async () => {
@@ -516,6 +523,9 @@ const App = () => {
 
           zim.on("receivePeerMessage", eventHandler.receivePeerMessage!);
 
+          //Fetching benefits on mount
+          await fetchBenefits();
+
           return () => {
             zim.off("receivePeerMessage");
           };
@@ -616,6 +626,7 @@ const App = () => {
                   <Stack.Screen name="CounsellingInboxScreen" component={CounsellingInboxScreen} />
                   <Stack.Screen name="CounsellingChatScreen" component={CounsellingChatScreen} />
                   <Stack.Screen name="ExpertsListScreen" component={ExpertsListScreen} />
+                  <Stack.Screen name="SubscriptionScreen" component={SubscriptionScreen} />
                   <Stack.Screen
                     name="ExpertsListDetailScreen"
                     component={ExpertsListDetailScreen}
@@ -694,6 +705,10 @@ const App = () => {
                     name="PetProfileDetailsScreen"
                     component={PetProfileDetailsScreen}
                   />
+                  <Stack.Screen
+                    name="PetProfileBenefitsScreen"
+                    component={PetProfileBenefitsScreen}
+                  />
                   <Stack.Screen name="SettingsMainScreen" component={SettingsMainScreen} />
                   {/* Appointments Screens */}
                   <Stack.Screen name="AppointmentsScreen" component={AppointmentsScreen} />
@@ -701,7 +716,10 @@ const App = () => {
                     name="AppointmentDetailsScreen"
                     component={AppointmentDetailsScreen}
                   />
+
                   <Stack.Screen name="PaymentDetailsScreen" component={PaymentDetailsScreen} />
+                  {/* Smoll care payment success */}
+                  <Stack.Screen name="paymentSuccess" component={SmollcarePaymentSuccessScreen} />
                 </Stack.Navigator>
                 <Popup />
                 <SocketListener />

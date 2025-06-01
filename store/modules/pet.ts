@@ -7,6 +7,7 @@ export const usePetStore = create<PetState>((set, get) => ({
   petBreeds: null,
   // healthHistoryMap: new Map(),
   pets: null,
+  benefits: [],
 
   fetchPets: async (isDeceased?: boolean) => {
     const response = await api.get("/member/pets", {
@@ -78,10 +79,14 @@ export const usePetStore = create<PetState>((set, get) => ({
 
     console.log("updated pet data", data);
     const existingHealthHistory = get().petsDetailMap.get(id)?.healthHistory;
+    const existingBenefits = get().petsDetailMap.get(id)?.benefits;
+    const existingSubscriptionDetails = get().petsDetailMap.get(id)?.subscriptionDetails;
 
     const updatedPetMap = get().petsDetailMap.set(id, {
       ...response.data,
       healthHistory: existingHealthHistory,
+      benefits: existingBenefits,
+      subscriptionDetails: existingSubscriptionDetails,
     });
 
     const updatedPets = get().pets?.map((pet) =>
@@ -193,5 +198,31 @@ export const usePetStore = create<PetState>((set, get) => ({
     set(() => ({
       pets: updatedPets,
     }));
+  },
+
+  fetchBenefits: async () => {
+    const { data } = await api.get("member/smollcare/benefits");
+    console.log(data, "TEST");
+    set(() => ({
+      benefits: data.map(
+        (benefit: { name: string; description: string; maxUsagePerSubscription: number }) => ({
+          name: benefit.name,
+          description: benefit.description,
+          totalUsageCount: benefit.maxUsagePerSubscription,
+        })
+      ),
+    }));
+  },
+  buySubscription: async (petId: string) => {
+    const { data } = await api.post(`/member/smollcare/subscribe/${petId}`);
+    return data;
+  },
+  activateSubscription: async (petId: string) => {
+    await api.post(`/member/smollcare/activate/subscription/${petId}`);
+  },
+
+  cancelSubscription: async (petId: string) => {
+    const res = await api.delete(`/member/smollcare/cancel/subscription/${petId}`);
+    console.log(res);
   },
 }));

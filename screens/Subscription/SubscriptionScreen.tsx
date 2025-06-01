@@ -1,0 +1,92 @@
+import Layout from "@/components/app/Layout";
+import { NavigationType } from "@/store/types";
+import React from "react";
+import { Button, Div, Image, Text } from "react-native-magnus";
+import { fontHauoraBold, fontHauoraSemiBold, fontHeading } from "@/constant/constant";
+import { IconArrowRight } from "@tabler/icons-react-native";
+import { useUserStore } from "@/store/modules/user";
+
+export default function SubscriptionScreen({ navigation }: { navigation: NavigationType }) {
+  const { user } = useUserStore();
+
+  return (
+    <Layout
+      showBack
+      title="Smoll Care"
+      onBackPress={() => {
+        navigation.goBack();
+      }}
+      style={{ position: "relative", justifyContent: "flex-start" }}
+    >
+      <Div>
+        <Div mt={12}>
+          <Text fontSize="2xl" color="#679FF0" fontFamily={fontHeading}>
+            Welcome To
+          </Text>
+          <Image w={157} h={28} mt={10} source={require("@/assets/icons/smollcare-logo.png")} />
+        </Div>
+        <Div alignItems="center" mt={32}>
+          <Image w={254} h={400} source={require("@/assets/images/smollcare-screen.png")} />
+        </Div>
+        <Div mt={14}>
+          <Div alignItems="center">
+            <Div alignItems="center">
+              <Text fontSize="xl" fontFamily={fontHauoraSemiBold} textAlign="center">
+                Your smoll number is
+              </Text>
+              <Div bg="#d6fcff" style={{ borderRadius: 1000 }} px={30} mt={10}>
+                <Text
+                  fontSize="8xl"
+                  fontFamily={fontHauoraBold}
+                  color="#1655C8"
+                  textAlignVertical="center"
+                  lineHeight={68}
+                >
+                  {user?.careId}
+                </Text>
+              </Div>
+            </Div>
+            <Text
+              mt={24}
+              fontSize="md"
+              maxW={210}
+              textAlign="center"
+              fontFamily={fontHauoraSemiBold}
+              lineHeight={16}
+            >
+              Present this number at any of our partner locations and enjoy your smoll® Care
+              benefits
+            </Text>
+          </Div>
+          <Button
+            fontSize={"lg"}
+            fontFamily={fontHauoraSemiBold}
+            color="primary"
+            flexDir="row"
+            alignItems="center"
+            mx={"auto"}
+            style={{ gap: 4 }}
+            p={0}
+            bg="transparent"
+            onPress={() => {
+              navigation.navigate("PetProfileListScreen");
+            }}
+            mt={42}
+            mb={24}
+          >
+            <Text color="primary" fontSize={"xl"} fontFamily={fontHauoraSemiBold}>
+              My Pets
+            </Text>
+            <IconArrowRight
+              width={24}
+              height={24}
+              color={"#427594"}
+              strokeWidth={2}
+              style={{ marginTop: 4 }}
+            />
+          </Button>
+        </Div>
+      </Div>
+    </Layout>
+  );
+}

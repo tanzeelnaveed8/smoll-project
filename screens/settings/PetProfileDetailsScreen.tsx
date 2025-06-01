@@ -3,36 +3,45 @@ import ImageUpload from "@/components/partials/ImageUpload";
 import {
   colorErrorText,
   colorPrimary,
+  fontHauoraBold,
   fontHauoraMedium,
   fontHauoraSemiBold,
 } from "@/constant/constant";
 import { NavigationType } from "@/store/types";
-import React, { useEffect, useRef, useState } from "react";
-import { ActivityIndicator, FlatList, TouchableOpacity } from "react-native";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { ActivityIndicator, FlatList, ScrollView, TouchableOpacity } from "react-native";
 import { Button, Div, DropdownRef, Image, Tag, Text } from "react-native-magnus";
 import ProfileOptionButton from "./ProfileOptionButton";
 import AddButton from "@/components/partials/AddButton";
 import { useRoute } from "@react-navigation/native";
 import { usePetStore } from "@/store/modules/pet";
-import { HealthHistory, PetDetail } from "@/store/types/pet";
+import { Benefit, HealthHistory, PetDetail } from "@/store/types/pet";
 import { UploadedFile } from "@/store/types/file";
 import { useToast } from "react-native-toast-notifications";
 import { showMessage } from "react-native-flash-message";
 import ConfirmationModal from "@/components/partials/ConfirmationModal";
-import { IconDots } from "@tabler/icons-react-native";
+import { IconCrown, IconDots } from "@tabler/icons-react-native";
 import Dropdown from "@/components/partials/Dropdown";
 import HealthHistoryModal from "@/components/app/pet/HealthHistoryModal";
+import SubscriptionBenefitsList from "@/components/app/subscription/SubscriptionBenefitsList";
+import dayjs from "dayjs";
 
-const btns = ["Basic Details", "Health History"];
-
-type RouteType = { petId: string };
+type RouteType = { petId: string; activeBenefitTab: boolean };
 
 const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
   const route = useRoute();
   const toast = useToast();
   const id = (route.params as RouteType)?.petId;
-  const { petsDetailMap, fetchPetDetails, updatePet, deleteHealthHistory, deletePet } =
-    usePetStore();
+  const activeTabParam = (route.params as RouteType)?.activeBenefitTab;
+  const {
+    petsDetailMap,
+    fetchPetDetails,
+    updatePet,
+    deleteHealthHistory,
+    deletePet,
+    activateSubscription,
+    cancelSubscription,
+  } = usePetStore();
   // const [healthHistoryDataState, setHealthHistoryDataState] = useState<
   //   HealthHistory[] | null
   // >(null);
@@ -46,8 +55,20 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
   const [showDeletePetModal, setShowDeletePetModal] = useState(false);
   const [deletePetLoading, setDeletePetLoading] = useState(false);
 
+  const [showCancelSubscriptionModal, setShowCancelSubscriptionModal] = useState(false);
+
   const petDetailsData = petsDetailMap.get(id);
   const healthHistoryDataState = petsDetailMap.get(id)?.healthHistory;
+
+  const isCarePet = petDetailsData?.careId;
+
+  const btns = useMemo(() => {
+    const baseBtns = ["Basic Details", "Health History"];
+    if (Boolean(isCarePet)) {
+      return [...baseBtns, "smoll® Care"];
+    }
+    return baseBtns;
+  }, [isCarePet]);
 
   const [activeTab, setActiveTab] = useState(btns[0]);
 
@@ -55,23 +76,23 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
   // const [selectedPetId, setSelectedPetId] = useState("");
   const [healthHistoryId, setHealthHistoryId] = useState("");
 
-  useEffect(() => {
-    if (!id) return;
+  const scrollRef = useRef<ScrollView>(null);
+  const itemPositions = useRef<Record<string, number>>({});
 
-    const fetchData = async () => {
-      const data = petsDetailMap.get(id);
+  useEffect(() => {
+    const fetchPet = async () => {
       try {
         setLoading(true);
-
-        if (!data) {
-          await fetchPetDetails(id);
-        }
+        await fetchPetDetails(id);
       } finally {
         setLoading(false);
       }
     };
-    fetchData();
-  }, [id, petsDetailMap, id && petsDetailMap.get(id)]);
+    fetchPet();
+    if (activeTabParam) {
+      handleTabPress("smoll® Care");
+    }
+  }, []);
 
   useEffect(() => {
     if (!petDetailsData) return;
@@ -208,14 +229,59 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
     },
   ];
 
+  const handleCancelSubscription = async (petId: string) => {
+    try {
+      setShowCancelSubscriptionModal(false);
+      setLoading(true);
+      await cancelSubscription(petId);
+      await fetchPetDetails(petId);
+      toast.show("Subscription canceled successfully", {
+        placement: "top",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleActivateSubscription = async (petId: string) => {
+    try {
+      setLoading(true);
+      await activateSubscription(petId);
+      await fetchPetDetails(petId);
+      toast.show("Subscription activated successfully", {
+        placement: "top",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleMenuDropdownSelect = (value: string) => {
     setTimeout(() => {
+      // if (
+      //   petDetailsData?.subscriptionDetails?.status === "Active" &&
+      //   (value === "Delete Pet" || value === "Deceased")
+      // ) {
+      //   toast.show("Please cancel your active subscription request before making changes.", {
+      //     placement: "top",
+      //     type: "danger",
+      //   });
+      //   return;
+      // }
+
       if (value === "Delete Pet") {
         setShowDeletePetModal(true);
       }
 
       if (value === "Deceased") {
         handleUpdateDeceased();
+      }
+      if (value === "activeSubscription") {
+        handleActivateSubscription(id);
+      }
+
+      if (value === "cancelSubscription") {
+        setShowCancelSubscriptionModal(true);
       }
     }, 500);
   };
@@ -241,6 +307,14 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
     }
   };
 
+  const handleTabPress = (item: string) => {
+    setActiveTab(item);
+    const x = itemPositions.current[item];
+    if (x !== undefined && scrollRef.current) {
+      scrollRef.current.scrollTo({ x: x - 16, animated: true });
+    }
+  };
+
   return (
     <Layout
       showBack
@@ -252,7 +326,7 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
       {!loading && (
         <Div flex={1}>
           <Div flexDir="row" alignItems="center" mb={35}>
-            <Div w={118} h={115} justifyContent="flex-end" alignItems="flex-end">
+            <Div w={118} h={115} justifyContent="center" alignItems="flex-end">
               <Div mx={"auto"}>
                 <ImageUpload
                   h={92}
@@ -268,9 +342,16 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
               </Div>
             </Div>
             <Div ml={14}>
-              <Text fontSize={"4xl"} fontFamily={fontHauoraMedium}>
-                {petDetailsData?.name}
-              </Text>
+              <Div>
+                <Text fontSize={"4xl"} fontFamily={fontHauoraMedium}>
+                  {petDetailsData?.name}
+                </Text>
+                {petDetailsData?.careId && (
+                  <Text fontSize={"lg"} mt={4} fontFamily={fontHauoraMedium} color="#494949">
+                    {petDetailsData.careId}
+                  </Text>
+                )}
+              </Div>
 
               {petDetailsData?.isDeceased && (
                 <Tag fontSize={"md"} mt={8} p={0} bg={colorErrorText} color="#fff">
@@ -281,60 +362,62 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
           </Div>
 
           <Div flexDir="row" position="relative" mb={20}>
-            {btns.map((item) => (
-              <TouchableOpacity
-                key={item}
-                style={{ marginRight: 24 }}
-                onPress={() => {
-                  setActiveTab(item);
-                }}
-              >
-                <Button
+            <ScrollView ref={scrollRef} horizontal showsHorizontalScrollIndicator={false}>
+              {btns.map((item) => (
+                <TouchableOpacity
                   key={item}
-                  py={0}
-                  flexDir="column"
-                  px={4}
-                  bg="transparent"
-                  pointerEvents="none"
+                  activeOpacity={0.6}
+                  style={{ marginRight: 24 }}
+                  onPress={() => handleTabPress(item)}
+                  onLayout={(event) => {
+                    itemPositions.current[item] = event.nativeEvent.layout.x;
+                  }}
                 >
-                  <Text
-                    fontSize={"lg"}
-                    fontFamily={fontHauoraSemiBold}
-                    mb={8}
-                    color={activeTab === item ? "#222" : "darkGreyText"}
-                  >
-                    {item}
-                  </Text>
+                  <Button py={0} flexDir="column" px={4} bg="transparent" pointerEvents="none">
+                    <Text
+                      fontSize="lg"
+                      fontFamily={fontHauoraSemiBold}
+                      mb={8}
+                      color={activeTab === item ? "#222" : "darkGreyText"}
+                    >
+                      {item}
+                    </Text>
 
-                  {item === activeTab && (
-                    <Div
-                      h={7}
-                      bg={true ? "#427594" : "transparent"}
-                      w={"100%"}
-                      style={{
-                        borderTopRightRadius: 4,
-                        borderTopLeftRadius: 4,
-                      }}
-                    />
-                  )}
-                </Button>
-              </TouchableOpacity>
-            ))}
+                    {item === activeTab && (
+                      <Div
+                        h={7}
+                        bg="#427594"
+                        w="100%"
+                        style={{
+                          borderTopRightRadius: 4,
+                          borderTopLeftRadius: 4,
+                        }}
+                      />
+                    )}
+                  </Button>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
 
             <TouchableOpacity
               style={{ marginLeft: "auto" }}
+              activeOpacity={0.6}
               onPress={() => {
+                console.log(petDetailsData);
                 if ("current" in optionMenuRef && optionMenuRef.current) {
                   optionMenuRef.current.open();
                 }
               }}
             >
-              <IconDots width={26} height={26} color={"#222"} />
+              <IconDots style={{ marginLeft: 12 }} width={26} height={26} color={"#222"} />
             </TouchableOpacity>
 
             <Dropdown
               ref={optionMenuRef}
               onSelect={handleMenuDropdownSelect}
+              subscriptionStatus={
+                petDetailsData?.subscriptionDetails?.status as "Active" | "Canceled"
+              }
               isDeceased={petDetailsData?.isDeceased ?? false}
             />
 
@@ -350,36 +433,85 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
           </Div>
 
           {activeTab === btns[0] && (
-            <FlatList
-              data={petDetails}
-              showsVerticalScrollIndicator={false}
-              renderItem={({ item }) => (
-                <ProfileOptionButton
-                  title={item.title}
-                  value={item.value}
-                  editable
-                  onEdit={() => {
-                    if (item.fileName) {
-                      navigation.navigate(item.link, {
-                        petId: id,
-                        fileName: item.fileName,
-                      });
-                    }
-
-                    if (item.heading) {
-                      navigation.navigate(item.link, {
-                        heading: item.heading,
-                        placeholder: item.placeholder,
-                        fieldKey: item.fieldKey,
-                        value: `${item.dataValue || ""}`,
-                        petId: id,
-                      });
-                    }
+            <>
+              {(!petDetailsData?.isDeceased || isCarePet) && (
+                <Div
+                  style={{
+                    padding: 16,
+                    borderWidth: 2,
+                    borderColor: "#6e99f0",
+                    flexDirection: "row",
+                    marginBottom: 16,
+                    alignItems: "center",
                   }}
-                />
+                  rounded={20}
+                >
+                  <Text
+                    maxW={146}
+                    w={"100%"}
+                    fontSize={"lg"}
+                    color="#545454"
+                    fontFamily={fontHauoraSemiBold}
+                  >
+                    {petDetailsData?.name.toLocaleUpperCase()}{" "}
+                    {isCarePet ? "is already enrolled in the plan" : "isn't enrolled in the plan"}
+                  </Text>
+                  <Button
+                    bg="#6e99f0"
+                    rounded={100}
+                    h={42}
+                    pt={13}
+                    pb={13}
+                    lineHeight={18}
+                    w={134}
+                    ml={"auto"}
+                    alignSelf="center"
+                    fontFamily={fontHauoraMedium}
+                    onPress={() => {
+                      if (isCarePet) {
+                        handleTabPress("smoll® Care");
+                      } else {
+                        navigation.navigate("PetProfileBenefitsScreen", {
+                          petId: petDetailsData?.id,
+                        });
+                      }
+                    }}
+                  >
+                    {isCarePet ? "View benefits" : `Enroll ${petDetailsData?.name}`}
+                  </Button>
+                </Div>
               )}
-              keyExtractor={(item, i) => `${i}`}
-            />
+              <FlatList
+                data={petDetails}
+                showsVerticalScrollIndicator={false}
+                renderItem={({ item }) => (
+                  <ProfileOptionButton
+                    title={item.title}
+                    value={item.value}
+                    editable
+                    onEdit={() => {
+                      if (item.fileName) {
+                        navigation.navigate(item.link, {
+                          petId: id,
+                          fileName: item.fileName,
+                        });
+                      }
+
+                      if (item.heading) {
+                        navigation.navigate(item.link, {
+                          heading: item.heading,
+                          placeholder: item.placeholder,
+                          fieldKey: item.fieldKey,
+                          value: `${item.dataValue || ""}`,
+                          petId: id,
+                        });
+                      }
+                    }}
+                  />
+                )}
+                keyExtractor={(item, i) => `${i}`}
+              />
+            </>
           )}
 
           {activeTab === btns[1] && (
@@ -446,6 +578,30 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
               />
             </Div>
           )}
+          {activeTab === btns[2] && (
+            <>
+              <SubscriptionBenefitsList
+                planFeatures={petDetailsData?.benefits as Benefit[]}
+                isExpandable={true}
+              />
+
+              <Div py={16} bg="#FAF8F5" px={4}>
+                <Div>
+                  <Text color="primary" fontSize="xl" fontFamily={fontHauoraBold}>
+                    {petDetailsData?.name} smoll® Care plan is active until.
+                  </Text>
+                  <Text color="#333" fontSize="2xl" fontFamily={fontHauoraBold}>
+                    {dayjs(petDetailsData?.subscriptionDetails?.endDate).format("DD MMM YYYY")}
+                  </Text>
+                </Div>
+                {petDetailsData?.subscriptionDetails?.status === "Canceled" && (
+                  <Text mt={4} fontSize={"lg"} color="#494949" fontFamily={fontHauoraBold}>
+                    Your subscription will not auto-renew as you have canceled the subscription.
+                  </Text>
+                )}
+              </Div>
+            </>
+          )}
         </Div>
       )}
 
@@ -469,6 +625,18 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
         showModal={showDeletePetModal}
         onClose={() => setShowDeletePetModal(false)}
         onConfirm={handleDeletePet}
+        confirmText="Confirm"
+        cancelText="Cancel"
+        confirmBgColor={colorErrorText}
+      />
+
+      <ConfirmationModal
+        heading="Cancel Subscription"
+        height={365}
+        text="Are you sure you want to cancel your subscription? You'll retain full access until your plan ends. It won't renew automatically."
+        showModal={showCancelSubscriptionModal ? true : false}
+        onClose={() => setShowCancelSubscriptionModal(false)}
+        onConfirm={() => handleCancelSubscription(id)}
         confirmText="Confirm"
         cancelText="Cancel"
         confirmBgColor={colorErrorText}

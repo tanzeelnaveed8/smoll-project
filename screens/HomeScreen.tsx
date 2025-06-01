@@ -11,6 +11,7 @@ import {
   IconArrowRight,
   IconBell,
   IconChevronRight,
+  IconCrown,
   IconSettings,
   IconX,
 } from "@tabler/icons-react-native";
@@ -36,6 +37,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRoute } from "@react-navigation/native";
 import React, { useEffect, useMemo, useState } from "react";
 import { showMessage } from "react-native-flash-message";
+import HomeScreenBanner from "@/components/app/HomeScreenBanner";
 
 interface Props {
   navigation: NavigationType;
@@ -45,7 +47,7 @@ interface Props {
 interface OptionTab {
   name: string;
   description: string;
-  value: "counselling" | "petProfileScreen" | "appointments";
+  value: "chat" | "petProfileScreen" | "appointments";
   loading: boolean;
   icon?: React.JSX.Element;
   img?: ImageSourcePropType;
@@ -62,6 +64,22 @@ const HomeScreen: React.FC<Props> = (props) => {
 
   const [options, setOptions] = useState<OptionTab[]>([
     {
+      name: "Chat with Expert",
+      value: "chat",
+      description: "Quick and Easy",
+      loading: false,
+      icon: (
+        <Div style={{ marginRight: 10, transform: [{ translateX: 2 }] }}>
+          <Image
+            source={require("../assets/images/homepage-boy-img.png")}
+            w={60}
+            h={60}
+            style={{ objectFit: "contain" }}
+          />
+        </Div>
+      ),
+    },
+    {
       name: "Appointments",
       value: "appointments",
       description: "All your appointment shows here",
@@ -74,31 +92,13 @@ const HomeScreen: React.FC<Props> = (props) => {
       ),
     },
     {
-      name: "Human Counselling",
-      value: "counselling",
-      description: "Talk to somone knows how it feels loosing a pet",
-      loading: false,
-      // icon: <OnboardingIcon4 width={55} height={55} />,
-      icon: (
-        <Div style={{ marginLeft: -10, transform: [{ translateX: 15 }] }}>
-          {/* <GirlIcon width={72} height={72} /> */}
-          <Image
-            source={require("../assets/images/home-human-counseling.png")}
-            w={80}
-            h={80}
-            style={{ objectFit: "contain" }}
-          />
-        </Div>
-      ),
-    },
-    {
       name: "smollink",
       value: "petProfileScreen",
       description: "Add and track your pet’s records",
       loading: false,
       // icon: <OnboardingIcon5 width={55} height={55} />,
-      img: require("../assets/images/home-pet-img.png"),
-      width: 70,
+      img: require("@/assets/images/home-pet-img.png"),
+      width: 71,
       height: 68,
       style: {
         transform: [{ translateX: 5 }, { translateY: 2 }],
@@ -158,13 +158,8 @@ const HomeScreen: React.FC<Props> = (props) => {
   }, [user]);
 
   const handleOptionTabPress = async (item: OptionTab) => {
-    if (item.value === "counselling") {
-      showMessage({
-        message: "Coming Soon!",
-        // description: "Get ready for some pawsome counselling! 🐾",
-        backgroundColor: "#222",
-        color: "#fff",
-      });
+    if (item.value === "chat") {
+      props.navigation.navigate("ExpertsListScreen");
     } else if (item.value === "petProfileScreen") {
       props.navigation.navigate("PetProfileListScreen", {
         navigateTo: "HomeScreen",
@@ -239,87 +234,7 @@ const HomeScreen: React.FC<Props> = (props) => {
             <Text fontSize={"lg"}>How can we help you today?</Text>
           </Div>
 
-          <TouchableOpacity
-            style={{
-              borderWidth: 1.4,
-              borderColor: "#222",
-              borderRadius: 40,
-              paddingVertical: 15,
-              flexDirection: "row",
-              marginBottom: 20,
-              alignItems: "center",
-            }}
-            onPress={() => {
-              props.navigation.navigate("ExpertsListScreen");
-            }}
-          >
-            <Div px={20} pr={0} h={191}>
-              <Div mb={30} mt={34}>
-                <Text fontSize={"4xl"} fontFamily={fontHauoraBold} lineHeight={27}>
-                  Chat with pet
-                </Text>
-                <Text fontSize={"4xl"} fontFamily={fontHauoraBold} lineHeight={27} mb={3}>
-                  wellness expert
-                </Text>
-
-                <Text fontFamily={fontHauoraSemiBold} fontSize="lg" lineHeight={20}>
-                  Completly Free!
-                </Text>
-              </Div>
-
-              <Div
-                style={{
-                  paddingVertical: 2,
-                  flexDirection: "row",
-                  gap: 10,
-                }}
-              >
-                <Tag
-                  fontFamily={fontHauoraSemiBold}
-                  fontSize={"md"}
-                  bg="#222"
-                  color="#fff"
-                  rounded={25}
-                  pb={9.48}
-                  pt={7.52}
-                  px={25}
-                  pointerEvents="none"
-                >
-                  Start Now
-                </Tag>
-                <IconArrowRight
-                  width={28}
-                  height={28}
-                  strokeWidth={2.7}
-                  color="#222"
-                  style={{ alignSelf: "center" }}
-                />
-                {/* <Icon
-                  alignSelf="center"
-                  name="chevron-right"
-                  fontFamily="Feather"
-                  fontSize={24}
-                  color="#222"
-                /> */}
-              </Div>
-            </Div>
-
-            {/* <OnboardingIcon1 width={130} height={130} /> */}
-
-            <Div
-              style={{
-                transform: [{ translateX: WINDOW_WIDTH <= 375 ? -40 : -25 }],
-              }}
-            >
-              {/* <HomeScreenBoyIcon width={190} height={170} /> */}
-              <Image
-                source={require("../assets/images/homepage-boy-img.png")}
-                w={200}
-                h={190}
-                style={{ objectFit: "contain", aspectRatio: "1/1" }}
-              />
-            </Div>
-          </TouchableOpacity>
+          <HomeScreenBanner isCarePlanUser={false} navigation={props.navigation} />
 
           <Div>
             <Div flexDir="row" style={{ gap: 8 }} alignItems="center" mb={16}>
