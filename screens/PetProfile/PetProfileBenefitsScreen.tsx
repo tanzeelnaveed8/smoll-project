@@ -233,7 +233,7 @@ const PetProfileBenefitsScreen: React.FC<{ navigation: NavigationType }> = ({ na
                 </Div>
               </Div>
             </Div>
-            <SubscriptionBenefitsList planFeatures={benefits} />
+            <SubscriptionBenefitsList planFeatures={benefits} petName={petDetailsData?.name} />
             <PlanCTA
               loading={btnLoader}
               petName={petDetailsData?.name}
