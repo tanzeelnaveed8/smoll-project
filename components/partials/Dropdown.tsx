@@ -107,7 +107,7 @@ const Dropdown = forwardRef<DropdownRef, DropdownProps>((props, ref) => {
                 props.onSelect("activeSubscription");
               }}
             >
-              Active Subscription
+              Subscribe
             </MagnusDropdown.Option>
           ) : (
             <></>

@@ -5,9 +5,12 @@ import { Button, Div, Image, Text } from "react-native-magnus";
 import { fontHauoraBold, fontHauoraSemiBold, fontHeading } from "@/constant/constant";
 import { IconArrowRight } from "@tabler/icons-react-native";
 import { useUserStore } from "@/store/modules/user";
+import { Dimensions } from "react-native";
 
 export default function SubscriptionScreen({ navigation }: { navigation: NavigationType }) {
   const { user } = useUserStore();
+
+  const { height } = Dimensions.get("window");
 
   return (
     <Layout
@@ -16,7 +19,7 @@ export default function SubscriptionScreen({ navigation }: { navigation: Navigat
       onBackPress={() => {
         navigation.goBack();
       }}
-      style={{ position: "relative", justifyContent: "flex-start" }}
+      style={{ position: "relative", justifyContent: "flex-start", flex: 1 }}
     >
       <Div>
         <Div mt={12}>
@@ -26,7 +29,11 @@ export default function SubscriptionScreen({ navigation }: { navigation: Navigat
           <Image w={157} h={28} mt={10} source={require("@/assets/icons/smollcare-logo.png")} />
         </Div>
         <Div alignItems="center" mt={32}>
-          <Image w={254} h={400} source={require("@/assets/images/smollcare-screen.png")} />
+          <Image
+            w={"80%"}
+            h={height * 0.45}
+            source={require("@/assets/images/smollcare-screen.png")}
+          />
         </Div>
         <Div mt={14}>
           <Div alignItems="center">

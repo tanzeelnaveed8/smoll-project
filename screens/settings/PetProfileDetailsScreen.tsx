@@ -78,6 +78,8 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
 
   const scrollRef = useRef<ScrollView>(null);
   const itemPositions = useRef<Record<string, number>>({});
+  const [layoutReady, setLayoutReady] = useState(false);
+  const layoutCount = useRef(0);
 
   useEffect(() => {
     const fetchPet = async () => {
@@ -89,9 +91,6 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
       }
     };
     fetchPet();
-    if (activeTabParam) {
-      handleTabPress("smoll® Care");
-    }
   }, []);
 
   useEffect(() => {
@@ -258,16 +257,16 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
 
   const handleMenuDropdownSelect = (value: string) => {
     setTimeout(() => {
-      // if (
-      //   petDetailsData?.subscriptionDetails?.status === "Active" &&
-      //   (value === "Delete Pet" || value === "Deceased")
-      // ) {
-      //   toast.show("Please cancel your active subscription request before making changes.", {
-      //     placement: "top",
-      //     type: "danger",
-      //   });
-      //   return;
-      // }
+      if (
+        petDetailsData?.subscriptionDetails?.status === "Active" &&
+        (value === "Delete Pet" || value === "Deceased")
+      ) {
+        toast.show("Please cancel your active subscription request before making changes.", {
+          placement: "top",
+          type: "danger",
+        });
+        return;
+      }
 
       if (value === "Delete Pet") {
         setShowDeletePetModal(true);
@@ -314,6 +313,12 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
       scrollRef.current.scrollTo({ x: x - 16, animated: true });
     }
   };
+
+  useEffect(() => {
+    if (activeTabParam && layoutReady) {
+      handleTabPress("smoll® Care");
+    }
+  }, [activeTabParam, layoutReady]);
 
   return (
     <Layout
@@ -371,6 +376,11 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
                   onPress={() => handleTabPress(item)}
                   onLayout={(event) => {
                     itemPositions.current[item] = event.nativeEvent.layout.x;
+                    layoutCount.current += 1;
+
+                    if (layoutCount.current === btns.length) {
+                      setLayoutReady(true);
+                    }
                   }}
                 >
                   <Button py={0} flexDir="column" px={4} bg="transparent" pointerEvents="none">
