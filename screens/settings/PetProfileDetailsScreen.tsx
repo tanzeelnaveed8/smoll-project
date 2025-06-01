@@ -235,6 +235,9 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
       setLoading(true);
       await cancelSubscription(petId);
       await fetchPetDetails(petId);
+      toast.show("Subscription canceled successfully", {
+        placement: "top",
+      });
     } finally {
       setLoading(false);
     }
@@ -245,6 +248,9 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
       setLoading(true);
       await activateSubscription(petId);
       await fetchPetDetails(petId);
+      toast.show("Subscription activated successfully", {
+        placement: "top",
+      });
     } finally {
       setLoading(false);
     }
@@ -252,16 +258,16 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
 
   const handleMenuDropdownSelect = (value: string) => {
     setTimeout(() => {
-      if (
-        petDetailsData?.subscriptionDetails?.status === "Active" &&
-        (value === "Delete Pet" || value === "Deceased")
-      ) {
-        toast.show("Please cancel your active subscription request before making changes.", {
-          placement: "top",
-          type: "danger",
-        });
-        return;
-      }
+      // if (
+      //   petDetailsData?.subscriptionDetails?.status === "Active" &&
+      //   (value === "Delete Pet" || value === "Deceased")
+      // ) {
+      //   toast.show("Please cancel your active subscription request before making changes.", {
+      //     placement: "top",
+      //     type: "danger",
+      //   });
+      //   return;
+      // }
 
       if (value === "Delete Pet") {
         setShowDeletePetModal(true);
