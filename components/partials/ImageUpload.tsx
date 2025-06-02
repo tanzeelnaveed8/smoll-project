@@ -595,8 +595,22 @@ const ImageUpload: React.FC<Props> = ({
                     position: "relative",
                   }}
                 >
+                  <TouchableOpacity
+                    onPress={() => setModalVisible(false)}
+                    style={{
+                      position: "absolute",
+                      top: 10,
+                      right: 10,
+                      zIndex: 10,
+                      backgroundColor: "#00000061",
+                      borderRadius: 10,
+                      padding: 6,
+                    }}
+                  >
+                    <IconX width={24} height={24} color={"#fff"} />
+                  </TouchableOpacity>
                   <Image
-                    source={{ uri: image }} // Display the selected image
+                    source={{ uri: image as string }} // Display the selected image
                     style={{
                       width: "100%",
                       height: "100%",
