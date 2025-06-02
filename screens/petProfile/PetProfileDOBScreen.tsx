@@ -36,6 +36,7 @@ const PetProfileDOBScreen: React.FC<Props> = (props) => {
           const date = dob.toDateString();
           props.setPet({ ...props.pet, dob, age: getAgeFromDOB(date) });
         }}
+        maxDate={new Date()}
       />
     </Div>
   );

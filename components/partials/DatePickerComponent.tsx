@@ -8,9 +8,15 @@ interface DatePickerComponentProps {
   value: string;
   onChange: (dob: any) => void;
   py?: number;
+  maxDate?: Date;
 }
 
-const DatePickerComponent: React.FC<DatePickerComponentProps> = ({ value, onChange, py }) => {
+const DatePickerComponent: React.FC<DatePickerComponentProps> = ({
+  value,
+  onChange,
+  py,
+  maxDate,
+}) => {
   const [date, setDate] = useState(new Date(value));
   const [open, setOpen] = useState(false);
 
@@ -56,6 +62,7 @@ const DatePickerComponent: React.FC<DatePickerComponentProps> = ({ value, onChan
         mode="date"
         onConfirm={handleConfirm}
         onCancel={hideDatePicker}
+        maximumDate={maxDate ? maxDate : undefined}
       />
     </Div>
   );
