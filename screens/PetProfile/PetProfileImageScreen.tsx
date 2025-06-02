@@ -48,6 +48,7 @@ const PetProfileImageScreen: React.FC<Props> = (props) => {
           singleImage
           onUnSelect={(e) => handleUnselectFile(0)}
           onChange={(files) => handleImageChange(files, 0)}
+          mediaType="Images"
           disableDownload
         />
       </Div>
