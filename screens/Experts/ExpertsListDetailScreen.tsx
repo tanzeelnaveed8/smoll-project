@@ -166,17 +166,9 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({ nav
   };
 
   const handleRequestConsultation = async () => {
-    try {
-      setIsRequesting(true);
-      const { id } = await requestConsultation(expertId);
-
-      navigation.navigate("ConsultationCaseBriefScreen", {
-        consultationId: id,
-        expertId: expertId,
-      });
-    } finally {
-      setIsRequesting(false);
-    }
+    navigation.navigate("ConsultationCaseBriefScreen", {
+      expertId: expertId,
+    });
   };
 
   const handleScheduleConsultation = async () => {

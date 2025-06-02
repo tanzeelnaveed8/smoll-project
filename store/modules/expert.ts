@@ -66,8 +66,10 @@ export const useExpertStore = create<ExpertState>((set, get) => ({
     const res = await api.get(`/member/vets/consultations/${id}`);
     return res.data;
   },
-  requestConsultation: async (id) => {
-    const res = await api.post(`/member/vets/${id}/consultations/request`);
+  requestConsultation: async (vetId, petId) => {
+    const res = await api.post(`/member/vets/${vetId}/consultations/request`, {
+      petId,
+    });
 
     return { id: res.data.id };
   },

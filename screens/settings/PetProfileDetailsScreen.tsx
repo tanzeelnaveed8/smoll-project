@@ -39,7 +39,6 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
     updatePet,
     deleteHealthHistory,
     deletePet,
-    activateSubscription,
     cancelSubscription,
   } = usePetStore();
   // const [healthHistoryDataState, setHealthHistoryDataState] = useState<
@@ -242,19 +241,6 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
     }
   };
 
-  const handleActivateSubscription = async (petId: string) => {
-    try {
-      setLoading(true);
-      await activateSubscription(petId);
-      await fetchPetDetails(petId);
-      toast.show("Subscription activated successfully", {
-        placement: "top",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleMenuDropdownSelect = (value: string) => {
     setTimeout(() => {
       if (
@@ -275,10 +261,6 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
       if (value === "Deceased") {
         handleUpdateDeceased();
       }
-      if (value === "activeSubscription") {
-        handleActivateSubscription(id);
-      }
-
       if (value === "cancelSubscription") {
         setShowCancelSubscriptionModal(true);
       }
@@ -425,9 +407,7 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
             <Dropdown
               ref={optionMenuRef}
               onSelect={handleMenuDropdownSelect}
-              subscriptionStatus={
-                petDetailsData?.subscriptionDetails?.status as "Active" | "Canceled"
-              }
+              showCancelSubscription={petDetailsData?.subscriptionDetails?.status === "Active"}
               isDeceased={petDetailsData?.isDeceased ?? false}
             />
 
