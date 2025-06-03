@@ -114,10 +114,12 @@ const PlanRow = ({
 interface SubscriptionBenefitsListProps {
   planFeatures: Benefit[];
   isExpandable?: boolean;
+  petName?: string;
 }
 
 export default function SubscriptionBenefitsList({
   planFeatures,
+  petName,
   isExpandable = false,
 }: SubscriptionBenefitsListProps) {
   return (
@@ -125,7 +127,7 @@ export default function SubscriptionBenefitsList({
       <Div px={12}>
         {!isExpandable && (
           <Text color="#121212" fontSize={"xl"} fontFamily={fontHauoraSemiBold}>
-            With smoll® Care Plan Steve will recieve all the following:
+            With smoll® Care Plan {petName} will recieve all the following:
           </Text>
         )}
         <Div

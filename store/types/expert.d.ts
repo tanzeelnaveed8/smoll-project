@@ -63,7 +63,7 @@ interface ExpertState {
   updateExpertStatus: (id: string, status: boolean) => void;
   fetchExpertAvailability: (id: string, date?: Date) => Promise<ExpertAvailability[]>;
   findOneConsultation: (id: string) => Promise<FindOneConsultationResDto>;
-  requestConsultation: (id: string) => Promise<{ id: string }>;
+  requestConsultation: (vetId: string, petId: string) => Promise<{ id: string }>;
   scheduleConsultation: (
     id: string,
     payload: {

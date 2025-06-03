@@ -69,6 +69,7 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
   const { updateConsultation } = useExpertStore();
   const { cancelConsultation } = useAppointmentStore();
   const { fetchPets } = usePetStore();
+  const { requestConsultation } = useExpertStore();
 
   const route = useRoute();
 
@@ -84,7 +85,6 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
   const petId = (route.params as Record<string, string>)?.petId;
   const petName = (route.params as Record<string, string>)?.petName;
   const expertId = (route.params as Record<string, string>)?.expertId;
-  const consultationId = (route.params as Record<string, string>)?.consultationId;
 
   const [documents, setDocuments] = useState<UploadedFile[]>([]);
   const [description, setDescription] = useState("");
@@ -186,6 +186,11 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
     try {
       setActionLoading(true);
 
+      const { id: consultationId } = await requestConsultation(
+        expertId,
+        selectedPet?.value as string
+      ); //send petId also
+
       const { id: caseId } = await createCase({
         description,
         assets: documents,
@@ -211,7 +216,6 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
   };
 
   const handleCancelConsultation = () => {
-    cancelConsultation(consultationId);
     navigation.goBack();
   };
 

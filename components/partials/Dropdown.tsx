@@ -5,7 +5,7 @@ import React, { forwardRef } from "react";
 interface DropdownProps {
   ref: React.RefObject<DropdownRef>;
   isDeceased: boolean;
-  subscriptionStatus: "Active" | "Canceled";
+  showCancelSubscription: boolean;
   onSelect: (value: string) => void;
 }
 
@@ -70,7 +70,7 @@ const Dropdown = forwardRef<DropdownRef, DropdownProps>((props, ref) => {
             {props.isDeceased ? "Alive" : "Deceased"}
           </MagnusDropdown.Option>
 
-          {props.subscriptionStatus === "Active" ? (
+          {props.showCancelSubscription ? (
             <MagnusDropdown.Option
               value={"cancelSubscription"}
               block
@@ -87,27 +87,6 @@ const Dropdown = forwardRef<DropdownRef, DropdownProps>((props, ref) => {
               }}
             >
               Cancel Subscription
-            </MagnusDropdown.Option>
-          ) : (
-            <></>
-          )}
-          {props.subscriptionStatus === "Canceled" ? (
-            <MagnusDropdown.Option
-              value={"activeSubscription"}
-              block
-              borderBottomWidth={1}
-              borderBottomColor="gray200"
-              bg="gray100"
-              color="blue600"
-              py="lg"
-              px="xl"
-              justifyContent="center"
-              roundedBottom="lg"
-              onPress={() => {
-                props.onSelect("activeSubscription");
-              }}
-            >
-              Active Subscription
             </MagnusDropdown.Option>
           ) : (
             <></>
