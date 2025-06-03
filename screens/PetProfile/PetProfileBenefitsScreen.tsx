@@ -216,6 +216,7 @@ const PetProfileBenefitsScreen: React.FC<{ navigation: NavigationType }> = ({ na
                     <ImageUpload
                       h={92}
                       w={93}
+                      docType="image/"
                       rounded={100}
                       uri={profileImg}
                       hideUnselectBtn
