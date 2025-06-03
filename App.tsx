@@ -155,7 +155,7 @@ const theme = {
     // xl: 18,
     // lg: 16,
     // md: 14,
-    "8xl": scaleFontSize(48),
+    "8xl": scaleFontSize(54),
     "7xl": scaleFontSize(34),
     "6xl": scaleFontSize(32),
     "5xl": scaleFontSize(28),
