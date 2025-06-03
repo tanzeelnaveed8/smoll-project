@@ -326,6 +326,7 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
                   onChange={handleUpdateImage}
                   disableDownload
                   mediaType="Images"
+                  docType="image/"
                 />
               </Div>
             </Div>
