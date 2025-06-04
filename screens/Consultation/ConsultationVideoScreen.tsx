@@ -136,6 +136,20 @@ const ConsultationVideoScreen: React.FC<{ navigation: NavigationType }> = ({ nav
     };
   }, []);
 
+  const sendPing = () => {
+    ZegoExpressEngine.instance().sendCustomCommand(expertId, "ping", []);
+  };
+
+  useEffect(() => {
+    const pingInterval = setInterval(() => {
+      sendPing();
+    }, 10000); // Send ping every 10 seconds
+
+    return () => {
+      clearInterval(pingInterval); // Clean up on unmount
+    };
+  }, []);
+
   const toggleMute = () => {
     ZegoExpressEngine.instance().mutePublishStreamAudio(!isMuted, undefined);
     setIsMuted(!isMuted);
