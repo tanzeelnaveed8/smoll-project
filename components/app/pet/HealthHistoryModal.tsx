@@ -157,6 +157,7 @@ const HealthHistoryModal = (props: PropTypes) => {
               onChange={(dob) => {
                 handleFormChange("date", dob.toISOString());
               }}
+              maxDate={new Date()}
             />
 
             <TextAreaField

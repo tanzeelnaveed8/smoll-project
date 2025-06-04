@@ -10,10 +10,16 @@ import { NavigationType } from "@/store/types";
 import { getAxiosErrMsg, isValidText } from "@/utils/helpers";
 import { useRoute } from "@react-navigation/native";
 import { AxiosError } from "axios";
-import React, { createRef, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Div, ScrollDiv, Text } from "react-native-magnus";
 import { useToast } from "react-native-toast-notifications";
-import { Dimensions, KeyboardAvoidingView, Platform } from "react-native";
+import {
+  Dimensions,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from "react-native";
 import { fontCooper, fontHeading } from "@/constant/constant";
 
 interface Props {
@@ -122,74 +128,75 @@ const AccountSetupAddressScreen: React.FC<Props> = (props) => {
         }
       }}
     >
-      {/* <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
         style={{ flex: 1 }}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 40 : 0}
-      > */}
-      <ScrollDiv
-        ref={scrollViewRef}
-        showsVerticalScrollIndicator={false}
-        flex={1}
-        keyboardShouldPersistTaps="handled"
+        keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0} // adjust as needed
       >
-        <Div flex={1}>
-          <Div flex={1}>
-            <Text fontSize={"6xl"} mb={4} fontFamily={fontHeading}>
-              What's your address?
-            </Text>
-            <Text fontSize={"xl"} mb={20}>
-              We need your address to suggest the nearest vet clinic for in-clinic visits
-            </Text>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <ScrollDiv
+            ref={scrollViewRef}
+            showsVerticalScrollIndicator={false}
+            flex={1}
+            keyboardShouldPersistTaps="handled"
+          >
+            <Div flex={1}>
+              <Div flex={1}>
+                <Text fontSize={"6xl"} mb={4} fontFamily={fontHeading}>
+                  What's your address?
+                </Text>
+                <Text fontSize={"xl"} mb={20}>
+                  We need your address to suggest the nearest vet clinic for in-clinic visits
+                </Text>
 
-            <Div style={{ gap: 16 }} mb={40}>
-              <InputField
-                ref={villaRef}
-                placeholder="Flat/Villa No"
-                value={address.villa}
-                onChangeText={(text) => setAddress((s) => ({ ...s, villa: text }))}
-                inputStyle={{
-                  borderRadius: 12,
-                }}
-                maxLength={40}
-                returnKeyType="next"
-                disabled={loading}
-                onSubmitEditing={() => {
-                  streetRef.current?.focus();
-                }}
-                onFocus={() => scrollToInput(villaRef)}
-              />
-              <InputField
-                ref={streetRef}
-                placeholder="Street address"
-                value={address.street}
-                onChangeText={(text) => setAddress((s) => ({ ...s, street: text }))}
-                inputStyle={{
-                  borderRadius: 12,
-                }}
-                maxLength={40}
-                returnKeyType="next"
-                disabled={loading}
-                onSubmitEditing={() => cityRef.current?.focus()}
-                onFocus={() => scrollToInput(streetRef)}
-              />
+                <Div style={{ gap: 16 }} mb={40}>
+                  <InputField
+                    ref={villaRef}
+                    placeholder="Flat/Villa No"
+                    value={address.villa}
+                    onChangeText={(text) => setAddress((s) => ({ ...s, villa: text }))}
+                    inputStyle={{
+                      borderRadius: 12,
+                    }}
+                    maxLength={40}
+                    returnKeyType="next"
+                    disabled={loading}
+                    onSubmitEditing={() => {
+                      streetRef.current?.focus();
+                    }}
+                    onFocus={() => scrollToInput(villaRef)}
+                  />
+                  <InputField
+                    ref={streetRef}
+                    placeholder="Street address"
+                    value={address.street}
+                    onChangeText={(text) => setAddress((s) => ({ ...s, street: text }))}
+                    inputStyle={{
+                      borderRadius: 12,
+                    }}
+                    maxLength={40}
+                    returnKeyType="next"
+                    disabled={loading}
+                    onSubmitEditing={() => cityRef.current?.focus()}
+                    onFocus={() => scrollToInput(streetRef)}
+                  />
 
-              <InputField
-                ref={cityRef}
-                placeholder="City"
-                value={address.city}
-                onChangeText={(text) => setAddress((s) => ({ ...s, city: text }))}
-                inputStyle={{
-                  borderRadius: 12,
-                }}
-                maxLength={40}
-                returnKeyType="next"
-                disabled={loading}
-                onSubmitEditing={() => postalCodeRef.current?.focus()}
-                onFocus={() => scrollToInput(cityRef)}
-              />
+                  <InputField
+                    ref={cityRef}
+                    placeholder="City"
+                    value={address.city}
+                    onChangeText={(text) => setAddress((s) => ({ ...s, city: text }))}
+                    inputStyle={{
+                      borderRadius: 12,
+                    }}
+                    maxLength={40}
+                    returnKeyType="next"
+                    disabled={loading}
+                    onSubmitEditing={() => postalCodeRef.current?.focus()}
+                    onFocus={() => scrollToInput(cityRef)}
+                  />
 
-              {/* <CountryDropdown
+                  {/* <CountryDropdown
                 onChange={(value) => {
                   console.log("testing==", value);
                   setAddress((s) => ({ ...s, country: value.label }));
@@ -197,35 +204,37 @@ const AccountSetupAddressScreen: React.FC<Props> = (props) => {
                 isDisabled={loading}
               /> */}
 
-              <SelectCountryDropdown
-                value={address.country}
-                showCountryFlag={true}
-                hideCountryCode
-                onChange={(e: string) => {
-                  console.log("testing==", e);
-                  setAddress((s) => ({ ...s, country: e }));
-                }}
-              />
+                  <SelectCountryDropdown
+                    value={address.country}
+                    showCountryFlag={true}
+                    hideCountryCode
+                    onChange={(e: string) => {
+                      console.log("testing==", e);
+                      setAddress((s) => ({ ...s, country: e }));
+                    }}
+                  />
 
-              <InputField
-                ref={postalCodeRef}
-                placeholder="Postal code"
-                value={address.postalCode}
-                onChangeText={(text) => setAddress((s) => ({ ...s, postalCode: text }))}
-                inputStyle={{
-                  borderRadius: 12,
-                }}
-                maxLength={10}
-                keyboardType="numeric"
-                returnKeyType="done"
-                disabled={loading}
-                onFocus={() => scrollToInput(postalCodeRef)}
-              />
+                  <InputField
+                    ref={postalCodeRef}
+                    placeholder="Postal code"
+                    value={address.postalCode}
+                    onChangeText={(text) => setAddress((s) => ({ ...s, postalCode: text }))}
+                    inputStyle={{
+                      borderRadius: 12,
+                    }}
+                    maxLength={10}
+                    keyboardType="numeric"
+                    returnKeyType="done"
+                    disabled={loading}
+                    onFocus={() => scrollToInput(postalCodeRef)}
+                  />
+                </Div>
+              </Div>
+              {/* </KeyboardAvoidingView> */}
             </Div>
-          </Div>
-          {/* </KeyboardAvoidingView> */}
-        </Div>
-      </ScrollDiv>
+          </ScrollDiv>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
 
       <ButtonPrimary
         bgColor="primary"

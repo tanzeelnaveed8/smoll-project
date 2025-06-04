@@ -5,7 +5,8 @@ import { Button, Div, Image, Text } from "react-native-magnus";
 import { fontHauoraBold, fontHauoraSemiBold, fontHeading } from "@/constant/constant";
 import { IconArrowRight } from "@tabler/icons-react-native";
 import { useUserStore } from "@/store/modules/user";
-import { Dimensions } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
+import Svg, { Defs, RadialGradient, Stop, Rect } from "react-native-svg";
 
 export default function SubscriptionScreen({ navigation }: { navigation: NavigationType }) {
   const { user } = useUserStore();
@@ -15,7 +16,6 @@ export default function SubscriptionScreen({ navigation }: { navigation: Navigat
   return (
     <Layout
       showBack
-      title="Smoll Care"
       onBackPress={() => {
         navigation.goBack();
       }}
@@ -41,12 +41,15 @@ export default function SubscriptionScreen({ navigation }: { navigation: Navigat
               <Text fontSize="xl" fontFamily={fontHauoraSemiBold} textAlign="center">
                 Your smoll number is
               </Text>
-              <Div bg="#d6fcff" style={{ borderRadius: 1000 }} px={30} mt={10}>
+              <Div position="relative" mt={8}>
+                <Image source={require("@/assets/images/careId-bg.png")} w={341} h={84} />
                 <Text
+                  style={{ position: "absolute", top: 10 }}
                   fontSize="8xl"
                   fontFamily={fontHauoraBold}
                   color="#1655C8"
                   textAlignVertical="center"
+                  alignSelf="center"
                   lineHeight={68}
                 >
                   {user?.careId}
@@ -54,7 +57,7 @@ export default function SubscriptionScreen({ navigation }: { navigation: Navigat
               </Div>
             </Div>
             <Text
-              mt={24}
+              mt={20}
               fontSize="md"
               maxW={210}
               textAlign="center"
@@ -78,7 +81,7 @@ export default function SubscriptionScreen({ navigation }: { navigation: Navigat
             onPress={() => {
               navigation.navigate("PetProfileListScreen");
             }}
-            mt={42}
+            mt={32}
             mb={24}
           >
             <Text color="primary" fontSize={"xl"} fontFamily={fontHauoraSemiBold}>

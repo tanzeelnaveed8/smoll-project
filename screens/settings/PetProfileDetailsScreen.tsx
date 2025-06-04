@@ -326,6 +326,7 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
                   onChange={handleUpdateImage}
                   disableDownload
                   mediaType="Images"
+                  docType="image/"
                 />
               </Div>
             </Div>
@@ -444,8 +445,8 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
                     color="#545454"
                     fontFamily={fontHauoraSemiBold}
                   >
-                    {petDetailsData?.name.toLocaleUpperCase()}{" "}
-                    {isCarePet ? "is already enrolled in the plan" : "isn't enrolled in the plan"}
+                    {`${petDetailsData?.name.charAt(0).toLocaleUpperCase()}${petDetailsData?.name.slice(1)}`}
+                    {isCarePet ? " is already enrolled in the plan" : " isn't enrolled in the plan"}
                   </Text>
                   <Button
                     bg="#6e99f0"

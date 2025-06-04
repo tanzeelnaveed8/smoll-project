@@ -54,7 +54,6 @@ const AvailabilityAndDateSelector: React.FC<Props> = ({ onSelect }) => {
           headerStyle={{ backgroundColor: "#FAF8F5" }}
           disablePan
           hideKnob
-          markedDates={{}}
           current={selectedDate}
           animateScroll={true}
           minDate={dayjs().format("YYYY-MM-DD")}
@@ -73,7 +72,16 @@ const AvailabilityAndDateSelector: React.FC<Props> = ({ onSelect }) => {
           )}
           onDayPress={(day) => handleDateSelect(day.dateString)}
           theme={{
-            calendarBackground: "#FAF8F5", // Change the background color to red
+            calendarBackground: "#FAF8F5",
+            selectedDayBackgroundColor: "transparent",
+            selectedDayTextColor: "#494949",
+          }}
+          markedDates={{
+            [selectedDate]: {
+              selected: true,
+              selectedColor: "#00adf5", // or your brand color
+              selectedTextColor: "#ffffff",
+            },
           }}
         />
       </CalendarProvider>
