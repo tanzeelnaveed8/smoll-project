@@ -60,7 +60,11 @@ const EditInfoScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }
     }
   };
 
-  const isFormValid = (fieldKey: string, value: string | number) => {
+  const isFormValid = (fieldKey: string, value: string) => {
+    if (fieldKey === "weight") {
+      const weightNum = Number(value.trim());
+      return !isNaN(weightNum) && weightNum > 0;
+    }
     if (typeof value === "string") {
       const trimmed = value.trim();
       if (trimmed === "") return false;
