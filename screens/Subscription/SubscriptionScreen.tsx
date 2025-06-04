@@ -22,7 +22,7 @@ export default function SubscriptionScreen({ navigation }: { navigation: Navigat
       style={{ position: "relative", justifyContent: "flex-start", flex: 1 }}
     >
       <Div>
-        <Div mt={12}>
+        <Div mt={4}>
           <Text fontSize="2xl" color="#679FF0" fontFamily={fontHeading}>
             Welcome To
           </Text>
@@ -42,9 +42,9 @@ export default function SubscriptionScreen({ navigation }: { navigation: Navigat
                 Your smoll number is
               </Text>
               <Div position="relative" mt={8}>
-                <Image source={require("@/assets/images/careId-bg.png")} w={341} h={84} />
+                <Image source={require("@/assets/images/careId-bg.png")} w={300} h={70} />
                 <Text
-                  style={{ position: "absolute", top: 10 }}
+                  style={{ position: "absolute" }}
                   fontSize="8xl"
                   fontFamily={fontHauoraBold}
                   color="#1655C8"
