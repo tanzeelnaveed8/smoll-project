@@ -106,6 +106,7 @@ import SubscriptionScreen from "./screens/Subscription/SubscriptionScreen";
 import PetProfileBenefitsScreen from "./screens/PetProfile/PetProfileBenefitsScreen";
 import SmollcarePaymentSuccessScreen from "./screens/smollcarePaymentSuccess/SmollcarePaymentSuccessScreen";
 import { usePetStore } from "./store/modules/pet";
+import PetProfileSmollcarePaymentScreen from "./screens/PetProfile/PetProfileSmollcarePaymentScreen";
 
 Sentry.init({
   dsn: Config.SENTRY_DSN,
@@ -241,6 +242,7 @@ const TabNavigation = () => {
             paddingBottom: 8,
             paddingTop: 2,
             backgroundColor: "#FAF8F5",
+            paddingHorizontal: 48,
           },
           tabBarLabelStyle: {
             fontSize: 14,
@@ -264,24 +266,8 @@ const TabNavigation = () => {
           }}
         />
 
-        {/* <Tab.Screen
-        name="HumanCounsellingMessage"
-        component={HumanCounsellingMessageScreen}
-        options={{
-          title: "Chats",
-          headerShown: false,
-          tabBarIcon: ({ focused }) => (
-            <IconMessage
-              width={28}
-              height={28}
-              color={focused ? "#427594" : "#494949"}
-            />
-          ),
-        }}
-      /> */}
-
         <Tab.Screen
-          name="Chats"
+          name="Inbox"
           component={ExpertsInboxScreen}
           options={{
             headerShown: false,
@@ -290,21 +276,6 @@ const TabNavigation = () => {
                 focused={focused}
                 icon={<IconMessage width={28} height={28} color={focused ? "#000" : "#494949"} />}
                 isNotification={Boolean(allUnreadMessageCount)}
-              />
-            ),
-          }}
-        />
-
-        <Tab.Screen
-          name="Quotations"
-          component={CasesQuotesListScreen}
-          options={{
-            headerShown: false,
-            tabBarIcon: ({ focused }) => (
-              <TabButton
-                focused={focused}
-                icon={<IconChecklist width={28} height={28} color={focused ? "#000" : "#494949"} />}
-                isNotification={Boolean(navNotif)}
               />
             ),
           }}
@@ -718,6 +689,11 @@ const App = () => {
                   />
 
                   <Stack.Screen name="PaymentDetailsScreen" component={PaymentDetailsScreen} />
+
+                  <Stack.Screen
+                    name="PetSmollcarePaymentScreen"
+                    component={PetProfileSmollcarePaymentScreen}
+                  />
                   {/* Smoll care payment success */}
                   <Stack.Screen name="paymentSuccess" component={SmollcarePaymentSuccessScreen} />
                 </Stack.Navigator>

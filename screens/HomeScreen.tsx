@@ -38,6 +38,7 @@ import { useRoute } from "@react-navigation/native";
 import React, { useEffect, useMemo, useState } from "react";
 import { showMessage } from "react-native-flash-message";
 import HomeScreenBanner from "@/components/app/HomeScreenBanner";
+import IconCustomUser from "@/components/icons/IconCustomUser";
 
 interface Props {
   navigation: NavigationType;
@@ -47,7 +48,7 @@ interface Props {
 interface OptionTab {
   name: string;
   description: string;
-  value: "chat" | "petProfileScreen" | "appointments";
+  value: "chat" | "petProfileScreen" | "appointments" | string;
   loading: boolean;
   icon?: React.JSX.Element;
   img?: ImageSourcePropType;
@@ -80,6 +81,21 @@ const HomeScreen: React.FC<Props> = (props) => {
       ),
     },
     {
+      name: "Clinics",
+      value: "/",
+      description: "Locate our partners clinics",
+      loading: false,
+      // icon: <OnboardingIcon5 width={55} height={55} />,
+      img: require("@/assets/images/home-clinic.png"),
+      width: 71,
+      height: 68,
+      style: {
+        transform: [{ translateX: 5 }, { translateY: 2 }],
+        objectFit: "contain",
+      },
+      // icon: <DogIcon width={70} height={70} />,
+    },
+    {
       name: "Appointments",
       value: "appointments",
       description: "All your appointment shows here",
@@ -90,21 +106,6 @@ const HomeScreen: React.FC<Props> = (props) => {
           <ClockIcon width={70} height={70} />
         </Div>
       ),
-    },
-    {
-      name: "smollink",
-      value: "petProfileScreen",
-      description: "Add and track your pet’s records",
-      loading: false,
-      // icon: <OnboardingIcon5 width={55} height={55} />,
-      img: require("@/assets/images/home-pet-img.png"),
-      width: 71,
-      height: 68,
-      style: {
-        transform: [{ translateX: 5 }, { translateY: 2 }],
-        objectFit: "contain",
-      },
-      // icon: <DogIcon width={70} height={70} />,
     },
   ]);
 
@@ -225,11 +226,12 @@ const HomeScreen: React.FC<Props> = (props) => {
               </Div>
               <IconButton
                 bg="bgColor"
+                style={{ marginLeft: -8 }}
                 onPress={() => {
                   props.navigation.navigate("SettingsMainScreen");
                 }}
               >
-                <IconSettings width={32} height={32} color={"#222222"} strokeWidth={1.5} />
+                <IconCustomUser color="#222" />
               </IconButton>
             </Div>
           </Div>
@@ -241,7 +243,7 @@ const HomeScreen: React.FC<Props> = (props) => {
             <Text fontSize={"lg"}>How can we help you today?</Text>
           </Div>
 
-          <HomeScreenBanner isCarePlanUser={false} navigation={props.navigation} />
+          <HomeScreenBanner navigation={props.navigation} />
 
           <Div>
             <Div flexDir="row" style={{ gap: 8 }} alignItems="center" mb={16}>

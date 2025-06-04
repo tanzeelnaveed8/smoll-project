@@ -9,7 +9,6 @@ type PropsType = {
   iconSize?: number;
   description?: string;
   toggleBtn?: boolean;
-  Icon: ReactElement;
   onPress?: () => void;
   toggleValue?: boolean;
   disabled?: boolean;
@@ -22,7 +21,6 @@ const SettingButton: React.FC<PropsType> = (props) => {
     iconSize = 32,
     description,
     toggleBtn = false,
-    Icon,
     title,
     onPress,
     toggleValue,
@@ -32,17 +30,14 @@ const SettingButton: React.FC<PropsType> = (props) => {
     <TouchableOpacity onPress={onPress} disabled={disabled}>
       <Div
         w="full"
-        py={16}
+        py={8}
         flexDir="row"
         justifyContent="space-between"
         alignItems="center"
-        borderBottomWidth={1}
-        borderBottomColor="#E0E0E0"
         opacity={disabled ? 0.5 : 1}
       >
         <Div flexDir="row" alignItems="flex-start">
-          <Icon color="#222222" size={32} strokeWidth={1.5} />
-          <Div alignSelf="center" ml={12}>
+          <Div alignSelf="center">
             <Text
               color="#222222"
               fontWeight="400"
@@ -66,18 +61,6 @@ const SettingButton: React.FC<PropsType> = (props) => {
             )}
           </Div>
         </Div>
-
-        {!toggleBtn ? (
-          <IconChevronRight fontSize={32} color="#898989" />
-        ) : (
-          <Toggle
-            onPress={onPress}
-            on={toggleValue}
-            activeBg="#222"
-            w={windowWidth < 390 ? 48 : 52}
-            h={windowWidth < 390 ? 28 : 32}
-          />
-        )}
       </Div>
     </TouchableOpacity>
   );

@@ -13,6 +13,7 @@ interface ButtonPrimaryProps extends ButtonProps {
   icon?: React.ReactNode;
   textColor?: string;
   fontFamily?: string;
+  appendIcon?: React.ReactNode;
 }
 
 const ButtonPrimary: React.FC<ButtonPrimaryProps> = ({
@@ -25,6 +26,7 @@ const ButtonPrimary: React.FC<ButtonPrimaryProps> = ({
   icon,
   textColor,
   fontFamily,
+  appendIcon,
   ...restProps
 }) => {
   return (
@@ -51,6 +53,7 @@ const ButtonPrimary: React.FC<ButtonPrimaryProps> = ({
       >
         {children}
       </Text>
+      {appendIcon && appendIcon}
     </Button>
   );
 };

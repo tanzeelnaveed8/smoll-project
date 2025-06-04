@@ -23,7 +23,7 @@ import ConfirmationModal from "@/components/partials/ConfirmationModal";
 import { IconCrown, IconDots } from "@tabler/icons-react-native";
 import Dropdown from "@/components/partials/Dropdown";
 import HealthHistoryModal from "@/components/app/pet/HealthHistoryModal";
-import SubscriptionBenefitsList from "@/components/app/subscription/SubscriptionBenefitsList";
+import SubscriptionBenefitsList from "@/components/app/subscription/SubscribedBenefitsList";
 import dayjs from "dayjs";
 
 type RouteType = { petId: string; activeBenefitTab: boolean };

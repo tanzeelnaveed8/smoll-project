@@ -7,15 +7,13 @@ import { Div, Image, Tag, Text, WINDOW_WIDTH } from "react-native-magnus";
 
 interface Props {
   navigation: NavigationType;
-  isCarePlanUser: boolean;
 }
 
-const HomeScreenBanner: React.FC<Props> = ({ navigation, isCarePlanUser }) => {
+const HomeScreenBanner: React.FC<Props> = ({ navigation }) => {
   return (
     <TouchableOpacity
       style={{
-        borderWidth: 1.4,
-        borderColor: "#6e99f0",
+        backgroundColor: "#6e99f0",
         borderRadius: 40,
         paddingVertical: 15,
         flexDirection: "row",
@@ -23,16 +21,12 @@ const HomeScreenBanner: React.FC<Props> = ({ navigation, isCarePlanUser }) => {
         alignItems: "center",
       }}
       onPress={() => {
-        if (isCarePlanUser) {
-          navigation.navigate("ExpertsListScreen");
-        } else {
-          navigation.navigate("SubscriptionScreen");
-        }
+        navigation.navigate("SubscriptionScreen");
       }}
     >
       <Div px={20} pr={0} h={191} flexDir="column" justifyContent="space-between">
-        <Div mt={29}>
-          <Image w={220} h={40} source={require("@/assets/icons/smollcare-logo.png")} />
+        <Div mt={20}>
+          <Image w={220} h={40} source={require("@/assets/icons/smollcare-logo-white.png")} />
         </Div>
 
         <Div
@@ -45,23 +39,25 @@ const HomeScreenBanner: React.FC<Props> = ({ navigation, isCarePlanUser }) => {
           <Tag
             fontFamily={fontHauoraBold}
             fontSize={"lg"}
-            bg="#6e99f0"
+            bg="trasnparent"
             h={42}
             color="#fff"
             rounded={25}
+            borderWidth={1}
+            borderColor="#fff"
             pb={9.48}
             pt={7.52}
             px={25}
             pointerEvents="none"
           >
-            {isCarePlanUser ? "Access your plan" : "Enroll your pet"}
+            Access your plan
           </Tag>
 
           <IconArrowRight
             width={28}
             height={28}
             strokeWidth={2.7}
-            color="#6e99f0"
+            color="#fff"
             style={{ alignSelf: "center" }}
           />
 

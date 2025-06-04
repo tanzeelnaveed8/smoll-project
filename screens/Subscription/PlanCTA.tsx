@@ -1,23 +1,24 @@
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
-import { fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
+import { fontHauoraBold, fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
+import { IconArrowRight } from "@tabler/icons-react-native";
 import React from "react";
 import { View, Image, StyleSheet, Dimensions } from "react-native";
 import { Text } from "react-native-magnus";
 
 const avatars = [
-  { id: 1, uri: "https://randomuser.me/api/portraits/men/1.jpg" },
-  { id: 2, uri: "https://randomuser.me/api/portraits/men/2.jpg" },
-  { id: 3, uri: "https://randomuser.me/api/portraits/men/3.jpg" },
-  { id: 4, uri: "https://randomuser.me/api/portraits/men/4.jpg" },
+  { id: 1, uri: "https://images.dog.ceo/breeds/beagle/n02088364_11136.jpg" },
+  { id: 2, uri: "https://images.dog.ceo/breeds/labrador/n02099712_6901.jpg" },
+  { id: 3, uri: "https://images.dog.ceo/breeds/spaniel-sussex/n02102480_5808.jpg" },
+  { id: 4, uri: "https://images.dog.ceo/breeds/corgi-cardigan/n02113186_1030.jpg" },
 ];
 
 const PlanCTA = ({
   petName,
-  onEnrollPress,
+  onButtonPress,
   loading,
 }: {
   petName?: string;
-  onEnrollPress: () => void;
+  onButtonPress: () => void;
   loading?: boolean;
 }) => {
   return (
@@ -33,12 +34,22 @@ const PlanCTA = ({
           ))}
         </View>
         <Text color="#090A0A" fontFamily={fontHauoraSemiBold} fontSize="lg" ml={8}>
-          24,000+ Joined
+          4,000+ Joined
         </Text>
       </View>
 
-      <ButtonPrimary bg="#6e99f0" onPress={onEnrollPress} loading={loading}>
-        Enroll {petName} in smoll® Care now!
+      <ButtonPrimary
+        borderWidth={2}
+        borderColor="#222"
+        textColor="#222"
+        fontFamily={fontHauoraBold}
+        bg="transparent"
+        onPress={onButtonPress}
+        loading={loading}
+        py={14}
+        appendIcon={<IconArrowRight color="#222" height={28} width={28} />}
+      >
+        Proceed
       </ButtonPrimary>
     </View>
   );
