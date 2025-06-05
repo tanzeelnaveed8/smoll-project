@@ -9,9 +9,9 @@ import { Div, Text } from "react-native-magnus";
 const renderSessionDots = (count: number, usageCount?: number) => {
   const dots = [];
 
-  for (let i = 0; i < Math.min(count, 4); i++) {
+  for (let i = 0; i < count; i++) {
     let icon;
-    if (i < usageCount) {
+    if (i < Number(usageCount)) {
       icon = <IconCircleCheckFilled key={i} color="#00D932" />;
     } else {
       icon = <IconCircleCheck key={i} color="gray" />;
@@ -45,6 +45,7 @@ const PlanRow = ({
           style={{
             display: "flex",
             flexDirection: "row",
+            alignSelf: "flex-start",
             gap: 8,
             alignItems: "center",
           }}
@@ -67,6 +68,7 @@ const PlanRow = ({
             width: "100%",
             flexDirection: "row",
             gap: 4,
+            flexWrap: "wrap",
           }}
         >
           {renderSessionDots(benefit.totalUsageCount, benefit.consumedUsageCount)}

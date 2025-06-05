@@ -1,10 +1,11 @@
 import Layout from "@/components/app/Layout";
 import StarRating from "@/components/partials/StarRating";
 import { fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
+import { useNavigation } from "@react-navigation/native";
 import { IconChevronRight } from "@tabler/icons-react-native";
 import React from "react";
 import { FlatList } from "react-native-bidirectional-infinite-scroll";
-import { Div, Image, ScrollDiv, Text } from "react-native-magnus";
+import { Div, Image, Text } from "react-native-magnus";
 
 const data = [
   {
@@ -77,78 +78,74 @@ const TimeTab: React.FC<{ heading: string; time: string; mb?: number }> = ({
 };
 
 const ClinicListScreen = () => {
+  const navigator = useNavigation();
   return (
-    <Layout showBack title="Clinic" style={{ backgroundColor: "#fff" }}>
+    <Layout
+      showBack
+      onBackPress={() => navigator.goBack()}
+      title="Clinics"
+      style={{ backgroundColor: "#fff" }}
+    >
       <Div flex={1}>
-        <ScrollDiv showsVerticalScrollIndicator={false}>
-          <Text fontSize={"xl"} fontFamily={fontHauoraSemiBold} mb={20}>
-            Clinics
-          </Text>
+        {/* <ScrollDiv showsVerticalScrollIndicator={false}> */}
+        {/* <Div> */}
+        <FlatList
+          data={data}
+          showsVerticalScrollIndicator={false}
+          renderItem={({ item, index }) => (
+            <Div
+              key={index}
+              flexDir="row"
+              style={{ gap: 16 }}
+              pb={16}
+              borderBottomWidth={1}
+              borderBottomColor="#D0D7DC"
+              alignItems="center"
+              mb={20}
+            >
+              <Image alignSelf="flex-start" source={item.img} w={32} h={32} rounded={32} />
+              <Div flex={1}>
+                <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold} lineHeight={24} mb={4}>
+                  {item.name}
+                </Text>
 
-          <Div>
-            <FlatList
-              data={data}
-              renderItem={({ item }) => (
-                <Div
-                  flexDir="row"
-                  style={{ gap: 16 }}
-                  pb={16}
-                  borderBottomWidth={1}
-                  borderBottomColor="#D0D7DC"
-                  mb={20}
-                >
-                  <Image source={item.img} w={32} h={32} rounded={32} />
-                  <Div flex={1}>
-                    <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold} lineHeight={24} mb={4}>
-                      {item.name}
-                    </Text>
+                <Div flexDir="row" alignItems="center" mb={12}>
+                  <StarRating defaultRating={item.rating} size={10} columnGap={5} />
+                  <Text
+                    ml={8}
+                    fontSize={"md"}
+                    fontFamily={fontHauoraMedium}
+                    lineHeight={24}
+                    color="#494949"
+                  >
+                    4/5 Rating
+                  </Text>
+                </Div>
 
-                    <Div flexDir="row" alignItems="center" mb={12}>
-                      <StarRating defaultRating={item.rating} size={10} columnGap={5} />
-                      <Text
-                        ml={8}
-                        fontSize={"md"}
-                        fontFamily={fontHauoraMedium}
-                        lineHeight={24}
-                        color="#494949"
-                      >
-                        4/5 Rating
+                <Div mb={12}>
+                  <TimeTab heading={"Morn"} time={item.morning} mb={2} />
+                  <TimeTab heading={"Eves"} time={item.evening} />
+                </Div>
+
+                <Div flexDir="row" flexWrap="wrap" style={{ gap: 8 }}>
+                  {item.category?.map((item, i) => (
+                    <Div key={i} px={8} py={6} rounded={12} borderWidth={1.2} borderColor="#222">
+                      <Text fontSize={"md"} fontFamily={fontHauoraSemiBold} lineHeight={20}>
+                        {item}
                       </Text>
                     </Div>
-
-                    <Div mb={12}>
-                      <TimeTab heading={"Morn"} time={item.morning} mb={2} />
-                      <TimeTab heading={"Eves"} time={item.evening} />
-                    </Div>
-
-                    <Div flexDir="row" flexWrap="wrap" style={{ gap: 8 }}>
-                      {item.category?.map((item, i) => (
-                        <Div
-                          key={i}
-                          px={8}
-                          py={6}
-                          rounded={12}
-                          borderWidth={1.2}
-                          borderColor="#222"
-                        >
-                          <Text fontSize={"md"} fontFamily={fontHauoraSemiBold} lineHeight={20}>
-                            {item}
-                          </Text>
-                        </Div>
-                      ))}
-                    </Div>
-                  </Div>
-                  <IconChevronRight size={32} color={"#222"} />
-                  {/* <Div w={32} h={32}>
-                  </Div> */}
+                  ))}
                 </Div>
-              )}
-              keyExtractor={(item, index) => `${index}`}
-              onEndReached={async () => {}}
-              onStartReached={async () => {}}
-            />
-          </Div>
-        </ScrollDiv>
+              </Div>
+              <IconChevronRight size={32} color={"#222"} />
+            </Div>
+          )}
+          keyExtractor={(item, index) => `${index}`}
+          onEndReached={async () => {}}
+          onStartReached={async () => {}}
+        />
+        {/* </Div> */}
+        {/* </ScrollDiv> */}
       </Div>
     </Layout>
   );

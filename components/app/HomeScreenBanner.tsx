@@ -20,6 +20,7 @@ const HomeScreenBanner: React.FC<Props> = ({ navigation }) => {
         marginBottom: 20,
         alignItems: "center",
       }}
+      activeOpacity={0.8}
       onPress={() => {
         navigation.navigate("SubscriptionScreen");
       }}

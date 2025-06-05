@@ -82,7 +82,7 @@ const HomeScreen: React.FC<Props> = (props) => {
     },
     {
       name: "Clinics",
-      value: "/",
+      value: "clinics",
       description: "Locate our partners clinics",
       loading: false,
       // icon: <OnboardingIcon5 width={55} height={55} />,
@@ -161,10 +161,8 @@ const HomeScreen: React.FC<Props> = (props) => {
   const handleOptionTabPress = async (item: OptionTab) => {
     if (item.value === "chat") {
       props.navigation.navigate("ExpertsListScreen");
-    } else if (item.value === "petProfileScreen") {
-      props.navigation.navigate("PetProfileListScreen", {
-        navigateTo: "HomeScreen",
-      });
+    } else if (item.value === "clinics") {
+      props.navigation.navigate("ClinicListScreen");
     } else if (item.value === "appointments") {
       props.navigation.navigate("AppointmentsScreen");
     }
