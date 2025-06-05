@@ -41,6 +41,8 @@ const BottomSheet: React.FC<Props> = (props) => {
       avoidKeyboard={true}
       {...restProps}
       onSwipeComplete={onCloseIconClick}
+      onBackdropPress={onCloseIconClick}
+      onBackButtonPress={onCloseIconClick}
     >
       <Div mx="auto" w={44} h={4} mt={8} rounded={4} bg="#DEDEDE" mb={barMb} />
 
