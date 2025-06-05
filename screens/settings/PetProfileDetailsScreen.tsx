@@ -234,7 +234,7 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
       await cancelSubscription(petId);
       await fetchPetDetails(petId);
       toast.show("Subscription canceled successfully", {
-        placement: "top",
+        placement: "bottom",
       });
     } finally {
       setLoading(false);
@@ -247,8 +247,8 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
         petDetailsData?.subscriptionDetails?.status === "Active" &&
         (value === "Delete Pet" || value === "Deceased")
       ) {
-        toast.show("Please cancel your active subscription request before making changes.", {
-          placement: "top",
+        showMessage({
+          message: "Please cancel your subscription before making changes.",
           type: "danger",
         });
         return;
