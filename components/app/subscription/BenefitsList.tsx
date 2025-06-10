@@ -45,16 +45,14 @@ const PlanRow = ({
       </Div>
       {expanded && (
         <Div ml={4} mr={12} my={4} style={{ gap: 4 }}>
-          {["test", "test", "test"].map((item, i) => (
-            <Div key={i} flexDir="row" alignItems="center">
-              <Text fontSize={"lg"} textAlignVertical="center" mr={4}>
-                •
-              </Text>
-              <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold}>
-                Test
-              </Text>
-            </Div>
-          ))}
+          <Div flexDir="row" alignItems="center">
+            <Text fontSize={"lg"} textAlignVertical="center" mr={4}>
+              •
+            </Text>
+            <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold}>
+              {benefit.description}
+            </Text>
+          </Div>
         </Div>
       )}
     </Pressable>
