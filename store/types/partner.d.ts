@@ -58,12 +58,25 @@ export interface PartnerVetDetails extends PartnerVet {
   partnerAddress: string;
 }
 
+interface Clinic {
+  id: string;
+  name: string;
+  clinicImg: UploadedFile;
+  openingHours: string;
+  country: string;
+  city: string;
+  address: string;
+  specialities: { id: string; name: string }[];
+}
+
 export interface State {
   partnerVets: Map<string, PartnerVet[]>;
   partnerVetDetails: Map<string, PartnerVetDetails>;
+  clinics: Clinic[];
   clinicDetails: Map<string, ClinicDetails>;
 
   fetchPartnerVets: (partnerId: string) => Promise<void>;
+  fetchClinics: () => Promise<void>;
   fetchClinicDetails: (id: string) => Promise<ClinicDetails>;
 
   fetchPartnerVetDetails: (id: string, partnerId: string) => Promise<PartnerVetDetails>;

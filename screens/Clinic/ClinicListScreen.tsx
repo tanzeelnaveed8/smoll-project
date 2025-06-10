@@ -1,70 +1,13 @@
 import Layout from "@/components/app/Layout";
 import StarRating from "@/components/partials/StarRating";
-import { fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
+import { fontHauoraBold, fontHauoraSemiBold } from "@/constant/constant";
+import { usePartnerStore } from "@/store/modules/partner";
 import { NavigationType } from "@/store/types";
-import { useNavigation, useRoute } from "@react-navigation/native";
 import { IconChevronRight } from "@tabler/icons-react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { TouchableOpacity } from "react-native";
 import { FlatList } from "react-native-bidirectional-infinite-scroll";
 import { Div, Image, Text } from "react-native-magnus";
-
-const data = [
-  {
-    id: 7,
-    img: require("@/assets/images/doctor-img.png"),
-    name: "Harmony Vet Clinic",
-    rating: 4,
-    morning: "08:00am - 13:00pm",
-    evening: "16:00pm - 20:00pm",
-    category: ["Primary", "Equistrain", "Hospitalization", "Rehabilitation"],
-  },
-  {
-    id: 6,
-    img: require("@/assets/images/doctor-img.png"),
-    name: "Harmony Vet Clinic",
-    rating: 5,
-    morning: "08:00am - 13:00pm",
-    evening: "16:00pm - 20:00pm",
-    category: ["Primary", "Equistrain", "Hospitalization", "Rehabilitation"],
-  },
-  {
-    id: 4,
-    img: require("@/assets/images/doctor-img.png"),
-    name: "Harmony Vet Clinic",
-    rating: 4,
-    morning: "08:00am - 13:00pm",
-    evening: "16:00pm - 20:00pm",
-    category: ["Primary", "Equistrain", "Hospitalization", "Rehabilitation"],
-  },
-  {
-    id: 3,
-    img: require("@/assets/images/doctor-img.png"),
-    name: "Harmony Vet Clinic",
-    rating: 4,
-    morning: "08:00am - 13:00pm",
-    evening: "16:00pm - 20:00pm",
-    category: ["Primary", "Equistrain", "Hospitalization", "Rehabilitation"],
-  },
-  {
-    id: 2,
-    img: require("@/assets/images/doctor-img.png"),
-    name: "Harmony Vet Clinic",
-    rating: 5,
-    morning: "08:00am - 13:00pm",
-    evening: "16:00pm - 20:00pm",
-    category: ["Primary", "Equistrain", "Hospitalization", "Rehabilitation"],
-  },
-  {
-    id: 1,
-    img: require("@/assets/images/doctor-img.png"),
-    name: "Harmony Vet Clinic",
-    rating: 4,
-    morning: "08:00am - 13:00pm",
-    evening: "16:00pm - 20:00pm",
-    category: ["Primary", "Equistrain", "Hospitalization", "Rehabilitation"],
-  },
-];
 
 const TimeTab: React.FC<{ heading: string; time: string; mb?: number }> = ({
   heading,
@@ -86,23 +29,38 @@ const TimeTab: React.FC<{ heading: string; time: string; mb?: number }> = ({
 };
 
 const ClinicListScreen = ({ navigation }: { navigation: NavigationType }) => {
+  const { clinics, fetchClinics } = usePartnerStore();
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const handleClinicsFetch = async () => {
+      try {
+        setLoading(true);
+        await fetchClinics();
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    handleClinicsFetch();
+  }, []);
+
   return (
     <Layout
       showBack
       onBackPress={() => navigation.goBack()}
       title="Clinics"
       style={{ backgroundColor: "#fff" }}
+      loading={loading}
     >
       <Div flex={1}>
-        {/* <ScrollDiv showsVerticalScrollIndicator={false}> */}
-        {/* <Div> */}
         <FlatList
-          data={data}
+          data={clinics}
           showsVerticalScrollIndicator={false}
-          renderItem={({ item, index }) => (
+          renderItem={({ item }) => (
             <TouchableOpacity
               activeOpacity={0.6}
-              key={index}
+              key={item.id}
               onPress={() => {
                 navigation.navigate("ClinicDetailScreen", {
                   id: item.id,
@@ -118,39 +76,73 @@ const ClinicListScreen = ({ navigation }: { navigation: NavigationType }) => {
                 alignItems="center"
                 mb={20}
               >
-                <Image alignSelf="flex-start" source={item.img} w={32} h={32} rounded={32} />
+                <Image
+                  alignSelf="flex-start"
+                  source={{ uri: item.clinicImg.url }}
+                  w={52}
+                  h={52}
+                  rounded={32}
+                />
                 <Div flex={1}>
                   <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold} lineHeight={24} mb={4}>
                     {item.name}
                   </Text>
 
-                  <Div flexDir="row" alignItems="center" mb={12}>
-                    <StarRating defaultRating={item.rating} size={10} columnGap={5} />
-                    <Text
-                      ml={8}
-                      fontSize={"md"}
-                      fontFamily={fontHauoraMedium}
-                      lineHeight={24}
-                      color="#494949"
-                    >
-                      4/5 Rating
-                    </Text>
+                  <Div>
+                    <TimeTab
+                      heading={"Opening Hours"}
+                      time={
+                        item.openingHours
+                          ? `${JSON.parse(item.openingHours)?.from} - ${JSON.parse(item.openingHours)?.to}`
+                          : "-"
+                      }
+                    />
                   </Div>
 
-                  <Div mb={12}>
-                    <TimeTab heading={"Morn"} time={item.morning} mb={2} />
-                    <TimeTab heading={"Eves"} time={item.evening} />
-                  </Div>
-
-                  <Div flexDir="row" flexWrap="wrap" style={{ gap: 8 }}>
-                    {item.category?.map((item, i) => (
-                      <Div key={i} px={8} py={6} rounded={12} borderWidth={1.2} borderColor="#222">
-                        <Text fontSize={"md"} fontFamily={fontHauoraSemiBold} lineHeight={20}>
-                          {item}
+                  {item.specialities.length ? (
+                    <Div flexDir="row" flexWrap="wrap" style={{ gap: 8 }} mt={12} mb={6}>
+                      {item.specialities.map((item) => (
+                        <Div
+                          key={item?.id}
+                          px={8}
+                          py={6}
+                          rounded={12}
+                          borderWidth={1.2}
+                          borderColor="#222"
+                        >
+                          <Text fontSize={"md"} fontFamily={fontHauoraSemiBold} lineHeight={20}>
+                            {item?.name}
+                          </Text>
+                        </Div>
+                      ))}
+                    </Div>
+                  ) : (
+                    <></>
+                  )}
+                  {item.city ? (
+                    <Div mt={4} flexDir="row" alignItems="center">
+                      <Div px={8} py={6} bg="#F4F6F8" rounded={12} mr={8}>
+                        <Text
+                          fontSize={"md"}
+                          mb={-1}
+                          fontFamily={fontHauoraSemiBold}
+                          lineHeight={14}
+                        >
+                          Location:
                         </Text>
                       </Div>
-                    ))}
-                  </Div>
+                      <Text
+                        lineHeight={17}
+                        textAlignVertical="center"
+                        fontFamily={fontHauoraBold}
+                        color="#494949"
+                      >
+                        {item.city}
+                      </Text>
+                    </Div>
+                  ) : (
+                    <></>
+                  )}
                 </Div>
                 <IconChevronRight size={32} color={"#222"} />
               </Div>

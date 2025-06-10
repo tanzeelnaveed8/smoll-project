@@ -35,66 +35,14 @@ const TimeTab: React.FC<{ heading: string; time: string; mb?: number }> = ({
   );
 };
 
-const category = ["Primary", "Equistrain", "Hospitalization", "Rehabilitation"];
-
-const images = [
-  {
-    url: "https://www.carandbike.com/_next/image?url=https%3A%2F%2Fimages.carandbike.com%2Fcms%2Farticles%2F2024%2F7%2F3213879%2FRoyal_Enfield_Guerrilla_450_launched_carandbike_edited_3_20980a956f.jpg&w=3840&q=75",
-  },
-  {
-    url: "https://imgd.aeplcdn.com/370x208/n/cw/ec/186579/royalenfield-guerrilla-450-right-side-view2.jpeg?isig=0&q=80",
-  },
-  {
-    url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSyHCgA8Tqz6eeb_f9uBBbNNjsg0_jnAuFp8uWo36Ho1PLRUAaFC5f4G24CcsEmU3JV0Oc&usqp=CAU",
-  },
-  {
-    url: "https://www.carandbike.com/_next/image?url=https%3A%2F%2Fimages.carandbike.com%2Fcms%2Farticles%2F2024%2F7%2F3213879%2FRoyal_Enfield_Guerrilla_450_launched_carandbike_edited_3_20980a956f.jpg&w=3840&q=75",
-  },
-  {
-    url: "https://imgd.aeplcdn.com/370x208/n/cw/ec/186579/royalenfield-guerrilla-450-right-side-view2.jpeg?isig=0&q=80",
-  },
-  {
-    url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSyHCgA8Tqz6eeb_f9uBBbNNjsg0_jnAuFp8uWo36Ho1PLRUAaFC5f4G24CcsEmU3JV0Oc&usqp=CAU",
-  },
-];
-
 const ClinicDetailScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
   const route = useRoute();
   const { id } = route.params as { id: string };
   const { clinicDetails, fetchClinicDetails } = usePartnerStore();
-  // const id = "RRN6UQzEFK";
 
   const [isLoading, setIsLoading] = useState(true);
 
   const data = useMemo(() => clinicDetails.get(id), [id, clinicDetails]);
-
-  console.log("clinicDetailsData == ", data);
-
-  const response = {
-    address: "test",
-    city: "test",
-    clinicImg: null,
-    country: "United Arab Emirates",
-    createdAt: "2024-11-24T21:12:08.036Z",
-    email: "mohibarshi@gmail.com",
-    id: "Lo0cRgfhD2Ppv",
-    imgCollections: null,
-    name: "Mak clinic",
-    openingHours: null,
-    phone: "+917830977750",
-    postalCode: null,
-    receptionistName: "Mohib Test",
-    specialities: [],
-    vets: [
-      {
-        designation: "adf",
-        id: "1AlO61IJqmUx1",
-        name: "Test Vet",
-        profileImg: null,
-        yearsOfExperience: 2,
-      },
-    ],
-  };
 
   useEffect(() => {
     if (data) {
@@ -147,18 +95,6 @@ const ClinicDetailScreen: React.FC<{ navigation: NavigationType }> = ({ navigati
                 <Text fontSize={"xl"} fontFamily={fontHauoraBold} lineHeight={24} mb={4}>
                   {data?.name}
                 </Text>
-                <Div flexDir="row" alignItems="center" mb={4}>
-                  <StarRating defaultRating={4} size={12} columnGap={4} />
-                  <Text
-                    ml={8}
-                    fontSize={"md"}
-                    fontFamily={fontHauoraMedium}
-                    lineHeight={24}
-                    color="#494949"
-                  >
-                    4/5 Rating
-                  </Text>
-                </Div>
 
                 <Div flexDir="row" alignItems="center">
                   <Image
@@ -181,7 +117,6 @@ const ClinicDetailScreen: React.FC<{ navigation: NavigationType }> = ({ navigati
                 time={openingHours ? `${openingHours.from} - ${openingHours.to}` : "-"}
                 mb={2}
               />
-              {/* <TimeTab heading={"Eves"} time={"16:00pm - 20:00pm"} /> */}
             </Div>
 
             {data.specialities.length > 0 && (
