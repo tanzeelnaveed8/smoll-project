@@ -11,7 +11,7 @@ import { CaseStatusEnum } from "@/store/types/case.d";
 import { useFocusEffect, useRoute } from "@react-navigation/native";
 import dayjs from "dayjs";
 import React, { useCallback, useEffect, useState } from "react";
-import { RefreshControl, TouchableOpacity } from "react-native";
+import { RefreshControl, SafeAreaView, TouchableOpacity } from "react-native";
 import { FlatList } from "react-native-bidirectional-infinite-scroll";
 
 import { Badge, Button, Div, Image, Text } from "react-native-magnus";
@@ -66,9 +66,9 @@ const CasesQuotesListScreen: React.FC<{ navigation: NavigationType }> = ({ navig
   };
 
   return (
-    <>
+    <SafeAreaView style={{ flex: 1 }}>
       <Layout
-        // showBack
+        showBack
         onBackPress={() => {
           if (comingFrom) {
             navigation.navigate("HomeScreen");
@@ -95,6 +95,7 @@ const CasesQuotesListScreen: React.FC<{ navigation: NavigationType }> = ({ navig
         <Div flex={1}>
           <FlatList
             data={cases}
+            onStartReached={() => Promise.resolve()}
             ListEmptyComponent={() => (
               <Div h={600} justifyContent="center">
                 <Text
@@ -219,13 +220,11 @@ const CasesQuotesListScreen: React.FC<{ navigation: NavigationType }> = ({ navig
                 </Div>
               </Div>
             )}
-            keyExtractor={(item, i) => `${i}`}
+            keyExtractor={(item, i) => item.id}
           />
         </Div>
       </Layout>
-
-      {/* <TabNavigationBar navigation={navigation} /> */}
-    </>
+    </SafeAreaView>
   );
 };
 
