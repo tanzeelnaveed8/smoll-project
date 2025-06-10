@@ -202,7 +202,6 @@ export const usePetStore = create<PetState>((set, get) => ({
 
   fetchBenefits: async () => {
     const { data } = await api.get("member/smollcare/benefits");
-    console.log(data, "TEST");
     set(() => ({
       benefits: data.map(
         (benefit: { name: string; description: string; maxUsagePerSubscription: number }) => ({

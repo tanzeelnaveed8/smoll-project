@@ -14,6 +14,7 @@ interface Props {
   title?: string;
   showCloseIcon?: boolean;
   loading?: boolean;
+  disableHeader?: boolean;
   /**
    * @requires navigation
    */
@@ -30,39 +31,46 @@ const Layout: React.FC<Props> = ({
   title,
   showCloseIcon,
   loading,
+  disableHeader = false,
 }) => {
   const externalStyles: {} = style ? style : {};
 
   return (
     <Div style={{ ...styles.container, ...externalStyles }}>
-      <Div row style={styles.titleContainer}>
-        <Div
-          row
-          justifyContent="space-between"
-          alignItems="center"
-          position="relative"
-          flex={1}
-          // bg="yellow"
-        >
-          {(showBack || showCloseIcon) && (
-            <Div top={2}>
-              <BackButton onPress={onBackPress} text={backBtnText} showCloseIcon={showCloseIcon} />
-            </Div>
-          )}
-          {/* <Div flex={1} minH={34}> */}
-          <Text
-            fontSize={"xl"}
-            fontWeight="600"
-            textAlign="center"
+      {!disableHeader && (
+        <Div row style={styles.titleContainer}>
+          <Div
+            row
+            justifyContent="space-between"
+            alignItems="center"
+            position="relative"
             flex={1}
-            lineHeight={28}
-            fontFamily={fontHauoraSemiBold}
-            style={{ position: "absolute", width: "100%", zIndex: -1, top: 0 }}
+            // bg="yellow"
           >
-            {title}
-          </Text>
+            {(showBack || showCloseIcon) && (
+              <Div top={2}>
+                <BackButton
+                  onPress={onBackPress}
+                  text={backBtnText}
+                  showCloseIcon={showCloseIcon}
+                />
+              </Div>
+            )}
+            {/* <Div flex={1} minH={34}> */}
+            <Text
+              fontSize={"xl"}
+              fontWeight="600"
+              textAlign="center"
+              flex={1}
+              lineHeight={28}
+              fontFamily={fontHauoraSemiBold}
+              style={{ position: "absolute", width: "100%", zIndex: -1, top: 0 }}
+            >
+              {title}
+            </Text>
+          </Div>
         </Div>
-      </Div>
+      )}
 
       {loading ? (
         <Div flex={1} justifyContent="center" minH={WINDOW_HEIGHT / 1.4}>

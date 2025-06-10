@@ -37,12 +37,11 @@ const BottomSheet: React.FC<Props> = (props) => {
       coverScreen={true}
       scrollTo={() => {}}
       scrollOffset={1}
-      propagateSwipe={true}
       avoidKeyboard={true}
-      {...restProps}
       onSwipeComplete={onCloseIconClick}
       onBackdropPress={onCloseIconClick}
       onBackButtonPress={onCloseIconClick}
+      {...restProps}
     >
       <Div mx="auto" w={44} h={4} mt={8} rounded={4} bg="#DEDEDE" mb={barMb} />
 

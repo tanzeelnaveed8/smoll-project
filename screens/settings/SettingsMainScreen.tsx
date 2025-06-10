@@ -8,6 +8,7 @@ import { logout } from "@/utils/chat.v2";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   IconBell,
+  IconChecklist,
   IconCreditCard,
   IconGavel,
   IconHelp,
@@ -32,7 +33,6 @@ interface OptionType {
   description?: string;
   toggleBtn?: boolean;
   iconFontSize?: number;
-  icon: any;
   link?: string;
   disabled?: boolean;
   externalLink?: boolean;
@@ -52,48 +52,33 @@ const options: GroupType[] = [
       {
         id: 1,
         title: "Personal Info",
-        icon: IconUserCircle,
         link: "SettingPersonalInfoScreen",
       },
-      // {
-      //   id: 2,
-      //   title: "Address",
-      //   icon: IconMap,
-      //   link: "AccountSetupAddressScreen",
-      // },
       {
-        id: 3,
-        title: "Pets Profile",
-        icon: IconPaw,
+        id: 2,
+        title: "Pets",
         link: "PetProfileListScreen",
       },
+      { id: 3, title: "Quotation", link: "CasesQuotesListScreen" },
+    ],
+  },
+  {
+    id: 2,
+    groupName: "Settings",
+    options: [
       {
         id: 4,
         title: "Push Notification",
-        icon: IconBell,
-        description: "Toggle push notifications to receive important messages.",
-        toggleBtn: true,
         link: "",
+      },
+      {
+        id: 3,
+        title: "Language",
+        externalLink: true,
+        link: "/",
       },
     ],
   },
-  // {
-  //   id: 2,
-  //   groupName: "Order & Cases",
-  //   options: [
-  //     // {
-  //     //   id: 1,
-  //     //   title: "Medicine Order",
-  //     //   icon: IconPrescription,
-  //     // },
-  //     {
-  //       id: 2,
-  //       title: "Cases",
-  //       icon: IconWritingSign,
-  //       link: "CasesListScreen",
-  //     },
-  //   ],
-  // },
   {
     id: 3,
     groupName: "Privacy & Help",
@@ -101,14 +86,12 @@ const options: GroupType[] = [
       {
         id: 2,
         title: "Legal",
-        icon: IconGavel,
         externalLink: true,
         link: "https://smoll.me/terms-and-conditions",
       },
       {
         id: 3,
         title: "Help",
-        icon: IconHelp,
         externalLink: true,
         link: "https://smoll.me/help",
       },
@@ -186,21 +169,27 @@ const SettingsMainScreen: React.FC<{ navigation: NavigationType }> = ({ navigati
   };
 
   return (
-    <Layout showBack onBackPress={() => navigation.goBack()} title="Settings">
+    <Layout showBack onBackPress={() => navigation.goBack()} title="You">
       <ScrollDiv showsVerticalScrollIndicator={false}>
         {options.map((group) => (
-          <React.Fragment key={`${group?.id}`}>
-            <Text fontWeight="400" fontSize={"xl"} fontFamily={fontHauora} lineHeight={24} mb={8}>
+          <Div key={`${group?.id}`} mb={20} borderBottomWidth={1} borderBottomColor="#E0E0E0">
+            <Text
+              fontWeight="400"
+              color="#6e99f0"
+              fontSize={"xl"}
+              fontFamily={fontHauora}
+              lineHeight={24}
+              mb={8}
+            >
               {group.groupName}
             </Text>
-            <Div mb={24}>
+            <Div>
               {group.options.map((option) => (
                 <SettingButton
                   key={`${option?.id}`}
                   title={option.title}
                   description={option?.description}
                   toggleBtn={option?.toggleBtn}
-                  Icon={option.icon}
                   disabled={option?.disabled}
                   onPress={() => {
                     if (option.externalLink) {
@@ -217,7 +206,7 @@ const SettingsMainScreen: React.FC<{ navigation: NavigationType }> = ({ navigati
                 />
               ))}
             </Div>
-          </React.Fragment>
+          </Div>
         ))}
 
         <Div mt="auto" my={20}>
@@ -227,7 +216,7 @@ const SettingsMainScreen: React.FC<{ navigation: NavigationType }> = ({ navigati
               fontSize={"xl"}
               fontFamily={fontHauora}
               lineHeight={24}
-              color="#0189F9"
+              color="#6e99f0"
             >
               Logout
             </Text>

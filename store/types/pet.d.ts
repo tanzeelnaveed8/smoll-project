@@ -14,6 +14,7 @@ export enum PetSpeciesEnum {
 export interface Benefit {
   id: number;
   name: string;
+  description?: string;
   totalUsageCount: number;
   consumedUsageCount: number;
   history: {

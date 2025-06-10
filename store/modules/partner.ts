@@ -5,6 +5,7 @@ import { State as PartnerState } from "../types/partner";
 export const usePartnerStore = create<PartnerState>((set, get) => ({
   partnerVets: new Map(),
   partnerVetDetails: new Map(),
+  clinics: [],
   clinicDetails: new Map(),
 
   fetchPartnerVets: async (partnerId) => {
@@ -53,6 +54,13 @@ export const usePartnerStore = create<PartnerState>((set, get) => ({
     });
 
     return { id: res.data.id };
+  },
+
+  fetchClinics: async () => {
+    const { data } = await api.get("/member/partners");
+    set({
+      clinics: data,
+    });
   },
 
   fetchClinicDetails: async (id) => {

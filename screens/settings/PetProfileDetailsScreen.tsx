@@ -23,7 +23,7 @@ import ConfirmationModal from "@/components/partials/ConfirmationModal";
 import { IconCrown, IconDots } from "@tabler/icons-react-native";
 import Dropdown from "@/components/partials/Dropdown";
 import HealthHistoryModal from "@/components/app/pet/HealthHistoryModal";
-import SubscriptionBenefitsList from "@/components/app/subscription/SubscriptionBenefitsList";
+import SubscriptionBenefitsList from "@/components/app/subscription/SubscribedBenefitsList";
 import dayjs from "dayjs";
 
 type RouteType = { petId: string; activeBenefitTab: boolean };
@@ -64,12 +64,16 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
   const btns = useMemo(() => {
     const baseBtns = ["Basic Details", "Health History"];
     if (Boolean(isCarePet)) {
-      return [...baseBtns, "smoll® Care"];
+      return ["smoll® Care", ...baseBtns];
     }
     return baseBtns;
   }, [isCarePet]);
 
   const [activeTab, setActiveTab] = useState(btns[0]);
+
+  useEffect(() => {
+    setActiveTab(btns[0]);
+  }, [btns]);
 
   const [open, setOpen] = useState(false);
   // const [selectedPetId, setSelectedPetId] = useState("");
@@ -424,9 +428,9 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
             />
           </Div>
 
-          {activeTab === btns[0] && (
+          {activeTab === "Basic Details" && (
             <>
-              {(!petDetailsData?.isDeceased || isCarePet) && (
+              {!petDetailsData?.isDeceased && !isCarePet && (
                 <Div
                   style={{
                     padding: 16,
@@ -445,9 +449,9 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
                     color="#545454"
                     fontFamily={fontHauoraSemiBold}
                   >
-                    {`${petDetailsData?.name.charAt(0).toLocaleUpperCase()}${petDetailsData?.name.slice(1)}`}
-                    {isCarePet ? " is already enrolled in the plan" : " isn't enrolled in the plan"}
+                    {`${petDetailsData?.name.charAt(0).toLocaleUpperCase()}${petDetailsData?.name.slice(1)} isn't enrolled in the plan`}
                   </Text>
+
                   <Button
                     bg="#6e99f0"
                     rounded={100}
@@ -469,7 +473,7 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
                       }
                     }}
                   >
-                    {isCarePet ? "View benefits" : `Enroll ${petDetailsData?.name}`}
+                    {`Enroll ${petDetailsData?.name}`}
                   </Button>
                 </Div>
               )}
@@ -506,7 +510,7 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
             </>
           )}
 
-          {activeTab === btns[1] && (
+          {activeTab === "Health History" && (
             <Div>
               {healthHistoryDataState && healthHistoryDataState.length > 0 && (
                 <FlatList
@@ -570,7 +574,7 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
               />
             </Div>
           )}
-          {activeTab === btns[2] && (
+          {activeTab === "smoll® Care" && (
             <>
               <SubscriptionBenefitsList
                 planFeatures={petDetailsData?.benefits as Benefit[]}
