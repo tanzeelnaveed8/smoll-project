@@ -66,15 +66,8 @@ const EditInfoScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }
       return !isNaN(weightNum) && weightNum > 0;
     }
     if (typeof value === "string") {
-      const trimmed = value.trim();
-      if (trimmed === "") return false;
-
-      // Regex to match emojis and special characters (excluding letters, numbers, and basic punctuation)
-      const hasInvalidChars =
-        /[\p{Emoji_Presentation}\p{Extended_Pictographic}0-9~`!@#$%^&*()_+\-=\[\]{}|\\:;"'<>,.?/]/gu.test(
-          trimmed
-        );
-      if (hasInvalidChars) return false;
+      const isValidChars = /^(?=.{2,10}$)[A-Za-z]+( [A-Za-z]+)*$/.test(value);
+      if (!isValidChars) return false;
     }
 
     return true;
