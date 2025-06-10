@@ -430,7 +430,7 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
 
           {activeTab === "Basic Details" && (
             <>
-              {(!petDetailsData?.isDeceased || isCarePet) && (
+              {!petDetailsData?.isDeceased && !isCarePet && (
                 <Div
                   style={{
                     padding: 16,
@@ -443,42 +443,38 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
                   rounded={20}
                 >
                   <Text
-                    maxW={!isCarePet ? 146 : "auto"}
+                    maxW={146}
                     w={"100%"}
                     fontSize={"lg"}
                     color="#545454"
                     fontFamily={fontHauoraSemiBold}
                   >
-                    {`${petDetailsData?.name.charAt(0).toLocaleUpperCase()}${petDetailsData?.name.slice(1)}`}
-                    {isCarePet ? " is already enrolled in the plan" : " isn't enrolled in the plan"}
+                    {`${petDetailsData?.name.charAt(0).toLocaleUpperCase()}${petDetailsData?.name.slice(1)} isn't enrolled in the plan`}
                   </Text>
-                  {!isCarePet ? (
-                    <Button
-                      bg="#6e99f0"
-                      rounded={100}
-                      h={42}
-                      pt={13}
-                      pb={13}
-                      lineHeight={18}
-                      w={134}
-                      ml={"auto"}
-                      alignSelf="center"
-                      fontFamily={fontHauoraMedium}
-                      onPress={() => {
-                        if (isCarePet) {
-                          handleTabPress("smoll® Care");
-                        } else {
-                          navigation.navigate("PetProfileBenefitsScreen", {
-                            petId: petDetailsData?.id,
-                          });
-                        }
-                      }}
-                    >
-                      {`Enroll ${petDetailsData?.name}`}
-                    </Button>
-                  ) : (
-                    <></>
-                  )}
+
+                  <Button
+                    bg="#6e99f0"
+                    rounded={100}
+                    h={42}
+                    pt={13}
+                    pb={13}
+                    lineHeight={18}
+                    w={134}
+                    ml={"auto"}
+                    alignSelf="center"
+                    fontFamily={fontHauoraMedium}
+                    onPress={() => {
+                      if (isCarePet) {
+                        handleTabPress("smoll® Care");
+                      } else {
+                        navigation.navigate("PetProfileBenefitsScreen", {
+                          petId: petDetailsData?.id,
+                        });
+                      }
+                    }}
+                  >
+                    {`Enroll ${petDetailsData?.name}`}
+                  </Button>
                 </Div>
               )}
               <FlatList
