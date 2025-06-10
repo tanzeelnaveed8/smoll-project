@@ -150,6 +150,7 @@ const ClinicDetailScreen: React.FC<{ navigation: NavigationType }> = ({ navigati
                         hideUnselectBtn
                         openImageOnTab
                         disableDownload
+                        docType="image/"
                         // onChange={handleUpdateImage}
                       />
                     </Div>
