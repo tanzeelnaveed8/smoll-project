@@ -57,7 +57,7 @@ const PlanRow = ({
           ) : (
             <Text>•</Text>
           )}
-          <Text fontSize="lg" fontFamily={fontHauoraBold} color="#000">
+          <Text maxW={190} fontSize="lg" fontFamily={fontHauoraBold} color="#000">
             {benefit.name}
           </Text>
         </Div>
