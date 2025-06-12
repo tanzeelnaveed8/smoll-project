@@ -41,24 +41,12 @@ const SettingButton: React.FC<PropsType> = (props) => {
             <Text
               color="#222222"
               fontWeight="400"
-              fontSize={"xl"}
+              fontSize={"2xl"}
               fontFamily={fontHauora}
               lineHeight={24}
             >
               {title}
             </Text>
-            {description && (
-              <Text
-                color="#494949"
-                fontWeight="400"
-                fontSize={"md"}
-                fontFamily={fontHauora}
-                lineHeight={20}
-                maxW={windowWidth < 390 ? 230 : 240}
-              >
-                {description}
-              </Text>
-            )}
           </Div>
         </Div>
       </Div>

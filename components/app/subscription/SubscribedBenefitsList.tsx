@@ -82,8 +82,8 @@ const PlanRow = ({
                 Service Provided by
               </Text>
               <Div mt={4} style={{ display: "flex", gap: 12 }}>
-                {benefit.history.map((item) => (
-                  <Div key={item.partnerId}>
+                {benefit.history.map((item, i) => (
+                  <Div key={item.partnerId + i}>
                     <Div flexDir="row" justifyContent="space-between">
                       <Text fontSize="lg" fontFamily={fontHauoraSemiBold} color="#000">
                         {item.clinicName}
