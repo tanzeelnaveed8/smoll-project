@@ -2,15 +2,8 @@ import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import { fontHauoraBold, fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
 import { IconArrowRight } from "@tabler/icons-react-native";
 import React from "react";
-import { View, Image, StyleSheet, Dimensions } from "react-native";
-import { Text } from "react-native-magnus";
-
-const avatars = [
-  { id: 1, uri: "https://images.dog.ceo/breeds/beagle/n02088364_11136.jpg" },
-  { id: 2, uri: "https://images.dog.ceo/breeds/labrador/n02099712_6901.jpg" },
-  { id: 3, uri: "https://images.dog.ceo/breeds/spaniel-sussex/n02102480_5808.jpg" },
-  { id: 4, uri: "https://images.dog.ceo/breeds/corgi-cardigan/n02113186_1030.jpg" },
-];
+import { View, StyleSheet } from "react-native";
+import { Image } from "react-native-magnus";
 
 const PlanCTA = ({
   petName,
@@ -24,18 +17,7 @@ const PlanCTA = ({
   return (
     <View style={styles.container}>
       <View style={styles.row}>
-        <View style={styles.avatarGroup}>
-          {avatars.map((avatar, index) => (
-            <Image
-              key={avatar.id}
-              source={{ uri: avatar.uri }}
-              style={[styles.avatar, { marginLeft: index === 0 ? 0 : -12 }]}
-            />
-          ))}
-        </View>
-        <Text color="#090A0A" fontFamily={fontHauoraSemiBold} fontSize="lg" ml={8}>
-          4,000+ Joined
-        </Text>
+        <Image h={37} w={240} source={require("@/assets/images/pet-joined.png")} />
       </View>
 
       <ButtonPrimary

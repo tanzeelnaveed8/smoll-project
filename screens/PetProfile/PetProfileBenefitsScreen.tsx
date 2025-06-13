@@ -10,6 +10,7 @@ import { usePetStore } from "@/store/modules/pet";
 import PlanCTA from "../Subscription/PlanCTA";
 import BackButton from "@/components/partials/BackButton";
 import BenefitsList from "@/components/app/subscription/BenefitsList";
+import { Benefit } from "@/store/types/pet";
 
 type RouteType = { petId: string };
 
@@ -20,7 +21,7 @@ const PetProfileBenefitsScreen: React.FC<{ navigation: NavigationType }> = ({ na
   const [profileImg, setProfileImg] = useState("");
   const [loading, setLoading] = useState(false);
   const petDetailsData = petsDetailMap.get(id);
-  const { benefits } = usePetStore();
+  const { plan } = usePetStore();
 
   useEffect(() => {
     if (!id) return;
@@ -100,13 +101,14 @@ const PetProfileBenefitsScreen: React.FC<{ navigation: NavigationType }> = ({ na
               </Div>
             </Div>
 
-            <BenefitsList planFeatures={benefits} />
+            <BenefitsList planFeatures={plan?.benefits as Benefit[]} />
           </View>
           <PlanCTA
             petName={petDetailsData?.name}
             onButtonPress={() => {
-              navigation.replace("PetSmollcarePaymentScreen", {
+              navigation.replace("PetProfileSmollcarePaymentScreen", {
                 pet: petDetailsData,
+                planPrice: plan?.price,
               });
             }}
           />

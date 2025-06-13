@@ -76,7 +76,7 @@ export interface PetState {
   petsDetailMap: Map<string, Nullable<PetDetail>>;
   // healthHistoryMap: Map<string, HealthHistory[]>;
   petBreeds: Nullable<PetBreeds>;
-  benefits: Benefit[];
+  plan: { benefits: Benefit[]; price: string } | null;
 
   fetchPetBreeds: () => Promise<void>;
   fetchPets: (isDeceased?: boolean) => Promise<Pet[]>;

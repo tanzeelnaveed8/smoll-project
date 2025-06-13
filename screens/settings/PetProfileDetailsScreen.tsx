@@ -192,6 +192,7 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
       value: petDetailsData?.species,
       link: "PetEditInfoScreen",
       fileName: "species",
+      editable: false,
     },
     {
       title: "Gender",
@@ -484,7 +485,7 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
                   <ProfileOptionButton
                     title={item.title}
                     value={item.value}
-                    editable
+                    editable={typeof item.editable === "boolean" ? item.editable : true}
                     onEdit={() => {
                       if (item.fileName) {
                         navigation.navigate(item.link, {

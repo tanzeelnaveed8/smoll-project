@@ -22,7 +22,7 @@ import { showMessage } from "react-native-flash-message";
 import { Div, Image, Text } from "react-native-magnus";
 import { useToast } from "react-native-toast-notifications";
 
-type RouteType = { pet: PetDetail };
+type RouteType = { pet: PetDetail; planPrice: String };
 
 export default function PetProfileSmollcarePayementScreen() {
   const { user } = useUserStore();
@@ -32,6 +32,7 @@ export default function PetProfileSmollcarePayementScreen() {
   const toast = useToast();
   const route = useRoute();
   const petDetailsData = (route.params as RouteType)?.pet;
+  const planPrice = (route.params as RouteType)?.planPrice;
   const paymentIntentRef = useRef<string | undefined>(undefined);
   const [envs, setEnvs] = useState<any>(null);
   const paymentIntentId = "";
@@ -252,7 +253,7 @@ export default function PetProfileSmollcarePayementScreen() {
                       <Div>
                         <Div flexDir="row" alignItems="flex-end">
                           <Text fontSize={"4xl"} fontFamily={fontHauoraBold}>
-                            AED125
+                            AED {(+planPrice / 12).toFixed(2)}
                           </Text>
                           <Text ml={8} fontFamily={fontHauoraSemiBold}>
                             (Vat Included)
@@ -270,7 +271,7 @@ export default function PetProfileSmollcarePayementScreen() {
                       Due today
                     </Text>
                     <Text fontFamily={fontHauoraMedium} color="#6e99f0" fontSize={"6xl"}>
-                      AED 1499.00
+                      AED {planPrice}
                     </Text>
                   </Div>
                 </Div>

@@ -1,9 +1,9 @@
 import { fontHauoraBold, fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
 import { Benefit } from "@/store/types/pet";
 import { IconChevronRight, IconMinus, IconPlus } from "@tabler/icons-react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FlatList, Platform, Pressable, View } from "react-native";
-import { Div, Text } from "react-native-magnus";
+import { Div, Image, Text } from "react-native-magnus";
 
 interface BenefitsListProps {
   planFeatures: Benefit[];
@@ -14,7 +14,7 @@ const PlanRow = ({
   styles,
   expandable = false,
 }: {
-  benefit: Benefit;
+  benefit: { heading: string; icon: string; items: string[] };
   styles: any;
   expandable?: boolean;
 }) => {
@@ -33,9 +33,13 @@ const PlanRow = ({
           }}
           flex={1}
         >
-          <Text fontSize="xl" fontFamily={fontHauoraBold} color="#000">
-            {benefit.name}
-          </Text>
+          <Div flexDir="row" style={{ gap: 10 }} alignItems="center">
+            <Image w={24} h={24} source={benefit.icon} />
+            <Text maxW={254} fontSize="xl" fontFamily={fontHauoraBold} color="#000">
+              {benefit.heading}
+            </Text>
+          </Div>
+
           {expanded ? (
             <IconMinus size={18} color="#494949" />
           ) : (
@@ -44,15 +48,17 @@ const PlanRow = ({
         </Div>
       </Div>
       {expanded && (
-        <Div ml={4} mr={12} my={4} style={{ gap: 4 }}>
-          <Div flexDir="row" alignItems="center">
-            <Text fontSize={"lg"} textAlignVertical="center" mr={4}>
-              •
-            </Text>
-            <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold}>
-              {benefit.description}
-            </Text>
-          </Div>
+        <Div ml={34} mr={12} my={4} style={{ gap: 4 }}>
+          {benefit.items?.map((item, index) => (
+            <Div key={index} flexDir="row" alignItems="center">
+              <Text fontSize={"lg"} textAlignVertical="center" mr={4}>
+                •
+              </Text>
+              <Text maxW={250} fontSize={"lg"} fontFamily={fontHauoraSemiBold}>
+                {item}
+              </Text>
+            </Div>
+          ))}
         </Div>
       )}
     </Pressable>
@@ -60,6 +66,61 @@ const PlanRow = ({
 };
 
 export default function BenefitsList({ planFeatures }: BenefitsListProps) {
+  const vaccineBenefits = [
+    {
+      heading: "Unlimited Consultations",
+      icon: require("@/assets/icons/benefits/stethoscope.png"),
+      items: ["Unlimited consultations all year long"],
+    },
+    {
+      heading: "Annual Vaccines",
+      icon: require("@/assets/icons/benefits/syringe.png"),
+      items: [planFeatures[0].name, planFeatures[1].name, planFeatures[2].name],
+    },
+    {
+      heading: "Unlimited access to vets & wellness experts",
+      icon: require("@/assets/icons/benefits/telephone-receiver.png"),
+      items: [
+        "24/7 access to tele-vet consultations",
+        "Behavioral advice, nutrition consults, minor follow-ups",
+      ],
+    },
+    {
+      heading: "Dental Check up",
+      icon: require("@/assets/icons/benefits/tooth.png"),
+      items: [planFeatures[3].name],
+    },
+    {
+      heading: "Routine Diagnostics",
+      icon: require("@/assets/icons/benefits/test-tube.png"),
+      items: [planFeatures[4].name, planFeatures[5].name],
+    },
+    {
+      heading: "Wellness Services",
+      icon: require("@/assets/icons/benefits/soap.png"),
+      items: [planFeatures[6].name, planFeatures[7].name, planFeatures[8].name],
+    },
+    {
+      heading: "Health Records & Follow-Ups",
+      icon: require("@/assets/icons/benefits/ledger.png"),
+      items: [
+        "Digital health record management",
+        "Automated reminders for vaccination & checkups",
+        "Follow-up consults on previously seen conditions",
+      ],
+    },
+    {
+      heading: "Predictable pricing and Upfront Quotations",
+      icon: require("@/assets/icons/benefits/umbrella-rain-drops.png"),
+      items: ["No paperwork, no fine print, know what you pay, know what you get"],
+    },
+    {
+      heading: "Peace of Mind",
+      icon: require("@/assets/icons/benefits/person-getting-massage.png"),
+      items: ["Never worry again about vet visit again"],
+    },
+  ];
+
   return (
     <View
       style={{
@@ -77,8 +138,8 @@ export default function BenefitsList({ planFeatures }: BenefitsListProps) {
       }}
     >
       <FlatList
-        data={planFeatures}
-        keyExtractor={(item) => item.name}
+        data={vaccineBenefits}
+        keyExtractor={(item, index) => index + "a"}
         renderItem={({ item, index }) => (
           <PlanRow
             benefit={item}

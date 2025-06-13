@@ -691,7 +691,7 @@ const App = () => {
                   <Stack.Screen name="PaymentDetailsScreen" component={PaymentDetailsScreen} />
 
                   <Stack.Screen
-                    name="PetSmollcarePaymentScreen"
+                    name="PetProfileSmollcarePaymentScreen"
                     component={PetProfileSmollcarePaymentScreen}
                   />
                   {/* Smoll care payment success */}

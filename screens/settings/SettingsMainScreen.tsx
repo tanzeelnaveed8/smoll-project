@@ -176,7 +176,7 @@ const SettingsMainScreen: React.FC<{ navigation: NavigationType }> = ({ navigati
             <Text
               fontWeight="400"
               color="#6e99f0"
-              fontSize={"xl"}
+              fontSize={"2xl"}
               fontFamily={fontHauora}
               lineHeight={24}
               mb={8}
@@ -213,7 +213,7 @@ const SettingsMainScreen: React.FC<{ navigation: NavigationType }> = ({ navigati
           <TouchableOpacity onPress={() => setShowLogoutModal(true)} style={{ marginBottom: 10 }}>
             <Text
               fontWeight="400"
-              fontSize={"xl"}
+              fontSize={"2xl"}
               fontFamily={fontHauora}
               lineHeight={24}
               color="#6e99f0"
@@ -224,7 +224,7 @@ const SettingsMainScreen: React.FC<{ navigation: NavigationType }> = ({ navigati
 
           <Text
             fontWeight="400"
-            fontSize={"xl"}
+            fontSize={"2xl"}
             fontFamily={fontHauora}
             lineHeight={24}
             mb={6}
