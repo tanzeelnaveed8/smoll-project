@@ -356,12 +356,18 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
           </Div>
 
           <Div flexDir="row" position="relative" mb={20}>
-            <ScrollView ref={scrollRef} horizontal showsHorizontalScrollIndicator={false}>
+            <ScrollView
+              ref={scrollRef}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              bounces={false}
+              overScrollMode="never"
+            >
               {btns.map((item) => (
                 <TouchableOpacity
                   key={item}
                   activeOpacity={0.6}
-                  style={{ marginRight: 24 }}
+                  style={{ marginRight: 20 }}
                   onPress={() => handleTabPress(item)}
                   onLayout={(event) => {
                     itemPositions.current[item] = event.nativeEvent.layout.x;

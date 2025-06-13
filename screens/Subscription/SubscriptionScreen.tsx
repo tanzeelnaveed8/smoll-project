@@ -5,8 +5,7 @@ import { Button, Div, Image, Text } from "react-native-magnus";
 import { fontHauoraBold, fontHauoraSemiBold, fontHeading } from "@/constant/constant";
 import { IconArrowRight } from "@tabler/icons-react-native";
 import { useUserStore } from "@/store/modules/user";
-import { Dimensions, StyleSheet } from "react-native";
-import Svg, { Defs, RadialGradient, Stop, Rect } from "react-native-svg";
+import { Dimensions } from "react-native";
 
 export default function SubscriptionScreen({ navigation }: { navigation: NavigationType }) {
   const { user } = useUserStore();
@@ -31,7 +30,7 @@ export default function SubscriptionScreen({ navigation }: { navigation: Navigat
         <Div alignItems="center" mt={32}>
           <Image
             w={"80%"}
-            h={height * 0.45}
+            h={height * 0.44}
             source={require("@/assets/images/smollcare-screen.png")}
           />
         </Div>
@@ -81,7 +80,7 @@ export default function SubscriptionScreen({ navigation }: { navigation: Navigat
             onPress={() => {
               navigation.navigate("PetProfileListScreen");
             }}
-            mt={32}
+            mt={28}
             mb={24}
           >
             <Text color="primary" fontSize={"xl"} fontFamily={fontHauoraSemiBold}>

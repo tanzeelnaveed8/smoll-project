@@ -57,7 +57,7 @@ const PlanRow = ({
           ) : (
             <Text>•</Text>
           )}
-          <Text maxW={190} fontSize="lg" fontFamily={fontHauoraBold} color="#000">
+          <Text maxW={148} fontSize="lg" fontFamily={fontHauoraBold} color="#000">
             {benefit.name}
           </Text>
         </Div>
@@ -126,7 +126,7 @@ export default function SubscriptionBenefitsList({
 }: SubscriptionBenefitsListProps) {
   return (
     <>
-      <Div px={12}>
+      <Div px={4}>
         {!isExpandable && (
           <Text color="#121212" fontSize={"xl"} fontFamily={fontHauoraSemiBold}>
             With smoll® Care Plan {petName} will recieve all the following:
@@ -166,6 +166,8 @@ export default function SubscriptionBenefitsList({
         data={planFeatures}
         keyExtractor={(item) => item.name}
         style={{ paddingRight: 10 }}
+        bounces={false}
+        overScrollMode="never"
         renderItem={({ item, index }) => (
           <PlanRow
             benefit={item}
@@ -180,7 +182,7 @@ export default function SubscriptionBenefitsList({
         )}
         contentContainerStyle={{
           paddingTop: 16,
-          paddingHorizontal: 12,
+          paddingHorizontal: 4,
           display: "flex",
           flexDirection: "column",
           gap: 14,

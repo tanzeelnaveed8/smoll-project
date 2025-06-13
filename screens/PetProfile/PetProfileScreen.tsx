@@ -54,7 +54,9 @@ const PetProfileScreen: React.FC<Props> = (props) => {
   const isActionDisabled = useMemo(() => {
     switch (currentStep) {
       case 0:
-        return !pet.name.trim().length || !/^[A-Za-z\s]+$/.test(pet.name.trim());
+        return (
+          !pet.name.trim().length || !/^(?=.{2,10}$)[A-Za-z]+( [A-Za-z]+)*$/.test(pet.name.trim())
+        );
       case 2:
         return !pet.gender.length;
       case 4:

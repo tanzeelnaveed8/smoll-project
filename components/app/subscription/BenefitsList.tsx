@@ -2,7 +2,7 @@ import { fontHauoraBold, fontHauoraMedium, fontHauoraSemiBold } from "@/constant
 import { Benefit } from "@/store/types/pet";
 import { IconChevronRight, IconMinus, IconPlus } from "@tabler/icons-react-native";
 import React, { useEffect, useState } from "react";
-import { FlatList, Platform, Pressable, View } from "react-native";
+import { Dimensions, FlatList, Platform, Pressable, View } from "react-native";
 import { Div, Image, Text } from "react-native-magnus";
 
 interface BenefitsListProps {
@@ -35,7 +35,7 @@ const PlanRow = ({
         >
           <Div flexDir="row" style={{ gap: 10 }} alignItems="center">
             <Image w={24} h={24} source={benefit.icon} />
-            <Text maxW={254} fontSize="xl" fontFamily={fontHauoraBold} color="#000">
+            <Text maxW={208} fontSize="xl" fontFamily={fontHauoraBold} color="#000">
               {benefit.heading}
             </Text>
           </Div>
@@ -121,6 +121,8 @@ export default function BenefitsList({ planFeatures }: BenefitsListProps) {
     },
   ];
 
+  const { height } = Dimensions.get("window");
+
   return (
     <View
       style={{
@@ -134,11 +136,13 @@ export default function BenefitsList({ planFeatures }: BenefitsListProps) {
         shadowRadius: 10,
         elevation: Platform.OS === "android" ? 5 : 0,
         marginBottom: 10,
-        maxHeight: 500,
+        maxHeight: height * 0.525,
       }}
     >
       <FlatList
         data={vaccineBenefits}
+        bounces={false}
+        overScrollMode="never"
         keyExtractor={(item, index) => index + "a"}
         renderItem={({ item, index }) => (
           <PlanRow

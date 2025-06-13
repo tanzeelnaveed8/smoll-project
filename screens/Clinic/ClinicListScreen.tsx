@@ -46,13 +46,7 @@ const ClinicListScreen = ({ navigation }: { navigation: NavigationType }) => {
   }, []);
 
   return (
-    <Layout
-      showBack
-      onBackPress={() => navigation.goBack()}
-      title="Clinics"
-      style={{ backgroundColor: "#fff" }}
-      loading={loading}
-    >
+    <Layout showBack onBackPress={() => navigation.goBack()} title="Clinics" loading={loading}>
       <Div flex={1}>
         <FlatList
           data={clinics}
