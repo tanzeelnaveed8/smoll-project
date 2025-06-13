@@ -136,7 +136,7 @@ export default function BenefitsList({ planFeatures }: BenefitsListProps) {
         shadowRadius: 10,
         elevation: Platform.OS === "android" ? 5 : 0,
         marginBottom: 10,
-        maxHeight: height * 0.525,
+        maxHeight: height * 0.5,
       }}
     >
       <FlatList
