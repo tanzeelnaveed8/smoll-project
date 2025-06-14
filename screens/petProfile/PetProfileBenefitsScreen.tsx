@@ -3,7 +3,7 @@ import ImageUpload from "@/components/partials/ImageUpload";
 import { colorPrimary, fontHauoraSemiBold } from "@/constant/constant";
 import { NavigationType } from "@/store/types";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, View } from "react-native";
+import { ActivityIndicator, FlatList, View } from "react-native";
 import { Div, Image, Text } from "react-native-magnus";
 import { useRoute } from "@react-navigation/native";
 import { usePetStore } from "@/store/modules/pet";
@@ -54,65 +54,75 @@ const PetProfileBenefitsScreen: React.FC<{ navigation: NavigationType }> = ({ na
     }
   }, [petDetailsData]);
 
+  const renderHeader = () => (
+    <>
+      <Div flexDir="row" alignItems="center" mt={12}>
+        <BackButton
+          onPress={() => {
+            navigation.goBack();
+          }}
+          showCloseIcon={false}
+        />
+        <Div flexDir="row" alignItems="center" ml={12}>
+          <Div alignItems="center">
+            <Div mx={"auto"}>
+              <ImageUpload
+                h={54}
+                w={54}
+                docType="image/"
+                rounded={100}
+                uri={profileImg}
+                hideUnselectBtn
+                openImageOnTab
+                disableDownload
+              />
+            </Div>
+          </Div>
+          <Div ml={24}>
+            <Text lineHeight={24} fontSize={"4xl"} fontFamily={fontHauoraSemiBold}>
+              {petDetailsData?.name}
+            </Text>
+          </Div>
+        </Div>
+      </Div>
+
+      <Div flexDir="row" alignSelf="center" mt={38} mb={38}>
+        <Div flexDir="row" alignItems="center">
+          <Image source={require("@/assets/images/congratulation-tick.png")} w={46} h={46} />
+          <Div h={42} ml={12}>
+            <Image source={require("@/assets/icons/smollcare-logo.png")} w={122} h={22} />
+            <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold}>
+              {petDetailsData?.name} will receive the below
+            </Text>
+          </Div>
+        </Div>
+      </Div>
+    </>
+  );
+
+  const renderFooter = () => (
+    <PlanCTA
+      petName={petDetailsData?.name}
+      onButtonPress={() => {
+        navigation.replace("PetProfileSmollcarePaymentScreen", {
+          pet: petDetailsData,
+          planPrice: plan?.price,
+        });
+      }}
+    />
+  );
+
   return (
     <Layout disableHeader style={{ flex: 1 }}>
       {!loading && (
-        <View style={{ flex: 1, justifyContent: "space-between" }}>
-          <View>
-            <Div flexDir="row" alignItems="center" mt={12}>
-              <BackButton
-                onPress={() => {
-                  navigation.goBack();
-                }}
-                showCloseIcon={false}
-              />
-              <Div flexDir="row" alignItems="center" ml={12}>
-                <Div alignItems="center">
-                  <Div mx={"auto"}>
-                    <ImageUpload
-                      h={54}
-                      w={54}
-                      docType="image/"
-                      rounded={100}
-                      uri={profileImg}
-                      hideUnselectBtn
-                      openImageOnTab
-                      disableDownload
-                    />
-                  </Div>
-                </Div>
-                <Div ml={24}>
-                  <Text lineHeight={24} fontSize={"4xl"} fontFamily={fontHauoraSemiBold}>
-                    {petDetailsData?.name}
-                  </Text>
-                </Div>
-              </Div>
-            </Div>
-
-            <Div flexDir="row" alignSelf="center" mt={38} mb={38}>
-              <Div flexDir="row" alignItems="center">
-                <Image source={require("@/assets/images/congratulation-tick.png")} w={46} h={46} />
-                <Div h={42} ml={12}>
-                  <Image source={require("@/assets/icons/smollcare-logo.png")} w={122} h={22} />
-                  <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold}>
-                    {petDetailsData?.name} will recieve the below
-                  </Text>
-                </Div>
-              </Div>
-            </Div>
-
-            <BenefitsList planFeatures={plan?.benefits as Benefit[]} />
-          </View>
-          <PlanCTA
-            petName={petDetailsData?.name}
-            onButtonPress={() => {
-              navigation.replace("PetProfileSmollcarePaymentScreen", {
-                pet: petDetailsData,
-                planPrice: plan?.price,
-              });
-            }}
-          />
-        </View>
+        <FlatList
+          data={[{ key: "benefits" }]}
+          renderItem={() => <BenefitsList planFeatures={plan?.benefits as Benefit[]} />}
+          ListHeaderComponent={renderHeader}
+          ListFooterComponent={renderFooter}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ flexGrow: 1 }}
+        />
       )}
       {loading && (
         <Div flex={1} justifyContent="center">

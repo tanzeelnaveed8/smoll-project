@@ -129,7 +129,7 @@ export default function SubscriptionBenefitsList({
       <Div px={4}>
         {!isExpandable && (
           <Text color="#121212" fontSize={"xl"} fontFamily={fontHauoraSemiBold}>
-            With smoll® Care Plan {petName} will recieve all the following:
+            With smoll® Care Plan {petName} will receive all the following:
           </Text>
         )}
         <Div

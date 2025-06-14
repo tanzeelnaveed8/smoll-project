@@ -236,8 +236,13 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
     try {
       setShowCancelSubscriptionModal(false);
       setLoading(true);
+
       await cancelSubscription(petId);
+
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+
       await fetchPetDetails(petId);
+
       toast.show("Subscription canceled successfully", {
         placement: "bottom",
       });
@@ -480,7 +485,7 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
                       }
                     }}
                   >
-                    {`Enroll ${petDetailsData?.name}`}
+                    Enroll
                   </Button>
                 </Div>
               )}

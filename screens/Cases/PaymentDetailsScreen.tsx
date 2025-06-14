@@ -432,7 +432,7 @@ const PaymentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ naviga
               maxW={"70%"}
               mx={"auto"}
             >
-              You’ll recieve appointment confirmation after payment is successful
+              You’ll receive appointment confirmation after payment is successful
             </Text>
           </Div>
 

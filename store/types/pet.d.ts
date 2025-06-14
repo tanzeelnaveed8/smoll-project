@@ -98,8 +98,14 @@ export interface PetState {
   fetchBenefits: () => Promise<void>;
 
   buySubscription: (
-    petId: string
-  ) => Promise<{ paymentIntent: string; paymentIntentClientSecret: string; ephemeralKey: string }>;
+    petId: string,
+    couponCode?: string
+  ) => Promise<{
+    paymentIntent: string | null;
+    paymentIntentClientSecret: string | null;
+    ephemeralKey: string | null;
+    percentageOff: number | null;
+  }>;
 
   activateSubscription: (petId: string) => Promise<void>;
   cancelSubscription: (petId: string) => Promise<void>;

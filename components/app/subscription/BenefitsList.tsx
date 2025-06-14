@@ -2,7 +2,7 @@ import { fontHauoraBold, fontHauoraMedium, fontHauoraSemiBold } from "@/constant
 import { Benefit } from "@/store/types/pet";
 import { IconChevronRight, IconMinus, IconPlus } from "@tabler/icons-react-native";
 import React, { useEffect, useState } from "react";
-import { Dimensions, FlatList, Platform, Pressable, View } from "react-native";
+import { Dimensions, Platform, Pressable, View } from "react-native";
 import { Div, Image, Text } from "react-native-magnus";
 
 interface BenefitsListProps {
@@ -121,8 +121,6 @@ export default function BenefitsList({ planFeatures }: BenefitsListProps) {
     },
   ];
 
-  const { height } = Dimensions.get("window");
-
   return (
     <View
       style={{
@@ -136,29 +134,20 @@ export default function BenefitsList({ planFeatures }: BenefitsListProps) {
         shadowRadius: 10,
         elevation: Platform.OS === "android" ? 5 : 0,
         marginBottom: 10,
-        maxHeight: height * 0.5,
       }}
     >
-      <FlatList
-        data={vaccineBenefits}
-        bounces={false}
-        overScrollMode="never"
-        keyExtractor={(item, index) => index + "a"}
-        renderItem={({ item, index }) => (
-          <PlanRow
-            benefit={item}
-            styles={{
-              borderBottomWidth: index !== planFeatures.length - 1 ? 1 : 0,
-              borderColor: "#c7c5c3",
-              paddingBottom: index !== planFeatures.length - 1 ? 16 : 0,
-            }}
-          />
-        )}
-        contentContainerStyle={{
-          gap: 14,
-        }}
-        showsVerticalScrollIndicator={false}
-      />
+      {vaccineBenefits.map((item, index) => (
+        <PlanRow
+          key={index}
+          benefit={item}
+          styles={{
+            borderBottomWidth: index !== planFeatures.length - 1 ? 1 : 0,
+            borderColor: "#c7c5c3",
+            paddingBottom: index !== planFeatures.length - 1 ? 16 : 0,
+            marginBottom: index !== planFeatures.length - 1 ? 14 : 0,
+          }}
+        />
+      ))}
     </View>
   );
 }

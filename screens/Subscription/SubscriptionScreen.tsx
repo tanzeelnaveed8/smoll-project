@@ -1,7 +1,7 @@
 import Layout from "@/components/app/Layout";
 import { NavigationType } from "@/store/types";
 import React from "react";
-import { Button, Div, Image, Text } from "react-native-magnus";
+import { Button, Div, Image, ScrollDiv, Text } from "react-native-magnus";
 import { fontHauoraBold, fontHauoraSemiBold, fontHeading } from "@/constant/constant";
 import { IconArrowRight } from "@tabler/icons-react-native";
 import { useUserStore } from "@/store/modules/user";
@@ -20,7 +20,7 @@ export default function SubscriptionScreen({ navigation }: { navigation: Navigat
       }}
       style={{ position: "relative", justifyContent: "flex-start", flex: 1 }}
     >
-      <Div>
+      <ScrollDiv showsVerticalScrollIndicator={false}>
         <Div mt={4}>
           <Text fontSize="2xl" color="#679FF0" fontFamily={fontHeading}>
             Welcome To
@@ -31,6 +31,7 @@ export default function SubscriptionScreen({ navigation }: { navigation: Navigat
           <Image
             w={"80%"}
             h={height * 0.44}
+            style={{ objectFit: "contain" }}
             source={require("@/assets/images/smollcare-screen.png")}
           />
         </Div>
@@ -95,7 +96,7 @@ export default function SubscriptionScreen({ navigation }: { navigation: Navigat
             />
           </Button>
         </Div>
-      </Div>
+      </ScrollDiv>
     </Layout>
   );
 }

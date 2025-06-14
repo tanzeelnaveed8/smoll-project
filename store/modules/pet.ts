@@ -16,8 +16,6 @@ export const usePetStore = create<PetState>((set, get) => ({
       },
     });
 
-    console.log("respose fetchPets", response.data);
-
     set(() => ({
       pets: response.data,
     }));
@@ -215,8 +213,11 @@ export const usePetStore = create<PetState>((set, get) => ({
       },
     }));
   },
-  buySubscription: async (petId: string) => {
-    const { data } = await api.post(`/member/smollcare/subscribe/${petId}`);
+  buySubscription: async (petId: string, couponCode?: string) => {
+    const { data } = await api.post(`/member/smollcare/subscribe/${petId}`, {
+      coupon: couponCode,
+    });
+
     return data;
   },
   activateSubscription: async (petId: string) => {
