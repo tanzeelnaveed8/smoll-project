@@ -155,13 +155,15 @@ const CasesQuotesListScreen: React.FC<{ navigation: NavigationType }> = ({ navig
                 </Div>
 
                 <Div bg="transparent" p={0} flexDir="row" alignItems="center" mb={12}>
-                  <Image
-                    source={{ uri: item.pet.photos?.[0]?.url }}
-                    w={58}
-                    h={58}
-                    mr={7}
-                    rounded={100}
-                  />
+                  {item.pet?.photos?.[0]?.url && (
+                    <Image
+                      source={{ uri: item.pet?.photos?.[0]?.url }}
+                      w={58}
+                      h={58}
+                      mr={7}
+                      rounded={100}
+                    />
+                  )}
                   <Div flex={1}>
                     <Div mb={4} flexDir="row" justifyContent="space-between" flex={1}>
                       <Div
@@ -171,7 +173,7 @@ const CasesQuotesListScreen: React.FC<{ navigation: NavigationType }> = ({ navig
                         w={"100%"}
                       >
                         <Text fontFamily={fontHauoraSemiBold} fontSize={"xl"}>
-                          {item.pet.name}
+                          {item.pet?.name}
                         </Text>
                       </Div>
 
