@@ -28,7 +28,7 @@ const PetProfileDOBScreen: React.FC<Props> = (props) => {
   return (
     <Div>
       <Text fontSize={"4xl"} mb={20} fontFamily={fontHeading}>
-        Great name! When was {props.pet.name} born?
+        Great name! When was {props.pet.name.trim()} born?
       </Text>
       <DatePickerComponent
         value={props.pet.dob}

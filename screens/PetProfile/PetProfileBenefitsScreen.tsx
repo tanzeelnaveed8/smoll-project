@@ -79,7 +79,14 @@ const PetProfileBenefitsScreen: React.FC<{ navigation: NavigationType }> = ({ na
             </Div>
           </Div>
           <Div ml={24}>
-            <Text lineHeight={24} fontSize={"4xl"} fontFamily={fontHauoraSemiBold}>
+            <Text
+              lineHeight={24}
+              fontSize={"4xl"}
+              fontFamily={fontHauoraSemiBold}
+              ellipsizeMode="tail"
+              numberOfLines={1}
+              maxW={200}
+            >
               {petDetailsData?.name}
             </Text>
           </Div>
@@ -91,7 +98,7 @@ const PetProfileBenefitsScreen: React.FC<{ navigation: NavigationType }> = ({ na
           <Image source={require("@/assets/images/congratulation-tick.png")} w={46} h={46} />
           <Div h={42} ml={12}>
             <Image source={require("@/assets/icons/smollcare-logo.png")} w={122} h={22} />
-            <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold}>
+            <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold} numberOfLines={2} maxW={300}>
               {petDetailsData?.name} will receive the below
             </Text>
           </Div>

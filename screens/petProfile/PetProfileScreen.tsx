@@ -54,9 +54,7 @@ const PetProfileScreen: React.FC<Props> = (props) => {
   const isActionDisabled = useMemo(() => {
     switch (currentStep) {
       case 0:
-        return (
-          !pet.name.trim().length || !/^(?=.{2,10}$)[A-Za-z]+( [A-Za-z]+)*$/.test(pet.name.trim())
-        );
+        return !pet.name.trim().length;
       case 2:
         return !pet.gender.length;
       case 4:
@@ -88,7 +86,7 @@ const PetProfileScreen: React.FC<Props> = (props) => {
         props.navigation.navigate("PetProfileMedicalHistoryScreen", {
           navigateTo: comingFrom === "modal" ? "HomeScreen" : comingFrom,
           petId: id ?? "",
-          petName: pet.name,
+          petName: pet.name.trim(),
           petBg: pet.photos?.[0]?.url ?? "",
           expertId,
           consultationId,
@@ -96,8 +94,6 @@ const PetProfileScreen: React.FC<Props> = (props) => {
           selectedTime,
           selectedDate,
         });
-
-        toast.show("Pet profile created successfully");
       } finally {
         setLoading(false);
       }
@@ -151,14 +147,6 @@ const PetProfileScreen: React.FC<Props> = (props) => {
         {currentStep === 7 && (
           <PetImageUploadScreen navigation={props.navigation} pet={pet} setPet={setPet} />
         )}
-
-        {/* {currentStep === 0 && (
-          <PetImageUploadScreen
-            navigation={props.navigation}
-            pet={pet}
-            setPet={setPet}
-          />
-        )} */}
       </ScrollDiv>
 
       <Div>

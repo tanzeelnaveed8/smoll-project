@@ -18,6 +18,7 @@ const PetProfileNameScreen: React.FC<Props> = (props) => {
       <InputField
         placeholder="Name"
         marginBottom={16}
+        maxLength={20}
         floatingPlaceholder
         inputStyle={{ borderRadius: 12 }}
         value={props.pet.name}

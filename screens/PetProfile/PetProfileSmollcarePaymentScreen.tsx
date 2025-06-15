@@ -161,41 +161,44 @@ export default function PetProfileSmollcarePayementScreen() {
   };
 
   const openPaymentSheet = async () => {
-    setBtnLoader(true);
+    try {
+      setBtnLoader(true);
 
-    const showPaymentSheet = await initStripe();
+      const showPaymentSheet = await initStripe();
 
-    if (showPaymentSheet) {
-      const { error } = await presentPaymentSheet();
+      if (showPaymentSheet) {
+        const { error } = await presentPaymentSheet();
 
-      if (error) {
-        setBtnLoader(false);
-        showMessage({
-          message: "",
-          renderCustomContent: () => (
-            <FlashCustomContent message="Could not process payment, please try again" />
-          ),
-          type: "danger",
-        });
+        if (error) {
+          setBtnLoader(false);
+          showMessage({
+            message: "",
+            renderCustomContent: () => (
+              <FlashCustomContent message="Could not process payment, please try again" />
+            ),
+            type: "danger",
+          });
 
-        return;
+          return;
+        }
       }
+      //On Success
+      await fetchPetDetails(petDetailsData.id as string);
+
+      await new Promise((resolve: any) => {
+        setTimeout(() => {
+          resolve();
+        }, 2000);
+      });
+
+      navigation.replace("paymentSuccess", {
+        petId: petDetailsData.id as string,
+        petName: petDetailsData?.name,
+      });
+    } finally {
+      setBtnLoader(false);
+      setLoading(false);
     }
-    //On Success
-    await fetchPetDetails(petDetailsData.id as string);
-
-    await new Promise((resolve: any) => {
-      setTimeout(() => {
-        resolve();
-      }, 2000);
-    });
-
-    navigation.replace("paymentSuccess", {
-      petId: petDetailsData.id as string,
-      petName: petDetailsData?.name,
-    });
-
-    setBtnLoader(false);
   };
 
   return (
@@ -225,7 +228,15 @@ export default function PetProfileSmollcarePayementScreen() {
                     openImageOnTab
                     disableDownload
                   />
-                  <Text ml={14} mb={6} color="#fff" fontSize={"4xl"} fontFamily={fontHauoraBold}>
+                  <Text
+                    ml={14}
+                    mb={6}
+                    color="#fff"
+                    fontSize={"4xl"}
+                    fontFamily={fontHauoraBold}
+                    numberOfLines={2}
+                    w={170}
+                  >
                     {petDetailsData?.name}
                   </Text>
                 </Div>

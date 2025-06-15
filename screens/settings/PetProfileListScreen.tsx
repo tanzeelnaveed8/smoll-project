@@ -140,6 +140,9 @@ const ProfileCard: React.FC<{
                 fontSize={"2xl"}
                 color={isCarePet ? "#6e99f0" : "#222"}
                 fontFamily={fontHauoraMedium}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+                maxW={130}
               >
                 {name}
               </Text>

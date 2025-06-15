@@ -140,7 +140,7 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
   );
 
   const isActionDisable = useMemo(
-    () => actionLoading || !selectedPet || !description,
+    () => actionLoading || !selectedPet || !description.trim(),
     [actionLoading, selectedPet, description]
   );
 
@@ -167,7 +167,7 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
       navigation.navigate("ExpertsScheduleConfirmationScreen", {
         expertId,
         caseData: JSON.stringify({
-          description,
+          description: description.trim(),
           assets: documents,
           petId: selectedPet?.value || "",
           vetId: expertId,
