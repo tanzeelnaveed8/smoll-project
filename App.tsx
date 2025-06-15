@@ -169,7 +169,7 @@ const theme = {
     xs: scaleFontSize(11),
   },
   colors: {
-    primary: "#427594",
+    primary: "#679FF0",
     primaryLight: "#518cb0",
     bgColor: "#FAF8F5",
     darkGreyText: "#494949",

@@ -13,8 +13,8 @@ const PartnerVetStarRating: React.FC<{ rating: number; color?: string }> = ({ ra
           <IconStar
             width={12}
             height={12}
-            color={color ? color : "#427594"}
-            fill={rating && rating >= item ? (color ? color : "#427594") : "#fff"}
+            color={color ? color : "#679FF0"}
+            fill={rating && rating >= item ? (color ? color : "#679FF0") : "#fff"}
           />
         ))}
       </Div>

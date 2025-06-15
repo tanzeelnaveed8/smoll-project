@@ -396,7 +396,7 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
                     {item === activeTab && (
                       <Div
                         h={7}
-                        bg="#427594"
+                        bg="primary"
                         w="100%"
                         style={{
                           borderTopRightRadius: 4,
@@ -595,15 +595,15 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
 
               <Div py={16} bg="#FAF8F5" px={4}>
                 <Div>
-                  <Text color="primary" fontSize="xl" fontFamily={fontHauoraBold}>
-                    {petDetailsData?.name} smoll® Care plan is active until.
+                  <Text color="primary" fontSize="lg" fontFamily={fontHauoraBold}>
+                    {petDetailsData?.name} smoll® Care plan is active until
                   </Text>
-                  <Text color="#333" fontSize="2xl" fontFamily={fontHauoraBold}>
+                  <Text color="#333" fontSize="xl" fontFamily={fontHauoraBold}>
                     {dayjs(petDetailsData?.subscriptionDetails?.endDate).format("DD MMM YYYY")}
                   </Text>
                 </Div>
                 {petDetailsData?.subscriptionDetails?.status === "Canceled" && (
-                  <Text mt={4} fontSize={"lg"} color="#494949" fontFamily={fontHauoraBold}>
+                  <Text mt={4} fontSize={"md"} color="#494949" fontFamily={fontHauoraBold}>
                     Your subscription will not auto-renew as you have canceled the subscription.
                   </Text>
                 )}

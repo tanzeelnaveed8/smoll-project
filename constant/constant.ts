@@ -15,7 +15,7 @@ export const fontHeadingBold = fontCooperBold;
 
 /** Colors */
 export const colorGray49 = "#494949";
-export const colorPrimary = "#427594";
+export const colorPrimary = "#679FF0";
 export const colorTextPrimary = "#494949";
 export const colorDisableBg = "#FAF8F5";
 export const colorDisableBorder = "#BDBDBD";

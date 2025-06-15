@@ -11,12 +11,12 @@ const cardData = [
   {
     heading: "Chat with a qualified counsellor",
     text: "Ask anything to a counsellor with a single click.",
-    icon: <IconMessages width={32} height={32} color={"#427594"} />,
+    icon: <IconMessages width={32} height={32} color={"#679FF0"} />,
   },
   {
     heading: "Video Consultant  with Counsellor",
     text: "Schedule a personalised video session with a professional counsellor.",
-    icon: <IconVideo width={32} height={32} color={"#427594"} />,
+    icon: <IconVideo width={32} height={32} color={"#679FF0"} />,
   },
 ];
 

@@ -21,11 +21,11 @@ interface Props {
 const btns = [
   {
     text: "Reschedule",
-    icon: <IconCalendarClock width={30} height={30} color={"#427594"} />,
+    icon: <IconCalendarClock width={30} height={30} color={"#679FF0"} />,
   },
   {
     text: "Cancel",
-    icon: <IconUserX width={30} height={30} color={"#427594"} />,
+    icon: <IconUserX width={30} height={30} color={"#679FF0"} />,
   },
 ];
 
@@ -130,7 +130,7 @@ const PartnerVetSuccessfullScreen: React.FC<Props> = ({ navigation }) => {
                 }}
               >
                 <Div>
-                  <IconCalendarClock width={32} height={32} color={"#427594"} />
+                  <IconCalendarClock width={32} height={32} color={"#679FF0"} />
                 </Div>
                 <Text
                   fontSize={"lg"}

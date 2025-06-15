@@ -183,7 +183,7 @@ const ClinicDetailScreen: React.FC<{ navigation: NavigationType }> = ({ navigati
                   }}
                 >
                   <Div flexDir="row" alignItems="center">
-                    <IconPhone width={24} height={24} color={"#427594"} strokeWidth={1.5} />
+                    <IconPhone width={24} height={24} color={"#679FF0"} strokeWidth={1.5} />
                     <Text
                       fontSize={"lg"}
                       fontFamily={fontHauoraMedium}

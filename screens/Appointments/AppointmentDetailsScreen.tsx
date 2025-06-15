@@ -33,12 +33,12 @@ import { Button, Div, Image, ScrollDiv, Tag, Text } from "react-native-magnus";
 const actionBtn = [
   {
     icon: (color?: string) => (
-      <IconCalendarClock width={30} height={30} color={color || "#427594"} />
+      <IconCalendarClock width={30} height={30} color={color || "#679FF0"} />
     ),
     text: "Reschedule",
   },
   {
-    icon: (color?: string) => <IconUserX width={30} height={30} color={colorPrimary} />,
+    icon: (color?: string) => <IconUserX width={30} height={30} color={"#679FF0"} />,
     text: "Cancel",
   },
 ];
@@ -659,7 +659,7 @@ const AppointmentDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ na
 
         {isLoading && (
           <Div justifyContent="center" alignItems="center" h={"90%"}>
-            <ActivityIndicator size="large" color="#427594" />
+            <ActivityIndicator size="large" color="primary" />
           </Div>
         )}
       </Layout>
