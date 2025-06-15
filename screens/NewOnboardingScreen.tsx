@@ -9,32 +9,26 @@ import { Image as RNImage } from "react-native";
 
 const images = [
   {
-    img: require("./../assets/images/onboarding-screen/new/slide-1.png"),
-    heading: ["Talk to Pet", "Experts at", "No Cost"],
+    img: require("@/assets/images/onboarding-screen/new/slide-1.jpg"),
+    heading: ["Your All-Inclusive Pet", "Wellness Plan"],
     width: 260,
     height: 260,
   },
   {
-    img: require("./../assets/images/onboarding-screen/new/slide-2.png"),
-    heading: ["Receive &", "Compare", "Upfront Prices"],
-    width: 250,
-    height: 300,
-  },
-  {
-    img: require("./../assets/images/onboarding-screen/new/slide-3.png"),
-    heading: ["Book", "appointments", "instantly"],
+    img: require("@/assets/images/onboarding-screen/new/slide-2.jpg"),
+    heading: ["Vaccines, tests and", "checkups, all here"],
     width: 380,
     height: 350,
   },
   {
-    img: require("./../assets/images/onboarding-screen/new/slide-4.png"),
-    heading: ["Helping You", "Navigate Pet", "Loss"],
+    img: require("@/assets/images/onboarding-screen/new/slide-3.jpg"),
+    heading: ["Free Telehealth all", "year long"],
     width: 300,
     height: 350,
   },
   {
-    img: require("./../assets/images/onboarding-screen/new/slide-5.png"),
-    heading: ["Get your pet", "a PetID"],
+    img: require("@/assets/images/onboarding-screen/new/slide-4.jpg"),
+    heading: ["Stress Free,", "at-home visits"],
     width: 400,
     height: 380,
   },
@@ -44,7 +38,7 @@ const windowWidth = Dimensions.get("window").width;
 
 const NewOnboardingScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
   const { height } = useWindowDimensions();
-  const fontSize = height < 900 ? 44 : 50;
+  const fontSize = height < 900 ? 30 : 36;
   const flatListRef = useRef<FlatList>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -86,7 +80,7 @@ const NewOnboardingScreen: React.FC<{ navigation: NavigationType }> = ({ navigat
   return (
     <>
       <Layout style={{ flex: 1 }}>
-        <Div px={8} justifyContent="space-between" flex={1}>
+        <Div px={8}>
           <Div flexDir="row" justifyContent="space-between" alignItems="center">
             <Image
               w={90}
@@ -117,7 +111,7 @@ const NewOnboardingScreen: React.FC<{ navigation: NavigationType }> = ({ navigat
           </Div>
 
           <Div>
-            <Div mb={40}>
+            <Div mt={60} my={40}>
               {images[currentIndex].heading.map((item, index) => (
                 <Text
                   key={index}
@@ -141,25 +135,26 @@ const NewOnboardingScreen: React.FC<{ navigation: NavigationType }> = ({ navigat
           }}
           keyExtractor={(item, i) => `${i}`}
           renderItem={({ item }: { item: (typeof images)[0] }) => (
-            <Div
-              w={windowWidth}
-              h={350}
-              justifyContent="center"
-              alignItems="flex-start"
-              mt={"auto"}
-              // pl={50}
-            >
-              {/* <Div style={item.style ? { ...item.style } : {}}>{item.icon}</Div> */}
-
-              <Image
-                w={"90%"}
-                h={"100%"}
-                mb={20}
+            <Div w={windowWidth} h={530} mt="auto">
+              <Div
                 alignSelf="flex-start"
-                // mx={"auto"}
-                style={{ objectFit: "contain" }}
-                source={item.img}
-              />
+                w="90%"
+                h="100%"
+                rounded={40}
+                overflow="hidden"
+                bg="transparent"
+              >
+                <Image
+                  w="100%"
+                  h="100%"
+                  mb={20}
+                  resizeMode="cover"
+                  source={item.img}
+                  style={{
+                    borderRadius: 40,
+                  }}
+                />
+              </Div>
             </Div>
           )}
           horizontal
