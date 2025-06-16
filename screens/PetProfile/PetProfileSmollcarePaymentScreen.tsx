@@ -1,16 +1,10 @@
 import Layout from "@/components/app/Layout";
 import BackButton from "@/components/partials/BackButton";
+import BottomSheet from "@/components/partials/BottomSheet";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import FlashCustomContent from "@/components/partials/FlashCustomContent";
 import ImageUpload from "@/components/partials/ImageUpload";
-import BottomSheet from "@/components/partials/BottomSheet";
-import InputField from "@/components/partials/InputField";
-import {
-  colorPrimary,
-  fontHauoraBold,
-  fontHauoraMedium,
-  fontHauoraSemiBold,
-} from "@/constant/constant";
+import { fontHauoraBold, fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
 import { usePetStore } from "@/store/modules/pet";
 import { useUserStore } from "@/store/modules/user";
 import { PetDetail } from "@/store/types/pet";
@@ -19,20 +13,11 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { initPaymentSheet, presentPaymentSheet, StripeProvider } from "@stripe/stripe-react-native";
 import { SetupParams } from "@stripe/stripe-react-native/lib/typescript/src/types/PaymentSheet";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import {
-  ActivityIndicator,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  Keyboard,
-  TouchableWithoutFeedback,
-  KeyboardAvoidingView,
-  Platform,
-} from "react-native";
+import { Keyboard, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
 import { showMessage } from "react-native-flash-message";
-import { Div, Image, ScrollDiv, Text, Input } from "react-native-magnus";
-import { useToast } from "react-native-toast-notifications";
-import api from "@/utils/api";
+import { Div, Image, Input, ScrollDiv, Text } from "react-native-magnus";
+import ToastContainer from "react-native-toast-notifications";
+import Toast from "react-native-toast-notifications";
 
 type RouteType = { pet: PetDetail; planPrice: String };
 
@@ -49,7 +34,7 @@ export default function PetProfileSmollcarePayementScreen() {
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
 
   const navigation = useNavigation();
-  const toast = useToast();
+  const toastRef = useRef<ToastContainer>(null);
   const route = useRoute();
   const petDetailsData = (route.params as RouteType)?.pet;
   const planPrice = (route.params as RouteType)?.planPrice;
@@ -58,7 +43,7 @@ export default function PetProfileSmollcarePayementScreen() {
   const [loading, setLoading] = useState(false);
   const [profileImg, setProfileImg] = useState("");
 
-  const { buySubscription } = usePetStore();
+  const { buySubscription, validateCoupon: validateCouponAPI } = usePetStore();
   const [btnLoader, setBtnLoader] = useState(false);
 
   useEffect(() => {
@@ -175,32 +160,36 @@ export default function PetProfileSmollcarePayementScreen() {
       setCouponModalLoading(true);
       setCouponModalError("");
 
-      const response = await api.post("/member/smollcare/coupon", {
-        code: code.trim(),
-      });
+      const data = await validateCouponAPI(code);
 
-      if (response.data.valid) {
+      if (data.valid) {
         // Apply the coupon
         setCouponCode(code);
-        setDiscountPercentage(response.data.discountPercentage);
+        setDiscountPercentage(data.discountPercentage || null);
         setShowCouponModal(false);
         setCouponModalInput("");
 
         showMessage({
           message: "Discount Applied! 🎉",
-          description: `${response.data.discountPercentage}% off your subscription`,
+          description: `${data.discountPercentage}% off your subscription`,
           type: "success",
           duration: 3000,
           icon: "success",
         });
       } else {
-        setCouponModalError(response.data.reason || "Invalid coupon code");
+        toastRef.current?.show(data.reason || "Invalid coupon code", {
+          type: "danger",
+        });
       }
     } catch (error: any) {
       if (error.response?.data?.reason) {
-        setCouponModalError(error.response.data.reason);
+        toastRef.current?.show(error.response.data.reason || "Invalid coupon code", {
+          type: "danger",
+        });
       } else {
-        setCouponModalError("Failed to validate coupon. Please try again.");
+        toastRef.current?.show("Failed to validate coupon. Please try again.", {
+          type: "danger",
+        });
       }
     } finally {
       setCouponModalLoading(false);
@@ -450,6 +439,8 @@ export default function PetProfileSmollcarePayementScreen() {
               keyboardShouldPersistTaps="handled"
               contentContainerStyle={{ paddingBottom: 30 }}
             >
+              <Toast ref={toastRef} placement="top" textStyle={{ textTransform: "capitalize" }} />
+
               <Div style={{ gap: 8 }}>
                 {/* Header Section */}
                 <Div alignItems="center" mt={14} mb={20}>
@@ -494,7 +485,7 @@ export default function PetProfileSmollcarePayementScreen() {
                     loading={couponModalLoading}
                     bg={!couponModalInput.trim() || couponModalLoading ? "#CCCCCC" : "#2b44ff"}
                   >
-                    {couponModalLoading ? "Validating..." : "Apply Coupon"}
+                    Apply Coupon
                   </ButtonPrimary>
                 </Div>
               </Div>
