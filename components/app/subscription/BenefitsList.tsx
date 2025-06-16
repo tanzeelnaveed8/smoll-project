@@ -19,6 +19,7 @@ const PlanRow = ({
   expandable?: boolean;
 }) => {
   const [expanded, setExpanded] = useState(false);
+  const width = Dimensions.get("window").width;
 
   return (
     <Pressable onPress={() => setExpanded((prev) => !prev)} style={{ ...styles }}>
@@ -34,8 +35,14 @@ const PlanRow = ({
           flex={1}
         >
           <Div flexDir="row" style={{ gap: 10 }} alignItems="center">
-            <Image w={24} h={24} source={benefit.icon} />
-            <Text maxW={208} fontSize="xl" fontFamily={fontHauoraBold} color="#000">
+            <Image w={20} h={20} source={benefit.icon} />
+            <Text
+              numberOfLines={expanded ? 2 : 1}
+              maxW={width - 150}
+              fontSize={14}
+              fontFamily={fontHauoraBold}
+              color="#000"
+            >
               {benefit.heading}
             </Text>
           </Div>
@@ -51,10 +58,10 @@ const PlanRow = ({
         <Div ml={34} mr={12} my={4} style={{ gap: 4 }}>
           {benefit.items?.map((item, index) => (
             <Div key={index} flexDir="row" alignItems="center">
-              <Text fontSize={"lg"} textAlignVertical="center" mr={4}>
+              <Text fontSize={"sm"} textAlignVertical="center" mr={4}>
                 •
               </Text>
-              <Text maxW={250} fontSize={"lg"} fontFamily={fontHauoraSemiBold}>
+              <Text maxW={250} fontSize={"sm"} fontFamily={fontHauoraSemiBold}>
                 {item}
               </Text>
             </Div>
@@ -110,7 +117,7 @@ export default function BenefitsList({ planFeatures }: BenefitsListProps) {
       ],
     },
     {
-      heading: "Predictable pricing and Upfront Quotations",
+      heading: "Predictable and Upfront Quotations",
       icon: require("@/assets/icons/benefits/umbrella-rain-drops.png"),
       items: ["No paperwork, no fine print, know what you pay, know what you get"],
     },
@@ -144,7 +151,7 @@ export default function BenefitsList({ planFeatures }: BenefitsListProps) {
             borderBottomWidth: index !== planFeatures.length - 1 ? 1 : 0,
             borderColor: "#c7c5c3",
             paddingBottom: index !== planFeatures.length - 1 ? 16 : 0,
-            marginBottom: index !== planFeatures.length - 1 ? 14 : 0,
+            marginBottom: index !== planFeatures.length - 1 ? 8 : 0,
           }}
         />
       ))}

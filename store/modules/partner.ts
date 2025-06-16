@@ -56,10 +56,13 @@ export const usePartnerStore = create<PartnerState>((set, get) => ({
     return { id: res.data.id };
   },
 
-  fetchClinics: async () => {
-    const { data } = await api.get("/member/partners");
+  fetchClinics: async (search?: string, city?: string) => {
+    const res = await api.get("/member/partners", {
+      params: { search, city },
+    });
+    console.log(res);
     set({
-      clinics: data,
+      clinics: res.data,
     });
   },
 

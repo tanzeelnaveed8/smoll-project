@@ -12,7 +12,7 @@ const AddButton: React.FC<{ text: string; onPress?: () => void; styles?: {} }> =
     <Button
       fontSize={"lg"}
       fontFamily={fontHauoraSemiBold}
-      color="primary"
+      color="#679FF0"
       flexDir="column"
       alignItems="center"
       mx={"auto"}
@@ -24,7 +24,7 @@ const AddButton: React.FC<{ text: string; onPress?: () => void; styles?: {} }> =
       <IconSquareRoundedPlus
         width={38}
         height={38}
-        color={"#427594"}
+        color={"#679FF0"}
         strokeWidth={0.9}
         style={{ marginTop: 2 }}
       />

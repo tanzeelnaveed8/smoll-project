@@ -228,4 +228,11 @@ export const usePetStore = create<PetState>((set, get) => ({
     const res = await api.delete(`/member/smollcare/cancel/subscription/${petId}`);
     console.log(res);
   },
+
+  validateCoupon: async (code: string) => {
+    const response = await api.post("/member/smollcare/coupon/verify", {
+      code: code.trim(),
+    });
+    return response.data;
+  },
 }));

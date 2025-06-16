@@ -41,7 +41,7 @@ const SettingButton: React.FC<PropsType> = (props) => {
             <Text
               color="#222222"
               fontWeight="400"
-              fontSize={"2xl"}
+              fontSize={"4xl"}
               fontFamily={fontHauora}
               lineHeight={24}
             >

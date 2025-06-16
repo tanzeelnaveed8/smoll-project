@@ -90,6 +90,6 @@ const styles = StyleSheet.create({
   activeBtn: {
     paddingHorizontal: 30,
     backgroundColor: "#fff",
-    borderColor: "#427594",
+    borderColor: "#679FF0",
   },
 });

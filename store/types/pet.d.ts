@@ -109,4 +109,9 @@ export interface PetState {
 
   activateSubscription: (petId: string) => Promise<void>;
   cancelSubscription: (petId: string) => Promise<void>;
+  validateCoupon: (code: string) => Promise<{
+    valid: boolean;
+    discountPercentage?: number;
+    reason?: string;
+  }>;
 }

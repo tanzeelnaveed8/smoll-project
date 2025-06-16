@@ -2,7 +2,7 @@ import { useAppVersion } from "@/app/hooks/useAppVersion";
 import Layout from "@/components/app/Layout";
 import ConfirmationModal from "@/components/partials/ConfirmationModal";
 import SettingButton from "@/components/partials/SettingButton";
-import { colorErrorText, fontHauora } from "@/constant/constant";
+import { colorErrorText, fontHauora, fontHauoraSemiBold } from "@/constant/constant";
 import { NavigationType } from "@/store/types";
 import { logout } from "@/utils/chat.v2";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -175,8 +175,8 @@ const SettingsMainScreen: React.FC<{ navigation: NavigationType }> = ({ navigati
           <Div key={`${group?.id}`} mb={20} borderBottomWidth={1} borderBottomColor="#E0E0E0">
             <Text
               fontWeight="400"
-              color="#6e99f0"
-              fontSize={"2xl"}
+              color="primary"
+              fontSize={"lg"}
               fontFamily={fontHauora}
               lineHeight={24}
               mb={8}
@@ -211,22 +211,16 @@ const SettingsMainScreen: React.FC<{ navigation: NavigationType }> = ({ navigati
 
         <Div mt="auto" my={20}>
           <TouchableOpacity onPress={() => setShowLogoutModal(true)} style={{ marginBottom: 10 }}>
-            <Text
-              fontWeight="400"
-              fontSize={"2xl"}
-              fontFamily={fontHauora}
-              lineHeight={24}
-              color="#6e99f0"
-            >
+            <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold} lineHeight={24} color="#6e99f0">
               Logout
             </Text>
           </TouchableOpacity>
 
           <Text
             fontWeight="400"
-            fontSize={"2xl"}
+            fontSize={"lg"}
             fontFamily={fontHauora}
-            lineHeight={24}
+            lineHeight={16}
             mb={6}
             color="#7B7B7B"
           >

@@ -2,7 +2,13 @@ import Layout from "@/components/app/Layout";
 import { NavigationType } from "@/store/types";
 import React from "react";
 import { Button, Div, Image, ScrollDiv, Text } from "react-native-magnus";
-import { fontHauoraBold, fontHauoraSemiBold, fontHeading } from "@/constant/constant";
+import {
+  fontHauora,
+  fontHauoraBold,
+  fontHauoraMedium,
+  fontHauoraSemiBold,
+  fontHeading,
+} from "@/constant/constant";
 import { IconArrowRight } from "@tabler/icons-react-native";
 import { useUserStore } from "@/store/modules/user";
 import { Dimensions } from "react-native";
@@ -23,7 +29,7 @@ export default function SubscriptionScreen({ navigation }: { navigation: Navigat
       <ScrollDiv showsVerticalScrollIndicator={false}>
         <Div mt={4}>
           <Text fontSize="2xl" color="#679FF0" fontFamily={fontHeading}>
-            Welcome To
+            Welcome to
           </Text>
           <Image w={157} h={28} mt={10} source={require("@/assets/icons/smollcare-logo.png")} />
         </Div>
@@ -46,11 +52,11 @@ export default function SubscriptionScreen({ navigation }: { navigation: Navigat
                 <Text
                   style={{ position: "absolute" }}
                   fontSize="8xl"
-                  fontFamily={fontHauoraBold}
+                  fontFamily={fontHauora}
                   color="#1655C8"
                   textAlignVertical="center"
                   alignSelf="center"
-                  lineHeight={68}
+                  lineHeight={64}
                 >
                   {user?.careId}
                 </Text>
@@ -71,7 +77,7 @@ export default function SubscriptionScreen({ navigation }: { navigation: Navigat
           <Button
             fontSize={"lg"}
             fontFamily={fontHauoraSemiBold}
-            color="primary"
+            color="#679FF0"
             flexDir="row"
             alignItems="center"
             mx={"auto"}
@@ -90,7 +96,7 @@ export default function SubscriptionScreen({ navigation }: { navigation: Navigat
             <IconArrowRight
               width={24}
               height={24}
-              color={"#427594"}
+              color="#679FF0"
               strokeWidth={2}
               style={{ marginTop: 4 }}
             />

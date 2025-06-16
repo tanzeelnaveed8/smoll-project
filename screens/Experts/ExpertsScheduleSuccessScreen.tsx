@@ -23,7 +23,7 @@ const btns = [
   //   },
   {
     text: "Cancel Booking",
-    icon: <IconCalendarClock width={32} height={32} color={"#427594"} />,
+    icon: <IconCalendarClock width={32} height={32} color={"#679FF0"} />,
   },
 ];
 
@@ -92,7 +92,7 @@ const ExpertsScheduleSuccessScreen: React.FC<Props> = ({ navigation }) => {
               }}
             >
               <Div>
-                <IconCalendarClock width={32} height={32} color={"#427594"} />
+                <IconCalendarClock width={32} height={32} color={"#679FF0"} />
               </Div>
               <Text
                 fontSize={"lg"}

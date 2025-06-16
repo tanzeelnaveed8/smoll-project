@@ -220,7 +220,7 @@ function Add({ title, onAdd }: { title: string; onAdd?: () => void }) {
         fontFamily={fontHauoraSemiBold}
         fontSize="lg"
         lineHeight={24}
-        color="#427594"
+        color="primary"
         onPress={onAdd}
       >
         Add

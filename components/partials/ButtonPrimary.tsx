@@ -38,7 +38,7 @@ const ButtonPrimary: React.FC<ButtonPrimaryProps> = ({
         }
       }}
       py={16}
-      bg={bgColor === "dark" ? "#222222" : bgColor === "danger" ? "#E02A2A" : "#427594"}
+      bg={bgColor === "dark" ? "#222222" : bgColor === "danger" ? "#E02A2A" : "primary"}
       rounded="circle"
       ripple
       style={{ width: "100%", columnGap: 10 }}

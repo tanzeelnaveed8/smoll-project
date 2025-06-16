@@ -31,7 +31,7 @@ const RadioButton: React.FC<Props> = ({
         }}
         pointerEvents="none"
       >
-        <Text fontSize={"xl"} textTransform="capitalize">
+        <Text fontSize={"xl"} textTransform="capitalize" w={320}>
           {label}
         </Text>
         <Div

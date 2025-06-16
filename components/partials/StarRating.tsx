@@ -34,9 +34,9 @@ const StarRating: React.FC<{
           <IconStar
             width={size || 32}
             height={size || 32}
-            color={"#427594"}
+            color={"#679FF0"}
             strokeWidth={3}
-            fill={rating && rating >= item ? "#427594" : "#fff"}
+            fill={rating && rating >= item ? "#679FF0" : "#fff"}
           />
         </TouchableOpacity>
       ))}
