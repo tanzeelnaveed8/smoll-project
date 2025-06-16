@@ -25,7 +25,6 @@ export default function PetProfileSmollcarePayementScreen() {
   const { user } = useUserStore();
   const { fetchPetDetails } = usePetStore();
   const [couponCode, setCouponCode] = useState("");
-  const [couponError, setCouponError] = useState("");
   const [discountPercentage, setDiscountPercentage] = useState<number | null>(null);
   const [showCouponModal, setShowCouponModal] = useState(false);
   const [couponModalInput, setCouponModalInput] = useState("");

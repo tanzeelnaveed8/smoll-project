@@ -12,8 +12,10 @@ import {
   IconCreditCard,
   IconGavel,
   IconHelp,
+  IconLogout,
   IconPaw,
   IconUserCircle,
+  IconWorld,
 } from "@tabler/icons-react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import {
@@ -21,6 +23,7 @@ import {
   AppState,
   AppStateStatus,
   Linking,
+  Platform,
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
@@ -51,7 +54,7 @@ const options: GroupType[] = [
     options: [
       {
         id: 1,
-        title: "Personal Info",
+        title: "Personal Information",
         link: "SettingPersonalInfoScreen",
       },
       {
@@ -59,7 +62,7 @@ const options: GroupType[] = [
         title: "Pets",
         link: "PetProfileListScreen",
       },
-      { id: 3, title: "Quotation", link: "CasesQuotesListScreen" },
+      { id: 3, title: "Quotations", link: "CasesQuotesListScreen" },
     ],
   },
   {
@@ -98,6 +101,30 @@ const options: GroupType[] = [
     ],
   },
 ];
+
+const getOptionIcon = (title: string): React.ReactElement | undefined => {
+  const iconSize = 26;
+  const iconColor = "#222222";
+
+  switch (title) {
+    case "Personal Information":
+      return <IconUserCircle size={iconSize} color={iconColor} />;
+    case "Pets":
+      return <IconPaw size={iconSize} color={iconColor} />;
+    case "Quotations":
+      return <IconChecklist size={iconSize} color={iconColor} />;
+    case "Push Notification":
+      return <IconBell size={iconSize} color={iconColor} />;
+    case "Language":
+      return <IconWorld size={iconSize} color={iconColor} />;
+    case "Legal":
+      return <IconGavel size={iconSize} color={iconColor} />;
+    case "Help":
+      return <IconHelp size={iconSize} color={iconColor} />;
+    default:
+      return undefined;
+  }
+};
 
 // Todos:
 // 1. Person icon needs to be changed
@@ -188,8 +215,9 @@ const SettingsMainScreen: React.FC<{ navigation: NavigationType }> = ({ navigati
                 <SettingButton
                   key={`${option?.id}`}
                   title={option.title}
+                  icon={getOptionIcon(option.title)}
                   description={option?.description}
-                  toggleBtn={option?.toggleBtn}
+                  toggleBtn={option.title === "Push Notification"}
                   disabled={option?.disabled}
                   onPress={() => {
                     if (option.externalLink) {
@@ -211,9 +239,14 @@ const SettingsMainScreen: React.FC<{ navigation: NavigationType }> = ({ navigati
 
         <Div mt="auto" my={20}>
           <TouchableOpacity onPress={() => setShowLogoutModal(true)} style={{ marginBottom: 10 }}>
-            <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold} lineHeight={24} color="#6e99f0">
-              Logout
-            </Text>
+            <Div flexDir="row" alignItems="center">
+              <Div mr={12} mt={3}>
+                <IconLogout size={26} color="#6e99f0" />
+              </Div>
+              <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold} lineHeight={24} color="#6e99f0">
+                Logout
+              </Text>
+            </Div>
           </TouchableOpacity>
 
           <Text
@@ -223,8 +256,9 @@ const SettingsMainScreen: React.FC<{ navigation: NavigationType }> = ({ navigati
             lineHeight={16}
             mb={6}
             color="#7B7B7B"
+            mt={10}
           >
-            App v {version} ({buildNumber})
+            App v {version} {Platform.OS === "ios" ? `(${buildNumber})` : ""}
           </Text>
         </Div>
       </ScrollDiv>

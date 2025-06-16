@@ -1,7 +1,7 @@
 import { colorTextPrimary } from "@/constant/constant";
 import { IconChevronDown, IconSearch } from "@tabler/icons-react-native";
 import React, { ReactElement, useEffect, useState } from "react";
-import { StyleProp, TextStyle, TouchableOpacity, Keyboard, FlatList, View } from "react-native";
+import { StyleProp, TextStyle, TouchableOpacity, Keyboard, FlatList } from "react-native";
 import { Div, Text } from "react-native-magnus";
 import BottomSheet from "./BottomSheet";
 import InputField from "./InputField";
@@ -44,7 +44,7 @@ const SelectInput: React.FC<Props> = (props) => {
   const [showMenu, setShowMenu] = useState(false);
 
   const filteredOptions = props.options.filter((option) =>
-    option.label?.toLowerCase().includes(searchQuery.toLowerCase())
+    option.label.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   useEffect(() => {
@@ -78,7 +78,6 @@ const SelectInput: React.FC<Props> = (props) => {
           setShowMenu(true);
           props.onOpen?.();
         }}
-        style={{ flex: 1 }}
       >
         <InputField
           placeholder={props.label ?? "Select"}
@@ -114,48 +113,46 @@ const SelectInput: React.FC<Props> = (props) => {
           onChangeText={setSearchQuery}
         />
 
-        <View style={{ paddingVertical: 70 }}>
-          <FlatList
-            data={filteredOptions}
-            keyExtractor={(item) => item.value + item.label}
-            showsVerticalScrollIndicator={false}
-            keyboardShouldPersistTaps={"always"}
-            scrollEventThrottle={16}
-            removeClippedSubviews={true}
-            bounces={true}
-            directionalLockEnabled={true}
-            renderItem={({ item, index }) =>
-              renderLabel ? (
-                renderLabel(item as OptionDto, onSelect, index)
-              ) : (
-                <RadioButton
-                  key={item.value}
-                  styles={{
-                    borderColor: "transparent",
-                  }}
-                  onTap={() => {
-                    onSelect(item);
-                    if (props.disableKeyboardDismissOnSelect) return;
-                    Keyboard.dismiss();
-                  }}
-                  label={item.label}
-                  value={item.value}
-                  selectedValue={selectedValue?.value ?? ""}
-                />
-              )
-            }
-            ListEmptyComponent={() =>
-              props.renderNoOptions ? (
-                props.renderNoOptions()
-              ) : (
-                <Div pl={10} pt={10}>
-                  <Text>No options found</Text>
-                </Div>
-              )
-            }
-            contentContainerStyle={styles.flatListContent}
-          />
-        </View>
+        <FlatList
+          data={filteredOptions}
+          keyExtractor={(item) => item.value + item.label}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps={"always"}
+          scrollEventThrottle={16}
+          removeClippedSubviews={true}
+          bounces={true}
+          directionalLockEnabled={true}
+          renderItem={({ item, index }) =>
+            renderLabel ? (
+              renderLabel(item as OptionDto, onSelect, index)
+            ) : (
+              <RadioButton
+                key={item.value}
+                styles={{
+                  borderColor: "transparent",
+                }}
+                onTap={() => {
+                  onSelect(item);
+                  if (props.disableKeyboardDismissOnSelect) return;
+                  Keyboard.dismiss();
+                }}
+                label={item.label}
+                value={item.value}
+                selectedValue={selectedValue?.value ?? ""}
+              />
+            )
+          }
+          ListEmptyComponent={() =>
+            props.renderNoOptions ? (
+              props.renderNoOptions()
+            ) : (
+              <Div pl={10} pt={10}>
+                <Text>No options found</Text>
+              </Div>
+            )
+          }
+          contentContainerStyle={styles.flatListContent}
+        />
       </BottomSheet>
     </>
   );

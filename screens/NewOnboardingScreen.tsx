@@ -44,10 +44,8 @@ const NewOnboardingScreen: React.FC<{ navigation: NavigationType }> = ({ navigat
 
   useEffect(() => {
     // Preload images
-    return;
     images.forEach((image) => {
       const resolvedImage = RNImage.resolveAssetSource(image.img);
-      console.log(resolvedImage.uri); // Log the URI to debug
       resolvedImage.uri && RNImage.prefetch(resolvedImage.uri);
     });
   }, []);
@@ -140,19 +138,12 @@ const NewOnboardingScreen: React.FC<{ navigation: NavigationType }> = ({ navigat
                 alignSelf="flex-start"
                 w="88.9%"
                 h="100%"
-                rounded={40}
                 overflow="hidden"
-                bg="transparent"
+                style={{
+                  borderRadius: 40,
+                }}
               >
-                <Image
-                  w="100%"
-                  h="100%"
-                  resizeMode="cover"
-                  source={item.img}
-                  style={{
-                    borderRadius: 40,
-                  }}
-                />
+                <Image w="100%" h="100%" resizeMode="contain" source={item.img} />
               </Div>
             </Div>
           )}

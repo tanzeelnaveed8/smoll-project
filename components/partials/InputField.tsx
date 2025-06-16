@@ -176,7 +176,6 @@ export default InputField;
 const styles = StyleSheet.create({
   container: {
     position: "relative",
-    flex: 1,
   },
   floatingLabel: {
     position: "absolute",
