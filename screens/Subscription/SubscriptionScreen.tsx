@@ -56,7 +56,7 @@ export default function SubscriptionScreen({ navigation }: { navigation: Navigat
                   color="#1655C8"
                   textAlignVertical="center"
                   alignSelf="center"
-                  lineHeight={72}
+                  lineHeight={64}
                 >
                   {user?.careId}
                 </Text>

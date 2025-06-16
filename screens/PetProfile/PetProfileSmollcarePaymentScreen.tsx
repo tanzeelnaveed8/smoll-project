@@ -208,7 +208,7 @@ export default function PetProfileSmollcarePayementScreen() {
     >
       <Layout disableHeader style={{ flex: 1 }}>
         <ScrollDiv showsVerticalScrollIndicator={false}>
-          <Div alignItems="flex-end" w={"100%"}>
+          <Div alignItems="flex-end">
             <BackButton
               onPress={() => {
                 navigation.goBack();
@@ -319,28 +319,6 @@ export default function PetProfileSmollcarePayementScreen() {
                 </Div>
               </Div>
               <Div mt={30}>
-                <Div mb={20}>
-                  <Input
-                    placeholder="Enter coupon code"
-                    value={couponCode}
-                    onChangeText={(text) => {
-                      setCouponCode(text);
-                      setCouponError("");
-                    }}
-                    borderWidth={1}
-                    borderColor={couponError ? "#ff3b30" : "#dbdad7"}
-                    rounded={8}
-                    px={16}
-                    py={12}
-                    fontSize="lg"
-                    fontFamily={fontHauoraMedium}
-                  />
-                  {couponError ? (
-                    <Text color="#ff3b30" mt={4} fontSize="sm" fontFamily={fontHauoraMedium}>
-                      {couponError}
-                    </Text>
-                  ) : null}
-                </Div>
                 <ButtonPrimary
                   onPress={openPaymentSheet}
                   disabled={btnLoader || loading}
@@ -363,7 +341,13 @@ export default function PetProfileSmollcarePayementScreen() {
             </Div>
           </Div>
 
-          <Div mb={12} alignItems="center">
+          <Div my={24} alignItems="center">
+            <Div flexDir="row">
+              <Text fontSize={"xl"}>Have code?</Text>
+              <TouchableOpacity>
+                <Text fontSize={"xl"}> Apply</Text>
+              </TouchableOpacity>
+            </Div>
             <Div flexDir="row" alignItems="flex-end" mt={4} justifyContent="center">
               <Text
                 fontSize={"lg"}

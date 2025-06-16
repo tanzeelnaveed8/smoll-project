@@ -139,7 +139,7 @@ const InputField = forwardRef<any, InputFieldProps>(
           placeholderTextColor={colorTextPrimary}
           bg={rest.disabled ? colorDisableBg : rest.bg ? rest.bg : "transparent"}
           color={rest.disabled ? colorDisableText : colorTextPrimary}
-          fontSize={"xl"}
+          fontSize={externalStyles.fontSize || "xl"}
           h={rest.h ? rest.h : multiline ? "unset" : 56}
           loaderColor={colorTextPrimary}
           pl={countryFlag ? 45 : 12}
@@ -176,6 +176,7 @@ export default InputField;
 const styles = StyleSheet.create({
   container: {
     position: "relative",
+    flex: 1,
   },
   floatingLabel: {
     position: "absolute",

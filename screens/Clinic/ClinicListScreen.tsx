@@ -1,151 +1,171 @@
 import Layout from "@/components/app/Layout";
+import InputField from "@/components/partials/InputField";
+import SelectInput from "@/components/partials/SelectInput";
 import StarRating from "@/components/partials/StarRating";
-import { fontHauoraBold, fontHauoraSemiBold } from "@/constant/constant";
+import { colorPrimary, fontHauoraBold, fontHauoraSemiBold, fontHeading } from "@/constant/constant";
 import { usePartnerStore } from "@/store/modules/partner";
 import { NavigationType } from "@/store/types";
-import { IconChevronRight } from "@tabler/icons-react-native";
-import React, { useEffect, useState } from "react";
-import { TouchableOpacity } from "react-native";
+import { uaeCities } from "@/utils/country-codes";
+import { IconChevronRight, IconCurrentLocation } from "@tabler/icons-react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { ActivityIndicator, TouchableOpacity } from "react-native";
 import { FlatList } from "react-native-bidirectional-infinite-scroll";
-import { Div, Image, Text } from "react-native-magnus";
-
-const TimeTab: React.FC<{ heading: string; time: string; mb?: number }> = ({
-  heading,
-  time,
-  mb,
-}) => {
-  return (
-    <Div flexDir="row" alignItems="center" mb={mb || 0}>
-      <Div px={8} py={6} bg="#F4F6F8" rounded={12} mr={8}>
-        <Text fontSize={"md"} mb={-1} fontFamily={fontHauoraSemiBold} lineHeight={14}>
-          {heading}
-        </Text>
-      </Div>
-      <Text fontSize={"md"} fontFamily={fontHauoraSemiBold} lineHeight={24} color="primary">
-        {time}
-      </Text>
-    </Div>
-  );
-};
+import { Div, Image, Text, WINDOW_HEIGHT } from "react-native-magnus";
 
 const ClinicListScreen = ({ navigation }: { navigation: NavigationType }) => {
   const { clinics, fetchClinics } = usePartnerStore();
   const [loading, setLoading] = useState(false);
+  const [city, setCity] = useState<{ label: string; value: string }>();
+  const [search, setSearch] = useState<string>();
+
+  const isMounted = useRef(false);
+
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      await fetchClinics(search, city?.value);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const handleClinicsFetch = async () => {
-      try {
-        setLoading(true);
-        await fetchClinics();
-      } finally {
-        setLoading(false);
-      }
-    };
+    fetchData();
+  }, [city]);
 
-    handleClinicsFetch();
-  }, []);
+  useEffect(() => {
+    if (!isMounted.current) {
+      isMounted.current = true;
+      return;
+    }
+
+    const delay = setTimeout(() => {
+      fetchData();
+    }, 500);
+
+    return () => clearTimeout(delay);
+  }, [search]);
 
   return (
-    <Layout showBack onBackPress={() => navigation.goBack()} title="Clinics" loading={loading}>
-      <Div flex={1}>
-        <FlatList
-          data={clinics}
-          showsVerticalScrollIndicator={false}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              activeOpacity={0.6}
-              key={item.id}
-              onPress={() => {
-                navigation.navigate("ClinicDetailScreen", {
-                  id: item.id,
-                });
-              }}
-            >
-              <Div
-                flexDir="row"
-                style={{ gap: 16 }}
-                pb={16}
-                borderBottomWidth={1}
-                borderBottomColor="#D0D7DC"
-                alignItems="center"
-                mb={20}
+    <Layout showBack onBackPress={() => navigation.goBack()} title="Partner Clinics">
+      <Div flex={1} style={{ gap: 28 }}>
+        <Text fontSize={"5xl"} fontFamily={fontHeading}>
+          Book an appointment with our partners clinic
+        </Text>
+        <Div flexDir="row" alignItems="center">
+          <IconCurrentLocation
+            size={32}
+            color={"#222"}
+            strokeWidth={1.2}
+            style={{ marginRight: 12 }}
+          />
+
+          <SelectInput
+            label="Select city"
+            options={uaeCities as any}
+            onSelect={(val) => {
+              setCity(val);
+            }}
+            disabled={loading}
+            selectedValue={city as any}
+            mainInputStyle={{
+              borderRadius: 40,
+              width: "97%",
+              height: 34,
+              paddingVertical: 1,
+              borderWidth: 1.2,
+              fontSize: 16,
+            }}
+          />
+
+          <InputField
+            placeholder="Search"
+            maxLength={20}
+            disabled={loading}
+            inputStyle={{
+              marginLeft: 4,
+              borderRadius: 40,
+              height: 34,
+              paddingVertical: 1,
+              borderWidth: 1.2,
+              fontSize: 16,
+              width: "97%",
+            }}
+            value={search}
+            returnKeyType="done"
+            onChangeText={(search) => setSearch(search)}
+          />
+        </Div>
+        {!loading && (
+          <FlatList
+            data={clinics}
+            showsVerticalScrollIndicator={false}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                activeOpacity={0.6}
+                key={item.id}
+                onPress={() => {
+                  navigation.navigate("ClinicDetailScreen", {
+                    id: item.id,
+                  });
+                }}
               >
-                <Image
-                  alignSelf="flex-start"
-                  source={{ uri: item.clinicImg.url }}
-                  w={52}
-                  h={52}
-                  rounded={32}
-                />
-                <Div flex={1}>
-                  <Text fontSize={"lg"} fontFamily={fontHauoraSemiBold} lineHeight={24} mb={4}>
-                    {item.name}
-                  </Text>
-
-                  <Div>
-                    <TimeTab
-                      heading={"Opening Hours"}
-                      time={
-                        item.openingHours
-                          ? `${JSON.parse(item.openingHours)?.from} - ${JSON.parse(item.openingHours)?.to}`
-                          : "-"
-                      }
-                    />
-                  </Div>
-
-                  {item.specialities.length ? (
-                    <Div flexDir="row" flexWrap="wrap" style={{ gap: 8 }} mt={12} mb={6}>
-                      {item.specialities.map((item) => (
-                        <Div
-                          key={item?.id}
-                          px={8}
-                          py={6}
-                          rounded={12}
-                          borderWidth={1.2}
-                          borderColor="#222"
-                        >
-                          <Text fontSize={"md"} fontFamily={fontHauoraSemiBold} lineHeight={20}>
-                            {item?.name}
-                          </Text>
-                        </Div>
-                      ))}
-                    </Div>
-                  ) : (
-                    <></>
-                  )}
-                  {item.city ? (
-                    <Div mt={4} flexDir="row" alignItems="center">
-                      <Div px={8} py={6} bg="#F4F6F8" rounded={12} mr={8}>
+                <Div
+                  flexDir="row"
+                  style={{ gap: 16 }}
+                  borderWidth={1}
+                  p={14}
+                  mb={20}
+                  alignItems="center"
+                  rounded={24}
+                >
+                  <Image
+                    alignSelf="flex-start"
+                    source={{ uri: item.clinicImg.url }}
+                    w={54}
+                    h={54}
+                    rounded={32}
+                  />
+                  <Div flex={1}>
+                    <Text fontSize={"xl"} fontFamily={fontHauoraBold} lineHeight={24}>
+                      {item.name}
+                    </Text>
+                    {item.city ? (
+                      <Div flexDir="row" alignItems="center">
                         <Text
                           fontSize={"md"}
-                          mb={-1}
-                          fontFamily={fontHauoraSemiBold}
-                          lineHeight={14}
+                          lineHeight={17}
+                          textAlignVertical="center"
+                          fontFamily={fontHauoraBold}
+                          color="#494949"
                         >
-                          Location:
+                          {item.city}
                         </Text>
                       </Div>
-                      <Text
-                        lineHeight={17}
-                        textAlignVertical="center"
-                        fontFamily={fontHauoraBold}
-                        color="#494949"
-                      >
-                        {item.city}
-                      </Text>
-                    </Div>
-                  ) : (
-                    <></>
-                  )}
+                    ) : (
+                      <></>
+                    )}
+                  </Div>
+                  <IconChevronRight size={24} color={"#222"} />
                 </Div>
-                <IconChevronRight size={32} color={"#222"} />
-              </Div>
-            </TouchableOpacity>
-          )}
-          keyExtractor={(item, index) => `${index}`}
-          onEndReached={async () => {}}
-          onStartReached={async () => {}}
-        />
+              </TouchableOpacity>
+            )}
+            keyExtractor={(item, index) => `${index}`}
+            onEndReached={async () => {}}
+            onStartReached={async () => {}}
+            ListEmptyComponent={
+              <Text mt="xl" textAlign="center">
+                No clinics found.
+              </Text>
+            }
+          />
+        )}
+
+        {loading && (
+          <Div flex={1} justifyContent="center" minH={WINDOW_HEIGHT / 1.4}>
+            <ActivityIndicator size="large" color={colorPrimary} style={{ marginTop: -80 }} />
+          </Div>
+        )}
         {/* </Div> */}
         {/* </ScrollDiv> */}
       </Div>

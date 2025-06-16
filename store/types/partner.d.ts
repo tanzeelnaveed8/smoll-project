@@ -76,7 +76,7 @@ export interface State {
   clinicDetails: Map<string, ClinicDetails>;
 
   fetchPartnerVets: (partnerId: string) => Promise<void>;
-  fetchClinics: () => Promise<void>;
+  fetchClinics: (search?: string, city?: string) => Promise<void>;
   fetchClinicDetails: (id: string) => Promise<ClinicDetails>;
 
   fetchPartnerVetDetails: (id: string, partnerId: string) => Promise<PartnerVetDetails>;

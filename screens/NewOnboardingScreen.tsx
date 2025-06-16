@@ -111,7 +111,7 @@ const NewOnboardingScreen: React.FC<{ navigation: NavigationType }> = ({ navigat
           </Div>
 
           <Div>
-            <Div mt={60} my={40}>
+            <Div mt={50} my={30}>
               {images[currentIndex].heading.map((item, index) => (
                 <Text
                   key={index}
@@ -130,15 +130,15 @@ const NewOnboardingScreen: React.FC<{ navigation: NavigationType }> = ({ navigat
           data={images}
           ref={flatListRef}
           style={{
-            height: 0,
             pointerEvents: "none",
           }}
+          contentContainerStyle={{ alignItems: "flex-start" }}
           keyExtractor={(item, i) => `${i}`}
           renderItem={({ item }: { item: (typeof images)[0] }) => (
-            <Div w={windowWidth} h={530} mt="auto">
+            <Div w={windowWidth} h={height / 1.66} mt="auto">
               <Div
                 alignSelf="flex-start"
-                w="90%"
+                w="88.9%"
                 h="100%"
                 rounded={40}
                 overflow="hidden"
@@ -147,7 +147,6 @@ const NewOnboardingScreen: React.FC<{ navigation: NavigationType }> = ({ navigat
                 <Image
                   w="100%"
                   h="100%"
-                  mb={20}
                   resizeMode="cover"
                   source={item.img}
                   style={{
