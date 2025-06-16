@@ -32,6 +32,12 @@ const images = [
     width: 400,
     height: 380,
   },
+  {
+    img: require("@/assets/images/onboarding-screen/new/slide-5.jpg"),
+    heading: ["Unlimited", "Consultations"],
+    width: 400,
+    height: 380,
+  },
 ];
 
 const windowWidth = Dimensions.get("window").width;
@@ -133,17 +139,19 @@ const NewOnboardingScreen: React.FC<{ navigation: NavigationType }> = ({ navigat
           contentContainerStyle={{ alignItems: "flex-start" }}
           keyExtractor={(item, i) => `${i}`}
           renderItem={({ item }: { item: (typeof images)[0] }) => (
-            <Div w={windowWidth} h={height / 1.66} mt="auto">
+            <Div w={windowWidth - 48} mt="auto" mr={4}>
               <Div
                 alignSelf="flex-start"
-                w="88.9%"
-                h="100%"
+                w="97%"
+                h="97%"
                 overflow="hidden"
                 style={{
                   borderRadius: 40,
+                  left: 10,
+                  position: "relative",
                 }}
               >
-                <Image w="100%" h="100%" resizeMode="contain" source={item.img} />
+                <Image w="100%" h="100%" resizeMode="cover" source={item.img} />
               </Div>
             </Div>
           )}
