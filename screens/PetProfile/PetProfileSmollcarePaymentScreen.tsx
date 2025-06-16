@@ -15,7 +15,15 @@ import { SetupParams } from "@stripe/stripe-react-native/lib/typescript/src/type
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Keyboard, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
 import { showMessage } from "react-native-flash-message";
-import { Div, Image, Input, ScrollDiv, Text } from "react-native-magnus";
+import {
+  Div,
+  Image,
+  Input,
+  ScrollDiv,
+  Text,
+  WINDOW_WIDTH,
+  WINDOW_HEIGHT,
+} from "react-native-magnus";
 import ToastContainer from "react-native-toast-notifications";
 import Toast from "react-native-toast-notifications";
 
@@ -238,11 +246,20 @@ export default function PetProfileSmollcarePayementScreen() {
 
   const bottomSheetHeight = useMemo(() => {
     let baseHeight = 55;
+
+    // Adjust base height based on screen size
+    if (WINDOW_HEIGHT < 700) {
+      // Smaller phones (iPhone SE, etc.)
+      baseHeight = 65;
+    } else if (WINDOW_HEIGHT > 900) {
+      // Larger phones (iPhone Pro Max, etc.)
+      baseHeight = 45;
+    }
+
     if (isKeyboardVisible) return `${baseHeight + 44}%`;
-    if (couponModalError) return `${baseHeight + 10}%`;
 
     return `${baseHeight}%`;
-  }, [isKeyboardVisible]);
+  }, [isKeyboardVisible, couponModalError]);
 
   return (
     <StripeProvider

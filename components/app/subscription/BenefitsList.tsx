@@ -1,7 +1,7 @@
-import { fontHauoraBold, fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
+import { fontHauoraBold, fontHauoraSemiBold } from "@/constant/constant";
 import { Benefit } from "@/store/types/pet";
-import { IconChevronRight, IconMinus, IconPlus } from "@tabler/icons-react-native";
-import React, { useEffect, useState } from "react";
+import { IconMinus, IconPlus } from "@tabler/icons-react-native";
+import React, { useState } from "react";
 import { Dimensions, Platform, Pressable, View } from "react-native";
 import { Div, Image, Text } from "react-native-magnus";
 
@@ -38,7 +38,7 @@ const PlanRow = ({
             <Image w={20} h={20} source={benefit.icon} />
             <Text
               numberOfLines={expanded ? 2 : 1}
-              maxW={width - 150}
+              maxW={width - 180}
               fontSize={14}
               fontFamily={fontHauoraBold}
               color="#000"
