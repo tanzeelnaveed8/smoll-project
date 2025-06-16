@@ -1,7 +1,14 @@
 import { colorTextPrimary } from "@/constant/constant";
 import { IconChevronDown, IconSearch } from "@tabler/icons-react-native";
 import React, { ReactElement, useEffect, useState } from "react";
-import { StyleProp, TextStyle, TouchableOpacity, Keyboard, FlatList } from "react-native";
+import {
+  StyleProp,
+  TextStyle,
+  TouchableOpacity,
+  Keyboard,
+  FlatList,
+  ViewStyle,
+} from "react-native";
 import { Div, Text } from "react-native-magnus";
 import BottomSheet from "./BottomSheet";
 import InputField from "./InputField";
@@ -35,6 +42,7 @@ interface Props {
   mainInputStyle?: StyleProp<TextStyle>;
   disableKeyboardDismissOnSelect?: boolean;
   value?: string;
+  style?: StyleProp<ViewStyle>;
 }
 
 const SelectInput: React.FC<Props> = (props) => {
@@ -78,6 +86,7 @@ const SelectInput: React.FC<Props> = (props) => {
           setShowMenu(true);
           props.onOpen?.();
         }}
+        style={props.style}
       >
         <InputField
           placeholder={props.label ?? "Select"}

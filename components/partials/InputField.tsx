@@ -13,6 +13,7 @@ import {
   StyleProp,
   StyleSheet,
   TextStyle,
+  ViewStyle,
 } from "react-native";
 import { Button, Div, Icon, Image, Input, InputProps } from "react-native-magnus";
 import { iconFontFamilyType } from "react-native-magnus/lib/typescript/src/ui/icon/icon.type";
@@ -36,6 +37,7 @@ interface rest {
   value?: string;
   focus?: boolean;
   countryFlag?: string;
+  containerStyle?: StyleProp<ViewStyle>;
 }
 
 interface InputFieldProps extends Omit<rest, keyof InputProps>, InputProps {
@@ -101,6 +103,7 @@ const InputField = forwardRef<any, InputFieldProps>(
       <Div
         style={{
           ...styles.container,
+          ...(rest.containerStyle as ViewStyle),
           pointerEvents: rest.disabled ? "none" : "auto",
         }}
         mb={marginBottom ? marginBottom : 0}

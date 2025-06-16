@@ -11,7 +11,7 @@ import {
 } from "@/constant/constant";
 import { IconArrowRight } from "@tabler/icons-react-native";
 import { useUserStore } from "@/store/modules/user";
-import { Dimensions } from "react-native";
+import { Dimensions, Platform } from "react-native";
 
 export default function SubscriptionScreen({ navigation }: { navigation: NavigationType }) {
   const { user } = useUserStore();
@@ -56,6 +56,7 @@ export default function SubscriptionScreen({ navigation }: { navigation: Navigat
                   color="#1655C8"
                   textAlignVertical="center"
                   alignSelf="center"
+                  top={Platform.OS === "android" ? 5 : 0}
                   lineHeight={64}
                 >
                   {user?.careId}

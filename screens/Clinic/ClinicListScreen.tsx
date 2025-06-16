@@ -95,6 +95,9 @@ const ClinicListScreen = ({ navigation }: { navigation: NavigationType }) => {
                 borderWidth: 1.2,
                 fontSize: 16,
               }}
+              style={{
+                flex: 1,
+              }}
             />
 
             <InputField
@@ -111,6 +114,9 @@ const ClinicListScreen = ({ navigation }: { navigation: NavigationType }) => {
                 width: "97%",
               }}
               value={search}
+              containerStyle={{
+                flex: 1,
+              }}
               returnKeyType="done"
               onChangeText={(search) => setSearch(search)}
               onSubmitEditing={Keyboard.dismiss}
