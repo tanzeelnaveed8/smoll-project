@@ -1,6 +1,11 @@
 import Layout from "@/components/app/Layout";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
-import { fontHauoraMedium, fontHauoraSemiBold, fontHeading } from "@/constant/constant";
+import {
+  fontHauoraBold,
+  fontHauoraMedium,
+  fontHauoraSemiBold,
+  fontHeading,
+} from "@/constant/constant";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { TouchableOpacity } from "react-native";
 import { Div, ScrollDiv, Text } from "react-native-magnus";
@@ -17,6 +22,7 @@ import { CaseStatusEnum, CreateCasePayloadDto } from "@/store/types/case.d";
 import { useNavigation } from "@react-navigation/native";
 import { useAppointmentStore } from "@/store/modules/appointments";
 import { Pet } from "@/store/types/pet";
+import BottomSheet from "@/components/partials/BottomSheet";
 
 const NoPetOptions = ({
   navigation,
@@ -98,6 +104,7 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
+  const [showLimitConsultationPopup, setShowLimitConsultationPopup] = useState(false);
 
   const [selectedPet, setSelectedPet] = useState<{
     label: string;
@@ -210,6 +217,10 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
         expertId,
         petName: selectedPet?.label || "",
       });
+    } catch (err: any) {
+      if (String(err.msgStr).includes("You've used your free consulatation call.")) {
+        setShowLimitConsultationPopup(true);
+      }
     } finally {
       setActionLoading(false);
     }
@@ -332,6 +343,30 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
       >
         {comingFrom === "ExpertsListDetailScreen" || scheduleAt ? "Confirm" : "Connect"}
       </ButtonPrimary>
+      <BottomSheet
+        isVisible={showLimitConsultationPopup}
+        onCloseIconClick={() => setShowLimitConsultationPopup(false)}
+        h="40%"
+        roundedTop={24}
+      >
+        <Div p={8}>
+          <Text fontSize="4xl" color="#000" fontFamily={fontHauoraBold}>
+            You have used your free consultation!
+          </Text>
+          <Text mt={10} fontSize="xl" maxW={280} fontFamily={fontHauoraMedium}>
+            But the good news is you can have as many consultations as you need with smoll® Care
+            plan
+          </Text>
+          <Div mt={16} maxW={230} alignItems="center">
+            <ButtonPrimary py={10} bg="#3859ff">
+              Explore Benefits
+            </ButtonPrimary>
+            <Text mt={4} fontSize={"sm"} fontFamily={fontHauoraMedium}>
+              No commitment, cancel anytime
+            </Text>
+          </Div>
+        </Div>
+      </BottomSheet>
     </Layout>
   );
 };
