@@ -6,6 +6,7 @@ import { colorPrimary, fontHauoraBold, fontHauoraSemiBold, fontHeading } from "@
 import { usePartnerStore } from "@/store/modules/partner";
 import { NavigationType } from "@/store/types";
 import { uaeCities } from "@/utils/country-codes";
+import { getCurrentLocation } from "@/utils/location";
 import { IconChevronRight, IconCurrentLocation, IconX } from "@tabler/icons-react-native";
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -13,6 +14,7 @@ import {
   TouchableOpacity,
   Keyboard,
   TouchableWithoutFeedback,
+  Alert,
 } from "react-native";
 import { FlatList } from "react-native-bidirectional-infinite-scroll";
 import { Div, Image, Text, WINDOW_HEIGHT } from "react-native-magnus";
@@ -21,8 +23,9 @@ const ClinicListScreen = ({ navigation }: { navigation: NavigationType }) => {
   const { clinics, fetchClinics } = usePartnerStore();
   const [loading, setLoading] = useState(false);
   const [city, setCity] = useState<{ label: string; value: string } | null>();
-  const [search, setSearch] = useState<string>();
   const [renderKey, setRenderKey] = useState(0);
+  const [search, setSearch] = useState<string>();
+  const [locationLoading, setLocationLoading] = useState(false);
 
   const isMounted = useRef(false);
 
@@ -35,15 +38,37 @@ const ClinicListScreen = ({ navigation }: { navigation: NavigationType }) => {
     }
   };
 
-  const clearFilters = async () => {
-    setSearch("");
-    setCity(null);
-    setLoading(true);
-    setRenderKey((prev) => prev + 1);
+  const handleGetCurrentLocation = async () => {
     try {
-      await fetchClinics("", "");
+      setLocationLoading(true);
+
+      const { city: currentCity } = await getCurrentLocation();
+
+      // Find the matching city in uaeCities
+      const matchingCity = uaeCities.find(
+        (cityOption) =>
+          cityOption.label.toLowerCase().includes(currentCity.toLowerCase()) ||
+          currentCity.toLowerCase().includes(cityOption.label.toLowerCase())
+      );
+
+      if (matchingCity) {
+        setCity(matchingCity);
+        setRenderKey((prev) => prev + 1);
+      } else {
+        Alert.alert(
+          "Location Not Found",
+          `We couldn't find "${currentCity}" in our supported cities. Please select a city manually.`
+        );
+      }
+    } catch (error) {
+      Alert.alert(
+        "Location Error",
+        error instanceof Error
+          ? error.message
+          : "Unable to get your current location. Please try again."
+      );
     } finally {
-      setLoading(false);
+      setLocationLoading(false);
     }
   };
 
@@ -69,15 +94,25 @@ const ClinicListScreen = ({ navigation }: { navigation: NavigationType }) => {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <Div flex={1} style={{ gap: 28 }}>
           <Text fontSize={"5xl"} fontFamily={fontHeading}>
-            Book an appointment with our partners clinic
+            Locate the nearest partner near you
           </Text>
           <Div flexDir="row" alignItems="center">
-            <IconCurrentLocation
-              size={32}
-              color={"#222"}
-              strokeWidth={1.2}
-              style={{ marginRight: 12 }}
-            />
+            <TouchableOpacity
+              activeOpacity={0.6}
+              onPress={handleGetCurrentLocation}
+              disabled={locationLoading}
+            >
+              {locationLoading ? (
+                <ActivityIndicator size={32} color="#222" style={{ marginRight: 12 }} />
+              ) : (
+                <IconCurrentLocation
+                  size={32}
+                  color={"#222"}
+                  strokeWidth={1.2}
+                  style={{ marginRight: 12 }}
+                />
+              )}
+            </TouchableOpacity>
 
             <SelectInput
               label="Select city"
@@ -85,8 +120,8 @@ const ClinicListScreen = ({ navigation }: { navigation: NavigationType }) => {
               onSelect={(val) => {
                 setCity(val);
               }}
-              key={renderKey}
               selectedValue={city as any}
+              key={renderKey}
               mainInputStyle={{
                 borderRadius: 40,
                 width: "97%",
@@ -121,22 +156,6 @@ const ClinicListScreen = ({ navigation }: { navigation: NavigationType }) => {
               onChangeText={(search) => setSearch(search)}
               onSubmitEditing={Keyboard.dismiss}
             />
-
-            {(search || city) && (
-              <TouchableOpacity
-                onPress={clearFilters}
-                disabled={loading}
-                style={{
-                  marginLeft: 8,
-                  padding: 4,
-                  borderRadius: 20,
-                  backgroundColor: "#f0f0f0",
-                }}
-                activeOpacity={0.7}
-              >
-                <IconX size={24} color={"#666"} strokeWidth={2} />
-              </TouchableOpacity>
-            )}
           </Div>
           {!loading && (
             <FlatList

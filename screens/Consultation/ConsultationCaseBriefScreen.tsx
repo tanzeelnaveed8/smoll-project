@@ -230,6 +230,12 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
     navigation.goBack();
   };
 
+  const handleExploreBenefitPress = async () => {
+    setShowLimitConsultationPopup(false);
+    await new Promise((resolve) => setTimeout(resolve, 200));
+    navigation.navigate("PetProfileBenefitsScreen", { petId: selectedPet?.value });
+  };
+
   return (
     <Layout showBack title="Case Brief" loading={loading} onBackPress={handleCancelConsultation}>
       <ScrollDiv flex={1} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
@@ -358,7 +364,7 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
             plan
           </Text>
           <Div mt={16} maxW={230} alignItems="center">
-            <ButtonPrimary py={10} bg="#3859ff">
+            <ButtonPrimary py={10} bg="#3859ff" onPress={async () => handleExploreBenefitPress()}>
               Explore Benefits
             </ButtonPrimary>
             <Text mt={4} fontSize={"sm"} fontFamily={fontHauoraMedium}>

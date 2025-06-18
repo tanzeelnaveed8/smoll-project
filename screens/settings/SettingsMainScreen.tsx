@@ -76,7 +76,8 @@ const options: GroupType[] = [
       },
       {
         id: 3,
-        title: "Language",
+        title: "Language (soon)",
+        disabled: true,
         externalLink: true,
         link: "/",
       },
