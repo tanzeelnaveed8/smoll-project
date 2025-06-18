@@ -29,7 +29,7 @@ import Toast from "react-native-toast-notifications";
 
 type RouteType = { pet: PetDetail; planPrice: String };
 
-export default function PetProfileSmollcarePayementScreen() {
+export default function PetProfileSmollcarePaymentScreen() {
   const { user } = useUserStore();
   const { fetchPetDetails } = usePetStore();
   const [couponCode, setCouponCode] = useState("");
@@ -234,7 +234,7 @@ export default function PetProfileSmollcarePayementScreen() {
         }, 2000);
       });
 
-      (navigation as any).navigate("paymentSuccess", {
+      (navigation as any).replace("paymentSuccess", {
         petId: petDetailsData.id as string,
         petName: petDetailsData?.name,
       });

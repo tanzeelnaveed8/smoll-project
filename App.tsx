@@ -287,7 +287,7 @@ const TabNavigation = () => {
 };
 
 const App = () => {
-  const { user, clearPopupNotification } = useUserStore();
+  const { user } = useUserStore();
 
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const { backgroundColor } = useUIStore();
@@ -310,7 +310,6 @@ const App = () => {
   } = useExpertStore();
   const { play } = useSound();
   const { SET_NAV_NOTIF } = useUserStore();
-  const { fetchBenefits } = usePetStore();
 
   useEffect(() => {
     (async () => {
@@ -493,9 +492,6 @@ const App = () => {
           };
 
           zim.on("receivePeerMessage", eventHandler.receivePeerMessage!);
-
-          //Fetching benefits on mount
-          await fetchBenefits();
 
           return () => {
             zim.off("receivePeerMessage");

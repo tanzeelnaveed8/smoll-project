@@ -95,7 +95,7 @@ const SelectInput: React.FC<Props> = (props) => {
           disabled={props.loading}
           readOnly
           pointerEvents="none"
-          value={selectedValue?.label}
+          value={selectedValue?.label || props.selectedValue}
           countryFlag={props.showCountryFlag ? selectedValue?.flag : ""}
           inputStyle={mainInputStyle}
         />

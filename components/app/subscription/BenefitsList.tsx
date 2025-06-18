@@ -35,7 +35,7 @@ const PlanRow = ({
           flex={1}
         >
           <Div flexDir="row" style={{ gap: 10 }} alignItems="center">
-            <Image w={20} h={20} source={benefit.icon} />
+            <Image w={20} h={20} source={benefit?.icon} />
             <Text
               numberOfLines={expanded ? 2 : 1}
               maxW={width - 180}
@@ -43,7 +43,7 @@ const PlanRow = ({
               fontFamily={fontHauoraBold}
               color="#000"
             >
-              {benefit.heading}
+              {benefit?.heading}
             </Text>
           </Div>
 
@@ -56,7 +56,7 @@ const PlanRow = ({
       </Div>
       {expanded && (
         <Div ml={34} mr={12} my={4} style={{ gap: 4 }}>
-          {benefit.items?.map((item, index) => (
+          {benefit?.items?.map((item, index) => (
             <Div key={index} flexDir="row" alignItems="center">
               <Text fontSize={"sm"} textAlignVertical="center" mr={4}>
                 •

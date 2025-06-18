@@ -1,23 +1,19 @@
 import Layout from "@/components/app/Layout";
 import InputField from "@/components/partials/InputField";
 import SelectInput from "@/components/partials/SelectInput";
-import StarRating from "@/components/partials/StarRating";
-import { colorPrimary, fontHauoraBold, fontHauoraSemiBold, fontHeading } from "@/constant/constant";
+import { colorPrimary, fontHauoraBold, fontHeading } from "@/constant/constant";
 import { usePartnerStore } from "@/store/modules/partner";
 import { NavigationType } from "@/store/types";
 import { uaeCities } from "@/utils/country-codes";
-import {
-  IconChevronRight,
-  IconCurrentLocation,
-  IconPhoto,
-  IconX,
-} from "@tabler/icons-react-native";
+import { getCurrentLocation } from "@/utils/location";
+import { IconChevronRight, IconCurrentLocation, IconX } from "@tabler/icons-react-native";
 import React, { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   TouchableOpacity,
   Keyboard,
   TouchableWithoutFeedback,
+  Alert,
 } from "react-native";
 import { FlatList } from "react-native-bidirectional-infinite-scroll";
 import { Avatar, Div, Image, Text, WINDOW_HEIGHT } from "react-native-magnus";
@@ -26,8 +22,9 @@ const ClinicListScreen = ({ navigation }: { navigation: NavigationType }) => {
   const { clinics, fetchClinics } = usePartnerStore();
   const [loading, setLoading] = useState(false);
   const [city, setCity] = useState<{ label: string; value: string } | null>();
-  const [search, setSearch] = useState<string>();
   const [renderKey, setRenderKey] = useState(0);
+  const [search, setSearch] = useState<string>();
+  const [locationLoading, setLocationLoading] = useState(false);
 
   const isMounted = useRef(false);
 
@@ -49,6 +46,40 @@ const ClinicListScreen = ({ navigation }: { navigation: NavigationType }) => {
       await fetchClinics("", "");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleGetCurrentLocation = async () => {
+    try {
+      setLocationLoading(true);
+
+      const { city: currentCity } = await getCurrentLocation();
+
+      // Find the matching city in uaeCities
+      const matchingCity = uaeCities.find(
+        (cityOption) =>
+          cityOption.label.toLowerCase().includes(currentCity.toLowerCase()) ||
+          currentCity.toLowerCase().includes(cityOption.label.toLowerCase())
+      );
+
+      if (matchingCity) {
+        setCity(matchingCity);
+        setRenderKey((prev) => prev + 1);
+      } else {
+        Alert.alert(
+          "Location Not Found",
+          `We couldn't find "${currentCity}" in our supported cities. Please select a city manually.`
+        );
+      }
+    } catch (error) {
+      Alert.alert(
+        "Location Error",
+        error instanceof Error
+          ? error.message
+          : "Unable to get your current location. Please try again."
+      );
+    } finally {
+      setLocationLoading(false);
     }
   };
 
@@ -74,15 +105,25 @@ const ClinicListScreen = ({ navigation }: { navigation: NavigationType }) => {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <Div flex={1} style={{ gap: 28 }}>
           <Text fontSize={"5xl"} fontFamily={fontHeading}>
-            Book an appointment with our partners clinic
+            Locate the nearest partner near you
           </Text>
           <Div flexDir="row" alignItems="center">
-            <IconCurrentLocation
-              size={32}
-              color={"#222"}
-              strokeWidth={1.2}
-              style={{ marginRight: 12 }}
-            />
+            <TouchableOpacity
+              activeOpacity={0.6}
+              onPress={handleGetCurrentLocation}
+              disabled={locationLoading}
+            >
+              {locationLoading ? (
+                <ActivityIndicator size={32} color="#222" style={{ marginRight: 12 }} />
+              ) : (
+                <IconCurrentLocation
+                  size={32}
+                  color={"#222"}
+                  strokeWidth={1.2}
+                  style={{ marginRight: 12 }}
+                />
+              )}
+            </TouchableOpacity>
 
             <SelectInput
               label="Select city"
@@ -90,8 +131,8 @@ const ClinicListScreen = ({ navigation }: { navigation: NavigationType }) => {
               onSelect={(val) => {
                 setCity(val);
               }}
-              key={renderKey}
               selectedValue={city as any}
+              key={renderKey}
               mainInputStyle={{
                 borderRadius: 40,
                 width: "97%",

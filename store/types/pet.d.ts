@@ -76,7 +76,6 @@ export interface PetState {
   petsDetailMap: Map<string, Nullable<PetDetail>>;
   // healthHistoryMap: Map<string, HealthHistory[]>;
   petBreeds: Nullable<PetBreeds>;
-  plan: { benefits: Benefit[]; price: string } | null;
 
   fetchPetBreeds: () => Promise<void>;
   fetchPets: (isDeceased?: boolean) => Promise<Pet[]>;
@@ -95,7 +94,7 @@ export interface PetState {
 
   deletePet: (petId: string) => Promise<void>;
 
-  fetchBenefits: () => Promise<void>;
+  fetchBenefits: (petId: string) => Promise<{ benefits: Benefit[]; price: string } | null>;
 
   buySubscription: (
     petId: string,
