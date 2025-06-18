@@ -37,20 +37,24 @@ api.interceptors.response.use(
       msgStr = message[0];
     }
 
-    if (!error.config.url.includes("skiperr")) {
-      if (msgStr) {
-        if (!msgStr.toLowerCase().includes("not found")) {
-          showMessage({
-            message: msgStr,
-            type: "danger",
-          });
+    console.log(msgStr);
+
+    if (msgStr === "You've used your free consulatation call.") {
+      throw { error, msgStr };
+    } else {
+      if (!error.config.url.includes("skiperr")) {
+        if (msgStr) {
+          if (!msgStr.toLowerCase().includes("not found")) {
+            showMessage({
+              message: msgStr,
+              type: "danger",
+            });
+          }
         }
       }
+
+      throw error;
     }
-
-    console.log(error, message);
-
-    throw error;
   }
 );
 

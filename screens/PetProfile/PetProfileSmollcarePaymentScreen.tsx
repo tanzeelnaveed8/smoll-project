@@ -276,7 +276,7 @@ export default function PetProfileSmollcarePayementScreen() {
               showCloseIcon={true}
             />
             <Div mt={42} px={18} w={"100%"}>
-              <Div justifyContent="space-between" h={200} rounded={14} bg="#6e99f0" py={20} px={30}>
+              <Div justifyContent="space-between" h={220} rounded={14} bg="#6e99f0" py={20} px={30}>
                 <Div flexDir="row" alignItems="center">
                   <ImageUpload
                     h={66}
@@ -308,8 +308,8 @@ export default function PetProfileSmollcarePayementScreen() {
               </Div>
               <Div mt={32} px={30}>
                 <Div borderBottomWidth={1} borderColor="#dbdad7" pb={18}>
-                  <Text fontSize="2xl" fontFamily={fontHauoraMedium}>
-                    {petDetailsData.name}'s Wellness Plan
+                  <Text fontSize="xl" fontFamily={fontHauoraMedium}>
+                    {petDetailsData.name}'s Annual Wellness Plan
                   </Text>
                   <Div
                     flexDir="row"
@@ -378,7 +378,7 @@ export default function PetProfileSmollcarePayementScreen() {
                   )}
                 </Div>
               </Div>
-              <Div mt={30}>
+              <Div mt={30} alignItems="center">
                 <ButtonPrimary
                   onPress={openPaymentSheet}
                   disabled={btnLoader || loading}
@@ -392,40 +392,47 @@ export default function PetProfileSmollcarePayementScreen() {
                   color="#494949"
                   textAlign="center"
                   mt={10}
-                  fontSize={"lg"}
+                  fontSize={"md"}
                   fontFamily={fontHauoraMedium}
                 >
                   Cancel anytime
                 </Text>
+                <Div flexDir="row">
+                  <Text fontSize={"sm"}>Have a coupon code?</Text>
+                  <TouchableOpacity onPress={() => setShowCouponModal(true)}>
+                    <Text fontSize={"sm"}> Apply now</Text>
+                  </TouchableOpacity>
+                </Div>
               </Div>
             </Div>
           </Div>
 
           <Div my={24} alignItems="center">
-            <Div flexDir="row">
-              <Text fontSize={"xl"}>Have a coupon code?</Text>
-              <TouchableOpacity onPress={() => setShowCouponModal(true)}>
-                <Text fontSize={"xl"}> Apply now</Text>
-              </TouchableOpacity>
-            </Div>
             <Div flexDir="row" alignItems="flex-end" mt={4} justifyContent="center">
               <Text
-                fontSize={"lg"}
+                fontSize={"sm"}
                 textAlign="center"
                 color="#B2B2B2"
                 fontFamily={fontHauoraSemiBold}
               >
                 Payment securely processed by
               </Text>
-              <Image ml={4} source={require("@/assets/icons/stripe-logo.png")} w={44} h={20} />
+              <Image ml={4} source={require("@/assets/icons/stripe-logo.png")} w={38} h={16} />
             </Div>
 
+            <Image
+              source={require("@/assets/images/payment-service.png")}
+              h={80}
+              w={"72%"}
+              style={{ objectFit: "contain" }}
+            />
             <Text
-              mt={4}
-              fontSize={"lg"}
+              mt={-8}
+              fontSize={"md"}
               textAlign="center"
               color="#5A5A5A"
               fontFamily={fontHauoraMedium}
+              maxW={340}
             >
               By starting your membership, you agree to smoll Terms of Service and Privacy Policy.
             </Text>
