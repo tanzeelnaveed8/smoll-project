@@ -52,7 +52,7 @@ const SelectInput: React.FC<Props> = (props) => {
   const [showMenu, setShowMenu] = useState(false);
 
   const filteredOptions = props.options.filter((option) =>
-    option.label.toLowerCase().includes(searchQuery.toLowerCase())
+    option.label?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   useEffect(() => {

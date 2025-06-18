@@ -148,10 +148,10 @@ export default function BenefitsList({ planFeatures }: BenefitsListProps) {
           key={index}
           benefit={item}
           styles={{
-            borderBottomWidth: index !== planFeatures.length - 1 ? 1 : 0,
+            borderBottomWidth: index !== vaccineBenefits.length - 1 ? 1 : 0,
             borderColor: "#c7c5c3",
-            paddingBottom: index !== planFeatures.length - 1 ? 16 : 0,
-            marginBottom: index !== planFeatures.length - 1 ? 8 : 0,
+            paddingBottom: index !== vaccineBenefits.length - 1 ? 16 : 0,
+            marginBottom: index !== vaccineBenefits.length - 1 ? 8 : 0,
           }}
         />
       ))}

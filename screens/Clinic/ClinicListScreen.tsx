@@ -6,7 +6,12 @@ import { colorPrimary, fontHauoraBold, fontHauoraSemiBold, fontHeading } from "@
 import { usePartnerStore } from "@/store/modules/partner";
 import { NavigationType } from "@/store/types";
 import { uaeCities } from "@/utils/country-codes";
-import { IconChevronRight, IconCurrentLocation, IconX } from "@tabler/icons-react-native";
+import {
+  IconChevronRight,
+  IconCurrentLocation,
+  IconPhoto,
+  IconX,
+} from "@tabler/icons-react-native";
 import React, { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
@@ -15,7 +20,7 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import { FlatList } from "react-native-bidirectional-infinite-scroll";
-import { Div, Image, Text, WINDOW_HEIGHT } from "react-native-magnus";
+import { Avatar, Div, Image, Text, WINDOW_HEIGHT } from "react-native-magnus";
 
 const ClinicListScreen = ({ navigation }: { navigation: NavigationType }) => {
   const { clinics, fetchClinics } = usePartnerStore();
@@ -161,13 +166,19 @@ const ClinicListScreen = ({ navigation }: { navigation: NavigationType }) => {
                     alignItems="center"
                     rounded={24}
                   >
-                    <Image
-                      alignSelf="flex-start"
-                      source={{ uri: item.clinicImg.url }}
-                      w={54}
-                      h={54}
-                      rounded={32}
-                    />
+                    {item.clinicImg?.url ? (
+                      <Image
+                        alignSelf="flex-start"
+                        source={{ uri: item.clinicImg?.url ?? "" }}
+                        w={54}
+                        h={54}
+                        rounded={32}
+                      />
+                    ) : (
+                      <Avatar bg="gray200" size={54} rounded={32}>
+                        <IconPhoto size={24} color={"#222"} />
+                      </Avatar>
+                    )}
                     <Div flex={1}>
                       <Text fontSize={"xl"} fontFamily={fontHauoraBold} lineHeight={24}>
                         {item.name}

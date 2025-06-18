@@ -37,6 +37,7 @@ const BottomSheet: React.FC<Props> = (props) => {
       coverScreen={true}
       scrollTo={() => {}}
       scrollOffset={1}
+      propagateSwipe={true}
       avoidKeyboard={true}
       onSwipeComplete={onCloseIconClick}
       onBackdropPress={onCloseIconClick}
