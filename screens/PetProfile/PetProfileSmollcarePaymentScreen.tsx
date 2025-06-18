@@ -244,6 +244,8 @@ export default function PetProfileSmollcarePaymentScreen() {
     }
   };
 
+  console.log("wind", WINDOW_HEIGHT);
+
   const bottomSheetHeight = useMemo(() => {
     let baseHeight = 55;
 
@@ -251,7 +253,7 @@ export default function PetProfileSmollcarePaymentScreen() {
     if (WINDOW_HEIGHT < 700) {
       // Smaller phones (iPhone SE, etc.)
       baseHeight = 65;
-    } else if (WINDOW_HEIGHT > 900) {
+    } else if (WINDOW_HEIGHT > 800) {
       // Larger phones (iPhone Pro Max, etc.)
       baseHeight = 45;
     }
@@ -337,13 +339,10 @@ export default function PetProfileSmollcarePaymentScreen() {
                         <Text fontSize={"4xl"} fontFamily={fontHauoraBold}>
                           AED {(+planPrice / 12).toFixed(2)}
                         </Text>
-                        <Text ml={8} fontFamily={fontHauoraSemiBold}>
-                          (Vat Included)
-                        </Text>
                       </Div>
 
                       <Text fontSize={"md"} fontFamily={fontHauoraMedium}>
-                        Per month
+                        Per month (Vat Included)
                       </Text>
                     </Div>
                   </Div>

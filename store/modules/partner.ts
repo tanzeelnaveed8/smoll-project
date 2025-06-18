@@ -60,9 +60,9 @@ export const usePartnerStore = create<PartnerState>((set, get) => ({
     const res = await api.get("/member/partners", {
       params: { search, city },
     });
-    console.log(res);
+
     set({
-      clinics: res.data,
+      clinics: res?.data ?? [],
     });
   },
 

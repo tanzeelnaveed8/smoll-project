@@ -49,6 +49,7 @@ const NewOnboardingScreen: React.FC<{ navigation: NavigationType }> = ({ navigat
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
+    return;
     // Preload images
     images.forEach((image) => {
       const resolvedImage = RNImage.resolveAssetSource(image.img);
