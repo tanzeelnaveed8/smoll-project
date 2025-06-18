@@ -49,12 +49,9 @@
 	<key>NSMicrophoneUsageDescription</key>
 	<string>We use the microphone to capture voice notes about your pet&apos;s health. These recordings are stored on our servers so you can access them later.&quot;</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Smoll needs access to your photos to help you upload and manage pet records easily and be able to share these photos with the pet expert to help you with better understanding of your pet’s case
-
-
-
-
-</string>
+	<string>Smoll needs access to your photos to help you upload and manage pet records easily and be able to share these photos with the pet expert to help you with better understanding of your pet’s case</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We use your location to help you find the nearest clinics and to provide you with the best possible service.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>

@@ -7,8 +7,6 @@ interface LocationResult {
 
 export const getCurrentLocation = (): Promise<LocationResult> => {
   return new Promise((resolve, reject) => {
-    console.log("Starting location request...");
-
     // Multiple attempts with different strategies
     let attempts = 0;
     const maxAttempts = 3;
