@@ -11,22 +11,36 @@ import PlanCTA from "../Subscription/PlanCTA";
 import BackButton from "@/components/partials/BackButton";
 import BenefitsList from "@/components/app/subscription/BenefitsList";
 import { Benefit } from "@/store/types/pet";
+import { useToast } from "react-native-toast-notifications";
 
 type RouteType = { petId: string };
 
 const PetProfileBenefitsScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
+  const toast = useToast();
   const route = useRoute();
   const id = (route.params as RouteType)?.petId;
   const { petsDetailMap, fetchPetDetails } = usePetStore();
   const [profileImg, setProfileImg] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const petDetailsData = petsDetailMap.get(id);
-  const { plan } = usePetStore();
+  const { fetchBenefits } = usePetStore();
+  const [plan, setPlan] = useState<{ benefits: Benefit[]; price: string } | null>(null);
 
   useEffect(() => {
     if (!id) return;
 
     const fetchData = async () => {
+      try {
+        setLoading(true);
+        const fetchedPlan = await fetchBenefits(id);
+        setPlan(fetchedPlan);
+      } catch (err) {
+        navigation.goBack();
+        toast.show("Plan not found", { type: "danger" });
+      } finally {
+        setLoading(false);
+      }
+
       const data = petsDetailMap.get(id);
       try {
         setLoading(true);
@@ -121,7 +135,7 @@ const PetProfileBenefitsScreen: React.FC<{ navigation: NavigationType }> = ({ na
 
   return (
     <Layout disableHeader style={{ flex: 1 }}>
-      {!loading && (
+      {!loading && plan && (
         <FlatList
           data={[{ key: "benefits" }]}
           renderItem={() => <BenefitsList planFeatures={plan?.benefits as Benefit[]} />}

@@ -1,8 +1,7 @@
 import Layout from "@/components/app/Layout";
 import InputField from "@/components/partials/InputField";
 import SelectInput from "@/components/partials/SelectInput";
-import StarRating from "@/components/partials/StarRating";
-import { colorPrimary, fontHauoraBold, fontHauoraSemiBold, fontHeading } from "@/constant/constant";
+import { colorPrimary, fontHauoraBold, fontHeading } from "@/constant/constant";
 import { usePartnerStore } from "@/store/modules/partner";
 import { NavigationType } from "@/store/types";
 import { uaeCities } from "@/utils/country-codes";
@@ -33,6 +32,18 @@ const ClinicListScreen = ({ navigation }: { navigation: NavigationType }) => {
     setLoading(true);
     try {
       await fetchClinics(search, city?.value);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const clearFilters = async () => {
+    setSearch("");
+    setCity(null);
+    setLoading(true);
+    setRenderKey((prev) => prev + 1);
+    try {
+      await fetchClinics("", "");
     } finally {
       setLoading(false);
     }
@@ -156,6 +167,22 @@ const ClinicListScreen = ({ navigation }: { navigation: NavigationType }) => {
               onChangeText={(search) => setSearch(search)}
               onSubmitEditing={Keyboard.dismiss}
             />
+
+            {(search || city) && (
+              <TouchableOpacity
+                onPress={clearFilters}
+                disabled={loading}
+                style={{
+                  marginLeft: 8,
+                  padding: 4,
+                  borderRadius: 20,
+                  backgroundColor: "#f0f0f0",
+                }}
+                activeOpacity={0.7}
+              >
+                <IconX size={24} color={"#666"} strokeWidth={2} />
+              </TouchableOpacity>
+            )}
           </Div>
           {!loading && (
             <FlatList
