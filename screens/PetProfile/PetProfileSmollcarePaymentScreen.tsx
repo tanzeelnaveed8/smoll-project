@@ -9,10 +9,10 @@ import { usePetStore } from "@/store/modules/pet";
 import { useUserStore } from "@/store/modules/user";
 import { PetDetail } from "@/store/types/pet";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
 import { initPaymentSheet, presentPaymentSheet, StripeProvider } from "@stripe/stripe-react-native";
 import { SetupParams } from "@stripe/stripe-react-native/lib/typescript/src/types/PaymentSheet";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Keyboard, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
 import { showMessage } from "react-native-flash-message";
 import {
@@ -52,6 +52,16 @@ export default function PetProfileSmollcarePaymentScreen() {
 
   const { buySubscription, validateCoupon: validateCouponAPI } = usePetStore();
   const [btnLoader, setBtnLoader] = useState(false);
+  const isMounted = useRef(true);
+
+  useFocusEffect(
+    useCallback(() => {
+      isMounted.current = true;
+      return () => {
+        isMounted.current = false;
+      };
+    }, [])
+  );
 
   useEffect(() => {
     if (!petDetailsData) return;
@@ -98,6 +108,15 @@ export default function PetProfileSmollcarePaymentScreen() {
         return false;
       }
 
+      // Only continue if still mounted
+      if (!isMounted.current) {
+        showMessage({
+          message: "Something went wrong!",
+          type: "danger",
+        });
+        return false;
+      }
+
       const { error } = await initPaymentSheet({
         customerEphemeralKeySecret: ephemeralKey,
         paymentIntentClientSecret: paymentIntentClientSecret,
@@ -139,10 +158,7 @@ export default function PetProfileSmollcarePaymentScreen() {
 
       if (error) {
         showMessage({
-          message: "",
-          renderCustomContent: () => (
-            <FlashCustomContent message={`Stripe error: ${error.message}`} />
-          ),
+          message: `Stripe error: ${error.message}`,
           type: "danger",
         });
 
@@ -215,29 +231,27 @@ export default function PetProfileSmollcarePaymentScreen() {
         if (error) {
           setBtnLoader(false);
           showMessage({
-            message: "",
-            renderCustomContent: () => (
-              <FlashCustomContent message="Could not process payment, please try again" />
-            ),
+            message: "Could not process payment, please try again",
             type: "danger",
           });
 
           return;
         }
+
+        //On Success
+        await fetchPetDetails(petDetailsData.id as string);
+
+        await new Promise((resolve: any) => {
+          setTimeout(() => {
+            resolve();
+          }, 2000);
+        });
+
+        (navigation as any).replace("paymentSuccess", {
+          petId: petDetailsData.id as string,
+          petName: petDetailsData?.name,
+        });
       }
-      //On Success
-      await fetchPetDetails(petDetailsData.id as string);
-
-      await new Promise((resolve: any) => {
-        setTimeout(() => {
-          resolve();
-        }, 2000);
-      });
-
-      (navigation as any).replace("paymentSuccess", {
-        petId: petDetailsData.id as string,
-        petName: petDetailsData?.name,
-      });
     } finally {
       setBtnLoader(false);
       setLoading(false);
