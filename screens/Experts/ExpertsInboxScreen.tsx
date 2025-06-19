@@ -20,25 +20,17 @@ import { Badge, Button, Div, Image, Text } from "react-native-magnus";
 interface Props {
   navigation: NavigationType;
 }
-const actionBtns = ["Inbox", "Quotations"];
+const actionBtns = ["Chats", "Quotations"];
 
 const ExpertsInboxScreen: React.FC<Props> = ({ navigation }) => {
   const route = useRoute();
-  const [activeTab, setActiveTab] = useState("Inbox");
+  const [activeTab, setActiveTab] = useState("Chats");
 
   const { experts, unreadMessages, loading, actionLoading, handleInboxItemPress } =
     useExperts(navigation);
 
   const { cases, isLoading, isRefreshing, handleFetchCases, handleLoadMore, comingFrom } =
     useQuotations();
-
-  useFocusEffect(
-    React.useCallback(() => {
-      return () => {
-        setActiveTab("Inbox");
-      };
-    }, [])
-  );
 
   return (
     <Layout title="Inbox" loading={loading} onBackPress={() => navigation.navigate("Home")}>
@@ -84,7 +76,7 @@ const ExpertsInboxScreen: React.FC<Props> = ({ navigation }) => {
           ))}
         </Div>
 
-        {activeTab === "Inbox" && (
+        {activeTab === "Chats" && (
           <Div flex={1}>
             {experts?.map((expert) => (
               <ChatInboxItem

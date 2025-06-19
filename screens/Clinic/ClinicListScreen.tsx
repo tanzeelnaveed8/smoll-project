@@ -6,7 +6,12 @@ import { usePartnerStore } from "@/store/modules/partner";
 import { NavigationType } from "@/store/types";
 import { uaeCities } from "@/utils/country-codes";
 import { getCurrentLocation } from "@/utils/location";
-import { IconChevronRight, IconCurrentLocation, IconX } from "@tabler/icons-react-native";
+import {
+  IconChevronRight,
+  IconCurrentLocation,
+  IconPhoto,
+  IconX,
+} from "@tabler/icons-react-native";
 import React, { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,

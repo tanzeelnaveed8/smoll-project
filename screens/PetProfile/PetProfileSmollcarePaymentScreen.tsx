@@ -110,10 +110,6 @@ export default function PetProfileSmollcarePaymentScreen() {
 
       // Only continue if still mounted
       if (!isMounted.current) {
-        showMessage({
-          message: "Something went wrong!",
-          type: "danger",
-        });
         return false;
       }
 
