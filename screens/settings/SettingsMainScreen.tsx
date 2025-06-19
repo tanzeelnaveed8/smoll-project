@@ -116,7 +116,7 @@ const getOptionIcon = (title: string): React.ReactElement | undefined => {
       return <IconChecklist size={iconSize} color={iconColor} />;
     case "Push Notification":
       return <IconBell size={iconSize} color={iconColor} />;
-    case "Language":
+    case "Language (soon)":
       return <IconWorld size={iconSize} color={iconColor} />;
     case "Legal":
       return <IconGavel size={iconSize} color={iconColor} />;
