@@ -15,6 +15,12 @@ const images = [
     height: 260,
   },
   {
+    img: require("@/assets/images/onboarding-screen/new/slide-5.jpg"),
+    heading: ["Unlimited", "Consultations"],
+    width: 400,
+    height: 380,
+  },
+  {
     img: require("@/assets/images/onboarding-screen/new/slide-2.jpg"),
     heading: ["Vaccines, tests and", "checkups, all here"],
     width: 380,
@@ -29,12 +35,6 @@ const images = [
   {
     img: require("@/assets/images/onboarding-screen/new/slide-4.jpg"),
     heading: ["Stress Free,", "at-home visits"],
-    width: 400,
-    height: 380,
-  },
-  {
-    img: require("@/assets/images/onboarding-screen/new/slide-5.jpg"),
-    heading: ["Unlimited", "Consultations"],
     width: 400,
     height: 380,
   },

@@ -1,4 +1,5 @@
 import Layout from "@/components/app/Layout";
+import IconSmollcareMember from "@/components/icons/IconSmollcareMember";
 import BackButton from "@/components/partials/BackButton";
 import BottomSheet from "@/components/partials/BottomSheet";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
@@ -312,11 +313,7 @@ export default function PetProfileSmollcarePaymentScreen() {
                     {petDetailsData?.name}
                   </Text>
                 </Div>
-                <Image
-                  source={require("@/assets/icons/smollcare-member-logo.png")}
-                  w={140}
-                  h={52}
-                />
+                <IconSmollcareMember />
               </Div>
               <Div mt={32} px={30}>
                 <Div borderBottomWidth={1} borderColor="#dbdad7" pb={18}>
