@@ -97,6 +97,12 @@ const PlanRow = ({
                         {item.note}
                       </Text>
                     )}
+                    <Div flexDir="row" mt={4}>
+                      <Text fontFamily={fontHauoraSemiBold} color="#000">
+                        Vet name:
+                      </Text>
+                      <Text fontFamily={fontHauoraSemiBold}> {item?.vet}</Text>
+                    </Div>
                   </Div>
                 ))}
               </Div>

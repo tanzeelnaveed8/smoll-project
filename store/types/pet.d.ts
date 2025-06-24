@@ -22,6 +22,7 @@ export interface Benefit {
     clinicName: string;
     note: string;
     createdAt: string;
+    vet?: string;
   }[];
 }
 
