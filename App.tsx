@@ -402,7 +402,7 @@ const App = () => {
       }
 
       ImmersiveMode.setBarMode("BottomSticky");
-      ImmersiveMode.fullLayout(true);
+      ImmersiveMode.fullLayout(false);
     })();
 
     return () => {

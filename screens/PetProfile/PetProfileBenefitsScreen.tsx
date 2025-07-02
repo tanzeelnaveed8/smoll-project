@@ -33,8 +33,6 @@ const PetProfileBenefitsScreen: React.FC<{ navigation: NavigationType }> = ({ na
   const [showOtpVerification, setShowOtpVerification] = useState(false);
   const [userEmail, setUserEmail] = useState("");
 
-  console.log("user --", user?.isEmailVerified);
-
   useEffect(() => {
     if (!id) return;
 
@@ -145,9 +143,12 @@ const PetProfileBenefitsScreen: React.FC<{ navigation: NavigationType }> = ({ na
     return <PlanCTA petName={petDetailsData?.name} onButtonPress={handleButtonPress} />;
   };
 
-  const handleEmailSent = (email: string) => {
+  const handleEmailSent = async (email: string) => {
     setShowEmailVerification(false);
     setUserEmail(email);
+
+    await new Promise((resolve) => setTimeout(resolve, 400));
+
     setShowOtpVerification(true);
   };
 

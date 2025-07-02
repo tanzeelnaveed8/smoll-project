@@ -19,13 +19,15 @@ const HomeScreenBanner: React.FC<Props> = ({ navigation }) => {
         flexDirection: "row",
         marginBottom: 20,
         alignItems: "center",
+        aspectRatio: 1.6,
+        width: "100%",
       }}
       activeOpacity={0.8}
       onPress={() => {
         navigation.navigate("SubscriptionScreen");
       }}
     >
-      <Div px={20} pr={0} h={191} flexDir="column" justifyContent="space-between">
+      <Div px={20} pr={0} h={"100%"} flexDir="column" justifyContent="space-between">
         <Div mt={25}>
           <Image w={250} h={45} source={require("@/assets/icons/smollcare-logo-white.png")} />
         </Div>
