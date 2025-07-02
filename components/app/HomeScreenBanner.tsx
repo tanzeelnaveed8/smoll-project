@@ -25,9 +25,9 @@ const HomeScreenBanner: React.FC<Props> = ({ navigation }) => {
         navigation.navigate("SubscriptionScreen");
       }}
     >
-      <Div px={20} pr={0} h={191} flexDir="column" justifyContent="space-between">
-        <Div mt={20}>
-          <Image w={220} h={40} source={require("@/assets/icons/smollcare-logo-white.png")} />
+      <Div px={20} pr={0} h={240} flexDir="column" justifyContent="space-between">
+        <Div mt={25}>
+          <Image w={250} h={45} source={require("@/assets/icons/smollcare-logo-white.png")} />
         </Div>
 
         <Div
@@ -39,24 +39,24 @@ const HomeScreenBanner: React.FC<Props> = ({ navigation }) => {
         >
           <Tag
             fontFamily={fontHauoraBold}
-            fontSize={"lg"}
+            fontSize={"xl"}
             bg="trasnparent"
-            h={42}
+            h={50}
             color="#fff"
-            rounded={25}
+            rounded={30}
             borderWidth={1}
             borderColor="#fff"
-            pb={9.48}
-            pt={7.52}
-            px={25}
+            pb={12}
+            pt={10}
+            px={30}
             pointerEvents="none"
           >
             Access your plan
           </Tag>
 
           <IconArrowRight
-            width={28}
-            height={28}
+            width={32}
+            height={32}
             strokeWidth={2.7}
             color="#fff"
             style={{ alignSelf: "center" }}

@@ -12,6 +12,9 @@ import BackButton from "@/components/partials/BackButton";
 import BenefitsList from "@/components/app/subscription/BenefitsList";
 import { Benefit } from "@/store/types/pet";
 import { useToast } from "react-native-toast-notifications";
+import { useUserStore } from "@/store/modules/user";
+import EmailVerificationPopup from "@/components/app/EmailVerificationPopup";
+import OtpVerificationPopup from "@/components/app/OtpVerificationPopup";
 
 type RouteType = { petId: string };
 
@@ -24,7 +27,13 @@ const PetProfileBenefitsScreen: React.FC<{ navigation: NavigationType }> = ({ na
   const [loading, setLoading] = useState(true);
   const petDetailsData = petsDetailMap.get(id);
   const { fetchBenefits } = usePetStore();
+  const { user } = useUserStore();
   const [plan, setPlan] = useState<{ benefits: Benefit[]; price: string } | null>(null);
+  const [showEmailVerification, setShowEmailVerification] = useState(false);
+  const [showOtpVerification, setShowOtpVerification] = useState(false);
+  const [userEmail, setUserEmail] = useState("");
+
+  console.log("user --", user?.isEmailVerified);
 
   useEffect(() => {
     if (!id) return;
@@ -121,17 +130,35 @@ const PetProfileBenefitsScreen: React.FC<{ navigation: NavigationType }> = ({ na
     </>
   );
 
-  const renderFooter = () => (
-    <PlanCTA
-      petName={petDetailsData?.name}
-      onButtonPress={() => {
-        navigation.replace("PetProfileSmollcarePaymentScreen", {
+  const renderFooter = () => {
+    const handleButtonPress = () => {
+      if (!user?.isEmailVerified) {
+        setShowEmailVerification(true);
+      } else {
+        navigation.navigate("PetProfileSmollcarePaymentScreen", {
           pet: petDetailsData,
           planPrice: plan?.price,
         });
-      }}
-    />
-  );
+      }
+    };
+
+    return <PlanCTA petName={petDetailsData?.name} onButtonPress={handleButtonPress} />;
+  };
+
+  const handleEmailSent = (email: string) => {
+    setShowEmailVerification(false);
+    setUserEmail(email);
+    setShowOtpVerification(true);
+  };
+
+  const handleOtpVerificationSuccess = () => {
+    setShowOtpVerification(false);
+    // Navigate to payment screen after OTP verification
+    navigation.navigate("PetProfileSmollcarePaymentScreen", {
+      pet: petDetailsData,
+      planPrice: plan?.price,
+    });
+  };
 
   return (
     <Layout disableHeader style={{ flex: 1 }}>
@@ -150,6 +177,19 @@ const PetProfileBenefitsScreen: React.FC<{ navigation: NavigationType }> = ({ na
           <ActivityIndicator size="large" color={colorPrimary} />
         </Div>
       )}
+
+      <EmailVerificationPopup
+        isVisible={showEmailVerification}
+        onClose={() => setShowEmailVerification(false)}
+        onEmailSent={handleEmailSent}
+      />
+
+      <OtpVerificationPopup
+        isVisible={showOtpVerification}
+        onClose={() => setShowOtpVerification(false)}
+        onSuccess={handleOtpVerificationSuccess}
+        userEmail={userEmail}
+      />
     </Layout>
   );
 };

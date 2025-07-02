@@ -349,7 +349,7 @@ const ChatComposer: React.FC<Props> = (props) => {
           renderComposer={() => (
             <Div style={{ flex: 1 }}>
               {renderReplyPreview()}
-              <Div flexDir="row" alignItems="flex-end" top={8}>
+              <Div flexDir="row" alignItems="flex-end" top={8} pb={7}>
                 <Input
                   multiline
                   placeholder="Type a message..."

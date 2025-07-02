@@ -61,7 +61,7 @@ const ChatScreen: React.FC = () => {
   }, []);
 
   return (
-    <Layout title="Chat" showBack>
+    <Layout title="Chat" showBack style={{ paddingBottom: 0 }}>
       <Chat messages={messages} />
     </Layout>
   );
