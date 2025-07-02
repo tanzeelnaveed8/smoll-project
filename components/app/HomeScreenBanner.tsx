@@ -14,7 +14,7 @@ const HomeScreenBanner: React.FC<Props> = ({ navigation }) => {
     <TouchableOpacity
       style={{
         backgroundColor: "#6e99f0",
-        borderRadius: 40,
+        borderRadius: 20,
         paddingVertical: 15,
         flexDirection: "row",
         marginBottom: 20,
@@ -25,7 +25,7 @@ const HomeScreenBanner: React.FC<Props> = ({ navigation }) => {
         navigation.navigate("SubscriptionScreen");
       }}
     >
-      <Div px={20} pr={0} h={240} flexDir="column" justifyContent="space-between">
+      <Div px={20} pr={0} h={191} flexDir="column" justifyContent="space-between">
         <Div mt={25}>
           <Image w={250} h={45} source={require("@/assets/icons/smollcare-logo-white.png")} />
         </Div>
