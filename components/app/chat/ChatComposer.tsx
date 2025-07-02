@@ -296,7 +296,7 @@ const ChatComposer: React.FC<Props> = (props) => {
   return (
     <>
       {isRecording ? (
-        <Div bg="#fff" pt={16} px={16} borderTopWidth={1} borderTopColor="#eaeaea">
+        <Div bg="#fff" pt={16} px={20} pb={24} borderTopWidth={1} borderTopColor="#eaeaea">
           <Div row alignItems="center" justifyContent="space-between" mb={10}>
             <Text fontSize={16} fontWeight="500">
               Recording...{" "}
@@ -341,8 +341,8 @@ const ChatComposer: React.FC<Props> = (props) => {
           containerStyle={{
             backgroundColor: "#fff",
             paddingTop: 8,
-            paddingBottom: Platform.OS === "ios" ? 24 : 8,
-            paddingHorizontal: 12,
+            paddingBottom: 24,
+            paddingHorizontal: 20,
             borderTopWidth: 1,
             borderTopColor: "#eaeaea",
           }}

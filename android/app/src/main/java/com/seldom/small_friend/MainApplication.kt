@@ -14,6 +14,7 @@ import com.facebook.soloader.SoLoader
 
 import expo.modules.ApplicationLifecycleDispatcher
 import expo.modules.ReactNativeHostWrapper
+import com.rnimmersivemode.RNImmersiveModePackage;
 
 class MainApplication : Application(), ReactApplication {
 
@@ -53,3 +54,6 @@ class MainApplication : Application(), ReactApplication {
     ApplicationLifecycleDispatcher.onConfigurationChanged(this, newConfig)
   }
 }
+
+
+

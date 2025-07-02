@@ -26,7 +26,7 @@ import CounsellingChatScreen from "./screens/Counselling/CounsellingChatScreen";
 import CounsellingInboxScreen from "./screens/Counselling/CounsellingInboxScreen";
 import CounsellingRequestScreen from "./screens/Counselling/CounsellingRequestScreen";
 import HomeScreen from "./screens/HomeScreen";
-import { SocketProvider, useSocket } from "./socket/provider";
+import { SocketProvider } from "./socket/provider";
 
 import PartnerVetConfirmationScreen from "./screens/Cases/PartnerVetConfirmationScreen";
 import PartnerVetDetailScreen from "./screens/Cases/PartnerVetDetailScreen";
@@ -71,42 +71,36 @@ import { navigationRef } from "./utils/root-navigation";
 import { useUIStore } from "@/store/modules/ui";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import PushNotificationIOS from "@react-native-community/push-notification-ios";
-import { IconChecklist, IconMessage, IconWindow } from "@tabler/icons-react-native";
+import * as Sentry from "@sentry/react-native";
+import { IconMessage, IconWindow } from "@tabler/icons-react-native";
+import Config from "react-native-config";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { ZIMEventHandler } from "zego-zim-react-native";
+import Popup from "./components/Popup";
+import SocketListener from "./components/SocketListener";
+import OnboardingUserModal from "./components/app/onboarding/OnboardingUserModal";
 import SignupScreen from "./components/app/onboarding/SignupScreen";
+import { useSound } from "./functions/useSound";
 import AppointmentDetailsScreen from "./screens/Appointments/AppointmentDetailsScreen";
 import AppointmentsScreen from "./screens/Appointments/AppointmentsScreen";
 import CaseQuoteDescriptionScreen from "./screens/Cases/CaseQuoteDescriptionScreen";
 import CaseQuotesScreen from "./screens/Cases/CaseQuotesScreen";
 import CasesQuotesListScreen from "./screens/Cases/CasesQuotesListScreen";
 import PaymentDetailsScreen from "./screens/Cases/PaymentDetailsScreen";
+import ClinicDetailScreen from "./screens/Clinic/ClinicDetailScreen";
+import ClinicListScreen from "./screens/Clinic/ClinicListScreen";
 import UnavailableScreen from "./screens/Consultation/UnavailableScreen";
+import EmergencyScreen from "./screens/EmergencyScreen";
 import NewOnboardingScreen from "./screens/NewOnboardingScreen";
 import NotificationScreen from "./screens/NotificationScreen";
-import { initializeChat, zim } from "./utils/chat.v2";
-import * as Sentry from "@sentry/react-native";
-import EmergencyScreen from "./screens/EmergencyScreen";
-import ClinicListScreen from "./screens/Clinic/ClinicListScreen";
-import ClinicDetailScreen from "./screens/Clinic/ClinicDetailScreen";
-import Config from "react-native-config";
-import {
-  ZIMConversationQueryConfig,
-  ZIMConversationType,
-  ZIMEventHandler,
-} from "zego-zim-react-native";
-import { useExpertStore } from "./store/modules/expert";
-import { useSound } from "./functions/useSound";
-import { transformMessages } from "./utils/helpers";
-import BottomPopup from "./components/app/BottomPopup";
-import { SocketEventEnum } from "./socket/events";
-import Popup from "./components/Popup";
-import SocketListener from "./components/SocketListener";
-import OnboardingUserModal from "./components/app/onboarding/OnboardingUserModal";
-import SubscriptionScreen from "./screens/Subscription/SubscriptionScreen";
 import PetProfileBenefitsScreen from "./screens/PetProfile/PetProfileBenefitsScreen";
-import SmollcarePaymentSuccessScreen from "./screens/smollcarePaymentSuccess/SmollcarePaymentSuccessScreen";
-import { usePetStore } from "./store/modules/pet";
 import PetProfileSmollcarePaymentScreen from "./screens/PetProfile/PetProfileSmollcarePaymentScreen";
+import SubscriptionScreen from "./screens/Subscription/SubscriptionScreen";
+import SmollcarePaymentSuccessScreen from "./screens/smollcarePaymentSuccess/SmollcarePaymentSuccessScreen";
+import { useExpertStore } from "./store/modules/expert";
+import { initializeChat, zim } from "./utils/chat.v2";
+import { transformMessages } from "./utils/helpers";
+import ImmersiveMode from "react-native-immersive-mode";
 
 Sentry.init({
   dsn: Config.SENTRY_DSN,
@@ -406,6 +400,9 @@ const App = () => {
           event.notification.display();
         });
       }
+
+      ImmersiveMode.setBarMode("BottomSticky");
+      ImmersiveMode.fullLayout(true);
     })();
 
     return () => {
