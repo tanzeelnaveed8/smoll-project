@@ -1,34 +1,20 @@
 import Layout from "@/components/app/Layout";
 import IconButton from "@/components/partials/IconButton";
-import {
-  colorPrimary,
-  fontHauoraBold,
-  fontHauoraMedium,
-  fontHauoraSemiBold,
-  fontHeading,
-} from "@/constant/constant";
-import {
-  IconArrowRight,
-  IconBell,
-  IconChevronRight,
-  IconCrown,
-  IconSettings,
-  IconX,
-} from "@tabler/icons-react-native";
+import { colorPrimary, fontHauoraBold, fontHauoraMedium, fontHeading } from "@/constant/constant";
+import { IconBell, IconChevronRight } from "@tabler/icons-react-native";
 import {
   ActivityIndicator,
   ImageSourcePropType,
   ImageStyle,
   StyleProp,
   StyleSheet,
-  TouchableOpacity,
 } from "react-native";
-import { Button, Div, Image, ScrollDiv, Tag, Text, WINDOW_WIDTH } from "react-native-magnus";
+import { Button, Div, Image, ScrollDiv, Text } from "react-native-magnus";
 
-import AccountSetupModal from "@/components/app/account/AccountSetupModal";
+import HomeScreenBanner from "@/components/app/HomeScreenBanner";
 import OnboardingCongratsModal from "@/components/app/onboarding/OnboardingCongratsModal";
 import ClockIcon from "@/components/icons/ClockIcon";
-import AccountSetupProgress from "@/components/partials/AccountSetupProgress";
+import IconCustomUser from "@/components/icons/IconCustomUser";
 import { useCounsellorStore } from "@/store/modules/counsellor";
 import { useNotificationStore } from "@/store/modules/notification";
 import { useUserStore } from "@/store/modules/user";
@@ -36,9 +22,6 @@ import { NavigationType } from "@/store/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRoute } from "@react-navigation/native";
 import React, { useEffect, useMemo, useState } from "react";
-import { showMessage } from "react-native-flash-message";
-import HomeScreenBanner from "@/components/app/HomeScreenBanner";
-import IconCustomUser from "@/components/icons/IconCustomUser";
 
 interface Props {
   navigation: NavigationType;

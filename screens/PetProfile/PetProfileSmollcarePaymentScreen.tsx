@@ -8,6 +8,7 @@ import ImageUpload from "@/components/partials/ImageUpload";
 import { fontHauoraBold, fontHauoraMedium, fontHauoraSemiBold } from "@/constant/constant";
 import { usePetStore } from "@/store/modules/pet";
 import { useUserStore } from "@/store/modules/user";
+import { NavigationType } from "@/store/types";
 import { PetDetail } from "@/store/types/pet";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
@@ -30,7 +31,11 @@ import Toast from "react-native-toast-notifications";
 
 type RouteType = { pet: PetDetail; planPrice: String };
 
-export default function PetProfileSmollcarePaymentScreen() {
+export default function PetProfileSmollcarePaymentScreen({
+  navigation,
+}: {
+  navigation: NavigationType;
+}) {
   const { user } = useUserStore();
   const { fetchPetDetails } = usePetStore();
   const [couponCode, setCouponCode] = useState("");
@@ -41,7 +46,6 @@ export default function PetProfileSmollcarePaymentScreen() {
   const [couponModalLoading, setCouponModalLoading] = useState(false);
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
 
-  const navigation = useNavigation();
   const toastRef = useRef<ToastContainer>(null);
   const route = useRoute();
   const petDetailsData = (route.params as RouteType)?.pet;
@@ -244,7 +248,7 @@ export default function PetProfileSmollcarePaymentScreen() {
           }, 2000);
         });
 
-        (navigation as any).replace("paymentSuccess", {
+        navigation.navigate("paymentSuccess", {
           petId: petDetailsData.id as string,
           petName: petDetailsData?.name,
         });

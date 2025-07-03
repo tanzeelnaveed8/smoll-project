@@ -60,7 +60,7 @@ export default function SmollcarePaymentSuccessScreen({
           bg="#6e99f0"
           fontFamily={fontHauoraSemiBold}
           onPress={() =>
-            navigation.replace("PetProfileDetailsScreen", {
+            navigation.navigate("PetProfileDetailsScreen", {
               petId: id,
               activeBenefitTab: true,
             })
