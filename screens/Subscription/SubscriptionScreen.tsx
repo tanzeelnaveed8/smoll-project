@@ -21,7 +21,7 @@ export default function SubscriptionScreen({ navigation }: { navigation: Navigat
   const careIdFormatted = useMemo(() => {
     if (!user?.careId) return "";
 
-    if (user.careId.includes("-")) return user.careId;
+    if (String(user?.careId).includes("-")) return String(user?.careId);
 
     const careId = user.careId.toString().padStart(6, "0");
     return `${careId.slice(0, 3)}-${careId.slice(3)}`;
