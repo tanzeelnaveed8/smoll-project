@@ -668,6 +668,9 @@ const App = () => {
                   <Stack.Screen
                     name="PetProfileDetailsScreen"
                     component={PetProfileDetailsScreen}
+                    options={{
+                      gestureEnabled: false,
+                    }}
                   />
                   <Stack.Screen
                     name="PetProfileBenefitsScreen"

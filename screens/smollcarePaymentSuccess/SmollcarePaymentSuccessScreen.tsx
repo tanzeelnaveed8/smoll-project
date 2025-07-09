@@ -63,6 +63,7 @@ export default function SmollcarePaymentSuccessScreen({
             navigation.navigate("PetProfileDetailsScreen", {
               petId: id,
               activeBenefitTab: true,
+              backNavigation: "HomeScreen",
             })
           }
         >

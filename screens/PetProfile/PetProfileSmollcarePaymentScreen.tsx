@@ -95,7 +95,12 @@ export default function PetProfileSmollcarePaymentScreen({
     };
   }, []);
 
-  const initStripe = async () => {
+  const initStripe = async (): Promise<
+    | boolean
+    | {
+        redirect: true;
+      }
+  > => {
     setLoading(true);
 
     setEnvs(JSON.parse((await AsyncStorage.getItem("envs")) as string));
@@ -103,14 +108,16 @@ export default function PetProfileSmollcarePaymentScreen({
     await new Promise((resolve) => setTimeout(resolve, 500));
 
     try {
-      const { ephemeralKey, paymentIntentClientSecret, percentageOff } = await buySubscription(
+      const { ephemeralKey, paymentIntentClientSecret } = await buySubscription(
         petDetailsData.id as string,
         couponCode || undefined
       );
 
       // If coupon was already validated in modal and gives 100% off, skip payment
       if (discountPercentage === 100) {
-        return false;
+        return {
+          redirect: true,
+        };
       }
 
       // Only continue if still mounted
@@ -226,6 +233,15 @@ export default function PetProfileSmollcarePaymentScreen({
 
       const showPaymentSheet = await initStripe();
 
+      if (typeof showPaymentSheet === "object" && showPaymentSheet.redirect) {
+        navigation.navigate("paymentSuccess", {
+          petId: petDetailsData.id as string,
+          petName: petDetailsData?.name,
+        });
+
+        return;
+      }
+
       if (showPaymentSheet) {
         const { error } = await presentPaymentSheet();
 
@@ -258,8 +274,6 @@ export default function PetProfileSmollcarePaymentScreen({
       setLoading(false);
     }
   };
-
-  console.log("wind", WINDOW_HEIGHT);
 
   const bottomSheetHeight = useMemo(() => {
     let baseHeight = 55;

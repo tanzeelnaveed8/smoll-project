@@ -28,7 +28,6 @@ const NoPetOptions = ({
   navigation,
   setShowModal,
   expertId,
-  consultationId,
   scheduleAt,
   selectedTime,
   selectedDate,
@@ -36,7 +35,6 @@ const NoPetOptions = ({
   navigation: NavigationType;
   setShowModal: (showModal: boolean) => void;
   expertId: string;
-  consultationId: string;
   scheduleAt: string;
   selectedTime: string;
   selectedDate: string;
@@ -54,7 +52,6 @@ const NoPetOptions = ({
             navigation.navigate("PetProfileScreen", {
               from: "ConsultationCaseBriefScreen",
               expertId,
-              consultationId,
               scheduleAt,
               selectedTime,
               selectedDate,
@@ -264,7 +261,6 @@ const ConsultationCaseBriefScreen: React.FC<{ navigation: NavigationType }> = ({
                 navigation,
                 setShowModal,
                 expertId,
-                consultationId,
                 scheduleAt,
                 selectedTime,
                 selectedDate,

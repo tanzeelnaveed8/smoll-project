@@ -26,7 +26,7 @@ import HealthHistoryModal from "@/components/app/pet/HealthHistoryModal";
 import SubscriptionBenefitsList from "@/components/app/subscription/SubscribedBenefitsList";
 import dayjs from "dayjs";
 
-type RouteType = { petId: string; activeBenefitTab: boolean };
+type RouteType = { petId: string; activeBenefitTab: boolean; backNavigation: string };
 
 const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
   const route = useRoute();
@@ -44,6 +44,8 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
   // const [healthHistoryDataState, setHealthHistoryDataState] = useState<
   //   HealthHistory[] | null
   // >(null);
+
+  const backNavigation = (route.params as RouteType)?.backNavigation;
 
   const optionMenuRef = useRef<DropdownRef>(null);
   const [profileImg, setProfileImg] = useState("");
@@ -317,7 +319,11 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
       showBack
       title="Profile"
       onBackPress={() => {
-        navigation.goBack();
+        if (backNavigation) {
+          navigation.navigate(backNavigation);
+        } else {
+          navigation.goBack();
+        }
       }}
     >
       {!loading && (

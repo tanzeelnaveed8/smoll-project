@@ -1,6 +1,6 @@
 import Layout from "@/components/app/Layout";
 import { NavigationType } from "@/store/types";
-import React from "react";
+import React, { useMemo } from "react";
 import { Button, Div, Image, ScrollDiv, Text } from "react-native-magnus";
 import {
   fontHauora,
@@ -17,6 +17,15 @@ export default function SubscriptionScreen({ navigation }: { navigation: Navigat
   const { user } = useUserStore();
 
   const { height } = Dimensions.get("window");
+
+  const careIdFormatted = useMemo(() => {
+    if (!user?.careId) return "";
+
+    if (user.careId.includes("-")) return user.careId;
+
+    const careId = user.careId.toString().padStart(6, "0");
+    return `${careId.slice(0, 3)}-${careId.slice(3)}`;
+  }, [user?.careId]);
 
   return (
     <Layout
@@ -47,7 +56,7 @@ export default function SubscriptionScreen({ navigation }: { navigation: Navigat
               <Text fontSize="xl" fontFamily={fontHauoraSemiBold} textAlign="center">
                 Your smoll number is
               </Text>
-              <Div position="relative" mt={8}>
+              <Div position="relative" alignItems="center" mt={8}>
                 <Image source={require("@/assets/images/careId-bg.png")} w={300} h={70} />
                 <Text
                   style={{ position: "absolute" }}
@@ -55,11 +64,11 @@ export default function SubscriptionScreen({ navigation }: { navigation: Navigat
                   fontFamily={fontHauora}
                   color="#1655C8"
                   textAlignVertical="center"
-                  alignSelf="center"
+                  textAlign="center"
                   top={5}
                   lineHeight={64}
                 >
-                  {user?.careId}
+                  {careIdFormatted}
                 </Text>
               </Div>
             </Div>
