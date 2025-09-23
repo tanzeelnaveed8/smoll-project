@@ -2,6 +2,7 @@ import { fontHauoraMedium } from "@/constant/constant";
 import { IconChevronRight } from "@tabler/icons-react-native";
 import { Button, Div, Text } from "react-native-magnus";
 import DoctorCard from "./DoctorCard";
+import AppointmentOnlyIcon from "@/components/icons/AppointmentOnlyIcon";
 
 type PropTypes = {
   name: string;
@@ -11,6 +12,7 @@ type PropTypes = {
   nextAvailable: string;
   mb?: number;
   onCheckAvailability?: () => void;
+  byAppointmentOnly?: boolean;
   isOnline?: boolean;
   image?: string;
   about?: string;
@@ -25,6 +27,7 @@ const DoctorListCard: React.FC<PropTypes> = (props) => {
     nextAvailable,
     mb,
     onCheckAvailability,
+    byAppointmentOnly,
     isOnline,
     image,
     about,
@@ -63,6 +66,9 @@ const DoctorListCard: React.FC<PropTypes> = (props) => {
           </Text> */}
         </Div>
 
+        <Div flex={1} mr={15} justifyContent={"center"} alignItems={"flex-end"}>
+          {byAppointmentOnly && <AppointmentOnlyIcon width={88} height={20} />}
+        </Div>
         <Button
           bg="#222"
           rounded={100}

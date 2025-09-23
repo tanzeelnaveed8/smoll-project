@@ -20,6 +20,7 @@ interface Expert {
   about?: string;
   verified?: boolean;
   //   availability: {};
+  byAppointmentOnly: boolean;
   isOnline: boolean;
   yearsOfExperience: Nullable<number>;
   profileImg: Nullable<UploadedFile>;
@@ -42,6 +43,11 @@ interface RateExpertPayloadDto {
   comment?: string;
 }
 
+interface FilterDetails {
+  id: string;
+  name: string;
+}
+
 // Response
 export interface FindOneConsultationResDto {
   id: string;
@@ -54,11 +60,16 @@ export interface FindOneConsultationResDto {
 interface ExpertState {
   expertDetailMap: Map<string, Expert>;
   experts: Nullable<Expert[]>;
+  expertFilter: Nullable<FilterDetails[]>;
   unreadMessages: Map<string, number>;
   conversations: Map<string, IMessage[]>;
   activeConvo: string | null;
 
   fetchExperts: () => Promise<Expert[]>;
+  fetchExpertsBySpeciality: (params?: {
+    specialityId?: string;
+    online?: boolean;
+  }) => Promise<Expert[]>;
   fetchExpertDetail: (id: string) => Promise<void>;
   updateExpertStatus: (id: string, status: boolean) => void;
   fetchExpertAvailability: (id: string, date?: Date) => Promise<ExpertAvailability[]>;
@@ -78,4 +89,6 @@ interface ExpertState {
   setUnreadMessage: (value: Map<string, number>) => void;
   setConversations: (value: Map<string, IMessage[]>) => void;
   setActiveConvo: (value: string | null) => void;
+  fetchExpertFilter: () => Promise<FilterDetails[]>;
+  setExpertFilter: (value: any[]) => void;
 }

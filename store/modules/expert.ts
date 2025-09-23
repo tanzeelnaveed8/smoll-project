@@ -8,6 +8,7 @@ import { IMessage } from "react-native-gifted-chat";
 export const useExpertStore = create<ExpertState>((set, get) => ({
   expertDetailMap: new Map(),
   experts: null,
+  expertFilter: [],
   unreadMessages: new Map(),
   conversations: new Map(),
   activeConvo: null,
@@ -20,6 +21,39 @@ export const useExpertStore = create<ExpertState>((set, get) => ({
     }));
 
     return response.data;
+  },
+  fetchExpertsBySpeciality: async (params?: { specialityId?: string; online?: boolean }) => {
+    const query: { specialityId?: string; online?: boolean } = {};
+
+    if (params?.specialityId) {
+      query.specialityId = params.specialityId;
+    }
+
+    if (params?.online !== undefined) {
+      query.online = params.online;
+    }
+
+    const response = await api.get("/member/vets/findByFilter", { params: query });
+
+    set(() => ({
+      experts: response.data,
+    }));
+
+    return response.data;
+  },
+  fetchExpertFilter: async () => {
+    const response = await api.get("/specialities");
+
+    set({
+      expertFilter: response.data,
+    });
+
+    return response.data;
+  },
+  setExpertFilter: (value: any[]) => {
+    set({
+      expertFilter: value,
+    });
   },
   fetchExpertDetail: async (id) => {
     const response = await api.get(`/member/vets/${id}`);
