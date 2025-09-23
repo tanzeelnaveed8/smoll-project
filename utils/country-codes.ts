@@ -22,11 +22,17 @@ export async function getCountryCodes(): Promise<CountryCodeDto[]> {
   return codes;
 }
 
+// filtered state field value from nominatim api
 export const uaeCities = [
   {
     label: "Abu Dhabi",
     value: "abu dhabi",
+    state: "Abu Dhabi Emirate",
   },
-  { label: "Dubai", value: "dubai" },
-  { label: "Sharjah", value: "sharjah" },
+  { label: "Dubai", value: "dubai", state: "Dubai" },
+  { label: "Sharjah", value: "sharjah", state: "Sharjah Emirate" },
+  { label: "Ajman", value: "ajman", state: "Ajman Emirate" },
+  { label: "Umm Al Quwain", value: "umm al quwain", state: "Umm al-Quwain" },
+  { label: "Ras Al Khaimah", value: "ras al khaimah", state: "Ras al-Khaimah" },
+  { label: "Fujairah", value: "fujairah", state: "Fujairah Emirate" },
 ];

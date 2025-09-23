@@ -12,7 +12,7 @@ const renderSessionDots = (count: number, usageCount?: number) => {
   for (let i = 0; i < count; i++) {
     let icon;
     if (i < Number(usageCount)) {
-      icon = <IconCircleCheckFilled key={i} color="#00D932" />;
+      icon = <IconCircleCheckFilled key={i} color="#679FF0" />;
     } else {
       icon = <IconCircleCheck key={i} color="gray" />;
     }

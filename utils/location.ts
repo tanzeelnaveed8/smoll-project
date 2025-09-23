@@ -1,5 +1,6 @@
 import { Alert } from "react-native";
 import Geolocation from "@react-native-community/geolocation";
+import { uaeCities } from "@/utils/country-codes";
 
 interface LocationResult {
   city: string;
@@ -79,6 +80,7 @@ const reverseGeocode = async (latitude: number, longitude: number): Promise<stri
         headers: {
           Accept: "application/json",
           "User-Agent": "YourApp/1.0",
+          "Accept-Language": "en",
         },
       }
     );
@@ -91,16 +93,12 @@ const reverseGeocode = async (latitude: number, longitude: number): Promise<stri
     const data = await response.json();
     console.log("Geocoding response:", JSON.stringify(data, null, 2));
 
+    const displayNameList = data.display_name?.split(", ");
+
     // Extract city from the response with better fallbacks
     const city =
-      data.address?.city ||
-      data.address?.town ||
-      data.address?.village ||
-      data.address?.suburb ||
-      data.address?.district ||
       data.address?.state ||
-      data.address?.region ||
-      data.display_name?.split(",")[0] || // First part of display name
+      uaeCities.filter((item: any) => displayNameList.includes(item.state)) || // First part of display name
       "Unknown City";
 
     console.log("Extracted city:", city);

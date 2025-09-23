@@ -353,7 +353,7 @@ const PetProfileDetailsScreen: React.FC<{ navigation: NavigationType }> = ({ nav
                 </Text>
                 {petDetailsData?.careId && (
                   <Text fontSize={"lg"} mt={4} fontFamily={fontHauoraMedium} color="#494949">
-                    {petDetailsData.careId}
+                    PetId: {petDetailsData?.careId}
                   </Text>
                 )}
               </Div>

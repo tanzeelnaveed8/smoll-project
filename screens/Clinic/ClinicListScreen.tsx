@@ -60,11 +60,12 @@ const ClinicListScreen = ({ navigation }: { navigation: NavigationType }) => {
 
       const { city: currentCity } = await getCurrentLocation();
 
-      // Find the matching city in uaeCities
+      // Find the matching state in uaeCities
+      // here I found that state field is capturing the all emirates
       const matchingCity = uaeCities.find(
         (cityOption) =>
-          cityOption.label.toLowerCase().includes(currentCity.toLowerCase()) ||
-          currentCity.toLowerCase().includes(cityOption.label.toLowerCase())
+          cityOption.state.toLowerCase().includes(currentCity.toLowerCase()) ||
+          currentCity.toLowerCase().includes(cityOption.state.toLowerCase())
       );
 
       if (matchingCity) {

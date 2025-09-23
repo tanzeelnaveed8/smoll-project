@@ -64,7 +64,7 @@ const HomeScreen: React.FC<Props> = (props) => {
       ),
     },
     {
-      name: "Clinics",
+      name: "Network",
       value: "clinics",
       description: "Locate our partners clinics",
       loading: false,

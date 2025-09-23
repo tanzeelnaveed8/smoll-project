@@ -75,9 +75,9 @@ const PlanRow = ({
 export default function BenefitsList({ planFeatures }: BenefitsListProps) {
   const vaccineBenefits = [
     {
-      heading: "Unlimited Consultations",
+      heading: "No consultations fees, ever!",
       icon: require("@/assets/icons/benefits/stethoscope.png"),
-      items: ["Unlimited consultations all year long"],
+      items: ["Consultations are included"],
     },
     {
       heading: "Annual Vaccines",
