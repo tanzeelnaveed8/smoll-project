@@ -1,0 +1,4 @@
+title,type,currency,description,price,quickBooking
+Test Service 4,Medication,AED,Service Description 4,12,TRUE
+Test Service 5,Exam,AED,Service Description 5,24,FALSE
+Test Service 6,Procedure,AED,Service Description 6,19,TRUE

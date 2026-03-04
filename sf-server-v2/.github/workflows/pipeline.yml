@@ -1,0 +1,129 @@
+name: Deploy to DigitalOcean
+
+on:
+  push:
+    branches:
+      - master
+      - staging
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Deploy to DigitalOcean Droplet
+        env:
+          HOST: ${{ github.ref == 'refs/heads/master' && secrets.HOST || secrets.STAGING_HOST }}
+          USERNAME: ${{ secrets.USERNAME }}
+          SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          DB_USER: ${{ secrets.DB_USER }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          JWT_ACCESS_TOKEN_EXPIRES_IN: ${{ secrets.JWT_ACCESS_TOKEN_EXPIRES_IN }}
+          JWT_REFRESH_TOKEN_EXPIRES_IN: ${{ secrets.JWT_REFRESH_TOKEN_EXPIRES_IN }}
+          JWT_ISSUER: ${{ secrets.JWT_ISSUER }}
+          SPACES_ACCESS_KEY_ID: ${{ secrets.SPACES_ACCESS_KEY_ID }}
+          SPACES_SECRET_ACCESS_KEY: ${{ secrets.SPACES_SECRET_ACCESS_KEY }}
+          SPACES_BUCKET_NAME: ${{ secrets.SPACES_BUCKET_NAME }}
+          EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
+          EMAIL_PORT: ${{ secrets.EMAIL_PORT }}
+          EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+          TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
+          TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
+          TWILIO_VERIFY_SERVICE_SID: ${{ secrets.TWILIO_VERIFY_SERVICE_SID }}
+          SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
+          ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+          ADMIN_NAME: ${{ secrets.ADMIN_NAME }}
+          ONESIGNAL_USER_AUTH_KEY: ${{ secrets.ONESIGNAL_USER_AUTH_KEY }}
+          ONESIGNAL_REST_API_KEY: ${{ secrets.ONESIGNAL_REST_API_KEY }}
+          ONESIGNAL_APP_ID: ${{ secrets.ONESIGNAL_APP_ID }}
+          DATABASE_URL: ${{ github.ref == 'refs/heads/master' && secrets.DATABASE_URL || secrets.STAGING_DATABASE_URL }}
+          DB_SSL_CERT: ${{ github.ref == 'refs/heads/master' && secrets.DB_SSL_CERT || secrets.STAGING_DB_SSL_CERT }}
+          STRIPE_SECRET_KEY: ${{ github.ref == 'refs/heads/master' && secrets.STRIPE_SECRET_KEY || secrets.STAGING_STRIPE_SECRET_KEY }}
+          STRIPE_PUBLISHABLE_KEY: ${{ github.ref == 'refs/heads/master' && secrets.STRIPE_PUBLISHABLE_KEY || secrets.STAGING_STRIPE_PUBLISHABLE_KEY }}
+          ZEGO_APP_ID: ${{ secrets.ZEGO_APP_ID }}
+          ZEGO_SERVER_SECRET: ${{ secrets.ZEGO_SERVER_SECRET }}
+          ZEGO_APP_SIGN: ${{ secrets.ZEGO_APP_SIGN }}
+          TWILIO_PHONE_NUMBER: ${{ secrets.TWILIO_PHONE_NUMBER }}
+          GRAFANA_LOKI_URL: ${{ secrets.GRAFANA_LOKI_URL }}
+          GRAFANA_LOKI_USER: ${{ secrets.GRAFANA_LOKI_USER }}
+          GRAFANA_LOKI_TOKEN: ${{ secrets.GRAFANA_LOKI_TOKEN }}
+          NODE_ENV: ${{ github.ref == 'refs/heads/master' && 'production' || 'staging' }}
+          ENVIRONMENT: ${{ github.ref == 'refs/heads/master' && 'production' || 'staging' }}
+          MASTERMIND_USERNAME: ${{ secrets.MASTERMIND_USERNAME }}
+          MASTERMIND_PASSWORD: ${{ secrets.MASTERMIND_PASSWORD }}
+          MASTERMIND_TOKEN: ${{ secrets.MASTERMIND_TOKEN }}
+          STRIPE_WEBHOOK_SECRET: ${{ github.ref == 'refs/heads/master' && secrets.STRIPE_WEBHOOK_SECRET || secrets.STAGING_STRIPE_WEBHOOK_SECRET }}
+          SWAGGER_USER: ${{ secrets.SWAGGER_USER }}
+          SWAGGER_PASSWORD: ${{ secrets.SWAGGER_PASSWORD }}
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H $HOST >> ~/.ssh/known_hosts
+
+          set -e  # Stop the script if any command fails
+          echo "Testing SSH connection..."
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $USERNAME@$HOST "echo 'SSH connection successful'"
+
+          echo "Using rsync for file transfer..."
+          rsync -avz --delete -e "ssh -i ~/.ssh/id_rsa" ./ $USERNAME@$HOST:~/app/sf-server/
+
+          echo "Uploading .env file..."
+          ssh -i ~/.ssh/id_rsa $USERNAME@$HOST "cat > ~/app/sf-server/.env <<EOT
+          JWT_SECRET=\"${JWT_SECRET}\"
+          JWT_ACCESS_TOKEN_EXPIRES_IN=\"${JWT_ACCESS_TOKEN_EXPIRES_IN}\"
+          JWT_REFRESH_TOKEN_EXPIRES_IN=\"${JWT_REFRESH_TOKEN_EXPIRES_IN}\"
+          JWT_ISSUER=\"${JWT_ISSUER}\"
+          SPACES_ACCESS_KEY_ID=\"${SPACES_ACCESS_KEY_ID}\"
+          SPACES_SECRET_ACCESS_KEY=\"${SPACES_SECRET_ACCESS_KEY}\"
+          SPACES_BUCKET_NAME=\"${SPACES_BUCKET_NAME}\"
+          EMAIL_HOST=\"${EMAIL_HOST}\"
+          EMAIL_PORT=\"${EMAIL_PORT}\"
+          EMAIL_USERNAME=\"${EMAIL_USERNAME}\"
+          EMAIL_PASSWORD=\"${EMAIL_PASSWORD}\"
+          TWILIO_ACCOUNT_SID=\"${TWILIO_ACCOUNT_SID}\"
+          TWILIO_AUTH_TOKEN=\"${TWILIO_AUTH_TOKEN}\"
+          TWILIO_VERIFY_SERVICE_SID=\"${TWILIO_VERIFY_SERVICE_SID}\"
+          SENDGRID_API_KEY=\"${SENDGRID_API_KEY}\"
+          ADMIN_EMAIL=\"${ADMIN_EMAIL}\"
+          ADMIN_PASSWORD=\"${ADMIN_PASSWORD}\"
+          ADMIN_NAME=\"${ADMIN_NAME}\"
+          ONESIGNAL_USER_AUTH_KEY=\"${ONESIGNAL_USER_AUTH_KEY}\"
+          ONESIGNAL_REST_API_KEY=\"${ONESIGNAL_REST_API_KEY}\"
+          ONESIGNAL_APP_ID=\"${ONESIGNAL_APP_ID}\"
+          REDIS_HOST=\"redis\"
+          REDIS_PORT=\"6379\"
+          DATABASE_URL=\"${DATABASE_URL}\"
+          DB_SSL_CERT=\"${DB_SSL_CERT}\"
+          STRIPE_SECRET_KEY=\"${STRIPE_SECRET_KEY}\"
+          STRIPE_PUBLISHABLE_KEY=\"${STRIPE_PUBLISHABLE_KEY}\"
+          ZEGO_APP_ID=\"${ZEGO_APP_ID}\"
+          ZEGO_SERVER_SECRET=\"${ZEGO_SERVER_SECRET}\"
+          ZEGO_APP_SIGN=\"${ZEGO_APP_SIGN}\"
+          TWILIO_PHONE_NUMBER=\"${TWILIO_PHONE_NUMBER}\"
+          GRAFANA_LOKI_URL=\"${GRAFANA_LOKI_URL}\"
+          GRAFANA_LOKI_USER=\"${GRAFANA_LOKI_USER}\"
+          GRAFANA_LOKI_TOKEN=\"${GRAFANA_LOKI_TOKEN}\"
+          NODE_TLS_REJECT_UNAUTHORIZED=\"0\"
+          NODE_ENV=\"${NODE_ENV}\"
+          ENVIRONMENT=\"${ENVIRONMENT}\"
+          MASTERMIND_USERNAME=\"${MASTERMIND_USERNAME}\"
+          MASTERMIND_PASSWORD=\"${MASTERMIND_PASSWORD}\"
+          MASTERMIND_TOKEN=\"${MASTERMIND_TOKEN}\"
+          STRIPE_WEBHOOK_SECRET=\"${STRIPE_WEBHOOK_SECRET}\"
+          SWAGGER_USER=\"${SWAGGER_USER}\"
+          SWAGGER_PASSWORD=\"${SWAGGER_PASSWORD}\"
+          EOT"
+
+          echo "Executing deployment commands..."
+          ssh -i ~/.ssh/id_rsa $USERNAME@$HOST "cd ~/app/sf-server && \
+            if ! systemctl is-active --quiet docker; then sudo systemctl start docker && sleep 10; fi && \
+            docker info > /dev/null 2>&1 || { echo 'Error: Docker is not running or not accessible.'; exit 1; } && \
+            docker compose up --build --force-recreate --remove-orphans -d && \
+            docker compose exec -T app yarn migration:run && \
+            docker compose exec -T app yarn seed:specialities && \
+            docker compose ps && docker compose logs --tail=50 app"

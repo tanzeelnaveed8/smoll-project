@@ -1,0 +1,166 @@
+@use 'vuetify/settings' with (
+  $color-pack: false,
+  $sheet-background: transparent,
+
+  // # Typography Styles
+  $heading-font-family: 'Hauora',
+  $body-font-family: 'Hauora',
+
+  $typography: (
+    'h6': (
+      'line-height': 25px
+    ),
+    'h5': (
+      'size': 1.5rem,
+      'line-height': 1.5rem,
+      'weight': 400
+    ),
+    'h4': (
+      'size': 2rem,
+      'line-height': 2.5rem,
+      'weight': 500
+    ),
+    'h3': (
+      'size': 2.5rem,
+      'line-height': 3rem,
+      'weight': 500
+    ),
+    'h2': (
+      'size': 3.25rem,
+      'line-height': 3.25rem,
+      'weight': 500
+    ),
+
+    'body-1': (
+      line-height: 1.25
+    ),
+    'caption': (
+      'line-height': 1rem
+    )
+  ),
+
+  // # Button Styles
+  $button-height: 36px,
+
+  $button-density: (
+    'default': 0,
+    'comfortable': -1,
+    'compact': -2
+  ),
+  $button-elevation: (
+    'default': 1,
+    'hover': 2,
+    'active': 4
+  ),
+  $button-font-size: 14px,
+  $button-text-transform: 'capitalize',
+  $button-font-weight: 500,
+  $button-color: #fff,
+  $button-border-radius: 8px,
+  $button-line-height: 20px,
+
+  //Overlay
+  $overlay-scrim-background: rgba(0, 0, 0, 0.32),
+  //Dialog
+  $dialog-elevation: 0,
+  //V-textfield
+  $field-control-solo-background: #f2f2f2,
+  $field-control-filled-background: #f2f2f2,
+  $text-field-details-padding-inline: 0,
+
+  $field-border-radius: 0.5rem,
+
+  $messages-font-size: 14px,
+
+  //TABLE
+  $table-header-height: 44px,
+  $table-row-height: 44px,
+  $table-column-padding: 8px 12px,
+
+  //CHECKBOX
+  $input-control-height: 44px,
+
+  //MENU
+  $menu-content-border-radius: 8px,
+
+  //LIST
+  $list-padding: 0px 0px,
+
+  $input-density: (
+    'default': 0,
+    'comfortable': -3,
+    'compact': -6
+  ),
+
+  //DIALOG
+  $dialog-margin: 0px
+);
+
+// # For v-push directives
+.push-transition {
+  transition: transform 0.1s;
+  &.push {
+    transform: scale(0.98);
+  }
+}
+
+.v-input {
+  & .v-field__input::placeholder {
+    color: #878787 !important;
+    opacity: 1;
+  }
+  .v-field {
+    background-color: transparent;
+    border: 1px solid #a0aeb8;
+    color: #222222 !important;
+    font-weight: 500;
+
+    .v-field__overlay {
+      background-color: inherit;
+      opacity: 1;
+    }
+    .v-field--appended {
+      padding-inline-end: 8px;
+    }
+
+    .v-field__input {
+      opacity: 1;
+    }
+    .v-icon {
+      opacity: 1;
+    }
+  }
+}
+
+.v-application {
+  font-weight: 500;
+}
+
+.v-btn--variant-plain {
+  height: auto !important;
+  min-height: auto !important;
+  opacity: 1 !important;
+}
+
+.v-tab {
+  &:hover {
+    color: rgb(34, 34, 34);
+  }
+}
+
+.Toastify__toast {
+  width: fit-content;
+  min-height: 40px !important;
+  margin: auto;
+}
+
+.v-date-picker {
+  box-shadow:
+    0px 2px 4px -1px rgba(0, 0, 0, 0.2),
+    0px 4px 5px 0px rgba(0, 0, 0, 0.14),
+    0px 1px 10px 0px rgba(0, 0, 0, 0.12) !important;
+
+  & .v-date-picker-month__day-btn {
+    color: #222;
+  }
+}

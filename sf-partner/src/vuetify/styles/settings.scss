@@ -1,0 +1,166 @@
+@use 'vuetify/settings' with (
+  $color-pack: false,
+  $sheet-background: transparent,
+
+  // # Typography Styles
+  $heading-font-family: 'Hauora',
+  $body-font-family: 'Hauora',
+
+  $typography: (
+    'h6': (
+      'line-height': 25px
+    ),
+    'h5': (
+      'size': 1.5rem,
+      'line-height': 1.5rem,
+      'weight': 400
+    ),
+    'h4': (
+      'size': 2rem,
+      'line-height': 2.5rem,
+      'weight': 500
+    ),
+    'h3': (
+      'size': 2.5rem,
+      'line-height': 3rem,
+      'weight': 500
+    ),
+    'h2': (
+      'size': 3.25rem,
+      'line-height': 3.25rem,
+      'weight': 500
+    ),
+
+    'body-1': (
+      line-height: 1.25
+    ),
+    'caption': (
+      'line-height': 1rem
+    )
+  ),
+
+  // # Button Styles
+  $button-height: 36px,
+
+  $button-density: (
+    'default': 0,
+    'comfortable': -1,
+    'compact': -2
+  ),
+  $button-elevation: (
+    'default': 1,
+    'hover': 2,
+    'active': 4
+  ),
+  $button-font-size: 14px,
+  $button-text-transform: 'capitalize',
+  $button-font-weight: 500,
+  $button-color: #fff,
+  $button-border-radius: 8px,
+  $button-line-height: 20px,
+
+  //Overlay
+  $overlay-scrim-background: rgba(0, 0, 0, 0.32),
+  //Dialog
+  $dialog-elevation: 0,
+  //V-textfield
+  $field-control-solo-background: #f2f2f2,
+  $field-control-filled-background: #f2f2f2,
+  $text-field-details-padding-inline: 0,
+
+  $field-border-radius: 0.5rem,
+
+  $messages-font-size: 14px,
+
+  //TABLE
+  $table-header-height: 40px,
+  $table-row-height: 40px,
+  $table-column-padding: 8px 12px,
+
+  //CHECKBOX
+  $input-control-height: 44px,
+
+  //MENU
+  $menu-content-border-radius: 8px,
+
+  //LIST
+  $list-padding: 0px 0px,
+
+  $input-density: (
+    'default': 0,
+    'comfortable': -3,
+    'compact': -6
+  ),
+
+  //DIALOG
+  $dialog-margin: 0px
+);
+
+.v-btn {
+  & .v-btn__append {
+    margin-inline: 0px !important;
+    margin-left: 8px !important;
+  }
+  & .v-btn__prepend {
+    margin-inline: 0px !important;
+    margin-right: 8px !important;
+  }
+}
+
+.v-input {
+  & input::placeholder {
+    color: #8a8a8a !important;
+    opacity: 1;
+  }
+  .v-field {
+    background-color: transparent;
+    border: 1px solid #a0aeb8;
+    color: #494949;
+    font-weight: 600;
+
+    .v-field__overlay {
+      background-color: inherit;
+      opacity: 1;
+    }
+    .v-field--appended {
+      padding-inline-end: 8px;
+    }
+
+    .v-field__input {
+      mask-image: none !important;
+      opacity: 1;
+    }
+    .v-icon {
+      opacity: 1;
+    }
+  }
+}
+
+.v-application {
+  font-weight: 500;
+}
+
+.v-btn--variant-plain {
+  height: auto !important;
+  min-height: auto !important;
+  opacity: 1 !important;
+}
+
+.v-tab {
+  &:hover {
+    color: rgb(34, 34, 34);
+  }
+}
+
+.Toastify__toast {
+  width: fit-content;
+  min-height: 40px !important;
+  margin: auto;
+}
+
+//TEXTAREA
+.v-textarea {
+  & .v-field__input {
+    padding: 8px 10px;
+  }
+}

@@ -1,0 +1,60 @@
+name: Deploy Expertsuite to DigitalOcean
+
+on:
+  push:
+    branches:
+      - master
+      - staging
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Deploy to DigitalOcean Droplet
+        env:
+          HOST: ${{ github.ref == 'refs/heads/master' && secrets.HOST || secrets.STAGING_HOST }}
+          USERNAME: ${{ secrets.USERNAME }}
+          SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          VITE_API_URL: ${{ github.ref == 'refs/heads/master' && vars.VITE_API_URL || vars.VITE_STAGING_API_URL }}
+          VITE_SOCKET_URL: ${{ github.ref == 'refs/heads/master' && vars.VITE_SOCKET_URL || vars.VITE_STAGING_SOCKET_URL }}
+          VITE_ZIM_APP_ID: ${{ secrets.VITE_ZIM_APP_ID }}
+          VITE_ZIM_SERVER_KEY: ${{ secrets.VITE_ZIM_SERVER_KEY }}
+          VITE_SENTRY_DSN: ${{ secrets.VITE_SENTRY_DSN }}
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H $HOST >> ~/.ssh/known_hosts
+
+          echo "Creating sf-vetsuite directory..."
+          ssh -i ~/.ssh/id_rsa $USERNAME@$HOST "mkdir -p ~/app/sf-vetsuite"
+
+          echo "Copying files using rsync..."
+          rsync -avz --delete -e "ssh -i ~/.ssh/id_rsa" ./ $USERNAME@$HOST:~/app/sf-vetsuite/
+
+          echo "Creating .env file..."
+          ssh -i ~/.ssh/id_rsa $USERNAME@$HOST << EOF
+            cd ~/app/sf-vetsuite
+            echo "VITE_API_URL=$VITE_API_URL" > .env
+            echo "VITE_SOCKET_URL=$VITE_SOCKET_URL" >> .env
+            echo "VITE_ZIM_APP_ID=$VITE_ZIM_APP_ID" >> .env
+            echo "VITE_ZIM_SERVER_KEY=$VITE_ZIM_SERVER_KEY" >> .env
+            echo "VITE_SENTRY_DSN=$VITE_SENTRY_DSN" >> .env
+          EOF
+
+          echo "Deploying..."
+          ssh -i ~/.ssh/id_rsa $USERNAME@$HOST << EOF
+            set -e
+            cd ~/app/sf-vetsuite
+            
+            docker-compose stop vetsuite
+            docker-compose rm -f vetsuite
+            docker-compose build vetsuite
+            docker-compose up -d
+
+            echo "Container status after deployment:"
+            docker-compose ps
+          EOF
