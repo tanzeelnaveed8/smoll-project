@@ -42,25 +42,34 @@ export const useCartStore = create<CartState>((set, get) => ({
     }
   },
 
-  removeItem: (id, type) => {
+  removeItem: (id, type, packageId) => {
     const { items } = get();
     set({
-      items: items.filter((it) => !(it.id === id && it.type === type)),
+      items: items.filter(
+        (it) =>
+          !(
+            it.id === id &&
+            it.type === type &&
+            (packageId === undefined ? it.packageId == null : it.packageId === packageId)
+          )
+      ),
     });
   },
 
-  updateQuantity: (id, type, quantity) => {
+  updateQuantity: (id, type, quantity, packageId) => {
     if (quantity <= 0) {
       const { removeItem } = get();
-      removeItem(id, type);
+      removeItem(id, type, packageId);
       return;
     }
 
     const { items } = get();
+    const matches = (it: CartItem) =>
+      it.id === id &&
+      it.type === type &&
+      (packageId === undefined ? it.packageId == null : it.packageId === packageId);
     set({
-      items: items.map((it) =>
-        it.id === id && it.type === type ? { ...it, quantity } : it
-      ),
+      items: items.map((it) => (matches(it) ? { ...it, quantity } : it)),
     });
   },
 

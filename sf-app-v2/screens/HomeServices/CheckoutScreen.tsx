@@ -8,6 +8,7 @@ import {
 } from "@/constant/constant";
 import { useCartStore } from "@/store/modules/cart";
 import type { CartItem } from "@/store/types/cart";
+import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
 import {
   IconClock,
@@ -16,7 +17,7 @@ import {
   IconShieldCheck,
   IconTruck,
 } from "@tabler/icons-react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import { Div, Text } from "react-native-magnus";
 
@@ -38,9 +39,17 @@ const CheckoutScreen: React.FC<Props> = ({ navigation }) => {
   const items = useCartStore((s) => s.items);
   const getTotal = useCartStore((s) => s.getTotal);
   const schedule = useCartStore((s) => s.schedule);
+  const user = useUserStore((s) => s.user);
 
   const subtotal = getTotal();
   const total = subtotal + TRAVEL_FEE;
+
+  // Redirect back if cart is empty (e.g. user navigated directly or after refresh)
+  useEffect(() => {
+    if (items.length === 0) {
+      navigation.goBack();
+    }
+  }, [items.length, navigation]);
 
   return (
     <Layout disableHeader>
@@ -216,7 +225,7 @@ const CheckoutScreen: React.FC<Props> = ({ navigation }) => {
                 fontFamily={fontHauoraBold}
                 color="#111827"
               >
-                123 Pet Lover Lane, Apt 4B
+                {user?.address ?? "No address set"}
               </Text>
               <Text
                 fontSize={11}
@@ -224,7 +233,9 @@ const CheckoutScreen: React.FC<Props> = ({ navigation }) => {
                 color="#9CA3AF"
                 mt={4}
               >
-                San Francisco, CA 94110
+                {user?.city && user?.country
+                  ? `${user.city}, ${user.country}`
+                  : "Add address in profile to book"}
               </Text>
             </Div>
           </Div>
@@ -363,8 +374,9 @@ const CheckoutScreen: React.FC<Props> = ({ navigation }) => {
         <TouchableOpacity
           activeOpacity={0.9}
           style={styles.payButton}
+          disabled={items.length === 0}
           onPress={() => {
-            // Placeholder: hook into existing payment flow later
+            // TODO: Integrate payment (e.g. createPaymentIntent / Stripe). On success: call booking API, clearCart(), setSchedule(null), navigate to confirmation.
           }}
         >
           <Text

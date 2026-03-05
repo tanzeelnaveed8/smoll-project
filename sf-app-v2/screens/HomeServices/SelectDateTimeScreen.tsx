@@ -61,7 +61,7 @@ const SelectDateTimeScreen: React.FC<Props> = ({ navigation }) => {
   }, [selectedDate?.id]);
 
   const handleContinue = () => {
-    if (!selectedDate) return;
+    if (!selectedDate || !MOCK_DATES.length) return;
     setSchedule({
       dateId: selectedDate.id,
       labelTop: selectedDate.labelTop,
@@ -220,6 +220,7 @@ const SelectDateTimeScreen: React.FC<Props> = ({ navigation }) => {
           activeOpacity={0.85}
           style={styles.primaryButton}
           onPress={handleContinue}
+          disabled={!selectedDate || !MOCK_DATES.length || !MOCK_SLOTS.length}
         >
           <Text
             fontSize={"md"}

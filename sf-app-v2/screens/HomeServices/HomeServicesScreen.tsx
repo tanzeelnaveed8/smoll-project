@@ -41,7 +41,7 @@ const HomeServicesScreen: React.FC<{ navigation: NavigationType }> = ({
   const [activeTab, setActiveTab] = useState<TabType>("services");
   const [nutritionsSubTab, setNutritionsSubTab] =
     useState<NutritionsSubTab>("all");
-  const { products: aiPicksProducts, loading: aiPicksLoading } = useAIPicks();
+  const { products: aiPicksProducts, loading: aiPicksLoading, error: aiPicksError } = useAIPicks();
 
   return (
     <Layout disableHeader>
@@ -352,7 +352,7 @@ const HomeServicesScreen: React.FC<{ navigation: NavigationType }> = ({
                         })
                       }
                     >
-                      <Div w="100%" aspectRatio={1} bg="#f3f4f6" rounded={12} mb={12} />
+                      <Div w="100%" bg="#f3f4f6" rounded={12} mb={12} style={{ aspectRatio: 1 }} />
                       <Text fontSize={"sm"} fontFamily={fontHauoraBold} color="#222" mb={4}>{p.title}</Text>
                       <Text fontSize={10} color="#9CA3AF" fontFamily={fontHauora} mb={8}>{p.description}</Text>
                       <Text fontSize={"sm"} fontFamily={fontHauoraBold} color={colorPrimary}>{p.priceLabel}</Text>
@@ -417,7 +417,7 @@ const HomeServicesScreen: React.FC<{ navigation: NavigationType }> = ({
                         })
                       }
                     >
-                      <Div w="100%" aspectRatio={1} bg="#f3f4f6" rounded={12} mb={12} />
+                      <Div w="100%" bg="#f3f4f6" rounded={12} mb={12} style={{ aspectRatio: 1 }} />
                       <Text fontSize={"sm"} fontFamily={fontHauoraBold} color="#222" mb={4}>{p.title}</Text>
                       <Text fontSize={10} color="#9CA3AF" fontFamily={fontHauora} mb={8}>{p.description}</Text>
                       <Text fontSize={"sm"} fontFamily={fontHauoraBold} color={colorPrimary}>{p.priceLabel}</Text>
@@ -482,7 +482,7 @@ const HomeServicesScreen: React.FC<{ navigation: NavigationType }> = ({
                         })
                       }
                     >
-                      <Div w="100%" aspectRatio={1} bg="#f3f4f6" rounded={12} mb={12} />
+                      <Div w="100%" bg="#f3f4f6" rounded={12} mb={12} style={{ aspectRatio: 1 }} />
                       <Text fontSize={"sm"} fontFamily={fontHauoraBold} color="#222" mb={4}>{p.title}</Text>
                       <Text fontSize={10} color="#9CA3AF" fontFamily={fontHauora} mb={8}>{p.description}</Text>
                       <Text fontSize={"sm"} fontFamily={fontHauoraBold} color={colorPrimary}>{p.priceLabel}</Text>
@@ -500,8 +500,16 @@ const HomeServicesScreen: React.FC<{ navigation: NavigationType }> = ({
                       Loading recommendations…
                     </Text>
                   </Div>
-                ) : (
-                  aiPicksProducts.map((p) => (
+                ) : null}
+                {aiPicksError ? (
+                  <Div py={12} px={16} mb={8} bg="#FEF2F2" rounded={16} borderWidth={1} borderColor="#FECACA">
+                    <Text fontSize="sm" fontFamily={fontHauora} color="#991B1B">
+                      {aiPicksError}
+                    </Text>
+                  </Div>
+                ) : null}
+                {!aiPicksLoading
+                  ? aiPicksProducts.map((p) => (
                   <TouchableOpacity
                     key={p.id}
                     activeOpacity={0.85}
@@ -586,7 +594,7 @@ const HomeServicesScreen: React.FC<{ navigation: NavigationType }> = ({
                     </Div>
                   </TouchableOpacity>
                   ))
-                )}
+                  : null}
               </Div>
             )}
 

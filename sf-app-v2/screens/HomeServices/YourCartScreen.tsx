@@ -114,7 +114,7 @@ const YourCartScreen: React.FC<Props> = ({ navigation }) => {
                 </Div>
                 <TouchableOpacity
                   activeOpacity={0.7}
-                  onPress={() => removeItem(item.id, item.type)}
+                  onPress={() => removeItem(item.id, item.type, item.packageId)}
                 >
                   <IconTrash size={18} color="#D1D5DB" />
                 </TouchableOpacity>
@@ -132,7 +132,7 @@ const YourCartScreen: React.FC<Props> = ({ navigation }) => {
                 >
                   <TouchableOpacity
                     onPress={() =>
-                      updateQuantity(item.id, item.type, Math.max(1, item.quantity - 1))
+                      updateQuantity(item.id, item.type, Math.max(1, item.quantity - 1), item.packageId)
                     }
                     disabled={item.quantity <= 1}
                     style={styles.qtyButton}
@@ -153,7 +153,7 @@ const YourCartScreen: React.FC<Props> = ({ navigation }) => {
                   </Text>
                   <TouchableOpacity
                     onPress={() =>
-                      updateQuantity(item.id, item.type, item.quantity + 1)
+                      updateQuantity(item.id, item.type, item.quantity + 1, item.packageId)
                     }
                     style={styles.qtyButton}
                   >

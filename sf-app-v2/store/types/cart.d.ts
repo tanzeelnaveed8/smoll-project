@@ -40,8 +40,10 @@ export interface CartState {
   schedule: Nullable<ScheduleSelection>;
 
   addOrUpdateItem: (item: Omit<CartItem, "quantity"> & { quantity?: number }) => void;
-  removeItem: (id: string, type: CartItemType) => void;
-  updateQuantity: (id: string, type: CartItemType, quantity: number) => void;
+  /** Remove one cart line. Use packageId when same id+type can appear with different packages (e.g. product sizes). */
+  removeItem: (id: string, type: CartItemType, packageId?: string) => void;
+  /** Update quantity for one cart line. Use packageId to target the correct line. */
+  updateQuantity: (id: string, type: CartItemType, quantity: number, packageId?: string) => void;
   clearCart: () => void;
 
   setSchedule: (schedule: ScheduleSelection | null) => void;

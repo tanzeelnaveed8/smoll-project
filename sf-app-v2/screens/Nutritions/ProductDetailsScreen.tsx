@@ -316,12 +316,16 @@ const ProductDetailsScreen: React.FC<Props> = ({ navigation }) => {
           <TextInput
             multiline
             numberOfLines={3}
+            maxLength={500}
             placeholder="Any specific delivery instructions?"
             placeholderTextColor="#9CA3AF"
             style={styles.textArea}
             value={specialNotes}
             onChangeText={setSpecialNotes}
           />
+          <Text fontSize={10} fontFamily={fontHauora} color="#9CA3AF" mt={4}>
+            {specialNotes.length}/500
+          </Text>
         </Div>
       </ScrollView>
 
