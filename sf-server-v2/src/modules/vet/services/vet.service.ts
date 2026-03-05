@@ -316,7 +316,6 @@ export class VetService {
       where.status = In([
         ConsultationStatusEnum.COMPLETED,
         ConsultationStatusEnum.INITIATED,
-        ConsultationStatusEnum.REJECTED,
       ]);
     }
 
@@ -335,8 +334,6 @@ export class VetService {
           name: true,
         },
         scheduledAt: true,
-        isAccepted: true,
-        rejectedByVetName: true,
         case: {
           description: true,
           pet: {
@@ -456,21 +453,6 @@ export class VetService {
     await this.vetConsultationRepo.save(consultation);
 
     return consultation;
-  }
-
-  async acceptConsultation(vet: AuthUser, id: string): Promise<VetConsultation> {
-    const consultation = await this.findOneConsultations(vet, id);
-    consultation.isAccepted = true;
-    consultation.rejectedByVetName = null;
-    return this.vetConsultationRepo.save(consultation);
-  }
-
-  async rejectConsultation(vet: AuthUser, id: string): Promise<VetConsultation> {
-    const consultation = await this.findOneConsultations(vet, id);
-    consultation.status = ConsultationStatusEnum.REJECTED;
-    consultation.isAccepted = false;
-    consultation.rejectedByVetName = `rejected by vet (${vet.name})`;
-    return this.vetConsultationRepo.save(consultation);
   }
 
   async createAvailability(

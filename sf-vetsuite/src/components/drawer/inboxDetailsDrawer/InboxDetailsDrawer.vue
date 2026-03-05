@@ -20,26 +20,6 @@
 
             <!-- Show only before schedule started -->
             <template v-if="isBeforeSchedule">
-              <v-btn
-                color="#10AFE1"
-                variant="outlined"
-                flat
-                :disabled="actionBusy || consultation.isAccepted || consultation.status === ConsultationStatusEnum.REJECTED"
-                @click="handleAcceptAppointment"
-              >
-                Accept
-              </v-btn>
-
-              <v-btn
-                color="#E02A2A"
-                variant="outlined"
-                flat
-                :disabled="actionBusy || consultation.status === ConsultationStatusEnum.REJECTED"
-                @click="handleRejectAppointment"
-              >
-                Reject
-              </v-btn>
-
               <v-btn color="grey1" variant="outlined" :loading="sendingReminder"
                 :disabled="sendingReminder || reminderSend" @click="handleSendAppointmentReminder" flat>
                 Send Reminder
@@ -55,15 +35,6 @@
               color="#E02A2A" flat style="font-weight: 600" @click="handleCloseAppointment" :disabled="cancelling"
               :loading="cancelling">
               Close Case
-            </v-btn>
-
-            <v-btn
-              v-if="consultation.status !== ConsultationStatusEnum.COMPLETED"
-              variant="outlined"
-              color="#E02A2A"
-              @click="handleMarkUnreachable"
-            >
-              Customer Not Reachable
             </v-btn>
           </div>
         </v-sheet>
@@ -83,13 +54,6 @@
           style="letter-spacing: 0.1px; font-weight: 600" @click="handleInitiateCall">
           {{ type === 'instant' ? 'Connect Now' : 'Connect the Call' }}
         </v-btn>
-      </v-sheet>
-      <v-sheet
-        v-if="consultation.rejectedByVetName"
-        class="px-8 py-3 text-body-2"
-        style="border-bottom: 1px solid #dde7ee; color: #e02a2a; font-weight: 700"
-      >
-        {{ consultation.rejectedByVetName }}
       </v-sheet>
       <v-tabs-window v-model="tab">
         <v-tabs-window-item value="basic-details">
@@ -117,7 +81,6 @@
 import useMitt from '@/functions/useMitt'
 import { useConsultationStore } from '@/stores/consultation'
 import { ConsultationStatusEnum, type ConsultationDetail } from '@/stores/types/consultation.d'
-import { useCaseStore } from '@/stores/case'
 import { useInterval } from '@vueuse/core'
 import dayjs from 'dayjs'
 import { computed, ref, watchEffect } from 'vue'
@@ -143,7 +106,6 @@ const emit = defineEmits<{
 
 const { emitter } = useMitt()
 const consultationStore = useConsultationStore()
-const caseStore = useCaseStore()
 
 const escalateDrawer = ref(false)
 const closeConsultationModal = ref(false)
@@ -156,7 +118,6 @@ const cancelling = ref(false)
 const connecting = ref(false)
 const reminderSend = ref(false)
 const sendingReminder = ref(false)
-const actionBusy = ref(false)
 
 const tab = ref('basic-details')
 
@@ -251,40 +212,6 @@ const handleSendAppointmentReminder = async () => {
   } finally {
     sendingReminder.value = false
     reminderSend.value = true
-  }
-}
-
-const handleAcceptAppointment = async () => {
-  try {
-    actionBusy.value = true
-    await consultationStore.acceptConsultation(props.consultation.id)
-    emitter.emit('inbox-details-drawer:escalated', { type: 'scheduled' })
-    emit('close')
-    toast.success('Appointment accepted')
-  } finally {
-    actionBusy.value = false
-  }
-}
-
-const handleRejectAppointment = async () => {
-  try {
-    actionBusy.value = true
-    await consultationStore.rejectConsultation(props.consultation.id)
-    emitter.emit('inbox-details-drawer:escalated', { type: 'scheduled' })
-    emit('close')
-    toast.success('Appointment rejected')
-  } finally {
-    actionBusy.value = false
-  }
-}
-
-const handleMarkUnreachable = async () => {
-  try {
-    actionBusy.value = true
-    await caseStore.markCustomerUnreachable(props.consultation.case.id)
-    toast.success('Customer marked as not reachable')
-  } finally {
-    actionBusy.value = false
   }
 }
 </script>

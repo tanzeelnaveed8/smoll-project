@@ -24,7 +24,7 @@
           {{ link.title }}
 
           <div
-            v-if="link.to === '/visit-details' && unreadMessagesCount"
+            v-if="link.to === '/inbox' && unreadMessagesCount"
             class="text-white text-caption rounded-circle d-flex justify-center align-center"
             style="
               background-color: #e31f7d;
@@ -46,19 +46,19 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import SideNavFooter from './SideNavFooter.vue'
 import { useChatStore } from '@/stores/chat'
+import { useSound } from '@/functions/useSound'
 import { storeToRefs } from 'pinia'
 import { useAuthStore } from '@/stores/auth'
 import { ZimHelper } from '@/utils/zim'
 
 const links = [
   { title: 'Dashboard', icon: '$tb-smart-home', to: '/' },
-  { title: 'Visit Details', icon: '$tb-mail-box', to: '/visit-details' },
-  { title: 'My Schedule', icon: '$tb-calender-month', to: '/my-schedule' },
-  { title: 'Visits', icon: '$tb-writing-sign', to: '/visits' },
-  { title: 'Finance', icon: '$tb-circle-arrow-up-right', to: '/finance' },
+  { title: 'Inbox', icon: '$tb-mail-box', to: '/inbox' },
+  { title: 'Calendar', icon: '$tb-calender-month', to: '/calendar' },
+  { title: 'Cases', icon: '$tb-writing-sign', to: '/cases' },
   { title: 'Settings', icon: '$tb-settings', to: '/settings' }
 ]
 const authStore = useAuthStore()

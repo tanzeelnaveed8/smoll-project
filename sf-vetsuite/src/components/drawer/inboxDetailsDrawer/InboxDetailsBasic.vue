@@ -33,18 +33,8 @@
             <p>{{ consultation?.member?.name ?? '-' }}</p>
           </span>
 
-          <a
-            v-if="consultation?.member?.phone"
-            :href="`tel:${consultation.member.phone}`"
-            style="text-decoration: none; color: inherit"
-          >
-            {{ consultation.member.phone }}
-          </a>
-          <p v-else>-</p>
+          <p>{{ consultation?.member?.phone ?? '-' }}</p>
         </div>
-        <p class="text-grey2 text-body-2" style="font-weight: 600">
-          {{ consultation?.member?.address ?? '-' }}
-        </p>
       </v-sheet>
 
       <v-sheet class="d-flex flex-column gr-6">
@@ -183,40 +173,6 @@
           <p v-else class="text-grey2 font-weight-medium">No files shared</p>
         </v-sheet>
       </v-sheet>
-
-      <v-sheet class="d-flex flex-column gr-4">
-        <v-sheet class="pb-2" style="border-bottom: 1px solid #dde7ee">
-          <h5
-            class="text-body-1 font-weight-bold text-uppercase"
-            style="line-height: 24px; color: black"
-          >
-            Services Requested
-          </h5>
-        </v-sheet>
-
-        <v-sheet class="d-flex flex-column gr-3">
-          <v-sheet
-            v-for="service in serviceChecklist"
-            :key="service.id"
-            class="d-flex align-center justify-space-between"
-          >
-            <div class="d-flex flex-column">
-              <p style="font-weight: 700">{{ service.name }}</p>
-              <p class="text-grey2 text-body-2">{{ service.description || '-' }}</p>
-            </div>
-            <v-checkbox-btn
-              :model-value="service.checked"
-              @update:model-value="(value:boolean) => toggleService(service.id, value)"
-            />
-          </v-sheet>
-          <p v-if="!serviceChecklist.length" class="text-grey2 font-weight-medium">No services added</p>
-        </v-sheet>
-
-        <v-sheet class="d-flex gc-2">
-          <v-text-field v-model="extraServiceName" placeholder="Add extra service" hide-details />
-          <v-btn flat :disabled="!extraServiceName" @click="addExtraService">Add</v-btn>
-        </v-sheet>
-      </v-sheet>
     </v-sheet>
   </v-sheet>
 </template>
@@ -224,55 +180,15 @@
 <script lang="ts" setup>
 import { ConsultationStatusEnum, type ConsultationDetail } from '@/stores/types/consultation.d'
 import dayjs from 'dayjs'
-import { onMounted, ref } from 'vue'
-import { useCaseStore } from '@/stores/case'
-import { toast } from 'vue3-toastify'
 
 const props = defineProps<{
   type: 'instant' | 'scheduled'
   consultation: ConsultationDetail
 }>()
 
-const caseStore = useCaseStore()
-const serviceChecklist = ref(
-  (props.consultation.case.serviceChecklist ?? []).map((item) => ({ ...item }))
-)
-const extraServiceName = ref('')
-
 const handleDownloadFile = (url: string) => {
   window.open(url, '_blank')
 }
-
-const toggleService = async (serviceId: string, checked: boolean) => {
-  await caseStore.updateServiceChecklist(props.consultation.case.id, { serviceId, checked })
-  serviceChecklist.value = serviceChecklist.value.map((item) =>
-    item.id === serviceId ? { ...item, checked } : item
-  )
-}
-
-const addExtraService = async () => {
-  if (!extraServiceName.value.trim()) return
-  await caseStore.addExtraServices(props.consultation.case.id, {
-    services: [{ name: extraServiceName.value.trim() }]
-  })
-  serviceChecklist.value = [
-    ...serviceChecklist.value,
-    {
-      id: `local-${Date.now()}`,
-      name: extraServiceName.value.trim(),
-      description: '',
-      price: 0,
-      checked: false,
-      isExtra: true
-    }
-  ]
-  extraServiceName.value = ''
-  toast.success('Extra service added')
-}
-
-onMounted(() => {
-  serviceChecklist.value = (props.consultation.case.serviceChecklist ?? []).map((item) => ({ ...item }))
-})
 </script>
 
 <style lang="scss" scoped>

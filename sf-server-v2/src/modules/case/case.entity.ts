@@ -44,19 +44,6 @@ export class Case extends BaseEntity {
   @Column('json', { default: [] })
   notes: Record<string, string>[];
 
-  @Column('jsonb', { default: [] })
-  serviceChecklist: {
-    id: string;
-    name: string;
-    description: string;
-    price: number;
-    checked: boolean;
-    isExtra: boolean;
-  }[];
-
-  @Column({ nullable: true })
-  customerReachabilityStatus: string | null;
-
   @Column({ default: CaseStatusEnum.OPEN })
   status: CaseStatusEnum;
 

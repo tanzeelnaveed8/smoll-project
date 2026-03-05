@@ -116,38 +116,3 @@ export class CloseCasePayloadDto {
   @IsNotEmpty()
   note: string;
 }
-
-export class AddExtraServiceItemDto {
-  @IsString()
-  @IsNotEmpty()
-  name: string;
-
-  @IsString()
-  @IsOptional()
-  description?: string;
-
-  @IsOptional()
-  @Type(() => Number)
-  price?: number;
-}
-
-export class AddExtraServicesPayloadDto {
-  @IsArray()
-  @Type(() => AddExtraServiceItemDto)
-  services: AddExtraServiceItemDto[];
-}
-
-export class UpdateServiceChecklistPayloadDto {
-  @IsString()
-  @IsNotEmpty()
-  serviceId: string;
-
-  @IsBoolean()
-  checked: boolean;
-}
-
-export class MarkCustomerUnreachablePayloadDto {
-  @IsString()
-  @IsOptional()
-  reason?: string;
-}

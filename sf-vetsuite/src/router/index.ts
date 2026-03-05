@@ -7,7 +7,6 @@ import CalendarView from '@/views/CalendarView.vue'
 import SettingsView from '@/views/SettingsView.vue'
 import CasesView from '@/views/CasesView.vue'
 import VideoView from '@/views/VideoView.vue'
-import FinanceView from '@/views/FinanceView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -24,52 +23,24 @@ const router = createRouter({
           }
         },
         {
-          path: '/visit-details',
-          component: InboxView,
-          meta: {
-            title: 'Visit Details'
-          }
-        },
-        {
           path: '/inbox',
           component: InboxView,
           meta: {
-            title: 'Visit Details'
-          }
-        },
-        {
-          path: '/my-schedule',
-          component: CalendarView,
-          meta: {
-            title: 'My Schedule'
+            title: 'Inbox'
           }
         },
         {
           path: '/calendar',
           component: CalendarView,
           meta: {
-            title: 'My Schedule'
-          }
-        },
-        {
-          path: '/visits',
-          component: CasesView,
-          meta: {
-            title: 'Visits'
+            title: 'Calendar'
           }
         },
         {
           path: '/cases',
           component: CasesView,
           meta: {
-            title: 'Visits'
-          }
-        },
-        {
-          path: '/finance',
-          component: FinanceView,
-          meta: {
-            title: 'Finance'
+            title: 'Cases'
           }
         },
         {

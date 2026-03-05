@@ -19,19 +19,6 @@ export class FindAllCasesResDto {
   notes: Record<string, string>[];
 
   @Expose()
-  serviceChecklist: {
-    id: string;
-    name: string;
-    description: string;
-    price: number;
-    checked: boolean;
-    isExtra: boolean;
-  }[];
-
-  @Expose()
-  customerReachabilityStatus: string | null;
-
-  @Expose()
   createdAt: Date;
 
   @Expose()

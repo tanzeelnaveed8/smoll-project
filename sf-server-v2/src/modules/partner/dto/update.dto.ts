@@ -1,6 +1,5 @@
 import { PartialType } from '@nestjs/mapped-types';
 import {
-  CreatePartnerCustomerPayloadDto,
   CreatePartnerServicePayloadDto,
   CreatePartnerVetPayloadDto,
 } from './create.dto';
@@ -40,10 +39,6 @@ export class UpdatePartnerVetPayloadDto extends PartialType(
 
 export class UpdatePartnerServicePayloadDto extends PartialType(
   CreatePartnerServicePayloadDto,
-) {}
-
-export class UpdatePartnerCustomerPayloadDto extends PartialType(
-  CreatePartnerCustomerPayloadDto,
 ) {}
 
 /** Response */

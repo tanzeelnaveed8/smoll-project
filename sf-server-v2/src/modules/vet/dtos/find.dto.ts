@@ -158,12 +158,6 @@ export class FindConsultationsResDto {
 
   @Expose()
   createdAt: Date;
-
-  @Expose()
-  isAccepted: boolean;
-
-  @Expose()
-  rejectedByVetName: string | null;
 }
 
 export class FindConsultationsForVetQueryDto extends PaginationQueryDto {

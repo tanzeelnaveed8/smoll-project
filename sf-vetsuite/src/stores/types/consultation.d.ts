@@ -19,8 +19,6 @@ export interface Consultation {
   scheduledAt?: string
   type: 'instant' | 'scheduled'
   createdAt: string
-  isAccepted: boolean
-  rejectedByVetName?: string | null
 }
 
 export interface ConsultationDetail {
@@ -30,8 +28,6 @@ export interface ConsultationDetail {
   createdAt: string
   member: Member
   case: Case
-  isAccepted: boolean
-  rejectedByVetName?: string | null
 }
 
 export interface State {

@@ -3,67 +3,40 @@
     <v-sheet class="d-flex flex-column gr-6 w-100" max-width="1104">
       <v-sheet class="d-flex justify-space-between">
         <v-sheet max-width="507">
-          <h2 style="font-weight: 600; line-height: 32px">{{ headerTitle }}</h2>
+          <h2 style="font-weight: 600; line-height: 32px">Current Services</h2>
           <p class="mt-1">
-            {{ headerDescription }}
+            Add single, one-time items or products from your product catalogue to this invoice.
           </p>
         </v-sheet>
         <v-btn flat appendIcon="$tb-plus" class="px-3 btn" @click="drawer = true"
-          >{{ ctaLabel }}</v-btn
+          >Add Service</v-btn
         >
       </v-sheet>
-      <ServicesTable :loading :services="filteredServices" />
+      <ServicesTable :loading :services />
     </v-sheet>
     <v-dialog v-model="drawer" transition="slide-x-reverse-transition" width="auto" class="dialog">
-      <ManageServicesDrawer @close="drawer = false" :defaultType="itemTypeFilter" />
+      <ManageServicesDrawer @close="drawer = false" />
     </v-dialog>
   </v-sheet>
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 import ServicesTable from './ServicesTable.vue'
 import ManageServicesDrawer from '@/components/drawer/ManageServicesDrawer.vue'
 import { useServicesStore } from '@/stores/services'
 import type { Service } from '@/stores/types/services'
 import useMitt from '@/functions/useMitt'
 
-const props = withDefaults(
-  defineProps<{
-    itemTypeFilter?: string
-    title?: string
-    description?: string
-    addLabel?: string
-  }>(),
-  {
-    itemTypeFilter: '',
-    title: 'Current Services',
-    description: 'Add single, one-time items or products from your product catalogue to this invoice.',
-    addLabel: 'Add Service'
-  }
-)
-
 const loading = ref(true)
 const drawer = ref(false)
+
+console.log('console')
 
 const services = ref<Service[] | []>([])
 const { fetchServices } = useServicesStore()
 
 const { emitter } = useMitt()
-
-const filteredServices = computed(() => {
-  if (!props.itemTypeFilter) {
-    return services.value
-  }
-
-  return services.value.filter(
-    (service) => `${service.type}`.toLowerCase() === props.itemTypeFilter.toLowerCase()
-  )
-})
-
-const headerTitle = computed(() => props.title)
-const headerDescription = computed(() => props.description)
-const ctaLabel = computed(() => props.addLabel)
 
 const updateServices = (payload: Service) => {
   const serviceIndex = services.value?.findIndex((service) => service.id === payload.id)

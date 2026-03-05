@@ -19,12 +19,9 @@ import { CaseStatusEnum } from '../enums/case-status.enum';
 import { Case } from '../case.entity';
 import {
   AddNotePayloadDto,
-  AddExtraServicesPayloadDto,
   CloseCasePayloadDto,
   DirectEscalatePayloadDto,
   EscalatePayloadDto,
-  MarkCustomerUnreachablePayloadDto,
-  UpdateServiceChecklistPayloadDto,
 } from '../dto/create.dto';
 import {
   CASE_CLOSED_EVENT,
@@ -148,8 +145,6 @@ export class CaseVetService {
       select: {
         id: true,
         notes: true,
-        serviceChecklist: true,
-        customerReachabilityStatus: true,
         status: true,
         assets: true,
         vetNote: true,
@@ -178,21 +173,6 @@ export class CaseVetService {
 
     if (!_case) {
       throw new NotFoundException(`Case with id ${id} not found`);
-    }
-
-    if (
-      (!_case.serviceChecklist || !_case.serviceChecklist.length) &&
-      _case.partnerBooking?.services?.length
-    ) {
-      _case.serviceChecklist = _case.partnerBooking.services.map((service) => ({
-        id: service.id,
-        name: service.name,
-        description: service.description,
-        price: Number(service.price ?? 0),
-        checked: false,
-        isExtra: false,
-      }));
-      await this.caseRepo.save(_case);
     }
 
     return _case;
@@ -239,16 +219,6 @@ export class CaseVetService {
       throw new BadRequestException('Case is escalated at the moment');
     }
 
-    const hasUncheckedServices =
-      (_case.serviceChecklist ?? []).length > 0 &&
-      _case.serviceChecklist.some((service) => !service.checked);
-
-    if (hasUncheckedServices) {
-      throw new BadRequestException(
-        'Visit cannot be closed until all services are checked off.',
-      );
-    }
-
     _case.status = CaseStatusEnum.CLOSED;
     _case.vetNote = note;
     _case.vetConsultation.status = ConsultationStatusEnum.COMPLETED;
@@ -264,65 +234,6 @@ export class CaseVetService {
       CASE_CLOSED_EVENT,
       new CaseClosedEvent(vet.name, _case.member.id, _case.pet.name),
     );
-
-    return this.caseRepo.save(_case);
-  }
-
-  async addExtraServices(
-    vet: AuthUser,
-    id: string,
-    body: AddExtraServicesPayloadDto,
-  ): Promise<Case> {
-    const _case = await this.findOne(vet, id);
-
-    const existing = _case.serviceChecklist ?? [];
-    const extras = body.services.map((service, index) => ({
-      id: `extra-${Date.now()}-${index}`,
-      name: service.name,
-      description: service.description ?? '',
-      price: Number(service.price ?? 0),
-      checked: false,
-      isExtra: true,
-    }));
-
-    _case.serviceChecklist = [...existing, ...extras];
-    return this.caseRepo.save(_case);
-  }
-
-  async updateServiceChecklist(
-    vet: AuthUser,
-    id: string,
-    body: UpdateServiceChecklistPayloadDto,
-  ): Promise<Case> {
-    const _case = await this.findOne(vet, id);
-    const checklist = _case.serviceChecklist ?? [];
-
-    _case.serviceChecklist = checklist.map((service) =>
-      service.id === body.serviceId
-        ? {
-            ...service,
-            checked: body.checked,
-          }
-        : service,
-    );
-
-    return this.caseRepo.save(_case);
-  }
-
-  async markCustomerUnreachable(
-    vet: AuthUser,
-    id: string,
-    body: MarkCustomerUnreachablePayloadDto,
-  ): Promise<Case> {
-    const _case = await this.findOne(vet, id);
-    _case.customerReachabilityStatus = 'not_reachable';
-
-    const notes = _case.notes ?? [];
-    notes.push({
-      content: body.reason ?? 'Customer is not reachable',
-      createdAt: new Date().toISOString(),
-    });
-    _case.notes = notes;
 
     return this.caseRepo.save(_case);
   }

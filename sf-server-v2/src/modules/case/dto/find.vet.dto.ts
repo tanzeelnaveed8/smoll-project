@@ -98,19 +98,6 @@ export class FindOneCaseForVetResDto extends FindCasesBaseDto {
   notes: Record<string, string>[];
 
   @Expose()
-  serviceChecklist: {
-    id: string;
-    name: string;
-    description: string;
-    price: number;
-    checked: boolean;
-    isExtra: boolean;
-  }[];
-
-  @Expose()
-  customerReachabilityStatus: string | null;
-
-  @Expose()
   @Type(() => FindFileResDto)
   assets: FindFileResDto[];
 

@@ -280,7 +280,7 @@ const tabs = ref([
 
 const menuList = computed(() => [
   {
-    title: 'View Paid Invoice',
+    title: 'Download Quotation',
     action: handleDownloadQuote,
     style: { display: tab.value === 'quotes' ? 'visible' : 'none' }
   },

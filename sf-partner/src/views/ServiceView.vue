@@ -1,10 +1,5 @@
 <template>
-  <Services
-    itemTypeFilter="service"
-    title="Current Services"
-    description="Create and manage the services offered by your clinic."
-    addLabel="Add Service"
-  />
+    <Services />
 </template>
 
 <script lang="ts" setup>

@@ -20,10 +20,6 @@ import {
   FindAllPartnerVetsResDto,
   FindAppointmentCalendarQueryDto,
   FindAppointmentCalendarResDto,
-  FindPartnerCustomersQueryDto,
-  FindPartnerCustomerResDto,
-  FindPartnerFinanceResDto,
-  FindPartnerInvoiceResDto,
   FindOnePartnerVetResDto,
   FindPartnerAppointmentResDto,
   FindPartnerResDto,
@@ -33,7 +29,6 @@ import {
 import {
   UpdatePartnerPayloadDto,
   UpdatePartnerResDto,
-  UpdatePartnerCustomerPayloadDto,
   UpdatePartnerServicePayloadDto,
   UpdatePartnerServiceResDto,
   UpdatePartnerVetPayloadDto,
@@ -41,7 +36,6 @@ import {
 } from '../dto/update.dto';
 import { PartnerService } from '../services/partner.service';
 import {
-  CreatePartnerCustomerPayloadDto,
   CreatePartnerServicePayloadDto,
   CreatePartnerServiceResDto,
   CreatePartnerVetPayloadDto,
@@ -126,17 +120,6 @@ export class PartnerController {
     });
   }
 
-  @Get('/appointments/:id/invoice')
-  async findAppointmentInvoice(
-    @GetUser() user: AuthUser,
-    @Param('id') id: string,
-  ): Promise<FindPartnerInvoiceResDto> {
-    const invoice = await this.partnerService.findAppointmentInvoice(user, id);
-    return plainToInstance(FindPartnerInvoiceResDto, invoice, {
-      excludeExtraneousValues: true,
-    });
-  }
-
   @Get('/appointments/calendar')
   async findAppointmentCalendar(
     @GetUser() user: AuthUser,
@@ -153,29 +136,6 @@ export class PartnerController {
     );
 
     return { appointments, lastDate: res.lastDate };
-  }
-
-  @Get('/customers')
-  async findCustomers(
-    @GetUser() user: AuthUser,
-    @Query() query: FindPartnerCustomersQueryDto,
-  ): Promise<FindPartnerCustomerResDto[]> {
-    const customers = await this.partnerService.findAllCustomers(
-      user,
-      query.search,
-    );
-
-    return plainToInstance(FindPartnerCustomerResDto, customers, {
-      excludeExtraneousValues: true,
-    });
-  }
-
-  @Get('/finance')
-  async findFinance(@GetUser() user: AuthUser): Promise<FindPartnerFinanceResDto> {
-    const finance = await this.partnerService.findFinanceSummary(user);
-    return plainToInstance(FindPartnerFinanceResDto, finance, {
-      excludeExtraneousValues: true,
-    });
   }
 
   @Post('/appointments/:id/close')
@@ -205,31 +165,6 @@ export class PartnerController {
     return plainToInstance(CreatePartnerServiceResDto, service, {
       excludeExtraneousValues: true,
     });
-  }
-
-  @Post('/customers')
-  async createCustomer(
-    @GetUser() user: AuthUser,
-    @Body() body: CreatePartnerCustomerPayloadDto,
-  ): Promise<FindPartnerCustomerResDto> {
-    const customer = await this.partnerService.createCustomer(user, body);
-
-    return plainToInstance(
-      FindPartnerCustomerResDto,
-      {
-        id: customer.id,
-        name: customer.name,
-        email: customer.email,
-        phone: customer.phone,
-        visits: 0,
-        orders: 0,
-        pets: 0,
-        lastVisitAt: null,
-      },
-      {
-        excludeExtraneousValues: true,
-      },
-    );
   }
 
   @Post('/services/bulk')
@@ -281,48 +216,12 @@ export class PartnerController {
     });
   }
 
-  @Patch('/customers/:id')
-  async updateCustomer(
-    @GetUser() user: AuthUser,
-    @Param('id') id: string,
-    @Body() body: UpdatePartnerCustomerPayloadDto,
-  ): Promise<FindPartnerCustomerResDto> {
-    const customer = await this.partnerService.updateCustomer(user, id, body);
-    const customers = await this.partnerService.findAllCustomers(user);
-    const stats = customers.find((item) => item.id === customer.id);
-
-    return plainToInstance(
-      FindPartnerCustomerResDto,
-      {
-        id: customer.id,
-        name: customer.name,
-        email: customer.email,
-        phone: customer.phone,
-        visits: stats?.visits ?? 0,
-        orders: stats?.orders ?? 0,
-        pets: stats?.pets ?? 0,
-        lastVisitAt: stats?.lastVisitAt ?? null,
-      },
-      {
-        excludeExtraneousValues: true,
-      },
-    );
-  }
-
   @Delete('/services/:id')
   async deleteService(
     @GetUser() user: AuthUser,
     @Param('id') id: string,
   ): Promise<void> {
     return await this.partnerService.deleteService(user, id);
-  }
-
-  @Delete('/customers/:id')
-  async deleteCustomer(
-    @GetUser() user: AuthUser,
-    @Param('id') id: string,
-  ): Promise<void> {
-    return await this.partnerService.deleteCustomer(user, id);
   }
 
   @Delete('/vets/:id')

@@ -122,32 +122,6 @@ export class BookEmergencyAppointmentPayloadDto {
   services: ServiceDto[];
 }
 
-export class CreatePartnerCustomerPayloadDto {
-  @IsString()
-  @IsOptional()
-  name?: string;
-
-  @IsString()
-  @IsOptional()
-  email?: string;
-
-  @IsPhoneNumber()
-  @IsOptional()
-  phone?: string;
-
-  @IsString()
-  @IsOptional()
-  address?: string;
-
-  @IsString()
-  @IsOptional()
-  city?: string;
-
-  @IsString()
-  @IsOptional()
-  country?: string;
-}
-
 /** Responses */
 
 export class CreatePartnerResDto extends FindPartnerResDto {}

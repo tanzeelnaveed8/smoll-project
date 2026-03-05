@@ -3,7 +3,6 @@ import {
   Controller,
   Get,
   Param,
-  Patch,
   Post,
   Query,
   UseGuards,
@@ -32,12 +31,9 @@ import {
 } from 'src/utils/pagination';
 import {
   AddNotePayloadDto,
-  AddExtraServicesPayloadDto,
   CloseCasePayloadDto,
   DirectEscalatePayloadDto,
   EscalatePayloadDto,
-  MarkCustomerUnreachablePayloadDto,
-  UpdateServiceChecklistPayloadDto,
 } from '../dto/create.dto';
 import { SocketEventEnum } from 'src/modules/socket/socket-event.enum';
 import { SocketService } from 'src/modules/socket/socket.service';
@@ -114,33 +110,6 @@ export class CaseVetController {
     @Body() body: AddNotePayloadDto,
   ): Promise<void> {
     await this.caseService.addNote(user, id, body);
-  }
-
-  @Post(':id/services/extra')
-  async addExtraServices(
-    @GetUser() user: AuthUser,
-    @Param('id') id: string,
-    @Body() body: AddExtraServicesPayloadDto,
-  ): Promise<void> {
-    await this.caseService.addExtraServices(user, id, body);
-  }
-
-  @Patch(':id/services/checklist')
-  async updateServiceChecklist(
-    @GetUser() user: AuthUser,
-    @Param('id') id: string,
-    @Body() body: UpdateServiceChecklistPayloadDto,
-  ): Promise<void> {
-    await this.caseService.updateServiceChecklist(user, id, body);
-  }
-
-  @Post(':id/unreachable')
-  async markCustomerUnreachable(
-    @GetUser() user: AuthUser,
-    @Param('id') id: string,
-    @Body() body: MarkCustomerUnreachablePayloadDto,
-  ): Promise<void> {
-    await this.caseService.markCustomerUnreachable(user, id, body);
   }
 
   @Post(':id/escalate')
