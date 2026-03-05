@@ -42,8 +42,6 @@ export interface UserState {
   callId: Nullable<string>;
   navNotif: number | null;
 
-  /** Dev-only: set a mock user to bypass login and explore the app. */
-  setDevUser: (user: User | null) => void;
   UPDATE_PET_COUNT: (increment: number) => void;
   SET_CALL_ID: (callId: string | null) => void;
   SET_NAV_NOTIF: (value: number | null) => void;

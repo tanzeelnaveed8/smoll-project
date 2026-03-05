@@ -35,7 +35,7 @@ interface Props {
 
 const OnboardingAuthModal: React.FC<Props> = (props) => {
   const toastRef = useRef<ToastContainer>(null);
-  const { login, devLogin } = useAuthStore();
+  const { login } = useAuthStore();
   const { findUser, updateUser } = useUserStore();
 
   const [showOtpModal, setShowOtpModal] = useState(false);
@@ -84,29 +84,6 @@ const OnboardingAuthModal: React.FC<Props> = (props) => {
       toastRef.current?.show(message, {
         type: "danger",
       });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleDevSkipLogin = async () => {
-    if (!__DEV__) return;
-    try {
-      setIsLoading(true);
-      Keyboard.dismiss();
-      await devLogin();
-      const user = await findUser();
-      if (!user?.timeZone) {
-        await updateUser({ timeZone: getUserTimezoneOffset() });
-      }
-      if (!user?.name) {
-        setShowNameModal(true);
-      } else {
-        props.onSuccess();
-      }
-    } catch (err) {
-      const message = getAxiosErrMsg(err as AxiosError);
-      toastRef.current?.show(message, { type: "danger" });
     } finally {
       setIsLoading(false);
     }
@@ -194,18 +171,6 @@ const OnboardingAuthModal: React.FC<Props> = (props) => {
             >
               Get OTP
             </ButtonPrimary>
-
-            {__DEV__ && (
-              <TouchableOpacity
-                onPress={handleDevSkipLogin}
-                disabled={isLoading}
-                style={{ marginTop: 12, paddingVertical: 8, alignSelf: "center" }}
-              >
-                <Text fontSize="sm" color="#666">
-                  [Dev] Skip login
-                </Text>
-              </TouchableOpacity>
-            )}
           </Div>
 
           <Div>

@@ -7,10 +7,6 @@ export const useUserStore = create<UserState>((set, get) => ({
   callId: null,
   navNotif: null,
 
-  setDevUser: (user) => {
-    set({ user });
-  },
-
   /** Mutations */
   SET_CALL_ID: (callId) => {
     set(() => ({

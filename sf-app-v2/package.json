@@ -9,7 +9,8 @@
     "web": "expo start --web",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@expo/metro-runtime": "~3.2.1",
@@ -80,6 +81,8 @@
     "zustand": "^4.5.4"
   },
   "devDependencies": {
+    "dotenv": "^16.4.5",
+    "patch-package": "^8.0.0",
     "@babel/core": "^7.20.0",
     "@eslint/js": "^9.22.0",
     "@tsconfig/react-native": "^3.0.5",

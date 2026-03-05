@@ -35,7 +35,7 @@ interface Props {
 
 const SignupScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
   const toastRef = useRef<ToastContainer>(null);
-  const { login, devLogin } = useAuthStore();
+  const { login } = useAuthStore();
   const { findUser, updateUser } = useUserStore();
 
   const [showOtpModal, setShowOtpModal] = useState(false);
@@ -96,31 +96,6 @@ const SignupScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) 
 
       setShowOtpModal(true);
     } catch (err) {
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleDevSkipLogin = async () => {
-    if (!__DEV__) return;
-    try {
-      setIsLoading(true);
-      Keyboard.dismiss();
-      await devLogin();
-      const user = await findUser();
-      if (!user?.timeZone) {
-        await updateUser({ timeZone: getUserTimezoneOffset() });
-      }
-      if (!user?.name) {
-        setShowNameModal(true);
-      } else {
-        setShowOtpModal(false);
-        navigation.navigate("HomeScreen", { isNewUser: "true" });
-      }
-    } catch (err) {
-      toastRef.current?.show("Dev login failed. Check DEV_BYPASS_PHONE/OTP and backend.", {
-        type: "danger",
-      });
     } finally {
       setIsLoading(false);
     }
@@ -193,18 +168,6 @@ const SignupScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) 
             >
               Get OTP
             </ButtonPrimary>
-
-            {__DEV__ && (
-              <TouchableOpacity
-                onPress={handleDevSkipLogin}
-                disabled={isLoading}
-                style={{ marginTop: 12, paddingVertical: 8, alignSelf: "center" }}
-              >
-                <Text fontSize="sm" color="#666">
-                  [Dev] Skip login
-                </Text>
-              </TouchableOpacity>
-            )}
           </Div>
 
           <Div>

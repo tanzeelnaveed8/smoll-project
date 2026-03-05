@@ -7,14 +7,19 @@ import {
   fontHauoraMedium,
   fontHauoraSemiBold,
 } from "@/constant/constant";
+import { useAIPicks } from "@/hooks/useAIPicks";
+import { MOCK_SERVICES, MOCK_PRODUCTS } from "@/mocks/homeServices";
 import { NavigationType } from "@/store/types";
 import {
   IconChevronLeft,
   IconCirclePlus,
+  IconPill,
   IconShieldCheck,
+  IconStethoscope,
 } from "@tabler/icons-react-native";
 import React, { useState } from "react";
 import {
+  ActivityIndicator,
   Dimensions,
   ScrollView,
   StyleSheet,
@@ -23,68 +28,9 @@ import {
 import { Div, Text } from "react-native-magnus";
 
 const { width } = Dimensions.get("window");
-const CARD_GAP = 16;
-const CARD_WIDTH = (width - 40 - 40 - CARD_GAP) / 2; // padding 20 each side, gap between cards
-
-const SERVICES = [
-  {
-    id: "1",
-    title: "Grooming",
-    duration: "45-60 min",
-    price: "From AED 40",
-    iconBg: "#FDF2F8",
-    iconColor: "#EC4899",
-  },
-  {
-    id: "2",
-    title: "Vaccination",
-    duration: "15-20 min",
-    price: "From AED 25",
-    iconBg: "#EFF6FF",
-    iconColor: "#3B82F6",
-  },
-  {
-    id: "3",
-    title: "Health Checkup",
-    duration: "30-45 min",
-    price: "From AED 50",
-    iconBg: "#EFF6FF",
-    iconColor: "#3B82F6",
-  },
-  {
-    id: "4",
-    title: "Dental Care",
-    duration: "30-40 min",
-    price: "From AED 45",
-    iconBg: "#F5F3FF",
-    iconColor: "#8B5CF6",
-  },
-  {
-    id: "5",
-    title: "Deworming",
-    duration: "10-15 min",
-    price: "From AED 20",
-    iconBg: "#ECFDF5",
-    iconColor: "#22C55E",
-  },
-  {
-    id: "6",
-    title: "Nail Trimming",
-    duration: "15-20 min",
-    price: "From AED 15",
-    iconBg: "#FFF7ED",
-    iconColor: "#F97316",
-  },
-];
-
-const PRODUCTS = [
-  { id: "1", title: "Premium Kibble", price: "AED 34.99", tag: "Good for Bella", description: "Grain-free, all breeds", subtitle: "High-protein grain-free formula ideal for active Golden Retrievers" },
-  { id: "2", title: "Vitamins", price: "AED 19.99", tag: "Good for Bella & Max", description: "Daily multivitamin chews", subtitle: "Daily multivitamins support immune health for dogs and cats" },
-  { id: "3", title: "Flea & Tick Meds", price: "AED 28.99", tag: "Good for Bella", description: "Monthly topical treatment", subtitle: "Monthly topical treatment for flea and tick prevention" },
-  { id: "4", title: "Joint Support", price: "AED 24.99", tag: "Good for Bella", description: "Glucosamine formula", subtitle: "Glucosamine supports hip and joint health in large breeds" },
-  { id: "5", title: "Probiotics", price: "AED 16.99", tag: "Good for Max", description: "Digestive health support", subtitle: "Gentle digestive support perfect for sensitive Persian cats" },
-  { id: "6", title: "Calming Treats", price: "AED 14.99", tag: "Good for Max", description: "Anxiety relief chews", subtitle: "Helps reduce anxiety and stress in indoor cats" },
-];
+const CARD_GAP = 16; // horizontal gap between cards
+// Two cards per row with 20px horizontal padding on each side and CARD_GAP between them
+const CARD_WIDTH = (width - 40 - CARD_GAP) / 2;
 
 type TabType = "services" | "nutritions";
 type NutritionsSubTab = "all" | "ai";
@@ -95,6 +41,7 @@ const HomeServicesScreen: React.FC<{ navigation: NavigationType }> = ({
   const [activeTab, setActiveTab] = useState<TabType>("services");
   const [nutritionsSubTab, setNutritionsSubTab] =
     useState<NutritionsSubTab>("all");
+  const { products: aiPicksProducts, loading: aiPicksLoading } = useAIPicks();
 
   return (
     <Layout disableHeader>
@@ -135,13 +82,20 @@ const HomeServicesScreen: React.FC<{ navigation: NavigationType }> = ({
             ]}
             onPress={() => setActiveTab("services")}
           >
-            <Text
-              fontSize={"sm"}
-              fontFamily={fontHauoraSemiBold}
-              color={activeTab === "services" ? colorPrimary : "#9CA3AF"}
-            >
-              Services
-            </Text>
+            <Div flexDir="row" alignItems="center" style={{ gap: 6 }}>
+              <IconStethoscope
+                size={18}
+                color={activeTab === "services" ? colorPrimary : "#9CA3AF"}
+                strokeWidth={1.8}
+              />
+              <Text
+                fontSize={"sm"}
+                fontFamily={fontHauoraSemiBold}
+                color={activeTab === "services" ? colorPrimary : "#9CA3AF"}
+              >
+                Services
+              </Text>
+            </Div>
           </TouchableOpacity>
           <TouchableOpacity
             style={[
@@ -150,13 +104,20 @@ const HomeServicesScreen: React.FC<{ navigation: NavigationType }> = ({
             ]}
             onPress={() => setActiveTab("nutritions")}
           >
-            <Text
-              fontSize={"sm"}
-              fontFamily={fontHauoraSemiBold}
-              color={activeTab === "nutritions" ? colorPrimary : "#9CA3AF"}
-            >
-              Nutritions
-            </Text>
+            <Div flexDir="row" alignItems="center" style={{ gap: 6 }}>
+              <IconPill
+                size={18}
+                color={activeTab === "nutritions" ? colorPrimary : "#9CA3AF"}
+                strokeWidth={1.8}
+              />
+              <Text
+                fontSize={"sm"}
+                fontFamily={fontHauoraSemiBold}
+                color={activeTab === "nutritions" ? colorPrimary : "#9CA3AF"}
+              >
+                Food & Supplies
+              </Text>
+            </Div>
           </TouchableOpacity>
         </Div>
 
@@ -164,11 +125,14 @@ const HomeServicesScreen: React.FC<{ navigation: NavigationType }> = ({
           <>
             {/* Row 1: Grooming, Vaccination */}
             <Div flexDir="row" flexWrap="wrap" style={{ marginHorizontal: -CARD_GAP / 2 }} mt={6} mb={6}>
-              {SERVICES.slice(0, 2).map((s) => (
+              {MOCK_SERVICES.slice(0, 2).map((s) => (
                 <TouchableOpacity
                   key={s.id}
                   style={[styles.serviceCard, { width: CARD_WIDTH }]}
                   activeOpacity={0.8}
+                  onPress={() =>
+                    navigation.navigate("ServiceDetailsScreen", { serviceId: s.id })
+                  }
                 >
                   <Div
                     w={40}
@@ -177,18 +141,18 @@ const HomeServicesScreen: React.FC<{ navigation: NavigationType }> = ({
                     rounded={12}
                     justifyContent="center"
                     alignItems="center"
-                    mb={4}
+                    mb={12}
                   >
-                    <Text fontSize={20}>🩺</Text>
+                    <IconStethoscope size={20} color={s.iconColor} strokeWidth={2} />
                   </Div>
                   <Text fontSize={"sm"} fontFamily={fontHauoraBold} color="#222" mb={2}>
                     {s.title}
                   </Text>
                   <Text fontSize={10} color="#9CA3AF" fontFamily={fontHauora} mb={2}>
-                    {s.duration}
+                    {s.durationLabel}
                   </Text>
                   <Text fontSize={"xs"} fontFamily={fontHauoraBold} color={colorPrimary}>
-                    {s.price}
+                    {s.priceLabel}
                   </Text>
                 </TouchableOpacity>
               ))}
@@ -196,73 +160,146 @@ const HomeServicesScreen: React.FC<{ navigation: NavigationType }> = ({
 
             {/* Sponsored banner 1 – after first row */}
             <Div
-              h={128}
-              rounded={16}
-              overflow="hidden"
-              mb={6}
-              position="relative"
-              bg="#FFF7ED"
+              rounded={24}
+              mb={10}
+              px={20}
+              py={16}
+              bg="#D1C6B8"
             >
-              <Div position="absolute" inset={0} bg="rgba(0,0,0,0.3)" p={16} justifyContent="center">
-                <Text fontSize={10} fontFamily={fontHauoraBold} color="white" style={{ textTransform: "uppercase", letterSpacing: 1 }} mb={4}>
-                  Sponsored
-                </Text>
-                <Text fontSize={"lg"} fontFamily={fontHauoraBold} color="white" mb={8}>
-                  20% OFF First Grooming
-                </Text>
-                <Div bg="white" alignSelf="flex-start" py={6} px={16} rounded={8}>
-                  <Text fontSize={10} fontFamily={fontHauoraBold} color="#222">Shop Now</Text>
+              <Text
+                fontSize={10}
+                fontFamily={fontHauoraBold}
+                color="#F9FAFB"
+                style={{ textTransform: "uppercase", letterSpacing: 1.2 }}
+                mb={6}
+              >
+                Sponsored
+              </Text>
+              <Text
+                fontSize={"lg"}
+                fontFamily={fontHauoraBold}
+                color="#FFFFFF"
+                mb={10}
+              >
+                20% OFF First Grooming
+              </Text>
+              <TouchableOpacity activeOpacity={0.85}>
+                <Div
+                  bg="#FFFFFF"
+                  px={18}
+                  py={10}
+                  rounded={16}
+                  alignSelf="flex-start"
+                >
+                  <Text
+                    fontSize={11}
+                    fontFamily={fontHauoraBold}
+                    color="#111827"
+                  >
+                    Shop Now
+                  </Text>
                 </Div>
-              </Div>
+              </TouchableOpacity>
             </Div>
 
             {/* Row 2: Health Checkup, Dental Care */}
             <Div flexDir="row" flexWrap="wrap" style={{ marginHorizontal: -CARD_GAP / 2 }} mb={6}>
-              {SERVICES.slice(2, 4).map((s) => (
+              {MOCK_SERVICES.slice(2, 4).map((s) => (
                 <TouchableOpacity
                   key={s.id}
                   style={[styles.serviceCard, { width: CARD_WIDTH }]}
                   activeOpacity={0.8}
+                  onPress={() =>
+                    navigation.navigate("ServiceDetailsScreen", { serviceId: s.id })
+                  }
                 >
-                  <Div w={40} h={40} bg={s.iconBg} rounded={12} justifyContent="center" alignItems="center" mb={4}>
-                    <Text fontSize={20}>🩺</Text>
+                  <Div
+                    w={40}
+                    h={40}
+                    bg={s.iconBg}
+                    rounded={12}
+                    justifyContent="center"
+                    alignItems="center"
+                    mb={12}
+                  >
+                    <IconStethoscope size={20} color={s.iconColor} strokeWidth={2} />
                   </Div>
                   <Text fontSize={"sm"} fontFamily={fontHauoraBold} color="#222" mb={2}>{s.title}</Text>
-                  <Text fontSize={10} color="#9CA3AF" fontFamily={fontHauora} mb={2}>{s.duration}</Text>
-                  <Text fontSize={"xs"} fontFamily={fontHauoraBold} color={colorPrimary}>{s.price}</Text>
+                  <Text fontSize={10} color="#9CA3AF" fontFamily={fontHauora} mb={2}>{s.durationLabel}</Text>
+                  <Text fontSize={"xs"} fontFamily={fontHauoraBold} color={colorPrimary}>{s.priceLabel}</Text>
                 </TouchableOpacity>
               ))}
             </Div>
 
             {/* Sponsored banner 2 – after second row */}
-            <Div h={128} rounded={16} overflow="hidden" mb={6} position="relative" bg="#E5E7EB">
-              <Div position="absolute" inset={0} style={{ backgroundColor: "rgba(55,65,81,0.6)" }} p={16} justifyContent="center">
-                <Text fontSize={10} fontFamily={fontHauoraBold} color="white" style={{ textTransform: "uppercase", letterSpacing: 1 }} mb={4}>
-                  Sponsored
-                </Text>
-                <Text fontSize={"lg"} fontFamily={fontHauoraBold} color="white" mb={8}>
-                  Free Delivery on Meds
-                </Text>
-                <Div bg="white" alignSelf="flex-start" py={6} px={16} rounded={8}>
-                  <Text fontSize={10} fontFamily={fontHauoraBold} color="#222">Shop Now</Text>
+            <Div
+              rounded={24}
+              mb={10}
+              px={20}
+              py={16}
+              bg="#E0E3EB"
+            >
+              <Text
+                fontSize={10}
+                fontFamily={fontHauoraBold}
+                color="#111827"
+                style={{ textTransform: "uppercase", letterSpacing: 1.2 }}
+                mb={6}
+              >
+                Sponsored
+              </Text>
+              <Text
+                fontSize={"lg"}
+                fontFamily={fontHauoraBold}
+                color="#111827"
+                mb={10}
+              >
+                Free Delivery on Meds
+              </Text>
+              <TouchableOpacity activeOpacity={0.85}>
+                <Div
+                  bg="#111827"
+                  px={18}
+                  py={10}
+                  rounded={16}
+                  alignSelf="flex-start"
+                >
+                  <Text
+                    fontSize={11}
+                    fontFamily={fontHauoraBold}
+                    color="#FFFFFF"
+                  >
+                    Shop Now
+                  </Text>
                 </Div>
-              </Div>
+              </TouchableOpacity>
             </Div>
 
             {/* Row 3: Deworming, Nail Trimming */}
             <Div flexDir="row" flexWrap="wrap" style={{ marginHorizontal: -CARD_GAP / 2 }} mb={6}>
-              {SERVICES.slice(4, 6).map((s) => (
+              {MOCK_SERVICES.slice(4, 6).map((s) => (
                 <TouchableOpacity
                   key={s.id}
                   style={[styles.serviceCard, { width: CARD_WIDTH }]}
                   activeOpacity={0.8}
+                  onPress={() =>
+                    navigation.navigate("ServiceDetailsScreen", { serviceId: s.id })
+                  }
                 >
-                  <Div w={40} h={40} bg={s.iconBg} rounded={12} justifyContent="center" alignItems="center" mb={4}>
-                    <Text fontSize={20}>🩺</Text>
+                  <Div
+                    w={40}
+                    h={40}
+                    bg={s.iconBg}
+                    rounded={12}
+                    justifyContent="center"
+                    alignItems="center"
+                    mb={12}
+                  >
+                    <IconStethoscope size={20} color={s.iconColor} strokeWidth={2} />
                   </Div>
                   <Text fontSize={"sm"} fontFamily={fontHauoraBold} color="#222" mb={2}>{s.title}</Text>
-                  <Text fontSize={10} color="#9CA3AF" fontFamily={fontHauora} mb={2}>{s.duration}</Text>
-                  <Text fontSize={"xs"} fontFamily={fontHauoraBold} color={colorPrimary}>{s.price}</Text>
+                  <Text fontSize={10} color="#9CA3AF" fontFamily={fontHauora} mb={2}>{s.durationLabel}</Text>
+                  <Text fontSize={"xs"} fontFamily={fontHauoraBold} color={colorPrimary}>{s.priceLabel}</Text>
                 </TouchableOpacity>
               ))}
             </Div>
@@ -304,84 +341,252 @@ const HomeServicesScreen: React.FC<{ navigation: NavigationType }> = ({
               <>
                 {/* Row 1: Premium Kibble, Vitamins */}
                 <Div flexDir="row" flexWrap="wrap" style={{ marginHorizontal: -CARD_GAP / 2 }} mb={6}>
-                  {PRODUCTS.slice(0, 2).map((p) => (
-                    <TouchableOpacity key={p.id} style={[styles.productCard, { width: CARD_WIDTH }]} activeOpacity={0.8}>
+                  {MOCK_PRODUCTS.slice(0, 2).map((p) => (
+                    <TouchableOpacity
+                      key={p.id}
+                      style={[styles.productCard, { width: CARD_WIDTH }]}
+                      activeOpacity={0.8}
+                      onPress={() =>
+                        navigation.navigate("ProductDetailsScreen", {
+                          productId: p.id,
+                        })
+                      }
+                    >
                       <Div w="100%" aspectRatio={1} bg="#f3f4f6" rounded={12} mb={12} />
                       <Text fontSize={"sm"} fontFamily={fontHauoraBold} color="#222" mb={4}>{p.title}</Text>
                       <Text fontSize={10} color="#9CA3AF" fontFamily={fontHauora} mb={8}>{p.description}</Text>
-                      <Text fontSize={"sm"} fontFamily={fontHauoraBold} color={colorPrimary}>{p.price}</Text>
+                      <Text fontSize={"sm"} fontFamily={fontHauoraBold} color={colorPrimary}>{p.priceLabel}</Text>
                     </TouchableOpacity>
                   ))}
                 </Div>
 
                 {/* Sponsored banner 1 */}
-                <Div h={144} rounded={16} overflow="hidden" mb={6} position="relative" bg="#FFF7ED">
-                  <Div position="absolute" inset={0} bg="rgba(0,0,0,0.3)" p={16} justifyContent="center">
-                    <Text fontSize={10} fontFamily={fontHauoraBold} color="white" style={{ textTransform: "uppercase", letterSpacing: 1 }} mb={4}>SPONSORED</Text>
-                    <Text fontSize={"xl"} fontFamily={fontHauoraBold} color="white" mb={12}>20% OFF First Grooming</Text>
-                    <Div bg="white" alignSelf="flex-start" py={8} px={16} rounded={8}>
-                      <Text fontSize={"xs"} fontFamily={fontHauoraBold} color="#222">Shop Now</Text>
+                <Div
+                  rounded={24}
+                  mb={10}
+                  px={20}
+                  py={16}
+                  bg="#D1C6B8"
+                >
+                  <Text
+                    fontSize={10}
+                    fontFamily={fontHauoraBold}
+                    color="#F9FAFB"
+                    style={{ textTransform: "uppercase", letterSpacing: 1.2 }}
+                    mb={6}
+                  >
+                    Sponsored
+                  </Text>
+                  <Text
+                    fontSize={"lg"}
+                    fontFamily={fontHauoraBold}
+                    color="#FFFFFF"
+                    mb={10}
+                  >
+                    20% OFF First Grooming
+                  </Text>
+                  <TouchableOpacity activeOpacity={0.85}>
+                    <Div
+                      bg="#FFFFFF"
+                      px={18}
+                      py={10}
+                      rounded={16}
+                      alignSelf="flex-start"
+                    >
+                      <Text
+                        fontSize={11}
+                        fontFamily={fontHauoraBold}
+                        color="#111827"
+                      >
+                        Shop Now
+                      </Text>
                     </Div>
-                  </Div>
+                  </TouchableOpacity>
                 </Div>
 
                 {/* Row 2: Flea & Tick, Joint Support */}
                 <Div flexDir="row" flexWrap="wrap" style={{ marginHorizontal: -CARD_GAP / 2 }} mb={6}>
-                  {PRODUCTS.slice(2, 4).map((p) => (
-                    <TouchableOpacity key={p.id} style={[styles.productCard, { width: CARD_WIDTH }]} activeOpacity={0.8}>
+                  {MOCK_PRODUCTS.slice(2, 4).map((p) => (
+                    <TouchableOpacity
+                      key={p.id}
+                      style={[styles.productCard, { width: CARD_WIDTH }]}
+                      activeOpacity={0.8}
+                      onPress={() =>
+                        navigation.navigate("ProductDetailsScreen", {
+                          productId: p.id,
+                        })
+                      }
+                    >
                       <Div w="100%" aspectRatio={1} bg="#f3f4f6" rounded={12} mb={12} />
                       <Text fontSize={"sm"} fontFamily={fontHauoraBold} color="#222" mb={4}>{p.title}</Text>
                       <Text fontSize={10} color="#9CA3AF" fontFamily={fontHauora} mb={8}>{p.description}</Text>
-                      <Text fontSize={"sm"} fontFamily={fontHauoraBold} color={colorPrimary}>{p.price}</Text>
+                      <Text fontSize={"sm"} fontFamily={fontHauoraBold} color={colorPrimary}>{p.priceLabel}</Text>
                     </TouchableOpacity>
                   ))}
                 </Div>
 
                 {/* Sponsored banner 2 */}
-                <Div h={144} rounded={16} overflow="hidden" mb={6} position="relative" bg="#E5E7EB">
-                  <Div position="absolute" inset={0} style={{ backgroundColor: "rgba(55,65,81,0.6)" }} p={16} justifyContent="center">
-                    <Text fontSize={10} fontFamily={fontHauoraBold} color="white" style={{ textTransform: "uppercase", letterSpacing: 1 }} mb={4}>SPONSORED</Text>
-                    <Text fontSize={"xl"} fontFamily={fontHauoraBold} color="white" mb={12}>Free Delivery on Meds</Text>
-                    <Div bg="white" alignSelf="flex-start" py={8} px={16} rounded={8}>
-                      <Text fontSize={"xs"} fontFamily={fontHauoraBold} color="#222">Shop Now</Text>
+                <Div
+                  rounded={24}
+                  mb={10}
+                  px={20}
+                  py={16}
+                  bg="#E0E3EB"
+                >
+                  <Text
+                    fontSize={10}
+                    fontFamily={fontHauoraBold}
+                    color="#111827"
+                    style={{ textTransform: "uppercase", letterSpacing: 1.2 }}
+                    mb={6}
+                  >
+                    Sponsored
+                  </Text>
+                  <Text
+                    fontSize={"lg"}
+                    fontFamily={fontHauoraBold}
+                    color="#111827"
+                    mb={10}
+                  >
+                    Free Delivery on Meds
+                  </Text>
+                  <TouchableOpacity activeOpacity={0.85}>
+                    <Div
+                      bg="#111827"
+                      px={18}
+                      py={10}
+                      rounded={16}
+                      alignSelf="flex-start"
+                    >
+                      <Text
+                        fontSize={11}
+                        fontFamily={fontHauoraBold}
+                        color="#FFFFFF"
+                      >
+                        Shop Now
+                      </Text>
                     </Div>
-                  </Div>
+                  </TouchableOpacity>
                 </Div>
 
                 {/* Row 3: Probiotics, Calming Treats */}
                 <Div flexDir="row" flexWrap="wrap" style={{ marginHorizontal: -CARD_GAP / 2 }} mb={6}>
-                  {PRODUCTS.slice(4, 6).map((p) => (
-                    <TouchableOpacity key={p.id} style={[styles.productCard, { width: CARD_WIDTH }]} activeOpacity={0.8}>
+                  {MOCK_PRODUCTS.slice(4, 6).map((p) => (
+                    <TouchableOpacity
+                      key={p.id}
+                      style={[styles.productCard, { width: CARD_WIDTH }]}
+                      activeOpacity={0.8}
+                      onPress={() =>
+                        navigation.navigate("ProductDetailsScreen", {
+                          productId: p.id,
+                        })
+                      }
+                    >
                       <Div w="100%" aspectRatio={1} bg="#f3f4f6" rounded={12} mb={12} />
                       <Text fontSize={"sm"} fontFamily={fontHauoraBold} color="#222" mb={4}>{p.title}</Text>
                       <Text fontSize={10} color="#9CA3AF" fontFamily={fontHauora} mb={8}>{p.description}</Text>
-                      <Text fontSize={"sm"} fontFamily={fontHauoraBold} color={colorPrimary}>{p.price}</Text>
+                      <Text fontSize={"sm"} fontFamily={fontHauoraBold} color={colorPrimary}>{p.priceLabel}</Text>
                     </TouchableOpacity>
                   ))}
                 </Div>
               </>
             ) : (
-              /* AI Picks: list layout */
+              /* AI Picks: list layout – data from API when endpoint is set, else fallback */
               <Div style={{ gap: 16 }} mb={8}>
-                {PRODUCTS.map((p) => (
-                  <Div key={p.id} bg="white" rounded={16} p={12} flexDir="row" style={{ gap: 16 }} borderWidth={1} borderColor="#f9fafb">
-                    <Div w={96} h={96} bg="#f3f4f6" rounded={12} overflow="hidden" />
-                    <Div flex={1}>
-                      <Div flexDir="row" justifyContent="space-between" alignItems="flex-start">
-                        <Text fontSize={"md"} fontFamily={fontHauoraBold} color="#222">{p.title}</Text>
-                        <TouchableOpacity style={styles.addBtn}>
-                          <IconCirclePlus size={16} color={colorPrimary} strokeWidth={2} />
-                        </TouchableOpacity>
-                      </Div>
-                      <Text fontSize={"sm"} fontFamily={fontHauoraBold} color={colorPrimary} mt={4}>{p.price}</Text>
-                      <Div flexDir="row" alignItems="center" mt={4} style={{ gap: 4 }}>
-                        <IconShieldCheck size={12} color={colorPrimary} />
-                        <Text fontSize={10} fontFamily={fontHauoraBold} color={colorPrimary} style={{ textTransform: "uppercase" }}>{p.tag}</Text>
-                      </Div>
-                      <Text fontSize={11} fontFamily={fontHauora} color="#9CA3AF" mt={8} fontStyle="italic" lineHeight={16}>{p.subtitle}</Text>
-                    </Div>
+                {aiPicksLoading ? (
+                  <Div py={24} alignItems="center">
+                    <ActivityIndicator size="small" color={colorPrimary} />
+                    <Text fontSize="sm" fontFamily={fontHauora} color="#6B7280" mt={8}>
+                      Loading recommendations…
+                    </Text>
                   </Div>
-                ))}
+                ) : (
+                  aiPicksProducts.map((p) => (
+                  <TouchableOpacity
+                    key={p.id}
+                    activeOpacity={0.85}
+                    onPress={() =>
+                      navigation.navigate("ProductDetailsScreen", {
+                        productId: p.id,
+                      })
+                    }
+                  >
+                    <Div
+                      bg="white"
+                      rounded={16}
+                      p={12}
+                      flexDir="row"
+                      style={{ gap: 16 }}
+                      borderWidth={1}
+                      borderColor="#f9fafb"
+                    >
+                      <Div
+                        w={96}
+                        h={96}
+                        bg="#f3f4f6"
+                        rounded={12}
+                        overflow="hidden"
+                      />
+                      <Div flex={1}>
+                        <Div
+                          flexDir="row"
+                          justifyContent="space-between"
+                          alignItems="flex-start"
+                        >
+                          <Text
+                            fontSize={"md"}
+                            fontFamily={fontHauoraBold}
+                            color="#222"
+                          >
+                            {p.title}
+                          </Text>
+                          <TouchableOpacity style={styles.addBtn}>
+                            <IconCirclePlus
+                              size={16}
+                              color={colorPrimary}
+                              strokeWidth={2}
+                            />
+                          </TouchableOpacity>
+                        </Div>
+                        <Text
+                          fontSize={"sm"}
+                          fontFamily={fontHauoraBold}
+                          color={colorPrimary}
+                          mt={4}
+                        >
+                          {p.priceLabel}
+                        </Text>
+                        <Div
+                          flexDir="row"
+                          alignItems="center"
+                          mt={4}
+                          style={{ gap: 4 }}
+                        >
+                          <IconShieldCheck size={12} color={colorPrimary} />
+                          <Text
+                            fontSize={10}
+                            fontFamily={fontHauoraBold}
+                            color={colorPrimary}
+                            style={{ textTransform: "uppercase" }}
+                          >
+                            {p.tag}
+                          </Text>
+                        </Div>
+                        <Text
+                          fontSize={11}
+                          fontFamily={fontHauora}
+                          color="#9CA3AF"
+                          mt={8}
+                          fontStyle="italic"
+                          lineHeight={16}
+                        >
+                          {p.subtitle}
+                        </Text>
+                      </Div>
+                    </Div>
+                  </TouchableOpacity>
+                  ))
+                )}
               </Div>
             )}
 
@@ -406,7 +611,7 @@ const styles = StyleSheet.create({
   scrollContent: { paddingBottom: 24 },
   topTab: {
     flex: 1,
-    paddingVertical: 16,
+    paddingVertical: 14,
     alignItems: "center",
     justifyContent: "center",
     borderBottomWidth: 2,
@@ -419,7 +624,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 12,
     paddingHorizontal: 16,
-    borderRadius: 16,
+    borderRadius: 999,
     backgroundColor: "white",
     borderWidth: 1,
     borderColor: "#e5e7eb",
@@ -432,22 +637,22 @@ const styles = StyleSheet.create({
   },
   serviceCard: {
     backgroundColor: "#fff",
-    padding: 16,
-    borderRadius: 16,
+    padding: 20,
+    borderRadius: 24,
     marginBottom: CARD_GAP,
     marginHorizontal: CARD_GAP / 2,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.03,
-    shadowRadius: 20,
-    elevation: 2,
+    shadowOpacity: 0.02,
+    shadowRadius: 18,
+    elevation: 1,
     borderWidth: 1,
-    borderColor: "#f9fafb",
+    borderColor: "#F3F4F6",
   },
   productCard: {
     backgroundColor: "#fff",
-    padding: 12,
-    borderRadius: 16,
+    padding: 14,
+    borderRadius: 20,
     marginBottom: CARD_GAP,
     marginHorizontal: CARD_GAP / 2,
     shadowColor: "#000",

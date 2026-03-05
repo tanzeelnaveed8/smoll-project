@@ -13,8 +13,14 @@ const extra = (Constants.expoConfig?.extra ?? {}) as {
 const DEMO_API = "https://api.example.com";
 const DEMO_SOCKET = "https://socket.example.com";
 
+const API_URL = extra.API_URL ?? DEMO_API;
+const SOCKET_URL = extra.SOCKET_URL ?? DEMO_SOCKET;
+
+/** True when app is using demo/mock data (no real backend). Use for optional UI hints. */
+export const DEMO_MODE = !extra.API_URL || API_URL === DEMO_API;
+
 export default {
-  API_URL: extra.API_URL ?? DEMO_API,
-  SOCKET_URL: extra.SOCKET_URL ?? DEMO_SOCKET,
+  API_URL,
+  SOCKET_URL,
   SENTRY_DSN: extra.SENTRY_DSN ?? "",
 };

@@ -1,13 +1,14 @@
 /**
- * Demo/mock API responses so the app works fully in dev without backend or network.
- * Used when USE_MOCK_API is true (__DEV__). No real requests are sent.
+ * Demo/mock API responses when no real backend is configured.
+ * When API_URL is set (real env), USE_MOCK_API is false and all requests go to the real API.
  */
-
+import { DEMO_MODE } from "@/utils/config";
 import type { User } from "@/store/types/user";
 
 const emptyFile = { filename: "", filesize: 0, mimetype: "", url: "" };
 
-export const USE_MOCK_API = typeof __DEV__ !== "undefined" && __DEV__;
+/** True only when app has no real API URL (demo); with real .env, real API is used. */
+export const USE_MOCK_API = DEMO_MODE;
 
 export const DEV_MOCK_USER: User = {
   id: "dev-mock-user",
@@ -76,6 +77,10 @@ export function getMockResponse(
       },
     };
   if (matchUrl(u, "/members/me/deactivate") && method === "post") return undefined;
+
+  // AI nutrition recommendations (when backend attaches OpenAI etc., replace this with real endpoint)
+  if (matchUrl(u, "/member/ai/nutrition-recommendations") && method === "post")
+    return { productIds: ["vitamins", "probiotics", "calming-treats", "joint-support"] };
 
   // Stripe
   if (matchUrl(u, "/member/stripe/create-payment-session") && method === "post")

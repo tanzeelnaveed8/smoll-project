@@ -23,11 +23,6 @@ export const colorDisableText = "#00000059";
 export const colorSuccessText = "#2F6E20";
 export const colorErrorText = "#E02A2A";
 
-/** Dev-only: OTP accepted by backend in development to bypass real SMS/email. Change if your backend uses another code. */
-export const DEV_BYPASS_OTP = "1234";
-/** Dev-only: phone number for "Skip login" – backend must accept this number and DEV_BYPASS_OTP in dev. */
-export const DEV_BYPASS_PHONE = "+971500000000";
-
 export const TOAST_CONFIGS: ToastOptions = {
   type: "danger",
   placement: "top",

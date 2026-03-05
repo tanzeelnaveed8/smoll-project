@@ -1,7 +1,7 @@
 import Layout from "@/components/app/Layout";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import InputField from "@/components/partials/InputField";
-import { colorPrimary, fontHauora, fontHauoraSemiBold, DEV_BYPASS_OTP } from "@/constant/constant";
+import { colorPrimary, fontHauora, fontHauoraSemiBold } from "@/constant/constant";
 import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
 import { getAxiosErrMsg } from "@/utils/helpers";
@@ -150,20 +150,6 @@ const AccountSetupEmailOtpScreen: React.FC<Props> = (props) => {
         >
           Confirm
         </ButtonPrimary>
-
-        {__DEV__ && (
-          <Button
-            bg="transparent"
-            mt={12}
-            py={8}
-            onPress={() => handleVerify(DEV_BYPASS_OTP)}
-            disabled={loading}
-          >
-            <Text fontSize="sm" color="#666">
-              [Dev] Use OTP {DEV_BYPASS_OTP}
-            </Text>
-          </Button>
-        )}
       </View>
     </Layout>
   );

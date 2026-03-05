@@ -1,8 +1,10 @@
-# Dev login / OTP bypass
+# Dev login / OTP bypass (outdated)
 
-Use this so you don’t have to enter a real phone number or OTP when developing.
+**The in-app dev bypass has been removed for production.** When `API_URL` is set in `.env`, the app uses real login and OTP only. The content below is kept for historical reference.
 
 ---
+
+## (Previously) Where to tap “[Dev] Skip login”
 
 ## 1. Where to tap “[Dev] Skip login”
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Div, Modal, Text } from "react-native-magnus";
-import { fontHauora, fontHauoraSemiBold, colorPrimary, DEV_BYPASS_OTP } from "@/constant/constant";
+import { fontHauora, fontHauoraSemiBold, colorPrimary } from "@/constant/constant";
 import InputField from "@/components/partials/InputField";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
 import { useUserStore } from "@/store/modules/user";
@@ -158,19 +158,6 @@ const OtpVerificationPopup: React.FC<OtpVerificationPopupProps> = ({
           >
             Confirm
           </ButtonPrimary>
-          {__DEV__ && (
-            <Button
-              bg="transparent"
-              mt={12}
-              py={8}
-              onPress={() => handleVerify(DEV_BYPASS_OTP)}
-              disabled={loading}
-            >
-              <Text fontSize="sm" color="#666">
-                [Dev] Use OTP {DEV_BYPASS_OTP}
-              </Text>
-            </Button>
-          )}
         </Div>
       </Div>
     </Modal>

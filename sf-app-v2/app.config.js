@@ -1,5 +1,7 @@
 // Expo app config with env exposed via extra (demo values for missing env)
-// Replace with real .env or EAS env later.
+// Load .env so API_URL and SOCKET_URL are available when running expo start / expo run:android.
+require("dotenv").config();
+
 const DEMO_API_URL = process.env.API_URL || "https://api.example.com";
 const DEMO_SOCKET_URL = process.env.SOCKET_URL || "https://socket.example.com";
 const DEMO_SENTRY_DSN = process.env.SENTRY_DSN || "";

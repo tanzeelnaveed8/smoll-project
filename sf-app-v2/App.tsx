@@ -89,6 +89,11 @@ import PaymentDetailsScreen from "./screens/Cases/PaymentDetailsScreen";
 import ClinicDetailScreen from "./screens/Clinic/ClinicDetailScreen";
 import ClinicListScreen from "./screens/Clinic/ClinicListScreen";
 import HomeServicesScreen from "./screens/HomeServices/HomeServicesScreen";
+import ServiceDetailsScreen from "./screens/HomeServices/ServiceDetailsScreen";
+import SelectDateTimeScreen from "./screens/HomeServices/SelectDateTimeScreen";
+import YourCartScreen from "./screens/HomeServices/YourCartScreen";
+import CheckoutScreen from "./screens/HomeServices/CheckoutScreen";
+import ProductDetailsScreen from "./screens/Nutritions/ProductDetailsScreen";
 import UnavailableScreen from "./screens/Consultation/UnavailableScreen";
 import EmergencyScreen from "./screens/EmergencyScreen";
 import NewOnboardingScreen from "./screens/NewOnboardingScreen";
@@ -211,18 +216,22 @@ const TabNavigation = () => {
     icon: React.ReactNode;
     isNotification?: boolean;
   }> = ({ focused, icon, isNotification }) => (
-    <Div position="relative" justifyContent="center" alignItems="center">
-      <Div
-        w={48}
-        h={48}
-        rounded={16}
-        bg={focused ? "#F0F5FF" : "transparent"}
-        justifyContent="center"
-        alignItems="center"
-      >
+    <Div alignItems="center">
+      <Div w={60} h={4} bg={focused ? "#000" : "transparent"} rounded={4} mb={6} />
+      <Div position="relative" justifyContent="center" alignItems="center">
         {icon}
         {isNotification && (
-          <Div position="absolute" top={4} right={4} w={10} h={10} rounded={100} bg="#f52c11" borderWidth={2} borderColor="#FAF8F5" />
+          <Div
+            position="absolute"
+            top={-2}
+            right={-2}
+            w={8}
+            h={8}
+            rounded={100}
+            bg="#f52c11"
+            borderWidth={2}
+            borderColor="#FAF8F5"
+          />
         )}
       </Div>
     </Div>
@@ -233,27 +242,20 @@ const TabNavigation = () => {
       <Tab.Navigator
         screenOptions={{
           tabBarStyle: {
-            height: 72,
-            paddingBottom: 10,
-            paddingTop: 8,
-            backgroundColor: "#fff",
-            paddingHorizontal: 32,
-            borderTopWidth: 1,
-            borderTopColor: "#f3f4f6",
-            borderTopLeftRadius: 40,
-            borderTopRightRadius: 40,
-            shadowColor: "#000",
-            shadowOffset: { width: 0, height: -4 },
-            shadowOpacity: 0.05,
-            shadowRadius: 20,
-            elevation: 8,
+            height: 62,
+            paddingBottom: 8,
+            paddingTop: 2,
+            backgroundColor: "#FAF8F5",
+            paddingHorizontal: 48,
+            borderTopWidth: 0,
+            elevation: 0,
           },
           tabBarLabelStyle: {
-            fontSize: 10,
+            fontSize: 14,
             fontFamily: "HauoraSemiBold",
           },
           tabBarInactiveTintColor: "#494949",
-          tabBarActiveTintColor: "#679FF0",
+          tabBarActiveTintColor: "#222222",
         }}
       >
         <Tab.Screen
@@ -265,7 +267,14 @@ const TabNavigation = () => {
             tabBarIcon: ({ focused }) => (
               <TabButton
                 focused={focused}
-                icon={<IconWindow width={24} height={24} color={focused ? "#679FF0" : "#494949"} strokeWidth={focused ? 2 : 1.5} />}
+                icon={
+                  <IconWindow
+                    width={28}
+                    height={28}
+                    color={focused ? "#222222" : "#494949"}
+                    strokeWidth={focused ? 2.2 : 1.7}
+                  />
+                }
               />
             ),
           }}
@@ -280,38 +289,15 @@ const TabNavigation = () => {
             tabBarIcon: ({ focused }) => (
               <TabButton
                 focused={focused}
-                icon={<IconMessage width={24} height={24} color={focused ? "#679FF0" : "#494949"} strokeWidth={focused ? 2 : 1.5} />}
+                icon={
+                  <IconMessage
+                    width={28}
+                    height={28}
+                    color={focused ? "#222222" : "#494949"}
+                    strokeWidth={focused ? 2.2 : 1.7}
+                  />
+                }
                 isNotification={Boolean(allUnreadMessageCount)}
-              />
-            ),
-          }}
-        />
-
-        <Tab.Screen
-          name="Chat"
-          component={CounsellingInboxScreen}
-          options={{
-            headerShown: false,
-            tabBarLabel: "Chat",
-            tabBarIcon: ({ focused }) => (
-              <TabButton
-                focused={focused}
-                icon={<IconMessage width={24} height={24} color={focused ? "#679FF0" : "#494949"} strokeWidth={focused ? 2 : 1.5} />}
-              />
-            ),
-          }}
-        />
-
-        <Tab.Screen
-          name="Profile"
-          component={SettingsMainScreen}
-          options={{
-            headerShown: false,
-            tabBarLabel: "Profile",
-            tabBarIcon: ({ focused }) => (
-              <TabButton
-                focused={focused}
-                icon={<IconUser width={24} height={24} color={focused ? "#679FF0" : "#494949"} strokeWidth={focused ? 2 : 1.5} />}
               />
             ),
           }}
@@ -616,6 +602,11 @@ const App = () => {
                   />
                   <Stack.Screen name="ClinicDetailScreen" component={ClinicDetailScreen} />
                   <Stack.Screen name="HomeServicesScreen" component={HomeServicesScreen} />
+                  <Stack.Screen name="ServiceDetailsScreen" component={ServiceDetailsScreen} />
+                  <Stack.Screen name="SelectDateTimeScreen" component={SelectDateTimeScreen} />
+                  <Stack.Screen name="YourCartScreen" component={YourCartScreen} />
+                  <Stack.Screen name="CheckoutScreen" component={CheckoutScreen} />
+                  <Stack.Screen name="ProductDetailsScreen" component={ProductDetailsScreen} />
 
                   <Stack.Screen name="PetProfileScreen" component={PetProfileScreen} />
                   <Stack.Screen

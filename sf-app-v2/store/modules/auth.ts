@@ -4,8 +4,6 @@ import { AuthState } from "../types/auth";
 import api from "@/utils/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { OneSignal } from "react-native-onesignal";
-import { DEV_BYPASS_OTP, DEV_BYPASS_PHONE } from "@/constant/constant";
-
 export const useAuthStore = create<AuthState>((set) => ({
   async login(payload) {
     let exist = true;
@@ -44,14 +42,6 @@ export const useAuthStore = create<AuthState>((set) => ({
         await api.patch("/members/me", { playerId });
       }
     }
-  },
-  /**
-   * Dev-only: get a token without sending OTP (avoids "Maximum OTP send attempts" limit).
-   * Calls only verifyOtp(DEV_BYPASS_PHONE, DEV_BYPASS_OTP). Backend must accept this in dev
-   * without requiring a prior login() call for this number (e.g. dev bypass in verify-otp).
-   */
-  async devLogin() {
-    await useAuthStore.getState().verifyOtp({ phone: DEV_BYPASS_PHONE, otp: DEV_BYPASS_OTP });
   },
   async deactivateAccount() {
     await api.post("/members/me/deactivate");
