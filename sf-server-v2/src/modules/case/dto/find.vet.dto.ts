@@ -109,4 +109,10 @@ export class FindOneCaseForVetResDto extends FindCasesBaseDto {
   @Expose()
   @Type(() => FindOneCaseForVetResDto__Quote)
   quotes: FindOneCaseForVetResDto__Quote[];
+
+  @Expose()
+  serviceChecklist: { name: string; checked: boolean }[];
+
+  @Expose()
+  customerNotReachable: boolean;
 }

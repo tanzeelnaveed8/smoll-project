@@ -55,10 +55,14 @@ defineProps<{
 }>()
 
 const infoCards: Array<{ title: string; to: string; value: keyof Analytics }> = [
-  { title: 'Members', to: '/members', value: 'members' },
-  { title: 'Our Veternians', to: '/experts', value: 'vets' },
+  { title: 'Customers', to: '/members', value: 'members' },
+  { title: 'Our Veterinarians', to: '/experts', value: 'vets' },
   { title: 'Partners', to: '/partners', value: 'partners' },
-  { title: 'Cases', to: '/cases', value: 'cases' }
+  { title: 'Total Visits', to: '/visits', value: 'cases' },
+  { title: 'Services', to: '/services', value: 'services' },
+  { title: 'Products', to: '/products', value: 'products' },
+  { title: 'Open Visits', to: '/visits', value: 'openCases' },
+  { title: 'Closed Visits', to: '/visits', value: 'closedCases' }
 ]
 </script>
 

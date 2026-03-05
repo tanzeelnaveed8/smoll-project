@@ -148,6 +148,8 @@ export class CaseVetService {
         status: true,
         assets: true,
         vetNote: true,
+        serviceChecklist: true,
+        customerNotReachable: true,
         partnerCosts: {
           id: true,
           note: true,
@@ -287,6 +289,34 @@ export class CaseVetService {
     );
 
     return updatedCase;
+  }
+
+  async updateServiceChecklist(
+    vet: AuthUser,
+    id: string,
+    checklist: { name: string; checked: boolean }[],
+  ) {
+    const _case = await this.findOne(vet, id);
+    _case.serviceChecklist = checklist;
+    return this.caseRepo.save(_case);
+  }
+
+  async markCustomerNotReachable(vet: AuthUser, id: string) {
+    const _case = await this.findOne(vet, id);
+    _case.customerNotReachable = true;
+    return this.caseRepo.save(_case);
+  }
+
+  async addAssets(
+    vet: AuthUser,
+    id: string,
+    assets: { filename: string; filesize: number; mimetype: string; url: string }[],
+  ) {
+    const _case = await this.findOne(vet, id);
+
+    _case.assets = [...(_case.assets || []), ...assets];
+
+    return this.caseRepo.save(_case);
   }
 
   async directEscalate(

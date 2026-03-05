@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import {
   ApiCookieAuth,
@@ -56,5 +56,43 @@ export class MemberAdminController {
     return plainToInstance(FindOneMemberResDto, member, {
       excludeExtraneousValues: true,
     });
+  }
+
+  @Post()
+  async create(
+    @Body()
+    body: {
+      name: string;
+      email?: string;
+      phone?: string;
+      address?: string;
+      villa?: string;
+      city?: string;
+      country?: string;
+    },
+  ) {
+    return this.memberService.create(body);
+  }
+
+  @Patch('/:id')
+  async update(
+    @Param('id') id: string,
+    @Body()
+    body: {
+      name?: string;
+      email?: string;
+      phone?: string;
+      address?: string;
+      villa?: string;
+      city?: string;
+      country?: string;
+    },
+  ) {
+    return this.memberService.update(id, body);
+  }
+
+  @Delete('/:id')
+  async remove(@Param('id') id: string) {
+    return this.memberService.remove(id);
   }
 }

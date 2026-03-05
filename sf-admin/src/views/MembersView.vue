@@ -1,22 +1,36 @@
 <template>
   <v-sheet class="d-flex justify-center">
     <div class="px-6 py-6 d-flex flex-column gr-6 w-100" style="max-width: 1140px">
-      <v-sheet class="d-flex gc-4 align-center">
-        <UtilityBar path="members" />
+      <v-sheet class="d-flex justify-space-between w-100">
+        <v-sheet class="d-flex gc-4 align-center">
+          <UtilityBar path="members" />
+          <v-btn
+            v-push
+            flat
+            class="text-grey1 px-0 reload-btn"
+            min-width="auto"
+            height="auto"
+            min-height="auto"
+            color="transparent "
+            style="margin: 0px"
+            @click="handleReload"
+          >
+            <template v-slot:prepend>
+              <v-icon icon="$tb-reload" size="20" />
+            </template>
+          </v-btn>
+        </v-sheet>
         <v-btn
-          v-push
-          flat
-          class="text-grey1 px-0 reload-btn"
-          min-width="auto"
-          height="auto"
-          min-height="auto"
-          color="transparent "
-          style="margin: 0px"
-          @click="handleReload"
+          color="grey1"
+          class="text-body-2 px-2"
+          prepend-icon="$tb-plus"
+          density="comfortable"
+          to="/members/add"
         >
           <template v-slot:prepend>
-            <v-icon icon="$tb-reload" size="20" />
+            <v-icon icon="$tb-plus" size="20" style="margin-right: -4px" />
           </template>
+          New Customer
         </v-btn>
       </v-sheet>
       <v-sheet class="d-flex flex-column gr-6">

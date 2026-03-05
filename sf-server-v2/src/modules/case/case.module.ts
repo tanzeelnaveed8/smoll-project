@@ -1,6 +1,9 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Case } from './case.entity';
+import { Member } from '../member/member.entity';
+import { Pet } from '../pet/entities/pet.entity';
+import { Vet } from '../vet/entities/vet.entity';
 import { SocketModule } from '../socket/socket.module';
 import { PetModule } from '../pet/pet.module';
 import { PartnerModule } from '../partner/partner.module';
@@ -15,7 +18,7 @@ import { CaseAdminService } from './services/case.admin.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Case]),
+    TypeOrmModule.forFeature([Case, Member, Pet, Vet]),
     SocketModule,
     PetModule,
     forwardRef(() => PartnerModule),

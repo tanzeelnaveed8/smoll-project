@@ -165,6 +165,15 @@ const handleInitiateCall = () => {
 }
 
 const handleCloseAppointment = () => {
+  // Validate all services are checked off before allowing close
+  const checklist = props.consultation.case.serviceChecklist ?? []
+  if (checklist.length > 0) {
+    const unchecked = checklist.filter((s: any) => !s.checked)
+    if (unchecked.length > 0) {
+      toast.error(`Please check off all services before closing. ${unchecked.length} service(s) remaining.`)
+      return
+    }
+  }
   closeConsultationModal.value = true
 }
 

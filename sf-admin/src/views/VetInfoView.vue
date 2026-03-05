@@ -25,6 +25,33 @@
         </template>
         <template #deactivate-account>
           <DeactivateAccount v-if="!vetDetails?.isSuspended" :id="vetDetails?.id!" type="vet" />
+          <!-- Reset Password -->
+          <v-sheet class="mt-6">
+            <h3 class="text-body-1 font-weight-bold mb-2">Login Credentials</h3>
+            <p class="text-grey2 text-body-2 mb-3" style="font-weight: 500">Send a new temporary password to the vet's email address.</p>
+            <v-btn color="grey1" variant="outlined" :loading="resettingPassword" @click="handleResetPassword">
+              Reset Password
+            </v-btn>
+          </v-sheet>
+          <!-- Visit History -->
+          <v-sheet class="mt-6">
+            <h3 class="text-body-1 font-weight-bold mb-3">Visit History</h3>
+            <v-sheet v-if="loadingCases" class="d-flex justify-center py-4">
+              <v-progress-circular indeterminate color="primary" size="24" />
+            </v-sheet>
+            <v-sheet v-else-if="vetCases.length" class="d-flex flex-column gr-2">
+              <v-card v-for="c in vetCases" :key="c.id" flat class="pa-3 rounded-lg" style="border: 1px solid #d0d7dc">
+                <v-sheet class="d-flex justify-space-between align-center">
+                  <div>
+                    <p class="font-weight-bold">{{ c.id }}</p>
+                    <p class="text-grey2 text-body-2">Member: {{ c.member?.name ?? '-' }} | Pet: {{ c.pet?.name ?? '-' }}</p>
+                  </div>
+                  <v-chip :color="c.status === 'closed' ? 'success' : 'warning'" size="small">{{ c.status }}</v-chip>
+                </v-sheet>
+              </v-card>
+            </v-sheet>
+            <p v-else class="text-grey2 text-body-2" style="font-weight: 500">No visit history found.</p>
+          </v-sheet>
         </template>
       </FormLayout>
     </v-sheet>
@@ -51,6 +78,9 @@ const isFormValid = ref(false)
 const loading = ref(false)
 const actionLoading = ref(false)
 const vetDetails = ref<Vets | null>(null)
+const vetCases = ref<any[]>([])
+const loadingCases = ref(false)
+const resettingPassword = ref(false)
 const accountDetails = ref({
   documents: [],
   profileImg: null,
@@ -148,7 +178,27 @@ const handleFormSubmit = async () => {
   toast.success('Vet updated successfully')
 }
 
+const getVetCases = async () => {
+  try {
+    loadingCases.value = true
+    vetCases.value = await veterniansStore.fetchVetCases(`${id.value}`)
+  } finally {
+    loadingCases.value = false
+  }
+}
+
+const handleResetPassword = async () => {
+  try {
+    resettingPassword.value = true
+    await veterniansStore.resetVetPassword(`${id.value}`)
+    toast.success('Password reset email sent')
+  } finally {
+    resettingPassword.value = false
+  }
+}
+
 onMounted(() => {
   getVet()
+  getVetCases()
 })
 </script>

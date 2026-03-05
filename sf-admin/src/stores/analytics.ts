@@ -6,6 +6,11 @@ export interface Analytics {
   partners: number
   vets: number
   members: number
+  services: number
+  products: number
+  openCases: number
+  closedCases: number
+  escalatedCases: number
 }
 
 export const useAnalyticsStore = defineStore('AnalyticsStore', {

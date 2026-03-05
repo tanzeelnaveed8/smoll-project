@@ -11,8 +11,7 @@
       <v-sheet>
         <p style="font-weight: 600" class="text-body-1">Name</p>
         <v-text-field
-          readonly
-          :value="memberDetails?.name"
+          v-model="form.name"
           type="text"
           hide-details="auto"
           class="text-field mt-2 text-grey1"
@@ -22,8 +21,7 @@
       <v-sheet>
         <p style="font-weight: 600" class="text-body-1">Flat/Villa No</p>
         <v-text-field
-          readonly
-          :value="memberDetails?.villa"
+          v-model="form.villa"
           type="text"
           hide-details="auto"
           class="text-field mt-2 text-grey1"
@@ -33,8 +31,7 @@
       <v-sheet>
         <p style="font-weight: 600" class="text-body-1">Street Address</p>
         <v-text-field
-          readonly
-          :value="memberDetails?.address"
+          v-model="form.address"
           type="text"
           hide-details="auto"
           class="text-field mt-2 text-grey1"
@@ -44,30 +41,27 @@
       <v-sheet>
         <p style="font-weight: 600" class="text-body-1">City</p>
         <v-text-field
-          readonly
-          :value="memberDetails?.city"
+          v-model="form.city"
           type="text"
           hide-details="auto"
           class="text-field mt-2 text-grey1"
-          placeholder="Address"
+          placeholder="City"
         />
       </v-sheet>
       <v-sheet>
         <p style="font-weight: 600" class="text-body-1">Country</p>
         <v-text-field
-          readonly
-          :value="memberDetails?.country"
+          v-model="form.country"
           type="text"
           hide-details="auto"
           class="text-field mt-2 text-grey1"
-          placeholder="Address"
+          placeholder="Country"
         />
       </v-sheet>
       <v-sheet>
         <p style="font-weight: 600" class="text-body-1">Phone</p>
         <v-text-field
-          readonly
-          :value="memberDetails?.phone"
+          v-model="form.phone"
           type="text"
           hide-details="auto"
           class="text-field mt-2 text-grey1"
@@ -78,8 +72,7 @@
       <v-sheet>
         <p style="font-weight: 600" class="text-body-1">Email address</p>
         <v-text-field
-          readonly
-          :value="memberDetails?.email"
+          v-model="form.email"
           type="email"
           hide-details="auto"
           class="text-field mt-2 text-grey1"
@@ -88,47 +81,90 @@
         />
       </v-sheet>
     </v-sheet>
+    <v-sheet class="d-flex gc-3">
+      <v-btn color="grey1" :loading="saving" @click="handleUpdate">Update</v-btn>
+      <v-btn color="error" variant="outlined" :loading="deleting" @click="showDeleteDialog = true">Delete</v-btn>
+    </v-sheet>
   </v-sheet>
+
+  <v-dialog v-model="showDeleteDialog" width="400">
+    <v-card class="pa-6">
+      <h3 class="mb-4">Delete Customer</h3>
+      <p>Are you sure you want to delete this customer?</p>
+      <v-sheet class="d-flex gc-3 justify-end mt-4">
+        <v-btn variant="outlined" @click="showDeleteDialog = false">Cancel</v-btn>
+        <v-btn color="error" :loading="deleting" @click="handleDelete">Delete</v-btn>
+      </v-sheet>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script lang="ts" setup>
 import type { Member } from '@/stores/types/member'
+import { useMemberStore } from '@/stores/member'
+import { reactive, ref, watchEffect } from 'vue'
+import { useRouter } from 'vue-router'
+import { toast } from 'vue3-toastify'
 
 const props = defineProps<{
   memberDetails: Member | null
 }>()
+
+const memberStore = useMemberStore()
+const router = useRouter()
+const saving = ref(false)
+const deleting = ref(false)
+const showDeleteDialog = ref(false)
+
+const form = reactive({
+  name: '',
+  villa: '',
+  address: '',
+  city: '',
+  country: '',
+  phone: '',
+  email: ''
+})
+
+watchEffect(() => {
+  if (props.memberDetails) {
+    form.name = props.memberDetails.name ?? ''
+    form.villa = props.memberDetails.villa ?? ''
+    form.address = props.memberDetails.address ?? ''
+    form.city = props.memberDetails.city ?? ''
+    form.country = props.memberDetails.country ?? ''
+    form.phone = props.memberDetails.phone ?? ''
+    form.email = props.memberDetails.email ?? ''
+  }
+})
+
+const handleUpdate = async () => {
+  if (!props.memberDetails) return
+  try {
+    saving.value = true
+    await memberStore.updateMember(props.memberDetails.id, form)
+    toast.success('Customer updated successfully')
+  } finally {
+    saving.value = false
+  }
+}
+
+const handleDelete = async () => {
+  if (!props.memberDetails) return
+  try {
+    deleting.value = true
+    await memberStore.deleteMember(props.memberDetails.id)
+    toast.success('Customer deleted')
+    showDeleteDialog.value = false
+    router.push('/members')
+  } finally {
+    deleting.value = false
+  }
+}
 </script>
 
 <style lang="scss" scoped>
 .text-field:deep(.v-input__prepend) {
   margin: 0px;
-}
-
-.num-prefix-select {
-  &:deep(.v-field) {
-    border-top-right-radius: 0px;
-    border-top-left-radius: 8px !important;
-
-    border-bottom-right-radius: 0px;
-    border-bottom-left-radius: 8px !important;
-
-    background-color: white;
-  }
-  &:deep(.v-field__input) {
-    padding-right: 2px !important;
-  }
-}
-.text-field-phone:deep(.v-field) {
-  border-top-left-radius: 0px;
-  border-bottom-left-radius: 0px;
-}
-
-.dob-select-month:deep(.v-field) {
-  border-radius: 0px;
-}
-
-.dob-field-year:deep(.v-field) {
-  border-top-left-radius: 0px;
-  border-bottom-left-radius: 0px;
 }
 </style>

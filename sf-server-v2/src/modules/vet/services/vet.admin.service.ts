@@ -14,12 +14,15 @@ import { paginate, PaginationResult } from 'src/utils/pagination';
 import { CreateVetPayloadDto } from '../dtos/create.admin.dto';
 import { UpdateVetPayloadDto } from '../dtos/update.admin.dto';
 import { VetSpeciality } from '../entities/vet.speciality.entity';
+import { Case } from '../../case/case.entity';
 
 @Injectable()
 export class VetAdminService {
   constructor(
     @InjectRepository(Vet)
     private readonly vetRepo: Repository<Vet>,
+    @InjectRepository(Case)
+    private readonly caseRepo: Repository<Case>,
     private readonly pwdService: PwdService,
     private readonly verifyService: VerifyService,
   ) {}
@@ -180,5 +183,24 @@ export class VetAdminService {
     }
 
     await this.vetRepo.update({ id }, { isSuspended: false });
+  }
+
+  async findVetCases(vetId: string) {
+    const cases = await this.caseRepo.find({
+      where: { assignedVet: { id: vetId } },
+      relations: { member: true, pet: true },
+      order: { createdAt: 'DESC' },
+      take: 50,
+    });
+    return cases;
+  }
+
+  async resetPassword(id: string) {
+    const vet = await this.findOne(id);
+    const pwd = this.pwdService.getTempPwd();
+    vet.password = await this.pwdService.hashPwd(pwd);
+    await this.vetRepo.save(vet);
+    this.verifyService.sendTemporaryPassword(vet.email, pwd);
+    return { message: 'Password reset email sent' };
   }
 }

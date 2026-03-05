@@ -17,6 +17,11 @@ import OrganizationsView from '@/views/OrganizationsView.vue'
 import OrganizationInfoView from '@/views/OrganizationInfoView.vue'
 import VerifyOtpView from '@/views/VerifyOtpView.vue'
 import SettingsView from '@/views/SettingsView.vue'
+import ServicesView from '@/views/ServicesView.vue'
+import ProductsView from '@/views/ProductsView.vue'
+import FinanceView from '@/views/FinanceView.vue'
+import AddMemberView from '@/views/AddMemberView.vue'
+import AddVisitView from '@/views/AddVisitView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -66,14 +71,21 @@ const router = createRouter({
               path: '',
               component: MembersView,
               meta: {
-                title: 'Members'
+                title: 'Customers'
+              }
+            },
+            {
+              path: 'add',
+              component: AddMemberView,
+              meta: {
+                title: 'Customers / Add Customer'
               }
             },
             {
               path: ':memberId',
               component: MemberInfoView,
               meta: {
-                title: 'Members / Information'
+                title: 'Customers / Information'
               }
             }
           ]
@@ -114,23 +126,59 @@ const router = createRouter({
         },
 
         {
-          path: '/cases',
+          path: '/visits',
           children: [
             {
               path: '',
               component: CasesView,
               meta: {
-                title: 'Cases'
+                title: 'Visits'
+              }
+            },
+            {
+              path: 'add',
+              component: AddVisitView,
+              meta: {
+                title: 'Visits / Add Visit'
               }
             },
             {
               path: ':caseId',
               component: CasePreviewView,
               meta: {
-                title: 'Cases / Preview'
+                title: 'Visits / Details'
               }
             }
           ]
+        },
+        {
+          path: '/cases',
+          redirect: '/visits'
+        },
+        {
+          path: '/cases/:caseId',
+          redirect: (to) => `/visits/${to.params.caseId}`
+        },
+        {
+          path: '/services',
+          component: ServicesView,
+          meta: {
+            title: 'Services'
+          }
+        },
+        {
+          path: '/products',
+          component: ProductsView,
+          meta: {
+            title: 'Products'
+          }
+        },
+        {
+          path: '/finance',
+          component: FinanceView,
+          meta: {
+            title: 'Finance'
+          }
         },
         {
           path: '/settings',

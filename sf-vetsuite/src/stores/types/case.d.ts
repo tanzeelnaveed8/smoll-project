@@ -48,6 +48,8 @@ export interface Case {
   quotes?: Quote[]
   notes?:[] | string[]
   updatedAt?:string
+  serviceChecklist?: { name: string; checked: boolean }[]
+  customerNotReachable?: boolean
 }
 
 export interface State {}

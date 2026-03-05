@@ -10,12 +10,15 @@ import { paginate, PaginationResult } from 'src/utils/pagination';
 import { SubscriptionStatus } from 'src/modules/smollcare/enums/subscription-status.enum';
 import { FindOneMemberResDto } from '../dtos/find.admin.dto';
 import { plainToInstance } from 'class-transformer';
+import { Case } from 'src/modules/case/case.entity';
 
 @Injectable()
 export class MemberAdminService {
   constructor(
     @InjectRepository(Member)
     private readonly memberRepo: Repository<Member>,
+    @InjectRepository(Case)
+    private readonly caseRepo: Repository<Case>,
   ) { }
 
   async findAll(
@@ -31,12 +34,26 @@ export class MemberAdminService {
         { name: searchQuery },
         { phone: searchQuery },
       ],
+      relations: {
+        pets: true,
+        cases: true,
+      },
       order: {
         createdAt: 'DESC',
       },
     };
 
-    return paginate(this.memberRepo, pageQuery, findOptions);
+    const result = await paginate(this.memberRepo, pageQuery, findOptions);
+
+    const data = result.data.map((member) => ({
+      ...member,
+      petsCount: member.pets?.length ?? 0,
+      visitsCount: member.cases?.length ?? 0,
+      pets: undefined,
+      cases: undefined,
+    }));
+
+    return { ...result, data };
   }
 
   async findOne(id: string): Promise<FindOneMemberResDto> {
@@ -112,5 +129,27 @@ export class MemberAdminService {
       pets: transformedPets,
       subscription: null,
     };
+  }
+
+  async create(data: Partial<Member>): Promise<Member> {
+    const member = this.memberRepo.create(data);
+    return this.memberRepo.save(member);
+  }
+
+  async update(id: string, data: Partial<Member>): Promise<Member> {
+    const member = await this.memberRepo.findOne({ where: { id } });
+    if (!member) {
+      throw new NotFoundException(`Member with id "${id}" not found`);
+    }
+    Object.assign(member, data);
+    return this.memberRepo.save(member);
+  }
+
+  async remove(id: string): Promise<void> {
+    const member = await this.memberRepo.findOne({ where: { id } });
+    if (!member) {
+      throw new NotFoundException(`Member with id "${id}" not found`);
+    }
+    await this.memberRepo.softRemove(member);
   }
 }

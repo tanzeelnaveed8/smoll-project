@@ -49,11 +49,14 @@ const router = useRouter()
 
 const links = [
   { title: 'Home', icon: '$tb-smart-home', to: '/' },
+  { title: 'Services', icon: '$tb-bolt', to: '/services' },
+  { title: 'Products', icon: '$tb-file-certificate', to: '/products' },
+  { title: 'Visits', icon: '$tb-writing-sign', to: '/visits' },
+  { title: 'Customers', icon: '$tb-users', to: '/members' },
   { title: 'Experts', icon: '$tb-first-aid-kit', to: '/experts' },
-  { title: 'Members', icon: '$tb-users', to: '/members' },
   { title: 'Partner management', icon: '$tb-heart-handshake', to: '/partners' },
   { title: 'Organizations', icon: '$tb-organizations', to: '/organizations' },
-  { title: 'Cases', icon: '$tb-writing-sign', to: '/cases' },
+  { title: 'Finance', icon: '$tb-circle-arrow-up-right', to: '/finance' },
   { title: 'Settings', icon: '$tb-settings', to: '/settings' }
 ]
 
