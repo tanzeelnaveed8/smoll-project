@@ -1,11 +1,12 @@
 import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
+import { DEV_MOCK_USER } from "@/utils/mockData";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect } from "react";
 import { Div, Image } from "react-native-magnus";
 
 const SplashScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
-  const { findUser } = useUserStore();
+  const { findUser, setDevUser } = useUserStore();
 
   useEffect(() => {
     const getStoredToken = async () => {
@@ -17,16 +18,22 @@ const SplashScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) 
           navigation.navigate("HomeScreen");
         } catch (error) {
           setTimeout(() => {
-            navigation.navigate("NewOnboardingScreen"); // latest
-            // navigation.navigate("CasesQuotesListScreen");
+            navigation.navigate("NewOnboardingScreen");
           }, 1000);
         }
-      } else {
-        setTimeout(() => {
-          navigation.navigate("NewOnboardingScreen"); // latest
-          // navigation.navigate("CasesQuotesListScreen");
-        }, 1000);
+        return;
       }
+
+      // Dev-only: skip login/OTP and go straight to Home with a mock user so you can explore the app.
+      if (__DEV__) {
+        setDevUser(DEV_MOCK_USER);
+        setTimeout(() => navigation.navigate("HomeScreen"), 500);
+        return;
+      }
+
+      setTimeout(() => {
+        navigation.navigate("NewOnboardingScreen");
+      }, 1000);
     };
 
     getStoredToken();

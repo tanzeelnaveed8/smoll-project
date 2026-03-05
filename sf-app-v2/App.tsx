@@ -11,8 +11,7 @@ import { Badge, Div, ThemeProvider } from "react-native-magnus";
 
 import * as Font from "expo-font";
 import React, { useEffect, useState } from "react";
-import { fontHauora, fontHauoraSemiBold } from "./constant/constant";
-
+import "@/constant/constant";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -72,8 +71,8 @@ import { useUIStore } from "@/store/modules/ui";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import PushNotificationIOS from "@react-native-community/push-notification-ios";
 import * as Sentry from "@sentry/react-native";
-import { IconMessage, IconWindow } from "@tabler/icons-react-native";
-import Config from "react-native-config";
+import { IconMessage, IconUser, IconWindow } from "@tabler/icons-react-native";
+import Config from "@/utils/config";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ZIMEventHandler } from "zego-zim-react-native";
 import Popup from "./components/Popup";
@@ -89,6 +88,7 @@ import CasesQuotesListScreen from "./screens/Cases/CasesQuotesListScreen";
 import PaymentDetailsScreen from "./screens/Cases/PaymentDetailsScreen";
 import ClinicDetailScreen from "./screens/Clinic/ClinicDetailScreen";
 import ClinicListScreen from "./screens/Clinic/ClinicListScreen";
+import HomeServicesScreen from "./screens/HomeServices/HomeServicesScreen";
 import UnavailableScreen from "./screens/Consultation/UnavailableScreen";
 import EmergencyScreen from "./screens/EmergencyScreen";
 import NewOnboardingScreen from "./screens/NewOnboardingScreen";
@@ -115,7 +115,7 @@ dayjs.extend(timezone);
 
 async function loadFonts() {
   await Font.loadAsync({
-    Hauora: require("./assets/fonts/Hauora//Hauora-Regular.ttf"),
+    Hauora: require("./assets/fonts/Hauora/Hauora-Regular.ttf"),
     HauoraMedium: require("./assets/fonts/Hauora/Hauora-Medium.ttf"),
     HauoraSemiBold: require("./assets/fonts/Hauora/Hauora-SemiBold.ttf"),
     HauoraBold: require("./assets/fonts/Hauora/Hauora-Bold.ttf"),
@@ -144,12 +144,22 @@ export const scaleFontSize = (size: number): number => {
 };
 
 const theme = {
+  // Font name lookups used by Magnus theme resolution – must exist as properties
+  fontHauora: "Hauora",
+  fontHauoraSemiBold: "HauoraSemiBold",
+  fontHauoraMedium: "HauoraMedium",
+  fontHauoraBold: "HauoraBold",
+  fontCooper: "Cooper",
+  fontCooperMedium: "CooperMedium",
+  fontCooperBold: "CooperBold",
+  fontHeading: "Cooper",
+  fontHeadingBold: "CooperBold",
+  Hauora: "Hauora",
+  HauoraSemiBold: "HauoraSemiBold",
+  HauoraMedium: "HauoraMedium",
+  HauoraBold: "HauoraBold",
+  Cooper: "Cooper",
   fontSize: {
-    // "5xl": 28,
-    // "2xl": 20,
-    // xl: 18,
-    // lg: 16,
-    // md: 14,
     "8xl": scaleFontSize(54),
     "7xl": scaleFontSize(34),
     "6xl": scaleFontSize(32),
@@ -170,15 +180,10 @@ const theme = {
   },
   components: {
     Text: {
-      fontFamily: fontHauora,
       color: "#222",
     },
-    Input: {
-      fontFamily: fontHauora,
-    },
-    Button: {
-      fontFamily: fontHauora,
-    },
+    Input: {},
+    Button: {},
   },
 };
 
@@ -204,46 +209,51 @@ const TabNavigation = () => {
   const TabButton: React.FC<{
     focused: boolean;
     icon: React.ReactNode;
-    isNotification?: Boolean;
-  }> = ({ focused, icon, isNotification }) => {
-    const styles: { container: ViewStyle } = {
-      container: {
-        borderBottomRightRadius: 4,
-        borderBottomLeftRadius: 4,
-        position: "relative",
-      },
-    };
-
-    return (
-      <Div position="relative" justifyContent="center" alignItems="center">
-        <Div h={4} bg={focused ? "#000" : "transparent"} w={60} mb={2} style={styles.container} />
+    isNotification?: boolean;
+  }> = ({ focused, icon, isNotification }) => (
+    <Div position="relative" justifyContent="center" alignItems="center">
+      <Div
+        w={48}
+        h={48}
+        rounded={16}
+        bg={focused ? "#F0F5FF" : "transparent"}
+        justifyContent="center"
+        alignItems="center"
+      >
         {icon}
         {isNotification && (
-          <Div position="absolute" top={4} right={6}>
-            <Badge bg="#f52c11" position="absolute" />
-          </Div>
+          <Div position="absolute" top={4} right={4} w={10} h={10} rounded={100} bg="#f52c11" borderWidth={2} borderColor="#FAF8F5" />
         )}
       </Div>
-    );
-  };
+    </Div>
+  );
 
   return (
     <>
       <Tab.Navigator
         screenOptions={{
           tabBarStyle: {
-            height: 62,
-            paddingBottom: 8,
-            paddingTop: 2,
-            backgroundColor: "#FAF8F5",
-            paddingHorizontal: 48,
+            height: 72,
+            paddingBottom: 10,
+            paddingTop: 8,
+            backgroundColor: "#fff",
+            paddingHorizontal: 32,
+            borderTopWidth: 1,
+            borderTopColor: "#f3f4f6",
+            borderTopLeftRadius: 40,
+            borderTopRightRadius: 40,
+            shadowColor: "#000",
+            shadowOffset: { width: 0, height: -4 },
+            shadowOpacity: 0.05,
+            shadowRadius: 20,
+            elevation: 8,
           },
           tabBarLabelStyle: {
-            fontSize: 14,
-            fontFamily: fontHauoraSemiBold,
+            fontSize: 10,
+            fontFamily: "HauoraSemiBold",
           },
           tabBarInactiveTintColor: "#494949",
-          tabBarActiveTintColor: "#222",
+          tabBarActiveTintColor: "#679FF0",
         }}
       >
         <Tab.Screen
@@ -251,10 +261,11 @@ const TabNavigation = () => {
           component={HomeScreen}
           options={{
             headerShown: false,
+            tabBarLabel: "Home",
             tabBarIcon: ({ focused }) => (
               <TabButton
                 focused={focused}
-                icon={<IconWindow width={28} height={28} color={focused ? "#000" : "#494949"} />}
+                icon={<IconWindow width={24} height={24} color={focused ? "#679FF0" : "#494949"} strokeWidth={focused ? 2 : 1.5} />}
               />
             ),
           }}
@@ -265,11 +276,42 @@ const TabNavigation = () => {
           component={ExpertsInboxScreen}
           options={{
             headerShown: false,
+            tabBarLabel: "Inbox",
             tabBarIcon: ({ focused }) => (
               <TabButton
                 focused={focused}
-                icon={<IconMessage width={28} height={28} color={focused ? "#000" : "#494949"} />}
+                icon={<IconMessage width={24} height={24} color={focused ? "#679FF0" : "#494949"} strokeWidth={focused ? 2 : 1.5} />}
                 isNotification={Boolean(allUnreadMessageCount)}
+              />
+            ),
+          }}
+        />
+
+        <Tab.Screen
+          name="Chat"
+          component={CounsellingInboxScreen}
+          options={{
+            headerShown: false,
+            tabBarLabel: "Chat",
+            tabBarIcon: ({ focused }) => (
+              <TabButton
+                focused={focused}
+                icon={<IconMessage width={24} height={24} color={focused ? "#679FF0" : "#494949"} strokeWidth={focused ? 2 : 1.5} />}
+              />
+            ),
+          }}
+        />
+
+        <Tab.Screen
+          name="Profile"
+          component={SettingsMainScreen}
+          options={{
+            headerShown: false,
+            tabBarLabel: "Profile",
+            tabBarIcon: ({ focused }) => (
+              <TabButton
+                focused={focused}
+                icon={<IconUser width={24} height={24} color={focused ? "#679FF0" : "#494949"} strokeWidth={focused ? 2 : 1.5} />}
               />
             ),
           }}
@@ -573,6 +615,7 @@ const App = () => {
                     // options={{ headerShown: false, gestureEnabled: false }}
                   />
                   <Stack.Screen name="ClinicDetailScreen" component={ClinicDetailScreen} />
+                  <Stack.Screen name="HomeServicesScreen" component={HomeServicesScreen} />
 
                   <Stack.Screen name="PetProfileScreen" component={PetProfileScreen} />
                   <Stack.Screen

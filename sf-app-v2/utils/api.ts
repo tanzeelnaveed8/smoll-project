@@ -1,7 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { showMessage } from "react-native-flash-message";
-import Config from "react-native-config";
+import Config from "@/utils/config";
+import { USE_MOCK_API, getMockResponse } from "@/utils/mockData";
 
 const api = axios.create({
   baseURL: Config.API_URL,
@@ -17,6 +18,27 @@ api.interceptors.request.use(
     const storedToken = await AsyncStorage.getItem("accessToken");
     if (storedToken) {
       config.headers.Authorization = `Bearer ${storedToken}`;
+    }
+
+    if (USE_MOCK_API) {
+      const url = config.url || "";
+      const fullUrl = (config.baseURL || "") + (url.startsWith("http") ? "" : url);
+      const mockData = getMockResponse(
+        (config.method || "get").toLowerCase(),
+        fullUrl,
+        config.data,
+        config.params
+      );
+      if (mockData !== null) {
+        config.adapter = () =>
+          Promise.resolve({
+            data: mockData,
+            status: 200,
+            statusText: "OK",
+            headers: {},
+            config,
+          });
+      }
     }
 
     return config;

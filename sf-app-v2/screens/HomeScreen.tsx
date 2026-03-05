@@ -1,345 +1,343 @@
 import Layout from "@/components/app/Layout";
-import IconButton from "@/components/partials/IconButton";
-import { colorPrimary, fontHauoraBold, fontHauoraMedium, fontHeading } from "@/constant/constant";
-import { IconBell, IconChevronRight } from "@tabler/icons-react-native";
-import {
-  ActivityIndicator,
-  ImageSourcePropType,
-  ImageStyle,
-  StyleProp,
-  StyleSheet,
-} from "react-native";
-import { Button, Div, Image, ScrollDiv, Text } from "react-native-magnus";
-
 import HomeScreenBanner from "@/components/app/HomeScreenBanner";
 import OnboardingCongratsModal from "@/components/app/onboarding/OnboardingCongratsModal";
-import ClockIcon from "@/components/icons/ClockIcon";
-import IconCustomUser from "@/components/icons/IconCustomUser";
-import { useCounsellorStore } from "@/store/modules/counsellor";
+import {
+  colorPrimary,
+  fontHauora,
+  fontHauoraBold,
+  fontHauoraMedium,
+  fontHauoraSemiBold,
+  fontHeading,
+} from "@/constant/constant";
 import { useNotificationStore } from "@/store/modules/notification";
 import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRoute } from "@react-navigation/native";
-import React, { useEffect, useMemo, useState } from "react";
+import {
+  IconBell,
+  IconChevronRight,
+  IconMessage,
+  IconSearch,
+  IconSettings,
+  IconUser,
+} from "@tabler/icons-react-native";
+import dayjs from "dayjs";
+import React, { useEffect, useState } from "react";
+import { Image, StyleSheet, TouchableOpacity } from "react-native";
+import { Button, Div, ScrollDiv, Text } from "react-native-magnus";
 
 interface Props {
   navigation: NavigationType;
   isNewUser?: boolean;
 }
 
-interface OptionTab {
-  name: string;
-  description: string;
-  value: "chat" | "petProfileScreen" | "appointments" | string;
-  loading: boolean;
-  icon?: React.JSX.Element;
-  img?: ImageSourcePropType;
-  width?: number;
-  height?: number;
-  style?: StyleProp<ImageStyle>;
+function getTimeBasedGreeting(): string {
+  const hour = dayjs().hour();
+  if (hour < 12) return "Good Morning";
+  if (hour < 17) return "Good Afternoon";
+  return "Good Evening";
 }
 
 const HomeScreen: React.FC<Props> = (props) => {
   const route = useRoute();
   const { user } = useUserStore();
-  const { sessions, fetchSessions } = useCounsellorStore();
   const { fetchNotifications, notifications } = useNotificationStore();
-
-  const [options, setOptions] = useState<OptionTab[]>([
-    {
-      name: "Chat with Expert",
-      value: "chat",
-      description: "Quick and Easy",
-      loading: false,
-      icon: (
-        <Div style={{ marginRight: 10, transform: [{ translateX: 2 }] }}>
-          <Image
-            source={require("../assets/images/homepage-boy-img.png")}
-            w={60}
-            h={60}
-            style={{ objectFit: "contain" }}
-          />
-        </Div>
-      ),
-    },
-    {
-      name: "Network",
-      value: "clinics",
-      description: "Locate our partners clinics",
-      loading: false,
-      // icon: <OnboardingIcon5 width={55} height={55} />,
-      img: require("@/assets/images/home-clinic.png"),
-      width: 71,
-      height: 68,
-      style: {
-        transform: [{ translateX: 5 }, { translateY: 2 }],
-        objectFit: "contain",
-      },
-      // icon: <DogIcon width={70} height={70} />,
-    },
-    {
-      name: "Appointments",
-      value: "appointments",
-      description: "All your appointment shows here",
-      loading: false,
-      // icon: <OnboardingIcon2 width={65} height={65} />,
-      icon: (
-        <Div style={{ transform: [{ translateY: 3 }] }}>
-          <ClockIcon width={70} height={70} />
-        </Div>
-      ),
-    },
-  ]);
-
-  const [showAccountSetupModal, setShowAccountSetupModal] = useState(false);
+  const [greeting] = useState(getTimeBasedGreeting());
   const [showCongratsModal, setShowCongratsModal] = useState(false);
-  const [showAccountSetupButton, setShowAccountSetupButton] = useState(false);
 
   useEffect(() => {
     fetchNotifications(1, 20);
-
-    // handling showAccountSetupButton
-    const checkAccountSetupStatus = async () => {
-      const hideAccountSetupBtn = await AsyncStorage.getItem("hideAccountSetupBtn");
-
-      if (hideAccountSetupBtn) {
-        setShowAccountSetupButton(false);
-      } else {
-        setShowAccountSetupButton(true);
-      }
-    };
-
-    checkAccountSetupStatus();
   }, []);
 
   useEffect(() => {
-    const showSetupModal = (route.params as Record<string, string>)?.showSetupModal === "true";
-
-    const isNewUser = (route.params as Record<string, string>)?.isNewUser === "true";
-
+    const isNewUser = (route?.params as Record<string, string>)?.isNewUser === "true";
     if (isNewUser) {
-      setTimeout(() => {
-        setShowCongratsModal(true);
-      }, 500);
+      setTimeout(() => setShowCongratsModal(true), 500);
     }
+  }, [route?.params]);
 
-    if (showSetupModal) {
-      setShowAccountSetupModal(true);
-    }
-  }, [route.params]);
-
-  const completedStep = useMemo(() => {
-    const basicInfoExist = Boolean(user?.address?.length);
-    const emailInfoExist = user?.email && user?.isEmailVerified;
-    const petInfoExist = (user?.petCount ?? 0) > 0;
-
-    const completedStep = [basicInfoExist, emailInfoExist, petInfoExist].filter(
-      (step) => step
-    ).length;
-
-    return completedStep;
-  }, [user]);
-
-  const handleOptionTabPress = async (item: OptionTab) => {
-    if (item.value === "chat") {
-      props.navigation.navigate("ExpertsListScreen");
-    } else if (item.value === "clinics") {
-      props.navigation.navigate("ClinicListScreen");
-    } else if (item.value === "appointments") {
-      props.navigation.navigate("AppointmentsScreen");
-    }
-  };
-
-  const hideAccountSetupModal = () => {
-    AsyncStorage.setItem("hideAccountSetupBtn", "true");
-    setShowAccountSetupButton(false);
-  };
-
-  // const handleLogout = async () => {
-  //   await AsyncStorage.setItem("accessToken", "");
-  //   AsyncStorage.removeItem("hideAccountSetupBtn");
-  // };
-
-  // useEffect(() => {
-  //   handleLogout();
-  // }, []);
+  const displayName = user?.name ? `${user.name} & Bella` : "Sarah & Bella";
+  const hasNotifications = Boolean(notifications?.count && notifications.count > 0);
 
   return (
     <>
-      <Layout
-        style={{
-          justifyContent: "flex-start",
-        }}
-      >
+      <Layout style={{ justifyContent: "flex-start" }} disableHeader>
         <ScrollDiv showsVerticalScrollIndicator={false}>
-          <Div mb={40} mt={5} flexDir="row" justifyContent="space-between" alignItems="center">
-            <Div flexDir="row" alignItems="center" style={{ gap: 12 }}>
-              <Image w={100} h={27} source={require("../assets/logo.png")} />
-            </Div>
-
-            <Div flexDir="row" alignItems="center" style={{ gap: 8 }}>
-              <Div position="relative">
-                {notifications && notifications.count > 0 && (
-                  <Div
-                    w={20}
-                    h={20}
-                    rounded={100}
-                    bg="#F44336"
-                    style={styles.notificationCount}
-                    pointerEvents="none"
-                  >
-                    <Text color="#fff">{notifications?.count}</Text>
+          {/* Header: avatar + greeting + name, then profile/settings/notifications */}
+          <Div
+            flexDir="row"
+            justifyContent="space-between"
+            alignItems="center"
+            pt={8}
+            pb={6}
+            mb={2}
+          >
+            <Div flexDir="row" alignItems="center" style={{ gap: 12 }} flex={1}>
+              <Div
+                w={56}
+                h={56}
+                rounded={100}
+                bg="#FFC107"
+                overflow="hidden"
+                style={styles.avatarWrap}
+              >
+                {user?.profileImg?.url ? (
+                  <Image
+                    source={{ uri: user.profileImg.url }}
+                    style={{ width: "100%", height: "100%" }}
+                    resizeMode="cover"
+                  />
+                ) : (
+                  <Div flex={1} justifyContent="center" alignItems="center">
+                    <IconUser size={28} color="#222" />
                   </Div>
                 )}
-
-                <IconButton
-                  bg="bgColor"
-                  style={{
-                    overflow: "visible",
-                  }}
-                  onPress={() => {
-                    props.navigation.navigate("NotificationScreen");
-                  }}
-                >
-                  <IconBell width={32} height={32} color={"#222222"} strokeWidth={1.5} />
-                </IconButton>
               </Div>
-              <IconButton
-                bg="bgColor"
-                style={{ marginLeft: -8 }}
-                onPress={() => {
-                  props.navigation.navigate("SettingsMainScreen");
-                }}
+              <Div>
+                <Text
+                  fontSize={10}
+                  fontFamily={fontHauoraBold}
+                  color="#9BA1A7"
+                  letterSpacing={2}
+                  style={{ textTransform: "uppercase" }}
+                >
+                  {greeting}
+                </Text>
+                <Div flexDir="row" alignItems="center" style={{ gap: 4 }}>
+                  <Text fontSize={"xl"} fontFamily={fontHeading} color="#222">
+                    {displayName}
+                  </Text>
+                  <Text fontSize={"lg"} color="#4E4485">
+                    🐾
+                  </Text>
+                </Div>
+              </Div>
+            </Div>
+            <Div flexDir="row" alignItems="center" style={{ gap: 8 }}>
+              <TouchableOpacity
+                onPress={() => props.navigation.navigate("SettingPersonalInfoScreen")}
+                style={styles.iconButton}
               >
-                <IconCustomUser color="#222" />
-              </IconButton>
+                <IconUser size={20} color="#9CA3AF" strokeWidth={1.5} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => props.navigation.navigate("SettingsMainScreen")}
+                style={styles.iconButton}
+              >
+                <IconSettings size={20} color="#9CA3AF" strokeWidth={1.5} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => props.navigation.navigate("NotificationScreen")}
+                style={styles.iconButton}
+              >
+                <Div position="relative">
+                  <IconBell size={20} color="#9CA3AF" strokeWidth={1.5} />
+                  {hasNotifications && (
+                    <Div
+                      position="absolute"
+                      top={-2}
+                      right={-2}
+                      w={6}
+                      h={6}
+                      rounded={100}
+                      bg="#EF4444"
+                      borderWidth={2}
+                      borderColor="#fff"
+                    />
+                  )}
+                </Div>
+              </TouchableOpacity>
             </Div>
           </Div>
 
-          <Div mb={16}>
-            <Text fontSize={"5xl"} fontFamily={fontHeading}>
-              Hi{user?.name ? `, ${user?.name}` : ""}
+          {/* Search bar */}
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => props.navigation.navigate("ExpertsListScreen")}
+            style={styles.searchBar}
+          >
+            <IconSearch size={20} color="#9CA3AF" style={{ marginRight: 12 }} />
+            <Text fontSize={"sm"} color="#9CA3AF" fontFamily={fontHauora}>
+              Find a specialist, service...
             </Text>
-            <Text fontSize={"lg"}>How can we help you today?</Text>
-          </Div>
+          </TouchableOpacity>
 
           <HomeScreenBanner navigation={props.navigation} />
 
-          <Div>
-            <Div flexDir="row" style={{ gap: 8 }} alignItems="center" mb={16}>
-              <Image
-                source={require("../assets/images/home-start-icon-dark.png")}
-                w={24}
-                h={24}
-                mt={2}
-              />
-              {/* <IconMichelinStar
-                width={24}
-                height={24}
-                color={"#222"}
-                fill={"#222"}
-                style={{ marginTop: 2 }}
-              /> */}
-              <Text fontFamily={fontHauoraBold} fontSize={"xl"}>
-                Other services you can do
-              </Text>
-            </Div>
-
-            {options.map((item, index) => (
+          {/* What do you need? */}
+          <Div mb={10}>
+            <Text fontSize={"xl"} fontFamily={fontHauoraBold} color="#222" mb={6}>
+              What do you need?
+            </Text>
+            <Div style={{ gap: 16 }}>
               <Button
-                key={item.value}
-                px={14}
-                py={12}
-                borderWidth={1.2}
-                borderColor="#222"
-                mb={index + 1 === options.length ? 0 : 8}
-                rounded={25}
-                w={"100%"}
-                h={83}
-                disabled={item.loading}
-                onPress={() => handleOptionTabPress(item)}
-                bg="transparent"
-                underlayColor="#f3f3f3"
+                bg="white"
+                p={24}
+                rounded={32}
+                flexDir="row"
+                alignItems="center"
+                justifyContent="space-between"
+                onPress={() => props.navigation.navigate("ExpertsListScreen")}
+                style={styles.actionCard}
+                underlayColor="#f9fafb"
               >
-                <Div flex={1} flexDir="row" alignItems="center" style={{ gap: 12 }}>
-                  {item.icon ? (
-                    item.icon
-                  ) : (
-                    <Image source={item.img} w={item.width} h={item.height} style={item.style} />
-                  )}
-
+                <Div flexDir="row" alignItems="center" style={{ gap: 20 }} flex={1}>
+                  <Div
+                    w={64}
+                    h={64}
+                    bg="#F0F5FF"
+                    rounded={16}
+                    justifyContent="center"
+                    alignItems="center"
+                  >
+                    <IconMessage size={32} color={colorPrimary} strokeWidth={1.5} />
+                  </Div>
                   <Div flex={1}>
-                    <Text fontSize={"xl"} fontFamily={fontHauoraBold} lineHeight={20}>
-                      {item.name}
+                    <Text fontSize={"lg"} fontFamily={fontHauoraBold} color="#222">
+                      Talk to a Vet
                     </Text>
                     <Text
                       fontSize={"sm"}
                       fontFamily={fontHauoraMedium}
+                      color="#6B7280"
+                      mt={4}
                       lineHeight={18}
-                      maxW={"90%"}
                     >
-                      {item.description}
+                      Instant video consultation with a licensed veterinarian.
                     </Text>
                   </Div>
                 </Div>
-                {item.loading ? (
-                  <ActivityIndicator color={colorPrimary} />
-                ) : (
-                  <IconChevronRight width={24} height={24} color={"#222222"} />
-                )}
+                <Div
+                  w={40}
+                  h={40}
+                  bg="#F7F8FA"
+                  rounded={100}
+                  justifyContent="center"
+                  alignItems="center"
+                >
+                  <IconChevronRight size={20} color="#D1D5DB" strokeWidth={2} />
+                </Div>
               </Button>
-            ))}
+
+              <Button
+                bg="white"
+                p={24}
+                rounded={32}
+                flexDir="row"
+                alignItems="center"
+                justifyContent="space-between"
+                onPress={() => props.navigation.navigate("HomeServicesScreen")}
+                style={styles.actionCard}
+                underlayColor="#f9fafb"
+              >
+                <Div flexDir="row" alignItems="center" style={{ gap: 20 }} flex={1}>
+                  <Div
+                    w={64}
+                    h={64}
+                    bg="#FFF2EA"
+                    rounded={16}
+                    justifyContent="center"
+                    alignItems="center"
+                  >
+                    <Text fontSize={28}>🛒</Text>
+                  </Div>
+                  <Div flex={1}>
+                    <Text fontSize={"lg"} fontFamily={fontHauoraBold} color="#222">
+                      Home Services
+                    </Text>
+                    <Text
+                      fontSize={"sm"}
+                      fontFamily={fontHauoraMedium}
+                      color="#6B7280"
+                      mt={4}
+                      lineHeight={18}
+                    >
+                      Grooming, vaccinations, and checkups at your doorstep.
+                    </Text>
+                  </Div>
+                </Div>
+                <Div
+                  w={40}
+                  h={40}
+                  bg="#F7F8FA"
+                  rounded={100}
+                  justifyContent="center"
+                  alignItems="center"
+                >
+                  <IconChevronRight size={20} color="#D1D5DB" strokeWidth={2} />
+                </Div>
+              </Button>
+            </Div>
+          </Div>
+
+          {/* Upcoming */}
+          <Div mb={10} style={{ width: "100%" }}>
+            <Div flexDir="row" justifyContent="space-between" alignItems="center" mb={4}>
+              <Text fontSize={"xl"} fontFamily={fontHauoraBold} color="#222">
+                Upcoming
+              </Text>
+              <TouchableOpacity onPress={() => props.navigation.navigate("AppointmentsScreen")}>
+                <Text fontSize={"sm"} fontFamily={fontHauoraSemiBold} color={colorPrimary}>
+                  See all
+                </Text>
+              </TouchableOpacity>
+            </Div>
+            <TouchableOpacity
+              activeOpacity={0.85}
+              onPress={() => props.navigation.navigate("ClinicListScreen")}
+              style={[styles.upcomingCard, styles.upcomingCardTouchable]}
+            >
+              <Div flexDir="column" w="100%" style={{ overflow: "hidden" }}>
+                <Div flexDir="row" alignItems="flex-start" style={{ gap: 16 }} mb={16}>
+                  <Div
+                    w={56}
+                    h={56}
+                    bg="rgba(255,255,255,0.1)"
+                    rounded={16}
+                    justifyContent="center"
+                    alignItems="center"
+                    style={{ flexShrink: 0 }}
+                  >
+                    <Text fontSize={28}>📅</Text>
+                  </Div>
+                  <Div flex={1} style={{ minWidth: 0 }}>
+                    <Text fontSize={"lg"} fontFamily={fontHauoraBold} color="white">
+                      Vaccination Due
+                    </Text>
+                    <Text
+                      fontSize={"sm"}
+                      fontFamily={fontHauoraMedium}
+                      color="rgba(255,255,255,0.7)"
+                      mt={4}
+                    >
+                      Bella needs her annual rabies shot.
+                    </Text>
+                  </Div>
+                </Div>
+                <Div
+                  bg="white"
+                  py={14}
+                  rounded={16}
+                  alignItems="center"
+                  justifyContent="center"
+                  w="100%"
+                >
+                  <Text fontSize={"sm"} fontFamily={fontHauoraBold} color="#1A3B70">
+                    Schedule Now
+                  </Text>
+                </Div>
+              </Div>
+            </TouchableOpacity>
           </Div>
 
           <Div h={50} />
         </ScrollDiv>
 
-        {/* {completedStep < 3 && showAccountSetupButton && (
-          <Div
-            mb={16}
-            position="absolute"
-            bottom={15}
-            zIndex={20}
-            w={"100%"}
-            alignSelf="center"
-          >
-            <TouchableOpacity
-              style={styles.actionSetupCloseBtn}
-              onPress={hideAccountSetupModal}
-            >
-              <IconX width={20} height={20} color={"#000"} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={() => {
-                setShowAccountSetupModal(true);
-              }}
-            >
-              <AccountSetupProgress
-                progress={completedStep / 3}
-                completedStepCount={completedStep}
-              />
-            </TouchableOpacity>
-          </Div>
-        )} */}
-
         <OnboardingCongratsModal
           isVisible={showCongratsModal}
-          onSuccess={async () => {
-            setShowCongratsModal(false);
-          }}
+          onSuccess={async () => setShowCongratsModal(false)}
         />
-
-        {/* remove it for now */}
-        {/* <AccountSetupModal
-          isVisible={showAccountSetupModal}
-          onBack={() => setShowAccountSetupModal(false)}
-          navigation={props.navigation}
-        /> */}
       </Layout>
-
-      {/* <TabNavigationBar navigation={props.navigation} /> */}
     </>
   );
 };
@@ -347,24 +345,53 @@ const HomeScreen: React.FC<Props> = (props) => {
 export default HomeScreen;
 
 const styles = StyleSheet.create({
-  actionSetupCloseBtn: {
-    position: "absolute",
-    top: 3,
-    right: 4,
-    zIndex: 10,
-    padding: 2,
+  avatarWrap: {
+    overflow: "hidden",
   },
-
-  notificationCount: {
-    position: "absolute",
-    top: -4,
-    right: -1,
+  iconButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "#fff",
+    borderWidth: 1,
+    borderColor: "#f3f4f6",
     justifyContent: "center",
-    alignContent: "center",
     alignItems: "center",
-    zIndex: 10,
-    textAlign: "center",
-    fontSize: 12,
-    fontWeight: "bold",
+  },
+  searchBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    paddingVertical: 16,
+    paddingLeft: 16,
+    paddingRight: 16,
+    borderRadius: 24,
+    marginBottom: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  actionCard: {
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.05,
+    shadowRadius: 20,
+    elevation: 2,
+  },
+  upcomingCard: {
+    backgroundColor: "#1A3B70",
+    padding: 24,
+    borderRadius: 32,
+    shadowColor: "rgba(26, 54, 110, 0.15)",
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 1,
+    shadowRadius: 24,
+    elevation: 4,
+  },
+  upcomingCardTouchable: {
+    width: "100%",
+    overflow: "hidden",
   },
 });

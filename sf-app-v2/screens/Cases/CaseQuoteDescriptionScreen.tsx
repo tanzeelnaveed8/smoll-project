@@ -171,7 +171,7 @@ const CaseQuoteDescriptionScreen: React.FC<{ navigation: NavigationType }> = ({ 
             borderBottomColor="#222"
             showsVerticalScrollIndicator={false}
           >
-            {clinicQuote?.services.map((item, i) => (
+            {(clinicQuote?.services ?? []).map((item, i) => (
               <Div mb={16} key={i}>
                 <ProposalDetailCard
                   key={item.id}

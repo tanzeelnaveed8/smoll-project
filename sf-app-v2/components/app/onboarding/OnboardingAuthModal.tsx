@@ -8,10 +8,12 @@ import { Div, Text } from "react-native-magnus";
 import BottomSheet from "@/components/partials/BottomSheet";
 import BackButton from "@/components/partials/BackButton";
 import OnboardingOtpModal from "./OnboardingOtpModal";
+import OnboardingUserModal from "./OnboardingUserModal";
 import { useAuthStore } from "@/store/modules/auth";
+import { useUserStore } from "@/store/modules/user";
 import ToastContainer from "react-native-toast-notifications/lib/typescript/toast-container";
 import Toast from "react-native-toast-notifications";
-import { getAxiosErrMsg } from "@/utils/helpers";
+import { getAxiosErrMsg, getUserTimezoneOffset } from "@/utils/helpers";
 import { AxiosError } from "axios";
 import {
   Keyboard,
@@ -33,9 +35,11 @@ interface Props {
 
 const OnboardingAuthModal: React.FC<Props> = (props) => {
   const toastRef = useRef<ToastContainer>(null);
-  const { login } = useAuthStore();
+  const { login, devLogin } = useAuthStore();
+  const { findUser, updateUser } = useUserStore();
 
   const [showOtpModal, setShowOtpModal] = useState(false);
+  const [showNameModal, setShowNameModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [isSelectInputOpen, setIsSelectInputOpen] = useState(false);
@@ -80,6 +84,29 @@ const OnboardingAuthModal: React.FC<Props> = (props) => {
       toastRef.current?.show(message, {
         type: "danger",
       });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDevSkipLogin = async () => {
+    if (!__DEV__) return;
+    try {
+      setIsLoading(true);
+      Keyboard.dismiss();
+      await devLogin();
+      const user = await findUser();
+      if (!user?.timeZone) {
+        await updateUser({ timeZone: getUserTimezoneOffset() });
+      }
+      if (!user?.name) {
+        setShowNameModal(true);
+      } else {
+        props.onSuccess();
+      }
+    } catch (err) {
+      const message = getAxiosErrMsg(err as AxiosError);
+      toastRef.current?.show(message, { type: "danger" });
     } finally {
       setIsLoading(false);
     }
@@ -167,6 +194,18 @@ const OnboardingAuthModal: React.FC<Props> = (props) => {
             >
               Get OTP
             </ButtonPrimary>
+
+            {__DEV__ && (
+              <TouchableOpacity
+                onPress={handleDevSkipLogin}
+                disabled={isLoading}
+                style={{ marginTop: 12, paddingVertical: 8, alignSelf: "center" }}
+              >
+                <Text fontSize="sm" color="#666">
+                  [Dev] Skip login
+                </Text>
+              </TouchableOpacity>
+            )}
           </Div>
 
           <Div>
@@ -203,6 +242,8 @@ const OnboardingAuthModal: React.FC<Props> = (props) => {
         phone={country.value + phone}
         label={country.value + " " + phone}
       />
+
+      <OnboardingUserModal isVisible={showNameModal} onSuccess={props.onSuccess} />
 
       <Toast ref={toastRef} placement="top" textStyle={{ textTransform: "capitalize" }} />
     </BottomSheet>

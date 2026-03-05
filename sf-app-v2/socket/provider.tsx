@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
-import Config from "react-native-config";
+import Config from "@/utils/config";
 import { useUserStore } from "@/store/modules/user";
 
 const SocketContext = createContext<Socket | null>(null);

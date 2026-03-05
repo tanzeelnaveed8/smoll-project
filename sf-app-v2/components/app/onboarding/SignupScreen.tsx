@@ -3,6 +3,8 @@ import InputField from "@/components/partials/InputField";
 import SelectInput from "@/components/partials/SelectInput";
 import { fontHauora } from "@/constant/constant";
 import { useAuthStore } from "@/store/modules/auth";
+import { useUserStore } from "@/store/modules/user";
+import { getUserTimezoneOffset } from "@/utils/helpers";
 import { NavigationType } from "@/store/types";
 import { getAxiosErrMsg } from "@/utils/helpers";
 import { AxiosError } from "axios";
@@ -21,6 +23,7 @@ import Toast from "react-native-toast-notifications";
 import ToastContainer from "react-native-toast-notifications/lib/typescript/toast-container";
 import Layout from "../Layout";
 import OnboardingOtpModal from "./OnboardingOtpModal";
+import OnboardingUserModal from "./OnboardingUserModal";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface Props {
@@ -32,9 +35,11 @@ interface Props {
 
 const SignupScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
   const toastRef = useRef<ToastContainer>(null);
-  const { login } = useAuthStore();
+  const { login, devLogin } = useAuthStore();
+  const { findUser, updateUser } = useUserStore();
 
   const [showOtpModal, setShowOtpModal] = useState(false);
+  const [showNameModal, setShowNameModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [isSelectInputOpen, setIsSelectInputOpen] = useState(false);
@@ -91,6 +96,31 @@ const SignupScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) 
 
       setShowOtpModal(true);
     } catch (err) {
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDevSkipLogin = async () => {
+    if (!__DEV__) return;
+    try {
+      setIsLoading(true);
+      Keyboard.dismiss();
+      await devLogin();
+      const user = await findUser();
+      if (!user?.timeZone) {
+        await updateUser({ timeZone: getUserTimezoneOffset() });
+      }
+      if (!user?.name) {
+        setShowNameModal(true);
+      } else {
+        setShowOtpModal(false);
+        navigation.navigate("HomeScreen", { isNewUser: "true" });
+      }
+    } catch (err) {
+      toastRef.current?.show("Dev login failed. Check DEV_BYPASS_PHONE/OTP and backend.", {
+        type: "danger",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -163,6 +193,18 @@ const SignupScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) 
             >
               Get OTP
             </ButtonPrimary>
+
+            {__DEV__ && (
+              <TouchableOpacity
+                onPress={handleDevSkipLogin}
+                disabled={isLoading}
+                style={{ marginTop: 12, paddingVertical: 8, alignSelf: "center" }}
+              >
+                <Text fontSize="sm" color="#666">
+                  [Dev] Skip login
+                </Text>
+              </TouchableOpacity>
+            )}
           </Div>
 
           <Div>
@@ -197,6 +239,14 @@ const SignupScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) 
         navigation={navigation}
         phone={country.value + phone}
         label={country.value + " " + phone}
+      />
+
+      <OnboardingUserModal
+        isVisible={showNameModal}
+        onSuccess={() => {
+          setShowNameModal(false);
+          navigation.navigate("HomeScreen", { isNewUser: "true" });
+        }}
       />
 
       <Toast ref={toastRef} placement="top" textStyle={{ textTransform: "capitalize" }} />

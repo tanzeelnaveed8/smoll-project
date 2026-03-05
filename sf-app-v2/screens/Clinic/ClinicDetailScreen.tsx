@@ -119,9 +119,9 @@ const ClinicDetailScreen: React.FC<{ navigation: NavigationType }> = ({ navigati
               />
             </Div>
 
-            {data.specialities.length > 0 && (
+            {(data.specialities?.length ?? 0) > 0 && (
               <Div flexDir="row" flexWrap="wrap" style={{ gap: 8 }} mb={16}>
-                {data.specialities.map((item, i) => (
+                {(data.specialities ?? []).map((item, i) => (
                   <Div key={i} px={8} py={6} rounded={32} borderWidth={1.2} borderColor="#222">
                     <Text fontSize={"md"} fontFamily={fontHauoraSemiBold} lineHeight={20}>
                       {item.name}
@@ -203,7 +203,7 @@ const ClinicDetailScreen: React.FC<{ navigation: NavigationType }> = ({ navigati
                 Veterinarian
               </Text>
 
-              {data.vets.map((item, i) => (
+              {(data.vets ?? []).map((item, i) => (
                 <Div
                   key={i}
                   pb={16}
