@@ -93,20 +93,21 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({ navi
       setSelectedDate(date);
 
       const _availability = await fetchPartnerVetAvailability(vetId, partnerId, new Date(date));
+      const firstSlot = Array.isArray(_availability) && _availability[0] ? _availability[0] : { intervals: [] };
 
       const getHour = (time: string) => {
         const dateTime = dayjs(`2025-01-21T${time}Z`);
         return dateTime.hour();
       };
-      const morningTimings = _availability[0].intervals.filter((item) => getHour(item.from) < 12);
-      const noonTimings = _availability[0].intervals.filter((item) => {
+      const morningTimings = (firstSlot.intervals ?? []).filter((item) => getHour(item.from) < 12);
+      const noonTimings = (firstSlot.intervals ?? []).filter((item) => {
         const time = getHour(item.from);
 
         if (time > 12 && time < 17) {
           return item;
         }
       });
-      const eveningTimings = _availability[0].intervals.filter((item) => getHour(item.from) > 17);
+      const eveningTimings = (firstSlot.intervals ?? []).filter((item) => getHour(item.from) > 17);
 
       if (morningTimings.length > 0) {
         setActiveTimeTab("morning");
@@ -346,7 +347,7 @@ const PartnerVetDetailScreen: React.FC<{ navigation: NavigationType }> = ({ navi
                       {a.dayOfWeek ?? dayjs(a.date).format("ddd, DD MMM")}
                     </Text>
 
-                    {a.intervals.length > 0 && (
+                    {(a.intervals ?? []).length > 0 && (
                       <Div flexDir="row" flexWrap="wrap" justifyContent="center" style={{ gap: 8 }}>
                         <Div
                           w={"100%"}

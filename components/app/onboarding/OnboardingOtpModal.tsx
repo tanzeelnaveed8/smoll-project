@@ -1,7 +1,7 @@
 import BackButton from "@/components/partials/BackButton";
 import BottomSheet from "@/components/partials/BottomSheet";
 import ButtonPrimary from "@/components/partials/ButtonPrimary";
-import { colorPrimary, fontHauora } from "@/constant/constant";
+import { colorPrimary, fontHauora, DEV_BYPASS_OTP } from "@/constant/constant";
 import { useAuthStore } from "@/store/modules/auth";
 import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
@@ -165,6 +165,20 @@ const OnboardingOtpModal: React.FC<Props> = (props) => {
             >
               Confirm
             </ButtonPrimary>
+
+            {__DEV__ && (
+              <Button
+                bg="transparent"
+                mt={16}
+                py={8}
+                onPress={() => handleConfirm(DEV_BYPASS_OTP)}
+                disabled={isLoading}
+              >
+                <Text fontSize="sm" color="#666">
+                  [Dev] Use OTP {DEV_BYPASS_OTP}
+                </Text>
+              </Button>
+            )}
 
             <Div mt={24} style={{ flexDirection: "row", justifyContent: "center" }}>
               <Text fontSize={16} color="#6B6B6B" fontFamily={fontHauora}>

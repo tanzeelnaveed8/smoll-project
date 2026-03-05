@@ -128,22 +128,21 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({ nav
       setSelectedDate(date);
 
       const _availability = await fetchExpertAvailability(expertId, new Date(date));
-
-      console.log("_availability[0].intervals", _availability[0].intervals);
+      const firstSlot = Array.isArray(_availability) && _availability[0] ? _availability[0] : { intervals: [] };
 
       const getHour = (time: string) => {
         const dateTime = dayjs(`2025-01-21T${time}Z`);
         return dateTime.hour();
       };
-      const morningTimings = _availability[0].intervals.filter((item) => getHour(item.from) < 12);
-      const noonTimings = _availability[0].intervals.filter((item) => {
+      const morningTimings = (firstSlot.intervals ?? []).filter((item) => getHour(item.from) < 12);
+      const noonTimings = (firstSlot.intervals ?? []).filter((item) => {
         const time = getHour(item.from);
 
         if (time > 12 && time < 17) {
           return item;
         }
       });
-      const eveningTimings = _availability[0].intervals.filter((item) => getHour(item.from) > 17);
+      const eveningTimings = (firstSlot.intervals ?? []).filter((item) => getHour(item.from) > 17);
 
       if (morningTimings.length > 0) {
         setActiveTimeTab("morning");
@@ -159,7 +158,7 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({ nav
         evening: eveningTimings,
       });
 
-      setAvailability(_availability);
+      setAvailability(Array.isArray(_availability) ? _availability : []);
     } finally {
       setAvailabilityLoading(false);
     }
@@ -227,6 +226,7 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({ nav
       to: string;
     }[];
   }> = ({ a, data, marginTop }) => {
+    const slots = data ?? [];
     return (
       <>
         {/* {data.length > 0 && (
@@ -239,8 +239,8 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({ nav
             {heading}
           </Text>
         )} */}
-        {data.length > 0 &&
-          data.map((intr, index) => {
+        {slots.length > 0 &&
+          slots.map((intr, index) => {
             const time = formatTime(a, intr);
 
             const isDisabled = hasAvailabilityDateTimePassed(
@@ -283,7 +283,7 @@ const ExpertsListDetailScreen: React.FC<{ navigation: NavigationType }> = ({ nav
             );
           })}
 
-        {data.length === 0 && (
+        {slots.length === 0 && (
           <Div w={"100%"} flexDir="row" py={15} flexWrap="wrap" style={{ gap: 8 }}>
             <Text mx={"auto"}>No available slots</Text>
           </Div>

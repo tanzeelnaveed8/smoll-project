@@ -96,7 +96,7 @@ const NotificationScreen: React.FC<{ navigation: NavigationType }> = ({ navigati
       loading={isLoading}
       onBackPress={() => navigation.goBack()}
     >
-      {!isLoading && notifications && notifications.data.length > 0 && (
+      {!isLoading && notifications && (notifications.data?.length ?? 0) > 0 && (
         <Div mb={24} flexDir="row" justifyContent="space-between">
           <Text fontSize={"lg"} fontFamily={fontHauoraBold}>
             Recent
@@ -111,7 +111,7 @@ const NotificationScreen: React.FC<{ navigation: NavigationType }> = ({ navigati
       )}
 
       <FlatList
-        data={notifications?.data}
+        data={notifications?.data ?? []}
         ListEmptyComponent={() => (
           <Div h={600} justifyContent="center" alignItems="center">
             <Text

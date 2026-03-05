@@ -52,6 +52,26 @@ dependencyResolutionManagement {
       from(files(new File(["node", "--print", "require.resolve('react-native/package.json')"].execute(null, rootDir).text.trim(), "../gradle/libs.versions.toml")))
     }
   }
+  repositoriesMode = RepositoriesMode.PREFER_SETTINGS
+  repositories {
+    maven {
+      url(new File(["node", "--print", "require.resolve('react-native/package.json')"].execute(null, rootDir).text.trim(), '../android'))
+    }
+    maven {
+      url(new File(["node", "--print", "require.resolve('jsc-android/package.json', { paths: [require.resolve('react-native/package.json')] })"].execute(null, rootDir).text.trim(), '../dist'))
+    }
+    google()
+    mavenCentral()
+    maven { url 'https://www.jitpack.io' }
+    exclusiveContent {
+      forRepository {
+        maven { url 'https://storage.zego.im/maven' }
+      }
+      filter {
+        includeGroup("im.zego")
+      }
+    }
+  }
 }
 
 apply from: new File(["node", "--print", "require.resolve('expo/package.json')"].execute(null, rootDir).text.trim(), "../scripts/autolinking.gradle");
@@ -64,7 +84,5 @@ if (getRNMinorVersion() < 75) {
 
 include ':app'
 includeBuild(new File(["node", "--print", "require.resolve('@react-native/gradle-plugin/package.json', { paths: [require.resolve('react-native/package.json')] })"].execute(null, rootDir).text.trim()).getParentFile())
-include ':react-native-config'
-project(':react-native-config').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-config/android')
 include ':react-native-immersive-mode'
 project(':react-native-immersive-mode').projectDir = new File(rootProject.projectDir, 	'../node_modules/react-native-immersive-mode/android')
