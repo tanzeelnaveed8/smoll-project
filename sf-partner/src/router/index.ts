@@ -6,7 +6,9 @@ import CalendarView from '@/views/CalendarView.vue'
 import SettingsView from '@/views/SettingsView.vue'
 import RequestView from '@/views/RequestView.vue'
 import ServiceView from '@/views/ServiceView.vue'
+import ProductView from '@/views/ProductView.vue'
 import VeterinariansView from '@/views/VeterinariansView.vue'
+import CustomersView from '@/views/CustomersView.vue'
 import SmollCareView from '../views/SmollCareView.vue'
 import FinanceView from '@/views/FinanceView.vue'
 
@@ -32,10 +34,17 @@ const router = createRouter({
           }
         },
         {
+          path: '/visits',
+          component: RequestView,
+          meta: {
+            title: 'Visits'
+          }
+        },
+        {
           path: '/quotations',
           component: RequestView,
           meta: {
-            title: 'Quotations'
+            title: 'Visits'
           }
         },
         {
@@ -43,6 +52,20 @@ const router = createRouter({
           component: ServiceView,
           meta: {
             title: 'Services'
+          }
+        },
+        {
+          path: '/products',
+          component: ProductView,
+          meta: {
+            title: 'Products'
+          }
+        },
+        {
+          path: '/customers',
+          component: CustomersView,
+          meta: {
+            title: 'Customers'
           }
         },
         {

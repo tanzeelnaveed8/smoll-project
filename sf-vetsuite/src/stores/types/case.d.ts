@@ -48,6 +48,15 @@ export interface Case {
   quotes?: Quote[]
   notes?:[] | string[]
   updatedAt?:string
+  customerReachabilityStatus?: string | null
+  serviceChecklist?: {
+    id: string
+    name: string
+    description: string
+    price: number
+    checked: boolean
+    isExtra: boolean
+  }[]
 }
 
 export interface State {}
@@ -63,4 +72,13 @@ export interface DirectEscalateCasePayload {
 
 export interface SendNotePayload {
     notes:{content:string,createdAt:string}[]
+}
+
+export interface AddExtraServicesPayload {
+  services: { name: string; description?: string; price?: number }[]
+}
+
+export interface UpdateServiceChecklistPayload {
+  serviceId: string
+  checked: boolean
 }

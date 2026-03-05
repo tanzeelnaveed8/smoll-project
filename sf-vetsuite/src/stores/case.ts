@@ -1,5 +1,11 @@
 import { defineStore } from 'pinia'
-import type { DirectEscalateCasePayload, SendNotePayload, State } from './types/case'
+import type {
+  AddExtraServicesPayload,
+  DirectEscalateCasePayload,
+  SendNotePayload,
+  State,
+  UpdateServiceChecklistPayload
+} from './types/case'
 import api from '@/utils/api'
 
 interface escalateCasePayload {
@@ -31,6 +37,15 @@ export const useCaseStore = defineStore('CaseStore', {
     },
     async sendNote (caseId:string , payload :SendNotePayload){
       await api.post(`/vet/cases/${caseId}/notes`,payload)
+    },
+    async addExtraServices(caseId: string, payload: AddExtraServicesPayload) {
+      await api.post(`/vet/cases/${caseId}/services/extra`, payload)
+    },
+    async updateServiceChecklist(caseId: string, payload: UpdateServiceChecklistPayload) {
+      await api.patch(`/vet/cases/${caseId}/services/checklist`, payload)
+    },
+    async markCustomerUnreachable(caseId: string, reason?: string) {
+      await api.post(`/vet/cases/${caseId}/unreachable`, { reason })
     }
   }
 })

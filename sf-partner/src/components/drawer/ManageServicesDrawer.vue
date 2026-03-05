@@ -186,6 +186,7 @@ import Papa from 'papaparse';
 const props = defineProps<{
   type?: 'edit'
   formData?: Service
+  defaultType?: string
 }>()
 
 const emit = defineEmits<{
@@ -196,7 +197,14 @@ const { emitter } = useMitt()
 const formRef = ref()
 const isFormValid = ref(true)
 const modalConfirmation = ref(false)
-const form = ref({ title: '', description: '', type: null, price: undefined, quickBooking:false, ...props?.formData })
+const form = ref({
+  title: '',
+  description: '',
+  type: props.defaultType ?? null,
+  price: undefined,
+  quickBooking: false,
+  ...props?.formData
+})
 const disableSubmitBtn = ref(true)
 
 const inputFileCsvRef = ref()

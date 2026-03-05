@@ -34,12 +34,13 @@ import SideNavFooter from "./SideNavFooter.vue";
 
 const links = [
   { title: "Dashboard", icon: "$tb-smart-home", to: "/" },
-  { title: "Smoll Care", icon: "$tb-paw", to: "/smoll-care" },
-  { title: "Quotations", icon: "$tb-writing-sign", to: "/quotations" },
-  { title: "Bookings", icon: "$tb-calender-month", to: "/bookings" },
-  { title: "Veterinarians", icon: "$tb-vets", to: "/veterinarians" },
   { title: "Services", icon: "$tb-briefcase-2", to: "/services" },
+  { title: "Products", icon: "$tb-pet", to: "/products" },
+  { title: "Visits", icon: "$tb-writing-sign", to: "/visits" },
+  { title: "Customers", icon: "$tb-user", to: "/customers" },
+  { title: "Veterinarians", icon: "$tb-vets", to: "/veterinarians" },
   { title: "Finance", icon: "$tb-graph", to: "/finance" },
+  { title: "Smoll Care", icon: "$tb-paw", to: "/smoll-care" },
   { title: "Settings", icon: "$tb-settings", to: "/settings" },
 ];
 </script>

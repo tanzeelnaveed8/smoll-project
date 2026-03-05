@@ -36,6 +36,7 @@ import dayJS from 'src/utils/dayjs';
 import { StripeService } from 'src/modules/stripe/stripe.service';
 import { NotificationService } from 'src/modules/notification/notification.service';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { RolesEnum } from 'src/guards/role/role.enum';
 import {
   PARTNER_BOOKING_CANCELLED_BY_PARTNER,
   PartnerBookingCancelledByPartnerEvent,
@@ -44,6 +45,7 @@ import { appointmentReminderTemplate } from 'src/utils/emailTemplate';
 import { Logger } from 'src/configs/logger';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import { Member } from 'src/modules/member/member.entity';
 
 dayjs.extend(utc);
 
@@ -66,6 +68,8 @@ export class PartnerService {
     private readonly partnerSpecialityRepo: Repository<PartnerSpeciality>,
     @InjectRepository(PartnerBooking)
     private readonly partnerBookingRepo: Repository<PartnerBooking>,
+    @InjectRepository(Member)
+    private readonly memberRepo: Repository<Member>,
     private readonly pwdService: PwdService,
     private readonly stripeService: StripeService,
     private readonly notificationService: NotificationService,
@@ -950,6 +954,259 @@ export class PartnerService {
     this.logger.info(
       `[LOG: PARTNER_SERVICE] Service deleted with id: ${id} for partnerId: ${partner.id}`,
     );
+  }
+
+  async findAllCustomers(partner: AuthUser, search?: string) {
+    const bookings = await this.partnerBookingRepo.find({
+      where: { partner: { id: partner.id } },
+      relations: {
+        member: true,
+        case: {
+          pet: true,
+        },
+      },
+      order: {
+        scheduledAt: 'DESC',
+      },
+    });
+
+    const customerMap = new Map<
+      string,
+      {
+        id: string;
+        name: string | null;
+        email: string | null;
+        phone: string | null;
+        visits: number;
+        orders: number;
+        pets: Set<string>;
+        lastVisitAt: Date | null;
+      }
+    >();
+
+    for (const booking of bookings) {
+      if (!booking.member?.id) {
+        continue;
+      }
+
+      const existing = customerMap.get(booking.member.id) ?? {
+        id: booking.member.id,
+        name: booking.member.name ?? null,
+        email: booking.member.email ?? null,
+        phone: booking.member.phone ?? null,
+        visits: 0,
+        orders: 0,
+        pets: new Set<string>(),
+        lastVisitAt: null,
+      };
+
+      existing.visits += 1;
+      if (booking.status === BookingStatusEnum.COMPLETED) {
+        existing.orders += 1;
+      }
+
+      if (booking.case?.pet?.id) {
+        existing.pets.add(booking.case.pet.id);
+      }
+
+      const visitDate = booking.scheduledAt ?? booking.createdAt;
+      if (!existing.lastVisitAt || visitDate > existing.lastVisitAt) {
+        existing.lastVisitAt = visitDate;
+      }
+
+      customerMap.set(booking.member.id, existing);
+    }
+
+    const customers = Array.from(customerMap.values()).map((item) => ({
+      id: item.id,
+      name: item.name,
+      email: item.email,
+      phone: item.phone,
+      visits: item.visits,
+      orders: item.orders,
+      pets: item.pets.size,
+      lastVisitAt: item.lastVisitAt,
+    }));
+
+    if (!search?.trim()) {
+      return customers.sort((a, b) => b.visits - a.visits);
+    }
+
+    const normalized = search.trim().toLowerCase();
+    return customers
+      .filter((item) =>
+        [item.name, item.email, item.phone]
+          .filter((field): field is string => !!field)
+          .some((field) => field.toLowerCase().includes(normalized)),
+      )
+      .sort((a, b) => b.visits - a.visits);
+  }
+
+  async createCustomer(
+    partner: AuthUser,
+    body: Partial<
+      Pick<Member, 'name' | 'email' | 'phone' | 'address' | 'city' | 'country'>
+    >,
+  ): Promise<Member> {
+    if (!body.name && !body.email && !body.phone) {
+      throw new BadRequestException(
+        'At least one of name, email or phone is required',
+      );
+    }
+
+    this.logger.info(
+      `[LOG: PARTNER_SERVICE] createCustomer called for partnerId: ${partner.id}`,
+    );
+
+    const customer = this.memberRepo.create({
+      role: RolesEnum.MEMBER,
+      isEmailVerified: false,
+      isPhoneVerified: false,
+      ...body,
+    });
+
+    return await this.memberRepo.save(customer);
+  }
+
+  async updateCustomer(
+    partner: AuthUser,
+    id: string,
+    body: Partial<
+      Pick<Member, 'name' | 'email' | 'phone' | 'address' | 'city' | 'country'>
+    >,
+  ): Promise<Member> {
+    const customer = await this.memberRepo.findOne({
+      where: { id },
+      relations: { cases: true },
+    });
+
+    if (!customer) {
+      throw new NotFoundException('Customer not found');
+    }
+
+    const bookingCount = await this.partnerBookingRepo.count({
+      where: {
+        partner: { id: partner.id },
+        member: { id: customer.id },
+      },
+    });
+
+    if (!bookingCount && customer.cases?.length) {
+      throw new NotFoundException('Customer not found');
+    }
+
+    return await this.memberRepo.save({
+      ...customer,
+      ...body,
+    });
+  }
+
+  async deleteCustomer(partner: AuthUser, id: string): Promise<void> {
+    const customer = await this.memberRepo.findOne({
+      where: { id },
+      relations: { cases: true },
+    });
+
+    if (!customer) {
+      throw new NotFoundException('Customer not found');
+    }
+
+    const bookingCount = await this.partnerBookingRepo.count({
+      where: {
+        partner: { id: partner.id },
+        member: { id: customer.id },
+      },
+    });
+
+    if (!bookingCount && customer.cases?.length) {
+      throw new NotFoundException('Customer not found');
+    }
+
+    if (customer.cases?.length) {
+      throw new BadRequestException(
+        'Cannot delete customer with existing visit history',
+      );
+    }
+
+    await this.memberRepo.softRemove(customer);
+  }
+
+  async findFinanceSummary(partner: AuthUser) {
+    const bookings = await this.partnerBookingRepo.find({
+      where: { partner: { id: partner.id } },
+      select: {
+        id: true,
+        status: true,
+        scheduledAt: true,
+        services: true,
+      },
+    });
+
+    const now = dayJS();
+    const completedVisits = bookings.filter(
+      (item) => item.status === BookingStatusEnum.COMPLETED,
+    ).length;
+    const cancelledVisits = bookings.filter(
+      (item) => item.status === BookingStatusEnum.CANCELLED,
+    ).length;
+    const upcomingVisits = bookings.filter(
+      (item) =>
+        item.status === BookingStatusEnum.INITIATED &&
+        (!!item.scheduledAt ? dayJS(item.scheduledAt).isAfter(now) : false),
+    ).length;
+
+    const totalRevenue = bookings
+      .filter((item) => item.status === BookingStatusEnum.COMPLETED)
+      .reduce((sum, item) => {
+        const bookingTotal = (item.services ?? []).reduce(
+          (acc, service) => acc + Number(service.price ?? 0),
+          0,
+        );
+        return sum + bookingTotal;
+      }, 0);
+
+    return {
+      completedVisits,
+      upcomingVisits,
+      cancelledVisits,
+      totalRevenue: Number(totalRevenue.toFixed(2)),
+      currency: 'AED',
+    };
+  }
+
+  async findAppointmentInvoice(partner: AuthUser, id: string) {
+    const booking = await this.partnerBookingRepo.findOne({
+      where: {
+        id,
+        partner: { id: partner.id },
+      },
+      relations: {
+        member: true,
+      },
+    });
+
+    if (!booking) {
+      throw new NotFoundException(`Booking with id ${id} not found`);
+    }
+
+    const subtotal = (booking.services ?? []).reduce(
+      (sum, service) => sum + Number(service.price ?? 0),
+      0,
+    );
+
+    return {
+      id: `inv-${booking.id}`,
+      appointmentId: booking.id,
+      paymentIntentId: booking.paymentIntentId,
+      scheduledAt: booking.scheduledAt,
+      services: booking.services ?? [],
+      subtotal: Number(subtotal.toFixed(2)),
+      total: Number(subtotal.toFixed(2)),
+      currency: 'AED',
+      memberName: booking.member?.name ?? null,
+      memberEmail: booking.member?.email ?? null,
+      memberPhone: booking.member?.phone ?? null,
+    };
   }
 
   async deleteVet(partner: AuthUser, id: string): Promise<void> {

@@ -201,4 +201,20 @@ export class VetController {
   ): Promise<void> {
     return this.vetService.sendReminder(user, id);
   }
+
+  @Post('/consultations/:id/accept')
+  async acceptConsultation(
+    @Param('id') id: string,
+    @GetUser() user: AuthUser,
+  ): Promise<void> {
+    await this.vetService.acceptConsultation(user, id);
+  }
+
+  @Post('/consultations/:id/reject')
+  async rejectConsultation(
+    @Param('id') id: string,
+    @GetUser() user: AuthUser,
+  ): Promise<void> {
+    await this.vetService.rejectConsultation(user, id);
+  }
 }

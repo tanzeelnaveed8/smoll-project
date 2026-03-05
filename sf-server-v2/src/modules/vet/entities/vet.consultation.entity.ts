@@ -41,6 +41,12 @@ export class VetConsultation extends BaseEntity {
   @Column({ nullable: true, type: 'timestamptz' })
   scheduledAt: Date | null;
 
+  @Column({ default: false })
+  isAccepted: boolean;
+
+  @Column({ nullable: true })
+  rejectedByVetName: string | null;
+
   @CreateDateColumn({
     type: 'timestamptz',
   })

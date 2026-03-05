@@ -24,6 +24,12 @@ export class FindAppointmentCalendarQueryDto {
   vetId?: string;
 }
 
+export class FindPartnerCustomersQueryDto {
+  @IsString()
+  @IsOptional()
+  search?: string;
+}
+
 /** Responses */
 
 export class FindPartnerSpecialityResDto {
@@ -179,6 +185,99 @@ export class FindPartnerAppointmentResDto {
   @Expose()
   @Transform(({ obj, value }) => obj.member?.name ?? value)
   member: string;
+}
+
+export class FindPartnerCustomerResDto {
+  @Expose()
+  id: string;
+
+  @Expose()
+  name: string | null;
+
+  @Expose()
+  email: string | null;
+
+  @Expose()
+  phone: string | null;
+
+  @Expose()
+  visits: number;
+
+  @Expose()
+  orders: number;
+
+  @Expose()
+  pets: number;
+
+  @Expose()
+  lastVisitAt: Date | null;
+}
+
+export class FindPartnerFinanceResDto {
+  @Expose()
+  completedVisits: number;
+
+  @Expose()
+  upcomingVisits: number;
+
+  @Expose()
+  cancelledVisits: number;
+
+  @Expose()
+  totalRevenue: number;
+
+  @Expose()
+  currency: string;
+}
+
+export class FindPartnerInvoiceServiceResDto {
+  @Expose()
+  name: string;
+
+  @Expose()
+  description: string;
+
+  @Expose()
+  price: number;
+
+  @Expose()
+  label: string;
+}
+
+export class FindPartnerInvoiceResDto {
+  @Expose()
+  id: string;
+
+  @Expose()
+  appointmentId: string;
+
+  @Expose()
+  paymentIntentId: string;
+
+  @Expose()
+  scheduledAt: Date | null;
+
+  @Expose()
+  @Type(() => FindPartnerInvoiceServiceResDto)
+  services: FindPartnerInvoiceServiceResDto[];
+
+  @Expose()
+  subtotal: number;
+
+  @Expose()
+  total: number;
+
+  @Expose()
+  currency: string;
+
+  @Expose()
+  memberName: string | null;
+
+  @Expose()
+  memberEmail: string | null;
+
+  @Expose()
+  memberPhone: string | null;
 }
 
 export class FindAppointmentCalendarResDto {

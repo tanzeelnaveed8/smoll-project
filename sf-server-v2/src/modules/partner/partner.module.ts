@@ -18,6 +18,7 @@ import { PartnerBooking } from './entities/partner.booking.entity';
 import { BullModule } from '@nestjs/bullmq';
 import { StripeModule } from '../stripe/stripe.module';
 import { CaseModule } from '../case/case.module';
+import { Member } from '../member/member.entity';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { CaseModule } from '../case/case.module';
       VetAvailability,
       PartnerSpeciality,
       PartnerBooking,
+      Member,
     ]),
     StripeModule,
     CaseModule,
