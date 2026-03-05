@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Date &amp; Time Selector</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "primary": "#5f9cec",
+                "background-light": "#f6f7f8",
+                "background-dark": "#111821",
+              },
+              fontFamily: {
+                "display": ["Manrope"]
+              },
+              borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+            },
+          },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-[#F9F8F6] font-display text-slate-900 min-h-screen">
+<!-- Main Container -->
+<div class="relative flex h-full min-h-screen w-full flex-col bg-[#F9F8F6] max-w-md mx-auto overflow-x-hidden">
+<!-- Top App Bar -->
+<div class="flex flex-col p-6 pb-2 gap-6">
+<div class="flex items-center">
+<div class="flex size-10 items-center justify-center rounded-full bg-white shadow-sm cursor-pointer">
+<span class="material-symbols-outlined text-slate-600 text-xl">chevron_left</span>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<h1 class="text-[#1A1C1E] text-2xl font-bold tracking-tight">Select Date &amp; Time</h1>
+<p class="text-[#74777F] text-sm">Choose a slot that works for you</p>
+</div>
+</div>
+<div class="flex flex-col flex-1">
+<!-- Date Selection Section -->
+<div class="flex items-center gap-2 px-6 pt-4 pb-2">
+<span class="material-symbols-outlined text-primary text-xl">calendar_month</span>
+<span class="text-[#1A1C1E] font-bold">October 2023</span>
+</div>
+<div class="flex gap-3 px-6 py-4 overflow-x-auto no-scrollbar">
+<!-- Selected Date -->
+<div class="flex h-[72px] min-w-[62px] shrink-0 flex-col items-center justify-center gap-0.5 rounded-2xl bg-primary text-white shadow-[0_8px_16px_rgba(95,156,236,0.3)]"><p class="text-[10px] font-medium text-white/80">Mon</p>
+<p class="text-lg font-bold">14</p></div>
+<!-- Other Dates -->
+<div class="flex h-[72px] min-w-[62px] shrink-0 flex-col items-center justify-center gap-0.5 rounded-2xl bg-white"><p class="text-[10px] font-medium text-[#74777F]">Tue</p>
+<p class="text-lg font-bold text-[#1A1C1E]">15</p></div>
+<div class="flex h-[72px] min-w-[62px] shrink-0 flex-col items-center justify-center gap-0.5 rounded-2xl bg-white"><p class="text-[10px] font-medium text-[#74777F]">Tue</p>
+<p class="text-lg font-bold text-[#1A1C1E]">15</p></div>
+<div class="flex h-[72px] min-w-[62px] shrink-0 flex-col items-center justify-center gap-0.5 rounded-2xl bg-white"><p class="text-[10px] font-medium text-[#74777F]">Tue</p>
+<p class="text-lg font-bold text-[#1A1C1E]">15</p></div>
+<div class="flex h-[72px] min-w-[62px] shrink-0 flex-col items-center justify-center gap-0.5 rounded-2xl bg-white"><p class="text-[10px] font-medium text-[#74777F]">Tue</p>
+<p class="text-lg font-bold text-[#1A1C1E]">15</p></div>
+<div class="flex h-[72px] min-w-[62px] shrink-0 flex-col items-center justify-center gap-0.5 rounded-2xl bg-white"><p class="text-[10px] font-medium text-[#74777F]">Tue</p>
+<p class="text-lg font-bold text-[#1A1C1E]">15</p></div>
+</div>
+<!-- Time Slots Section -->
+<div class="flex items-center gap-2 px-6 pt-6 pb-2">
+<span class="material-symbols-outlined text-primary text-xl">schedule</span>
+<span class="text-[#1A1C1E] font-bold">Available Slots</span>
+</div>
+<div class="grid grid-cols-2 gap-3 px-6 py-4">
+<!-- Selected Slot -->
+<div class="flex flex-1 h-[48px] items-center justify-center rounded-lg border border-primary bg-[#ECF4FF] cursor-pointer">
+<span class="text-primary text-sm font-semibold">09:00 AM</span>
+</div>
+<!-- Other Slots -->
+<div class="flex flex-1 h-[48px] items-center justify-center rounded-lg bg-white border border-transparent cursor-pointer">
+<span class="text-[#44474E] text-sm font-semibold">10:00 AM</span>
+</div>
+<div class="flex flex-1 h-[48px] items-center justify-center rounded-lg bg-white border border-transparent cursor-pointer">
+<span class="text-[#44474E] text-sm font-semibold">10:00 AM</span>
+</div>
+<div class="flex flex-1 h-[48px] items-center justify-center rounded-lg bg-white border border-transparent cursor-pointer">
+<span class="text-[#44474E] text-sm font-semibold">10:00 AM</span>
+</div>
+<div class="flex flex-1 h-[48px] items-center justify-center rounded-lg bg-white border border-transparent cursor-pointer">
+<span class="text-[#44474E] text-sm font-semibold">10:00 AM</span>
+</div>
+<div class="flex flex-1 h-[48px] items-center justify-center rounded-lg bg-white border border-transparent cursor-pointer">
+<span class="text-[#44474E] text-sm font-semibold">10:00 AM</span>
+</div>
+<div class="flex flex-1 h-[48px] items-center justify-center rounded-lg bg-white border border-transparent cursor-pointer">
+<span class="text-[#44474E] text-sm font-semibold">10:00 AM</span>
+</div>
+<div class="flex flex-1 h-[48px] items-center justify-center rounded-lg bg-white border border-transparent cursor-pointer">
+<span class="text-[#44474E] text-sm font-semibold">10:00 AM</span>
+</div>
+</div>
+</div>
+<!-- Sticky Bottom Button -->
+<div class="mt-auto p-6 bg-white rounded-t-[32px] shadow-[0_-8px_32px_rgba(0,0,0,0.05)]">
+<button class="w-full h-14 bg-primary text-white font-bold text-sm rounded-2xl shadow-[0_8px_16px_rgba(95,156,236,0.3)] transition-all active:scale-95">
+    Continue to Payment
+  </button>
+</div>
+</div>
+<style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</body></html>

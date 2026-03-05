@@ -1,48 +1,30 @@
 import Layout from "@/components/app/Layout";
-import HomeScreenBanner from "@/components/app/HomeScreenBanner";
 import OnboardingCongratsModal from "@/components/app/onboarding/OnboardingCongratsModal";
-import {
-  colorPrimary,
-  fontHauora,
-  fontHauoraBold,
-  fontHauoraMedium,
-  fontHauoraSemiBold,
-  fontHeading,
-} from "@/constant/constant";
+import { fontHauora, fontHauoraBold, fontHauoraMedium, fontHeading } from "@/constant/constant";
+import { DEMO_MODE } from "@/utils/config";
 import { useNotificationStore } from "@/store/modules/notification";
 import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
 import { useRoute } from "@react-navigation/native";
-import {
-  IconBell,
-  IconChevronRight,
-  IconMessage,
-  IconSearch,
-  IconSettings,
-  IconUser,
-} from "@tabler/icons-react-native";
-import dayjs from "dayjs";
+import { IconArrowRight, IconBell, IconUser } from "@tabler/icons-react-native";
 import React, { useEffect, useState } from "react";
 import { Image, StyleSheet, TouchableOpacity } from "react-native";
-import { Button, Div, ScrollDiv, Text } from "react-native-magnus";
+import { Div, ScrollDiv, Text } from "react-native-magnus";
+
+const smollHomeIllustration = require("../stitch-export/home-final/Illustrations/smol-home.png");
+const smollVetIllustration = require("../stitch-export/home-final/Illustrations/smoll-vet.png");
+const appointmentIllustration = require("../stitch-export/home-final/Illustrations/appointments.png");
+const networkIllustration = require("../stitch-export/home-final/Illustrations/network.png");
 
 interface Props {
   navigation: NavigationType;
   isNewUser?: boolean;
 }
 
-function getTimeBasedGreeting(): string {
-  const hour = dayjs().hour();
-  if (hour < 12) return "Good Morning";
-  if (hour < 17) return "Good Afternoon";
-  return "Good Evening";
-}
-
 const HomeScreen: React.FC<Props> = (props) => {
   const route = useRoute();
   const { user } = useUserStore();
   const { fetchNotifications, notifications } = useNotificationStore();
-  const [greeting] = useState(getTimeBasedGreeting());
   const [showCongratsModal, setShowCongratsModal] = useState(false);
 
   useEffect(() => {
@@ -56,76 +38,44 @@ const HomeScreen: React.FC<Props> = (props) => {
     }
   }, [route?.params]);
 
-  const displayName = user?.name ? `${user.name} & Bella` : "Sarah & Bella";
+  const displayName = user?.name ? user.name : "Jane";
+  const displayFirstName = displayName.split(" ")[0] || "Jane";
   const hasNotifications = Boolean(notifications?.count && notifications.count > 0);
 
   return (
     <>
       <Layout style={{ justifyContent: "flex-start" }} disableHeader>
         <ScrollDiv showsVerticalScrollIndicator={false}>
-          {/* Header: avatar + greeting + name, then profile/settings/notifications */}
+          {DEMO_MODE && (
+            <Div
+              bg="#EFF6FF"
+              py={4}
+              px={10}
+              mb={4}
+              alignSelf="flex-start"
+              rounded={999}
+            >
+              <Text fontSize={11} fontFamily={fontHauoraMedium} color="#3B82F6">
+                Demo mode
+              </Text>
+            </Div>
+          )}
+          {/* Header: logo + notifications/profile */}
           <Div
             flexDir="row"
             justifyContent="space-between"
             alignItems="center"
             pt={8}
             pb={6}
-            mb={2}
+            mb={10}
           >
-            <Div flexDir="row" alignItems="center" style={{ gap: 12 }} flex={1}>
-              <Div
-                w={56}
-                h={56}
-                rounded={100}
-                bg="#FFC107"
-                overflow="hidden"
-                style={styles.avatarWrap}
-              >
-                {user?.profileImg?.url ? (
-                  <Image
-                    source={{ uri: user.profileImg.url }}
-                    style={{ width: "100%", height: "100%" }}
-                    resizeMode="cover"
-                  />
-                ) : (
-                  <Div flex={1} justifyContent="center" alignItems="center">
-                    <IconUser size={28} color="#222" />
-                  </Div>
-                )}
-              </Div>
-              <Div>
-                <Text
-                  fontSize={10}
-                  fontFamily={fontHauoraBold}
-                  color="#9BA1A7"
-                  letterSpacing={2}
-                  style={{ textTransform: "uppercase" }}
-                >
-                  {greeting}
-                </Text>
-                <Div flexDir="row" alignItems="center" style={{ gap: 4 }}>
-                  <Text fontSize={"xl"} fontFamily={fontHeading} color="#222">
-                    {displayName}
-                  </Text>
-                  <Text fontSize={"lg"} color="#4E4485">
-                    🐾
-                  </Text>
-                </Div>
-              </Div>
+            <Div flexDir="row" alignItems="center" style={{ gap: 8 }}>
+              <Image
+                source={require("../assets/logo.png")}
+                style={{ width: 100, height: 28, resizeMode: "contain" }}
+              />
             </Div>
             <Div flexDir="row" alignItems="center" style={{ gap: 8 }}>
-              <TouchableOpacity
-                onPress={() => props.navigation.navigate("SettingPersonalInfoScreen")}
-                style={styles.iconButton}
-              >
-                <IconUser size={20} color="#9CA3AF" strokeWidth={1.5} />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => props.navigation.navigate("SettingsMainScreen")}
-                style={styles.iconButton}
-              >
-                <IconSettings size={20} color="#9CA3AF" strokeWidth={1.5} />
-              </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => props.navigation.navigate("NotificationScreen")}
                 style={styles.iconButton}
@@ -147,190 +97,134 @@ const HomeScreen: React.FC<Props> = (props) => {
                   )}
                 </Div>
               </TouchableOpacity>
-            </Div>
-          </Div>
-
-          {/* Search bar */}
-          <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={() => props.navigation.navigate("ExpertsListScreen")}
-            style={styles.searchBar}
-          >
-            <IconSearch size={20} color="#9CA3AF" style={{ marginRight: 12 }} />
-            <Text fontSize={"sm"} color="#9CA3AF" fontFamily={fontHauora}>
-              Find a specialist, service...
-            </Text>
-          </TouchableOpacity>
-
-          <HomeScreenBanner navigation={props.navigation} />
-
-          {/* What do you need? */}
-          <Div mb={10}>
-            <Text fontSize={"xl"} fontFamily={fontHauoraBold} color="#222" mb={6}>
-              What do you need?
-            </Text>
-            <Div style={{ gap: 16 }}>
-              <Button
-                bg="white"
-                p={24}
-                rounded={32}
-                flexDir="row"
-                alignItems="center"
-                justifyContent="space-between"
-                onPress={() => props.navigation.navigate("ExpertsListScreen")}
-                style={styles.actionCard}
-                underlayColor="#f9fafb"
+              <TouchableOpacity
+                onPress={() => props.navigation.navigate("SettingPersonalInfoScreen")}
+                style={styles.iconButton}
               >
-                <Div flexDir="row" alignItems="center" style={{ gap: 20 }} flex={1}>
-                  <Div
-                    w={64}
-                    h={64}
-                    bg="#F0F5FF"
-                    rounded={16}
-                    justifyContent="center"
-                    alignItems="center"
-                  >
-                    <IconMessage size={32} color={colorPrimary} strokeWidth={1.5} />
-                  </Div>
-                  <Div flex={1}>
-                    <Text fontSize={"lg"} fontFamily={fontHauoraBold} color="#222">
-                      Talk to a Vet
-                    </Text>
-                    <Text
-                      fontSize={"sm"}
-                      fontFamily={fontHauoraMedium}
-                      color="#6B7280"
-                      mt={4}
-                      lineHeight={18}
-                    >
-                      Instant video consultation with a licensed veterinarian.
-                    </Text>
-                  </Div>
-                </Div>
-                <Div
-                  w={40}
-                  h={40}
-                  bg="#F7F8FA"
-                  rounded={100}
-                  justifyContent="center"
-                  alignItems="center"
-                >
-                  <IconChevronRight size={20} color="#D1D5DB" strokeWidth={2} />
-                </Div>
-              </Button>
-
-              <Button
-                bg="white"
-                p={24}
-                rounded={32}
-                flexDir="row"
-                alignItems="center"
-                justifyContent="space-between"
-                onPress={() => props.navigation.navigate("HomeServicesScreen")}
-                style={styles.actionCard}
-                underlayColor="#f9fafb"
-              >
-                <Div flexDir="row" alignItems="center" style={{ gap: 20 }} flex={1}>
-                  <Div
-                    w={64}
-                    h={64}
-                    bg="#FFF2EA"
-                    rounded={16}
-                    justifyContent="center"
-                    alignItems="center"
-                  >
-                    <Text fontSize={28}>🛒</Text>
-                  </Div>
-                  <Div flex={1}>
-                    <Text fontSize={"lg"} fontFamily={fontHauoraBold} color="#222">
-                      Home Services
-                    </Text>
-                    <Text
-                      fontSize={"sm"}
-                      fontFamily={fontHauoraMedium}
-                      color="#6B7280"
-                      mt={4}
-                      lineHeight={18}
-                    >
-                      Grooming, vaccinations, and checkups at your doorstep.
-                    </Text>
-                  </Div>
-                </Div>
-                <Div
-                  w={40}
-                  h={40}
-                  bg="#F7F8FA"
-                  rounded={100}
-                  justifyContent="center"
-                  alignItems="center"
-                >
-                  <IconChevronRight size={20} color="#D1D5DB" strokeWidth={2} />
-                </Div>
-              </Button>
-            </Div>
-          </Div>
-
-          {/* Upcoming */}
-          <Div mb={10} style={{ width: "100%" }}>
-            <Div flexDir="row" justifyContent="space-between" alignItems="center" mb={4}>
-              <Text fontSize={"xl"} fontFamily={fontHauoraBold} color="#222">
-                Upcoming
-              </Text>
-              <TouchableOpacity onPress={() => props.navigation.navigate("AppointmentsScreen")}>
-                <Text fontSize={"sm"} fontFamily={fontHauoraSemiBold} color={colorPrimary}>
-                  See all
-                </Text>
+                <IconUser size={20} color="#9CA3AF" strokeWidth={1.5} />
               </TouchableOpacity>
             </Div>
+          </Div>
+
+          {/* Greeting */}
+          <Div mt={12} mb={24}>
+            <Text fontSize={"4xl"} fontFamily={fontHeading} color="#111111" mb={6}>
+              Hi, {displayFirstName}
+            </Text>
+            <Text fontSize={"lg"} fontFamily={fontHauora} color="#494949">
+              How can we help you today?
+            </Text>
+          </Div>
+
+          {/* Primary cards: smoll Home & smoll Vet */}
+          <Div style={{ gap: 16 }} mb={16}>
+            <TouchableOpacity
+              activeOpacity={0.85}
+              onPress={() => props.navigation.navigate("HomeServicesScreen")}
+              style={styles.primaryCard}
+            >
+              <Div>
+                <Text fontSize={"xl"} fontFamily={fontHauoraBold} color="#111827" mb={6}>
+                  smoll®Home
+                </Text>
+                <Text fontSize={"md"} fontFamily={fontHauoraMedium} color="#6B7280" lineHeight={20}>
+                  Book Home Visits
+                </Text>
+              </Div>
+
+              <Image source={smollHomeIllustration} style={styles.primaryHomeImage} />
+              <Div style={styles.primaryArrowWrap}>
+                <IconArrowRight size={28} color="#111827" strokeWidth={2.5} />
+              </Div>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              activeOpacity={0.85}
+              onPress={() => props.navigation.navigate("ExpertsListScreen")}
+              style={styles.primaryCard}
+            >
+              <Div>
+                <Text fontSize={"xl"} fontFamily={fontHauoraBold} color="#111827" mb={6}>
+                  smoll®Vet
+                </Text>
+                <Text fontSize={"md"} fontFamily={fontHauoraMedium} color="#6B7280" lineHeight={20}>
+                  Consult over Video
+                </Text>
+              </Div>
+
+              <Image source={smollVetIllustration} style={styles.primaryVetImage} />
+              <Div style={styles.primaryArrowWrap}>
+                <IconArrowRight size={28} color="#111827" strokeWidth={2.5} />
+              </Div>
+            </TouchableOpacity>
+          </Div>
+
+          {/* Secondary grid cards */}
+          <Div flexDir="row" style={{ gap: 16 }} mb={32}>
+            <TouchableOpacity
+              activeOpacity={0.85}
+              onPress={() => props.navigation.navigate("AppointmentsScreen")}
+              style={[styles.secondaryCard, { flex: 1 }]}
+            >
+              <Div flex={1} justifyContent="space-between">
+                <Image
+                  source={appointmentIllustration}
+                  style={styles.secondaryIconImage}
+                />
+                <Div>
+                  <Text
+                    fontSize={"lg"}
+                    fontFamily={fontHauoraBold}
+                    color="#111827"
+                    mb={4}
+                  >
+                    Appointment
+                  </Text>
+                  <Text
+                    fontSize={"sm"}
+                    fontFamily={fontHauoraMedium}
+                    color="#6B7280"
+                    lineHeight={18}
+                  >
+                    Your appointment
+                  </Text>
+                </Div>
+              </Div>
+            </TouchableOpacity>
+
             <TouchableOpacity
               activeOpacity={0.85}
               onPress={() => props.navigation.navigate("ClinicListScreen")}
-              style={[styles.upcomingCard, styles.upcomingCardTouchable]}
+              style={[styles.secondaryCard, { flex: 1 }]}
             >
-              <Div flexDir="column" w="100%" style={{ overflow: "hidden" }}>
-                <Div flexDir="row" alignItems="flex-start" style={{ gap: 16 }} mb={16}>
-                  <Div
-                    w={56}
-                    h={56}
-                    bg="rgba(255,255,255,0.1)"
-                    rounded={16}
-                    justifyContent="center"
-                    alignItems="center"
-                    style={{ flexShrink: 0 }}
+              <Div flex={1} justifyContent="space-between">
+                <Image
+                  source={networkIllustration}
+                  style={styles.secondaryIconImage}
+                />
+                <Div>
+                  <Text
+                    fontSize={"lg"}
+                    fontFamily={fontHauoraBold}
+                    color="#111827"
+                    mb={4}
                   >
-                    <Text fontSize={28}>📅</Text>
-                  </Div>
-                  <Div flex={1} style={{ minWidth: 0 }}>
-                    <Text fontSize={"lg"} fontFamily={fontHauoraBold} color="white">
-                      Vaccination Due
-                    </Text>
-                    <Text
-                      fontSize={"sm"}
-                      fontFamily={fontHauoraMedium}
-                      color="rgba(255,255,255,0.7)"
-                      mt={4}
-                    >
-                      Bella needs her annual rabies shot.
-                    </Text>
-                  </Div>
-                </Div>
-                <Div
-                  bg="white"
-                  py={14}
-                  rounded={16}
-                  alignItems="center"
-                  justifyContent="center"
-                  w="100%"
-                >
-                  <Text fontSize={"sm"} fontFamily={fontHauoraBold} color="#1A3B70">
-                    Schedule Now
+                    Network
+                  </Text>
+                  <Text
+                    fontSize={"sm"}
+                    fontFamily={fontHauoraMedium}
+                    color="#6B7280"
+                    lineHeight={18}
+                  >
+                    Our partners clinics
                   </Text>
                 </Div>
               </Div>
             </TouchableOpacity>
           </Div>
 
-          <Div h={50} />
+          <Div h={80} />
         </ScrollDiv>
 
         <OnboardingCongratsModal
@@ -345,9 +239,6 @@ const HomeScreen: React.FC<Props> = (props) => {
 export default HomeScreen;
 
 const styles = StyleSheet.create({
-  avatarWrap: {
-    overflow: "hidden",
-  },
   iconButton: {
     width: 40,
     height: 40,
@@ -358,40 +249,64 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  searchBar: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#fff",
-    paddingVertical: 16,
-    paddingLeft: 16,
-    paddingRight: 16,
-    borderRadius: 24,
-    marginBottom: 20,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  actionCard: {
+  primaryCard: {
+    backgroundColor: "#FFFFFF",
+    paddingVertical: 32,
+    paddingHorizontal: 28,
+    minHeight: 220,
+    borderRadius: 40,
+    borderWidth: 1,
+    borderColor: "#E5E7EB",
+    position: "relative",
+    overflow: "hidden",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.05,
     shadowRadius: 20,
     elevation: 2,
   },
-  upcomingCard: {
-    backgroundColor: "#1A3B70",
-    padding: 24,
-    borderRadius: 32,
-    shadowColor: "rgba(26, 54, 110, 0.15)",
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 1,
-    shadowRadius: 24,
-    elevation: 4,
+  primaryHomeImage: {
+    position: "absolute",
+    right: 4,
+    bottom: -4,
+    width: 200,
+    height: 176,
+    resizeMode: "contain",
   },
-  upcomingCardTouchable: {
-    width: "100%",
+  primaryVetImage: {
+    position: "absolute",
+    right: 18,
+    bottom: -10,
+    width: 170,
+    height: 190,
+    resizeMode: "contain",
+  },
+  primaryArrowWrap: {
+    position: "absolute",
+    left: 24,
+    bottom: 36,
+    width: 40,
+    height: 40,
+    justifyContent: "center",
+    alignItems: "flex-start",
+  },
+  secondaryCard: {
+    backgroundColor: "#FFFFFF",
+    padding: 24,
+    borderRadius: 40,
+    borderWidth: 1,
+    borderColor: "#E5E7EB",
+    aspectRatio: 1,
     overflow: "hidden",
+  },
+  secondaryIconWrap: {
+    // no longer used; kept for compatibility
+  },
+  secondaryIconImage: {
+    width: 72,
+    height: 72,
+    resizeMode: "contain",
+    alignSelf: "center",
+    marginBottom: 16,
   },
 });
