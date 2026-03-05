@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#5f9cec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#111821",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<title>Checkout</title>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-[#faf9f6] font-display text-slate-900 min-h-screen">
+<div class="relative flex h-auto min-h-screen w-full max-w-md mx-auto flex-col bg-background-light dark:bg-background-dark overflow-x-hidden"><!-- Header -->
+<div class="flex flex-col px-6 pt-10 pb-4">
+<div class="w-10 h-10 flex items-center justify-center bg-white rounded-full shadow-sm cursor-pointer mb-6">
+<span class="material-symbols-outlined text-slate-600 text-sm">arrow_back_ios_new</span>
+</div>
+<h1 class="text-2xl font-extrabold text-slate-900 mb-1">Checkout</h1>
+<p class="text-sm text-slate-500">Review your order details</p>
+</div>
+<div class="flex-1 overflow-y-auto px-6 pb-32">
+<!-- Order Summary -->
+<div class="bg-white rounded-[2rem] p-6 mb-6 shadow-sm border border-slate-50">
+<h3 class="text-sm font-bold text-slate-900 mb-6">Order Summary</h3>
+<div class="space-y-6">
+<div class="flex justify-between items-center">
+<p class="text-sm font-medium text-slate-600">1x Grooming</p>
+<p class="text-sm font-extrabold text-slate-900">AED 40.00</p>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-lg">local_shipping</span>
+<p class="text-sm font-medium text-slate-600">Travel Fee</p>
+</div>
+<p class="text-sm font-extrabold text-slate-900">AED 30.00</p>
+</div>
+<div class="pt-4 border-t border-slate-50 flex justify-between items-center">
+<p class="text-sm font-medium text-slate-400">Subtotal</p>
+<p class="text-sm font-extrabold text-slate-900">AED 40.00</p>
+</div>
+<div class="flex justify-between items-center">
+<p class="text-base font-extrabold text-slate-900">Total</p>
+<p class="text-xl font-extrabold text-[#5f9cec]">AED 70.00</p>
+</div>
+</div>
+</div>
+<!-- Details -->
+<div class="bg-white rounded-[2rem] p-6 shadow-sm border border-slate-50">
+<div class="flex items-start gap-4 mb-8">
+<div class="w-10 h-10 rounded-full bg-orange-50 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-orange-500 text-lg">location_on</span>
+</div>
+<div class="flex-1">
+<p class="text-[10px] font-bold text-slate-300 uppercase tracking-wider mb-0.5">Location</p>
+<p class="text-sm font-bold text-slate-900">123 Pet Lover Lane, Apt 4B</p>
+<p class="text-xs text-slate-400 mt-1">San Francisco, CA 94110</p>
+</div>
+</div>
+<div class="flex items-start gap-4 mb-8">
+<div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-blue-500 text-lg">schedule</span>
+</div>
+<div class="flex-1">
+<p class="text-[10px] font-bold text-slate-300 uppercase tracking-wider mb-0.5">Appointment</p>
+<p class="text-sm font-bold text-slate-900">2023-10-14 <span class="font-medium text-slate-600 mx-2">at</span> 09:00 AM</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-blue-500 text-lg">payment</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-[10px] font-bold text-slate-300 uppercase tracking-wider mb-0.5">Payment Method</p>
+<div class="flex items-center gap-2 mt-1">
+<p class="text-sm font-bold text-slate-900">•••• 4242</p>
+<span class="text-[10px] font-bold text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">VISA</span>
+</div>
+</div>
+<button class="text-[11px] font-bold text-[#5f9cec]">Change</button>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-8 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-lg">verified_user</span>
+<p class="text-[11px] font-medium text-slate-400">Secure SSL Payment</p>
+</div>
+</div>
+<!-- Footer -->
+<div class="fixed bottom-0 left-0 right-0 p-6 bg-white/80 backdrop-blur-md max-w-md mx-auto">
+<button class="w-full bg-[#5f9cec] text-white font-bold py-5 rounded-2xl shadow-[0_10px_20px_-5px_rgba(95,156,236,0.4)] transition-transform active:scale-[0.98]">
+        Pay AED 70.00
+    </button>
+</div></div>
+</body></html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#5f9cec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#111821",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<title>Your Cart</title>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-[#F9F9F7] font-display text-slate-900 min-h-screen flex flex-col items-center p-4">
+<header class="w-full max-w-md bg-white rounded-3xl p-8 mb-6 shadow-[0_4px_20px_rgba(0,0,0,0.03)]">
+<button class="flex items-center justify-center size-10 rounded-full bg-[#F9F9F7] mb-6">
+<span class="material-symbols-outlined text-slate-600 text-sm">arrow_back_ios_new</span>
+</button>
+<h1 class="text-2xl font-extrabold text-[#1A1A1A]">Your Cart</h1>
+<p class="text-slate-400 text-sm mt-1 font-medium">1 item</p>
+</header>
+<main class="w-full flex-1 flex flex-col items-center"><div class="w-full max-w-md bg-white rounded-3xl p-6 shadow-[0_4px_20px_rgba(0,0,0,0.03)]">
+<div class="flex justify-between items-start mb-6">
+<h3 class="text-lg font-bold text-[#1A1A1A]">Grooming</h3>
+<button class="text-slate-300 hover:text-red-500 transition-colors">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex items-center bg-[#F9F9F7] rounded-xl p-1 gap-4">
+<button class="size-10 flex items-center justify-center rounded-lg bg-slate-500 text-white shadow-sm">
+<span class="material-symbols-outlined text-lg">remove</span>
+</button>
+<span class="text-lg font-bold w-4 text-center text-[#1A1A1A]">1</span>
+<button class="size-10 flex items-center justify-center rounded-lg text-slate-600">
+<span class="material-symbols-outlined text-lg">add</span>
+</button>
+</div>
+<p class="text-[#5f9cec] font-bold text-lg">AED 40.00</p>
+</div>
+</div></main>
+<footer class="w-full max-w-md bg-white rounded-3xl p-6 mt-6 shadow-[0_-4px_20px_rgba(0,0,0,0.03)]">
+<div class="flex justify-between items-center mb-6 px-2">
+<span class="text-slate-400 font-bold">Total</span>
+<span class="text-2xl font-extrabold text-[#5f9cec]">AED 40.00</span>
+</div>
+<button class="w-full bg-[#5f9cec] hover:bg-[#5f9cec]/90 text-white font-bold py-5 rounded-2xl shadow-xl shadow-[#5f9cec]/30 transition-all active:scale-[0.98]">
+        Proceed to Checkout
+    </button>
+</footer>
+</body></html>

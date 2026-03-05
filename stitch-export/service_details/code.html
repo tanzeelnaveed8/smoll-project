@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#5f9cec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#111821",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+<div class="relative flex h-auto min-h-screen w-full max-w-md mx-auto flex-col bg-slate-50 dark:bg-background-dark overflow-x-hidden shadow-xl">
+<!-- Top Navigation -->
+<div class="flex items-center p-6 sticky top-0 z-10">
+<div class="bg-slate-100 dark:bg-slate-800 flex size-10 shrink-0 items-center justify-center rounded-full cursor-pointer hover:bg-slate-200 transition-colors">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-400 text-xl">chevron_left</span>
+</div>
+</div>
+<div class="flex flex-col gap-6 pb-32">
+<!-- Service Header -->
+<div class="flex flex-col px-6">
+<div class="flex flex-col items-center justify-center mb-6">
+<div class="w-24 h-24 bg-pink-50 dark:bg-pink-900/20 rounded-2xl flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-slate-800 dark:text-slate-200 text-4xl">content_cut</span>
+</div>
+<h1 class="text-slate-900 dark:text-slate-100 text-2xl font-bold mb-2">Grooming</h1>
+<div class="flex gap-2">
+<div class="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-lg">
+<span class="material-symbols-outlined text-slate-500 text-lg">schedule</span>
+<span class="text-slate-600 dark:text-slate-400 text-sm font-medium">45-60 min</span>
+</div>
+<div class="flex items-center gap-1 bg-yellow-50 dark:bg-yellow-900/20 px-3 py-1 rounded-lg">
+<span class="material-symbols-outlined text-yellow-500 text-lg fill-current">star</span>
+<span class="text-yellow-700 dark:text-yellow-500 text-sm font-medium">4.9 (120+)</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Number of Pets -->
+<div class="px-4"><div class="bg-white dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 flex items-center justify-between mx-6 shadow-sm">
+<div class="flex items-center gap-3">
+<div class="text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-2xl">group</span>
+</div>
+<p class="text-slate-900 dark:text-slate-100 text-base font-bold">Number of pets</p>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-slate-300 dark:text-slate-600">
+<span class="material-symbols-outlined">remove</span>
+</button>
+<span class="text-slate-900 dark:text-slate-100 text-lg font-bold">1</span>
+<button class="text-primary">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+</div></div>
+<!-- Select Package -->
+<div class="px-4"><div class="flex items-center gap-2 mb-4 px-6">
+<span class="material-symbols-outlined text-primary text-xl">verified_user</span>
+<h3 class="text-slate-900 dark:text-slate-100 text-base font-bold">Select Package</h3>
+</div>
+<div class="flex flex-col gap-4 px-6">
+<!-- Basic Care Selected -->
+<div class="relative flex flex-col p-6 rounded-2xl border-2 border-primary bg-blue-50/50 dark:bg-primary/5 cursor-pointer shadow-sm">
+<div class="absolute top-0 right-0 bg-primary text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg rounded-tr-xl uppercase tracking-wider">Selected</div>
+<div class="flex justify-between items-start mb-3">
+<h4 class="font-bold text-lg text-slate-800 dark:text-slate-100">Basic Care</h4>
+<div class="flex flex-col items-end">
+<span class="text-primary font-bold text-lg">AED 40</span>
+</div>
+</div>
+<ul class="flex flex-col gap-2">
+<li class="flex items-center gap-2 text-slate-500 dark:text-slate-400 text-sm">
+<span class="material-symbols-outlined text-primary text-lg">check_circle</span> Standard service
+</li>
+<li class="flex items-center gap-2 text-slate-500 dark:text-slate-400 text-sm">
+<span class="material-symbols-outlined text-primary text-lg">check_circle</span> Health check
+</li>
+<li class="flex items-center gap-2 text-slate-500 dark:text-slate-400 text-sm">
+<span class="material-symbols-outlined text-primary text-lg">check_circle</span> Report card
+</li>
+</ul>
+</div>
+<!-- Premium -->
+<div class="flex flex-col p-6 rounded-2xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-800/30 cursor-pointer shadow-sm">
+<div class="flex justify-between items-start mb-3">
+<h4 class="font-bold text-lg text-slate-800 dark:text-slate-100">Premium</h4>
+<span class="text-slate-900 dark:text-slate-100 font-bold text-lg">AED 60</span>
+</div>
+<ul class="flex flex-col gap-2 opacity-50">
+<li class="flex items-center gap-2 text-slate-500 dark:text-slate-400 text-sm">
+<span class="material-symbols-outlined text-lg">check_circle</span> Everything in Basic
+</li>
+<li class="flex items-center gap-2 text-slate-500 dark:text-slate-400 text-sm">
+<span class="material-symbols-outlined text-lg">check_circle</span> Premium products
+</li>
+<li class="flex items-center gap-2 text-slate-500 dark:text-slate-400 text-sm">
+<span class="material-symbols-outlined text-lg">check_circle</span> Extended time
+</li>
+<li class="flex items-center gap-2 text-slate-500 dark:text-slate-400 text-sm">
+<span class="material-symbols-outlined text-lg">check_circle</span> Photo update
+</li>
+</ul>
+</div>
+<!-- Deluxe Spa -->
+<div class="flex flex-col p-6 rounded-2xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-800/30 cursor-pointer shadow-sm">
+<div class="flex justify-between items-start mb-3">
+<h4 class="font-bold text-lg text-slate-800 dark:text-slate-100">Deluxe Spa</h4>
+<span class="text-slate-900 dark:text-slate-100 font-bold text-lg">AED 88</span>
+</div>
+<ul class="flex flex-col gap-2 opacity-50">
+<li class="flex items-center gap-2 text-slate-500 dark:text-slate-400 text-sm">
+<span class="material-symbols-outlined text-lg">check_circle</span> Everything in Premium
+</li>
+<li class="flex items-center gap-2 text-slate-500 dark:text-slate-400 text-sm">
+<span class="material-symbols-outlined text-lg">check_circle</span> Luxury treatment
+</li>
+<li class="flex items-center gap-2 text-slate-500 dark:text-slate-400 text-sm">
+<span class="material-symbols-outlined text-lg">check_circle</span> Gourmet treat
+</li>
+<li class="flex items-center gap-2 text-slate-500 dark:text-slate-400 text-sm">
+<span class="material-symbols-outlined text-lg">check_circle</span> Take-home bandana
+</li>
+</ul>
+</div>
+</div></div>
+<!-- Add-ons & Extras -->
+<div class="px-4"><div class="flex items-center gap-2 mb-4 px-6">
+<span class="material-symbols-outlined text-primary text-xl">add</span>
+<h3 class="text-slate-900 dark:text-slate-100 text-base font-bold">Add-ons &amp; Extras</h3>
+</div>
+<div class="flex flex-col gap-3 px-6">
+<div class="bg-white dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 flex items-center justify-between">
+<div class="flex-1">
+<p class="text-slate-800 dark:text-slate-100 font-bold text-sm">Premium Shampoo</p>
+<p class="text-xs text-primary font-bold">+AED 10</p>
+</div>
+<div class="flex items-center gap-4 bg-slate-50 dark:bg-slate-800 px-3 py-2 rounded-xl border border-slate-100 dark:border-slate-700">
+<button class="text-slate-300">
+<span class="material-symbols-outlined text-lg">remove</span>
+</button>
+<span class="text-slate-300 text-sm font-bold">0</span>
+<button class="text-slate-600">
+<span class="material-symbols-outlined text-lg">add</span>
+</button>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 flex items-center justify-between">
+<div class="flex-1">
+<p class="text-slate-800 dark:text-slate-100 font-bold text-sm">Relaxing Massage</p>
+<p class="text-xs text-primary font-bold">+AED 15</p>
+</div>
+<div class="flex items-center gap-4 bg-slate-50 dark:bg-slate-800 px-3 py-2 rounded-xl border border-slate-100 dark:border-slate-700">
+<button class="text-slate-300">
+<span class="material-symbols-outlined text-lg">remove</span>
+</button>
+<span class="text-slate-300 text-sm font-bold">0</span>
+<button class="text-slate-600">
+<span class="material-symbols-outlined text-lg">add</span>
+</button>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 flex items-center justify-between">
+<div class="flex-1">
+<p class="text-slate-800 dark:text-slate-100 font-bold text-sm">Teeth Brushing</p>
+<p class="text-xs text-primary font-bold">+AED 12</p>
+</div>
+<div class="flex items-center gap-4 bg-slate-50 dark:bg-slate-800 px-3 py-2 rounded-xl border border-slate-100 dark:border-slate-700">
+<button class="text-slate-300">
+<span class="material-symbols-outlined text-lg">remove</span>
+</button>
+<span class="text-slate-300 text-sm font-bold">0</span>
+<button class="text-slate-600">
+<span class="material-symbols-outlined text-lg">add</span>
+</button>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 flex items-center justify-between">
+<div class="flex-1">
+<p class="text-slate-800 dark:text-slate-100 font-bold text-sm">Paw Balm Application</p>
+<p class="text-xs text-primary font-bold">+AED 8</p>
+</div>
+<div class="flex items-center gap-4 bg-slate-50 dark:bg-slate-800 px-3 py-2 rounded-xl border border-slate-100 dark:border-slate-700">
+<button class="text-slate-300">
+<span class="material-symbols-outlined text-lg">remove</span>
+</button>
+<span class="text-slate-300 text-sm font-bold">0</span>
+<button class="text-slate-600">
+<span class="material-symbols-outlined text-lg">add</span>
+</button>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 flex items-center justify-between">
+<div class="flex-1">
+<p class="text-slate-800 dark:text-slate-100 font-bold text-sm">Blueberry Facial</p>
+<p class="text-xs text-primary font-bold">+AED 18</p>
+</div>
+<div class="flex items-center gap-4 bg-slate-50 dark:bg-slate-800 px-3 py-2 rounded-xl border border-slate-100 dark:border-slate-700">
+<button class="text-slate-300">
+<span class="material-symbols-outlined text-lg">remove</span>
+</button>
+<span class="text-slate-300 text-sm font-bold">0</span>
+<button class="text-slate-600">
+<span class="material-symbols-outlined text-lg">add</span>
+</button>
+</div>
+</div>
+</div></div>
+<!-- Special Instructions -->
+<div class="px-4 pb-10"><div class="flex items-center gap-2 mb-4 px-6">
+<span class="material-symbols-outlined text-primary text-xl">info</span>
+<h3 class="text-slate-900 dark:text-slate-100 text-base font-bold">Special Instructions</h3>
+</div>
+<div class="px-6">
+<textarea class="w-full rounded-2xl border-none bg-white dark:bg-slate-800/50 p-6 text-slate-500 dark:text-slate-400 focus:ring-1 focus:ring-primary min-h-[120px] shadow-sm text-sm" placeholder="Any specific requests or info about your pet?"></textarea>
+</div></div>
+</div>
+<!-- Bottom Bar -->
+<div class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-white/80 dark:bg-background-dark/80 backdrop-blur-md border-t border-slate-100 dark:border-slate-800 p-6 flex flex-col gap-4 rounded-t-3xl">
+<div class="flex justify-between items-center px-2">
+<div class="flex items-center gap-2">
+<span class="text-slate-500 dark:text-slate-400 text-sm">Basic Care</span>
+<span class="text-slate-400 text-xs">x 1</span>
+</div>
+<div class="flex items-baseline gap-1">
+<span class="text-slate-400 text-[10px] font-bold uppercase">AED</span>
+<span class="text-slate-600 dark:text-slate-300 font-bold">40</span>
+</div>
+</div>
+<div class="flex justify-between items-center border-t border-slate-100 dark:border-slate-800 pt-4 px-2 mb-2">
+<span class="text-slate-900 dark:text-slate-100 text-lg font-bold">Total Estimate</span>
+<div class="flex items-baseline gap-1">
+<span class="text-primary text-xl font-bold uppercase">AED</span>
+<span class="text-primary text-3xl font-bold leading-none">40</span>
+</div>
+</div>
+<button class="w-full bg-primary text-white font-bold py-4 rounded-2xl shadow-xl shadow-primary/30 hover:opacity-90 transition-opacity flex items-center justify-center gap-3">
+<span class="material-symbols-outlined">shopping_cart</span>
+Add to Cart
+</button>
+</div>
+</div>
+</body></html>
