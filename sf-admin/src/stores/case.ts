@@ -84,6 +84,16 @@ export const useCaseStore = defineStore('CaseStore', {
     async fetchCaseDetails(id: string) {
       const data = await api.get(`/admin/cases/${id}`)
       return data.data
+    },
+    async addNote(caseId: string, note: string, author: string) {
+      await api.post(`/admin/cases/${caseId}/notes`, { note, author })
+    },
+    async cancelCase(caseId: string) {
+      await api.post(`/admin/cases/${caseId}/cancel`)
+    },
+    async createCase(payload: { memberId: string; petId: string; vetId: string; description: string }) {
+      const { data } = await api.post('/admin/cases', payload)
+      return data
     }
   }
 })

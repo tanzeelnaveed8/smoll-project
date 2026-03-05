@@ -13,4 +13,6 @@ export interface Member {
   phone: string
   profileImg: UploadedFile | null
   villa: string | null
+  petsCount?: number
+  visitsCount?: number
 }

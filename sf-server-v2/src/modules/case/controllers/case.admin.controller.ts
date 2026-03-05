@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import {
   ApiBearerAuth,
@@ -51,5 +51,25 @@ export class CaseAdminController {
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return await this.caseService.findOne(id);
+  }
+
+  @Post()
+  async create(
+    @Body() body: { memberId: string; petId: string; vetId: string; description: string },
+  ) {
+    return await this.caseService.createCase(body);
+  }
+
+  @Post(':id/notes')
+  async addNote(
+    @Param('id') id: string,
+    @Body() body: { note: string; author: string },
+  ) {
+    return await this.caseService.addNote(id, body.note, body.author);
+  }
+
+  @Post(':id/cancel')
+  async cancel(@Param('id') id: string) {
+    return await this.caseService.cancelCase(id);
   }
 }

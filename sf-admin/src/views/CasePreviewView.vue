@@ -10,11 +10,16 @@
       class="px-6 pt-6 align-start pb-10"
       style="display: grid; grid-template-columns: 60px 1fr"
     >
-      <v-btn variant="plain" color="grey2" prepend-icon="$tb-arrow-left" class="px-0" to="/cases">
+      <v-btn variant="plain" color="grey2" prepend-icon="$tb-arrow-left" class="px-0" to="/visits">
         Back
       </v-btn>
 
       <v-sheet max-width="800" class="w-100" style="justify-self: center">
+        <v-sheet class="d-flex justify-end gc-3 mb-3" v-if="caseDetails && caseDetails.status !== 'closed'">
+          <v-btn color="error" variant="outlined" :loading="cancelling" @click="handleCancelVisit">
+            Cancel Visit
+          </v-btn>
+        </v-sheet>
         <v-sheet class="d-flex flex-column gr-3">
           <CaseDetails :caseDetails="caseDetails!" />
           <v-sheet height="504" class="rounded-lg pb-6" style="border: 1px solid #d0d7dc">
@@ -164,6 +169,24 @@
                   </v-sheet>
                 </v-tabs-window-item>
 
+                <!-- TAB NOTES -->
+                <v-tabs-window-item value="notes" class="px-5">
+                  <v-sheet max-width="760" height="400" class="d-flex flex-column gr-4 overflow-y-auto custom-scroll">
+                    <v-sheet v-if="caseDetails?.notes?.length" class="d-flex flex-column gr-3">
+                      <v-card v-for="(note, i) in caseDetails.notes" :key="i" flat color="#f7f7f7" class="pa-3 rounded-lg" style="border: 1px solid #d0d7dc">
+                        <p class="text-body-2 font-weight-bold">{{ note.author ?? 'Admin' }}</p>
+                        <p class="text-grey2 mt-1" style="font-weight: 500">{{ note.note }}</p>
+                        <p v-if="note.createdAt" class="text-caption text-grey2 mt-1">{{ new Date(note.createdAt).toLocaleString() }}</p>
+                      </v-card>
+                    </v-sheet>
+                    <p v-else class="text-grey2 font-weight-medium">No notes yet.</p>
+                    <v-sheet class="d-flex gc-2 mt-4">
+                      <v-text-field v-model="newNote" placeholder="Add a note..." hide-details density="compact" />
+                      <v-btn color="grey1" :disabled="!newNote" :loading="addingNote" @click="handleAddNote">Add</v-btn>
+                    </v-sheet>
+                  </v-sheet>
+                </v-tabs-window-item>
+
                 <!-- TAB SHARED FILES -->
                 <v-tabs-window-item value="sharedFiles" class="px-5 text-center">
                   <p v-if="!caseDetails?.pet.photos?.length" class="pt-6 text-grey2">
@@ -180,8 +203,37 @@
                     />
                   </v-sheet>
                 </v-tabs-window-item>
-                <v-tabs-window-item value="sessionRecording" class="px-5 text-center">
-                  <p class="mt-4 font-weight-medium">No Video Session found.</p>
+
+                <!-- TAB INVOICE -->
+                <v-tabs-window-item value="invoice" class="px-5">
+                  <v-sheet max-width="760" height="400" class="overflow-y-auto custom-scroll">
+                    <template v-if="caseDetails?.partnerBooking?.services?.length">
+                      <table class="w-100">
+                        <thead>
+                          <tr>
+                            <th class="text-left pa-2" style="font-weight: 700">Service</th>
+                            <th class="text-center pa-2" style="font-weight: 700">Qty</th>
+                            <th class="text-right pa-2" style="font-weight: 700">Price</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr v-for="s in caseDetails.partnerBooking.services" :key="s.id" style="border-top: 1px solid #dde7ee">
+                            <td class="pa-2" style="font-weight: 600">{{ s.name }}</td>
+                            <td class="text-center pa-2">{{ s.quantity ?? 1 }}</td>
+                            <td class="text-right pa-2" style="font-weight: 600">{{ s.price }} AED</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <v-divider class="my-3" />
+                      <p class="text-right font-weight-bold" style="font-size: 18px">
+                        Total: {{ caseDetails.partnerBooking.services.reduce((sum: number, s: any) => sum + (s.price * (s.quantity ?? 1)), 0) }} AED
+                      </p>
+                      <v-chip class="mt-2" :color="caseDetails.status === 'closed' ? 'success' : 'warning'" size="small">
+                        {{ caseDetails.status === 'closed' ? 'Paid' : 'Pending' }}
+                      </v-chip>
+                    </template>
+                    <p v-else class="text-grey2 font-weight-medium pt-4">No invoice available.</p>
+                  </v-sheet>
                 </v-tabs-window-item>
                 
               </v-tabs-window>
@@ -199,19 +251,24 @@ import { useCaseStore } from '@/stores/case'
 import type { CaseDetail } from '@/stores/types/cases'
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
+import { toast } from 'vue3-toastify'
 
 const tab = ref('caseBrief')
 const route = useRoute()
 const caseDetails = ref<CaseDetail | null>()
 const actionLoading = ref(false)
+const newNote = ref('')
+const addingNote = ref(false)
+const cancelling = ref(false)
 
 const caseStore = useCaseStore()
 
 const tabs = [
-  { title: 'Case Brief', value: 'caseBrief' },
-  { title: 'Case Info', value: 'caseInfo' },
+  { title: 'Visit Brief', value: 'caseBrief' },
+  { title: 'Visit Info', value: 'caseInfo' },
+  { title: 'Notes', value: 'notes' },
   { title: 'Shared Files', value: 'sharedFiles' },
-  { title: 'Session Recording', value: 'sessionRecording' },
+  { title: 'Invoice', value: 'invoice' },
 ]
 
 const getCaseDetails = async () => {
@@ -222,6 +279,31 @@ const getCaseDetails = async () => {
     caseDetails.value = data
   } finally {
     actionLoading.value = false
+  }
+}
+
+const handleAddNote = async () => {
+  if (!newNote.value || !caseDetails.value) return
+  try {
+    addingNote.value = true
+    await caseStore.addNote(caseDetails.value.id, newNote.value, 'Admin')
+    caseDetails.value.notes = [...(caseDetails.value.notes ?? []), { note: newNote.value, author: 'Admin', createdAt: new Date().toISOString() }]
+    newNote.value = ''
+    toast.success('Note added')
+  } finally {
+    addingNote.value = false
+  }
+}
+
+const handleCancelVisit = async () => {
+  if (!caseDetails.value) return
+  try {
+    cancelling.value = true
+    await caseStore.cancelCase(caseDetails.value.id)
+    caseDetails.value.status = 'closed'
+    toast.success('Visit cancelled')
+  } finally {
+    cancelling.value = false
   }
 }
 

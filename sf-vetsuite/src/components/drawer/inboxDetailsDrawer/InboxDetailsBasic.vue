@@ -143,6 +143,62 @@
           </p>
         </v-sheet>
       </v-sheet>
+      <!-- Service Checklist -->
+      <v-sheet class="d-flex flex-column gr-4">
+        <v-sheet class="pb-2 d-flex justify-space-between align-center" style="border-bottom: 1px solid #dde7ee">
+          <h5
+            class="text-body-1 font-weight-bold text-uppercase"
+            style="line-height: 24px; color: black"
+          >
+            Services Checklist
+          </h5>
+          <v-btn size="small" variant="text" color="primary" @click="showAddService = !showAddService">
+            + Add Service
+          </v-btn>
+        </v-sheet>
+        <v-sheet v-if="showAddService" class="d-flex gc-2 mb-2">
+          <v-text-field v-model="newServiceName" placeholder="Service name..." hide-details density="compact" />
+          <v-btn color="primary" size="small" :disabled="!newServiceName" @click="handleAddService">Add</v-btn>
+        </v-sheet>
+        <v-sheet v-if="serviceChecklist.length > 0" class="d-flex flex-column gr-2">
+          <v-card
+            v-for="(item, i) in serviceChecklist"
+            :key="i"
+            flat
+            class="pa-3 d-flex align-center gc-3"
+            style="border: 1px solid #dde7ee; border-radius: 8px"
+          >
+            <v-checkbox
+              v-model="item.checked"
+              hide-details
+              density="compact"
+              color="primary"
+              class="flex-grow-0"
+              @change="handleChecklistUpdate"
+            />
+            <span style="font-weight: 600" :class="{ 'text-decoration-line-through text-grey2': item.checked }">
+              {{ item.name }}
+            </span>
+          </v-card>
+        </v-sheet>
+        <p v-else class="text-grey2 font-weight-medium">No services in checklist</p>
+      </v-sheet>
+
+      <!-- Customer Not Reachable -->
+      <v-sheet v-if="!consultation.case.customerNotReachable">
+        <v-btn
+          color="warning"
+          variant="outlined"
+          :loading="markingNotReachable"
+          @click="handleMarkNotReachable"
+        >
+          Customer Not Reachable
+        </v-btn>
+      </v-sheet>
+      <v-chip v-else color="warning" variant="flat">
+        Customer marked as not reachable
+      </v-chip>
+
       <v-sheet class="d-flex flex-column gr-4">
         <v-sheet class="pb-2" style="border-bottom: 1px solid #dde7ee">
           <h5
@@ -172,6 +228,28 @@
           </template>
           <p v-else class="text-grey2 font-weight-medium">No files shared</p>
         </v-sheet>
+
+        <!-- Upload Photos -->
+        <v-sheet class="mt-4">
+          <v-btn
+            color="primary"
+            variant="outlined"
+            prepend-icon="$tb-upload"
+            :loading="uploading"
+            :disabled="uploading"
+            @click="triggerFileInput"
+          >
+            Upload Photos
+          </v-btn>
+          <input
+            ref="fileInputRef"
+            type="file"
+            multiple
+            accept="image/*"
+            style="display: none"
+            @change="handleFileUpload"
+          />
+        </v-sheet>
       </v-sheet>
     </v-sheet>
   </v-sheet>
@@ -179,12 +257,87 @@
 
 <script lang="ts" setup>
 import { ConsultationStatusEnum, type ConsultationDetail } from '@/stores/types/consultation.d'
+import { useUploadStore } from '@/stores/upload'
+import { useCaseStore } from '@/stores/case'
 import dayjs from 'dayjs'
+import { ref } from 'vue'
+import { toast } from 'vue3-toastify'
 
 const props = defineProps<{
   type: 'instant' | 'scheduled'
   consultation: ConsultationDetail
 }>()
+
+const uploadStore = useUploadStore()
+const caseStore = useCaseStore()
+const uploading = ref(false)
+const fileInputRef = ref<HTMLInputElement | null>(null)
+const markingNotReachable = ref(false)
+const showAddService = ref(false)
+const newServiceName = ref('')
+
+const serviceChecklist = ref<{ name: string; checked: boolean }[]>(
+  props.consultation.case.serviceChecklist ?? []
+)
+
+const handleChecklistUpdate = async () => {
+  try {
+    await caseStore.updateServiceChecklist(props.consultation.case.id, serviceChecklist.value)
+  } catch {
+    toast.error('Failed to update checklist')
+  }
+}
+
+const handleAddService = async () => {
+  if (!newServiceName.value) return
+  serviceChecklist.value.push({ name: newServiceName.value, checked: false })
+  newServiceName.value = ''
+  showAddService.value = false
+  await handleChecklistUpdate()
+}
+
+const handleMarkNotReachable = async () => {
+  try {
+    markingNotReachable.value = true
+    await caseStore.markCustomerNotReachable(props.consultation.case.id)
+    props.consultation.case.customerNotReachable = true
+    toast.success('Customer marked as not reachable')
+  } catch {
+    toast.error('Failed to mark customer as not reachable')
+  } finally {
+    markingNotReachable.value = false
+  }
+}
+
+const triggerFileInput = () => {
+  fileInputRef.value?.click()
+}
+
+const handleFileUpload = async (event: Event) => {
+  const input = event.target as HTMLInputElement
+  if (!input.files?.length) return
+
+  try {
+    uploading.value = true
+    const formData = new FormData()
+    for (const file of input.files) {
+      formData.append('files', file)
+    }
+
+    const uploadedFiles = await uploadStore.uploadFile(formData)
+    await caseStore.addAssets(props.consultation.case.id, uploadedFiles)
+
+    // Add to local assets list
+    props.consultation.case.assets.push(...uploadedFiles)
+
+    toast.success('Photos uploaded successfully')
+  } catch {
+    toast.error('Failed to upload photos')
+  } finally {
+    uploading.value = false
+    input.value = ''
+  }
+}
 
 const handleDownloadFile = (url: string) => {
   window.open(url, '_blank')

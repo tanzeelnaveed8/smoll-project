@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  Patch,
   Post,
   Query,
   UseGuards,
@@ -110,6 +111,32 @@ export class CaseVetController {
     @Body() body: AddNotePayloadDto,
   ): Promise<void> {
     await this.caseService.addNote(user, id, body);
+  }
+
+  @Patch(':id/service-checklist')
+  async updateServiceChecklist(
+    @GetUser() user: AuthUser,
+    @Param('id') id: string,
+    @Body() body: { checklist: { name: string; checked: boolean }[] },
+  ): Promise<void> {
+    await this.caseService.updateServiceChecklist(user, id, body.checklist);
+  }
+
+  @Post(':id/customer-not-reachable')
+  async markCustomerNotReachable(
+    @GetUser() user: AuthUser,
+    @Param('id') id: string,
+  ): Promise<void> {
+    await this.caseService.markCustomerNotReachable(user, id);
+  }
+
+  @Patch(':id/assets')
+  async addAssets(
+    @GetUser() user: AuthUser,
+    @Param('id') id: string,
+    @Body() body: { assets: { filename: string; filesize: number; mimetype: string; url: string }[] },
+  ): Promise<void> {
+    await this.caseService.addAssets(user, id, body.assets);
   }
 
   @Post(':id/escalate')

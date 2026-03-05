@@ -21,7 +21,7 @@
 
     <template #item.action="{ item }">
       <v-btn
-        :to="`/cases/${item.id}`"
+        :to="`/visits/${item.id}`"
         class="opacity-100 px-0 font-weight-medium"
         min-height="auto"
         height="auto"
@@ -53,7 +53,7 @@ const items = computed(() =>
 )
 
 const headers = [
-  { title: 'Case Id', key: 'id' },
+  { title: 'Visit Id', key: 'id' },
   { title: "Parent's name", key: 'member' },
   { title: "Pet's name", key: 'pet' },
   { title: 'Date', key: 'createdAt' },

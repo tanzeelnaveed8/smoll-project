@@ -3,6 +3,7 @@
     <div class="px-6 pt-6 d-flex flex-column gr-6 w-100" style="max-width: 1140px">
       <v-sheet class="d-flex gc-4 align-center">
         <UtilityBar path="cases" />
+        <v-btn color="grey1" to="/visits/add" flat>New Visit</v-btn>
         <v-btn
           v-push
           flat

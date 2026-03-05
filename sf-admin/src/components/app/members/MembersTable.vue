@@ -49,6 +49,8 @@ const headers = [
   { title: 'Full name', key: 'name' },
   { title: 'Phone number', key: 'phone' },
   { title: 'Email', key: 'email' },
+  { title: 'Pets', key: 'petsCount', align: 'center' },
+  { title: 'Visits', key: 'visitsCount', align: 'center' },
   { title: 'Location', key: 'address' },
   { title: 'Action', key: 'action', align: 'center' }
 ] as const

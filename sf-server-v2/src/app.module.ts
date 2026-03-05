@@ -30,6 +30,8 @@ import { SmollCareModule } from './modules/smollcare/smoll-care.module';
 import { StripeModule } from './modules/stripe/stripe.module';
 import { PaymentLogModule } from './modules/payment-log/payment-log.module';
 import { OrganizationModule } from './modules/organization/organization.module';
+import { ServiceModule } from './modules/service/service.module';
+import { ProductModule } from './modules/product/product.module';
 import { ClsContextService } from './utils/cls-context.service';
 import { RequestContextMiddleware } from './middleware/request-context.middleware';
 
@@ -75,6 +77,8 @@ import { RequestContextMiddleware } from './middleware/request-context.middlewar
     PaymentLogModule,
     StripeModule,
     OrganizationModule,
+    ServiceModule,
+    ProductModule,
   ],
   providers: [
     {

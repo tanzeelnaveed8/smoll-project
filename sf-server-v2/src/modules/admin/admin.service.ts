@@ -6,6 +6,9 @@ import { Case } from '../case/case.entity';
 import { Partner } from '../partner/entities/partner.entity';
 import { Vet } from '../vet/entities/vet.entity';
 import { Member } from '../member/member.entity';
+import { CaseStatusEnum } from '../case/enums/case-status.enum';
+import { Service } from '../service/service.entity';
+import { Product } from '../product/product.entity';
 
 @Injectable()
 export class AdminService {
@@ -20,6 +23,10 @@ export class AdminService {
     private readonly vetRepo: Repository<Vet>,
     @InjectRepository(Member)
     private readonly memberRepo: Repository<Member>,
+    @InjectRepository(Service)
+    private readonly serviceRepo: Repository<Service>,
+    @InjectRepository(Product)
+    private readonly productRepo: Repository<Product>,
   ) {}
 
   findOneByEmail(email: string): Promise<Admin> {
@@ -35,12 +42,28 @@ export class AdminService {
     const partners = await this.partnerRepo.count();
     const vets = await this.vetRepo.count();
     const members = await this.memberRepo.count();
+    const services = await this.serviceRepo.count();
+    const products = await this.productRepo.count();
+    const openCases = await this.caseRepo.count({
+      where: { status: CaseStatusEnum.OPEN },
+    });
+    const closedCases = await this.caseRepo.count({
+      where: { status: CaseStatusEnum.CLOSED },
+    });
+    const escalatedCases = await this.caseRepo.count({
+      where: { status: CaseStatusEnum.OPEN_ESCALATED },
+    });
 
     return {
       cases,
       partners,
       vets,
       members,
+      services,
+      products,
+      openCases,
+      closedCases,
+      escalatedCases,
     };
   }
 }

@@ -36,6 +36,14 @@ export const useVeterniansStore = defineStore('VeterniansStore', {
 
     async suspendVet(id: string) {
       await api.post(`/admin/vets/${id}/suspend`)
+    },
+    async fetchVetCases(id: string) {
+      const { data } = await api.get(`/admin/vets/${id}/cases`)
+      return data
+    },
+    async resetVetPassword(id: string) {
+      const { data } = await api.post(`/admin/vets/${id}/reset-password`)
+      return data
     }
   }
 })

@@ -5,12 +5,22 @@ import { FindManyOptions, ILike, Repository } from 'typeorm';
 import { Case } from '../case.entity';
 import { FindAllCasesAdminQueryDto } from '../dto/find.admin.dto';
 import { SubscriptionStatus } from 'src/modules/smollcare/enums/subscription-status.enum';
+import { CaseStatusEnum } from '../enums/case-status.enum';
+import { Member } from 'src/modules/member/member.entity';
+import { Pet } from 'src/modules/pet/entities/pet.entity';
+import { Vet } from 'src/modules/vet/entities/vet.entity';
 
 @Injectable()
 export class CaseAdminService {
   constructor(
     @InjectRepository(Case)
     private readonly caseRepo: Repository<Case>,
+    @InjectRepository(Member)
+    private readonly memberRepo: Repository<Member>,
+    @InjectRepository(Pet)
+    private readonly petRepo: Repository<Pet>,
+    @InjectRepository(Vet)
+    private readonly vetRepo: Repository<Vet>,
   ) {}
 
   async findAll(
@@ -124,5 +134,51 @@ export class CaseAdminService {
         benefitUsageSummary,
       },
     };
+  }
+
+  async addNote(id: string, note: string, author: string): Promise<Case> {
+    const _case = await this.caseRepo.findOne({ where: { id } });
+    if (!_case) {
+      throw new NotFoundException(`Case with id ${id} not found`);
+    }
+    const notes = _case.notes ?? [];
+    notes.push({ note, author, createdAt: new Date().toISOString() });
+    _case.notes = notes;
+    return this.caseRepo.save(_case);
+  }
+
+  async cancelCase(id: string): Promise<Case> {
+    const _case = await this.caseRepo.findOne({ where: { id } });
+    if (!_case) {
+      throw new NotFoundException(`Case with id ${id} not found`);
+    }
+    _case.status = CaseStatusEnum.CLOSED;
+    return this.caseRepo.save(_case);
+  }
+
+  async createCase(data: {
+    memberId: string;
+    petId: string;
+    vetId: string;
+    description: string;
+  }): Promise<Case> {
+    const member = await this.memberRepo.findOne({ where: { id: data.memberId } });
+    if (!member) throw new NotFoundException(`Member with id ${data.memberId} not found`);
+
+    const pet = await this.petRepo.findOne({ where: { id: data.petId } });
+    if (!pet) throw new NotFoundException(`Pet with id ${data.petId} not found`);
+
+    const vet = await this.vetRepo.findOne({ where: { id: data.vetId } });
+    if (!vet) throw new NotFoundException(`Vet with id ${data.vetId} not found`);
+
+    const _case = this.caseRepo.create({
+      description: data.description,
+      member,
+      pet,
+      assignedVet: vet,
+      status: CaseStatusEnum.OPEN,
+    });
+
+    return this.caseRepo.save(_case);
   }
 }

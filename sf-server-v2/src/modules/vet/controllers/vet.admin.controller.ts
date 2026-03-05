@@ -99,4 +99,14 @@ export class VetAdminController {
       excludeExtraneousValues: true,
     });
   }
+
+  @Get(':id/cases')
+  async findVetCases(@Param('id') id: string) {
+    return this.vetService.findVetCases(id);
+  }
+
+  @Post(':id/reset-password')
+  async resetPassword(@Param('id') id: string) {
+    return this.vetService.resetPassword(id);
+  }
 }

@@ -12,6 +12,7 @@ import { VetConsultation } from '../vet/entities/vet.consultation.entity';
 import { PartnerBooking } from '../partner/entities/partner.booking.entity';
 import { VetModule } from '../vet/vet.module';
 import { CaseModule } from '../case/case.module';
+import { Case } from '../case/case.entity';
 // OrganizationModule import removed – module not found
 import { OrgCodeController } from './controllers/member.org-code.controller';
 import { OrgCodeService } from './services/member.org-code.service';
@@ -19,7 +20,7 @@ import { OrganizationModule } from '../organization/organization.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Member, VetConsultation, PartnerBooking]),
+    TypeOrmModule.forFeature([Member, VetConsultation, PartnerBooking, Case]),
     ChatModule,
     PartnerModule,
     forwardRef(() => StripeModule),
