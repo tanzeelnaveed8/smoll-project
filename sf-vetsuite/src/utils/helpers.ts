@@ -40,6 +40,11 @@ export const getStatusData = (
         label: 'Initiated',
         color: '#2F6E20'
       }
+    case ConsultationStatusEnum.REJECTED:
+      return {
+        label: 'Rejected',
+        color: '#E02A2A'
+      }
     default:
       return {
         label: 'Unknown',

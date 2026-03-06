@@ -6,7 +6,8 @@ import {
   fontHauoraBold,
   fontHauoraMedium,
 } from "@/constant/constant";
-import { MOCK_PRODUCTS, type ProductId } from "@/mocks/homeServices";
+import { type ProductId, type ProductSummary } from "@/mocks/homeServices";
+import { fetchProductByIdFromApi } from "@/utils/homeServicesApi";
 import { useCartStore } from "@/store/modules/cart";
 import { NavigationType } from "@/store/types";
 import {
@@ -17,7 +18,7 @@ import {
   IconTruck,
 } from "@tabler/icons-react-native";
 import { useRoute } from "@react-navigation/native";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { ScrollView, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import { Div, Text } from "react-native-magnus";
 
@@ -34,11 +35,28 @@ interface Props {
 
 const ProductDetailsScreen: React.FC<Props> = ({ navigation }) => {
   const route = useRoute();
-  const productId = (route.params as { productId?: ProductId })?.productId;
-  const product = useMemo(
-    () => (productId ? MOCK_PRODUCTS.find((p) => p.id === productId) : null),
-    [productId]
-  );
+  const productId = (route.params as { productId?: ProductId | string })?.productId;
+  const [product, setProduct] = useState<ProductSummary | null>(null);
+  const [loading, setLoading] = useState(!!productId);
+
+  useEffect(() => {
+    if (!productId) {
+      setProduct(null);
+      setLoading(false);
+      return;
+    }
+    let cancelled = false;
+    setLoading(true);
+    fetchProductByIdFromApi(String(productId)).then((p) => {
+      if (!cancelled) {
+        setProduct(p);
+      }
+      setLoading(false);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [productId]);
 
   const [selectedQuantityOption, setSelectedQuantityOption] = useState<string>("30");
   const [count, setCount] = useState(1);
@@ -77,14 +95,20 @@ const ProductDetailsScreen: React.FC<Props> = ({ navigation }) => {
   const increment = () => setCount((n) => Math.min(10, n + 1));
   const decrement = () => setCount((n) => Math.max(1, n - 1));
 
-  if (!product) {
+  if (loading || !product) {
     return (
       <Layout disableHeader>
         <Div p={20}>
           <BackButton onPress={() => navigation.goBack()} />
-          <Text fontSize="lg" fontFamily={fontHauora} color="#6B7280" mt={12}>
-            Product not found.
-          </Text>
+          {loading ? (
+            <Text fontSize="lg" fontFamily={fontHauora} color="#6B7280" mt={12}>
+              Loading…
+            </Text>
+          ) : (
+            <Text fontSize="lg" fontFamily={fontHauora} color="#6B7280" mt={12}>
+              Product not found.
+            </Text>
+          )}
         </Div>
       </Layout>
     );

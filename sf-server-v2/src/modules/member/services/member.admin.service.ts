@@ -4,12 +4,12 @@ import { FindManyOptions, ILike, Repository } from 'typeorm';
 import { Member } from '../member.entity';
 import {
   FindAllMemberQueryDto,
+  FindAllMemberResDto,
   FindOnePetForAdminResDto,
 } from '../dtos/find.admin.dto';
 import { paginate, PaginationResult } from 'src/utils/pagination';
 import { SubscriptionStatus } from 'src/modules/smollcare/enums/subscription-status.enum';
 import { FindOneMemberResDto } from '../dtos/find.admin.dto';
-import { plainToInstance } from 'class-transformer';
 import { Case } from 'src/modules/case/case.entity';
 
 @Injectable()
@@ -23,7 +23,7 @@ export class MemberAdminService {
 
   async findAll(
     query: FindAllMemberQueryDto,
-  ): Promise<PaginationResult<Member>> {
+  ): Promise<PaginationResult<FindAllMemberResDto>> {
     const { search, ...pageQuery } = query;
 
     const searchQuery = search ? ILike(`%${search}%`) : undefined;
@@ -45,12 +45,22 @@ export class MemberAdminService {
 
     const result = await paginate(this.memberRepo, pageQuery, findOptions);
 
-    const data = result.data.map((member) => ({
-      ...member,
+    const data: FindAllMemberResDto[] = result.data.map((member) => ({
+      id: member.id,
+      name: member.name,
+      phone: member.phone,
+      isPhoneVerified: member.isPhoneVerified,
+      email: member.email,
+      isEmailVerified: member.isEmailVerified,
+      profileImg: member.profileImg,
+      address: member.address,
+      villa: member.villa,
+      city: member.city,
+      country: member.country,
+      postalCode: member.postalCode,
+      createdAt: member.createdAt,
       petsCount: member.pets?.length ?? 0,
       visitsCount: member.cases?.length ?? 0,
-      pets: undefined,
-      cases: undefined,
     }));
 
     return { ...result, data };

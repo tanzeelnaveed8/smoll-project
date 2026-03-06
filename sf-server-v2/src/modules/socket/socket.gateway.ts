@@ -8,7 +8,7 @@ import { SocketService } from './socket.service';
 import { ALLOWED_ORIGIN } from 'src/constants';
 
 // ws://localhost:${port}/${namespace}
-@WebSocketGateway(81, {
+@WebSocketGateway({
   namespace: 'socket',
   cors: { origin: ALLOWED_ORIGIN },
 })

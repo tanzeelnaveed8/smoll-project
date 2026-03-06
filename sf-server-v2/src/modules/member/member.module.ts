@@ -17,6 +17,7 @@ import { Case } from '../case/case.entity';
 import { OrgCodeController } from './controllers/member.org-code.controller';
 import { OrgCodeService } from './services/member.org-code.service';
 import { OrganizationModule } from '../organization/organization.module';
+import { MemberAiController } from './controllers/member.ai.controller';
 
 @Module({
   imports: [
@@ -30,7 +31,7 @@ import { OrganizationModule } from '../organization/organization.module';
     CaseModule,
     OrganizationModule,
   ],
-  controllers: [MemberController, MemberAdminController, OrgCodeController],
+  controllers: [MemberController, MemberAdminController, OrgCodeController, MemberAiController],
   providers: [MemberService, MemberAdminService, OrgCodeService],
   exports: [MemberService, TypeOrmModule],
 })

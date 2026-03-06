@@ -7,7 +7,8 @@ import {
   fontHauoraMedium,
   fontHauoraSemiBold,
 } from "@/constant/constant";
-import { MOCK_SERVICES, type ServiceId } from "@/mocks/homeServices";
+import { type ServiceId, type ServiceSummary } from "@/mocks/homeServices";
+import { fetchServiceByIdFromApi } from "@/utils/homeServicesApi";
 import {
   getServiceAddons,
   getServicePackages,
@@ -23,7 +24,7 @@ import {
   IconUsers,
 } from "@tabler/icons-react-native";
 import { useRoute } from "@react-navigation/native";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { ScrollView, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import { Div, Text } from "react-native-magnus";
 
@@ -33,11 +34,26 @@ interface Props {
 
 const ServiceDetailsScreen: React.FC<Props> = ({ navigation }) => {
   const route = useRoute();
-  const serviceId = (route.params as { serviceId?: ServiceId })?.serviceId;
-  const service = useMemo(
-    () => (serviceId ? MOCK_SERVICES.find((s) => s.id === serviceId) : null),
-    [serviceId]
-  );
+  const serviceId = (route.params as { serviceId?: ServiceId | string })?.serviceId;
+  const [service, setService] = useState<ServiceSummary | null>(null);
+  const [loading, setLoading] = useState(!!serviceId);
+
+  useEffect(() => {
+    if (!serviceId) {
+      setService(null);
+      setLoading(false);
+      return;
+    }
+    let cancelled = false;
+    setLoading(true);
+    fetchServiceByIdFromApi(String(serviceId)).then((s) => {
+      if (!cancelled) setService(s);
+      setLoading(false);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [serviceId]);
 
   const packages = useMemo(
     () => (serviceId ? getServicePackages(serviceId) : []),
@@ -104,13 +120,13 @@ const ServiceDetailsScreen: React.FC<Props> = ({ navigation }) => {
   const incrementPets = () => setNumPets((n) => Math.min(5, n + 1));
   const decrementPets = () => setNumPets((n) => Math.max(1, n - 1));
 
-  if (!service) {
+  if (loading || !service) {
     return (
       <Layout disableHeader>
         <Div p={20}>
           <BackButton onPress={() => navigation.goBack()} />
           <Text fontSize="lg" fontFamily={fontHauora} color="#6B7280" mt={12}>
-            Service not found.
+            {loading ? "Loading…" : "Service not found."}
           </Text>
         </Div>
       </Layout>

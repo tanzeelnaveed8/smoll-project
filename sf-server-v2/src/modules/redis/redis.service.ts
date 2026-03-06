@@ -1,15 +1,22 @@
 import { Injectable, OnModuleDestroy } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Redis from 'ioredis';
+import { Logger } from 'src/configs/logger';
 
 @Injectable()
 export class RedisService implements OnModuleDestroy {
+  private readonly logger = Logger.getInstance();
   private readonly redis: Redis;
 
   constructor(private configService: ConfigService) {
     this.redis = new Redis({
       host: this.configService.get('REDIS_HOST', 'localhost'),
       port: this.configService.get<number>('REDIS_PORT', 6379),
+    });
+
+    this.redis.on('error', (err) => {
+      // ioredis emits "error" frequently when Redis is down; avoid crashing the process
+      this.logger.error(`[LOG: REDIS] ${err?.message ?? err}`);
     });
   }
 

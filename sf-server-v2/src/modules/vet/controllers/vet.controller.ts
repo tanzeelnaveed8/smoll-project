@@ -201,4 +201,9 @@ export class VetController {
   ): Promise<void> {
     return this.vetService.sendReminder(user, id);
   }
+
+  @Get('/finance')
+  async getFinanceStats(@GetUser() user: AuthUser) {
+    return this.vetService.findFinanceStats(user.id);
+  }
 }

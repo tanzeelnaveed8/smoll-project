@@ -557,4 +557,27 @@ export class VetService {
       }
     }
   }
+
+  async findFinanceStats(vetId: string): Promise<{
+    totalVisits: number;
+    completedVisits: number;
+    totalEarnings: number;
+  }> {
+    const [totalVisits, completedVisits] = await Promise.all([
+      this.vetConsultationRepo.count({
+        where: { vet: { id: vetId } },
+      }),
+      this.vetConsultationRepo.count({
+        where: {
+          vet: { id: vetId },
+          status: ConsultationStatusEnum.COMPLETED,
+        },
+      }),
+    ]);
+    return {
+      totalVisits,
+      completedVisits,
+      totalEarnings: 0,
+    };
+  }
 }

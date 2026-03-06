@@ -8,7 +8,7 @@ import {
   fontHauoraSemiBold,
 } from "@/constant/constant";
 import { useAIPicks } from "@/hooks/useAIPicks";
-import { MOCK_SERVICES, MOCK_PRODUCTS } from "@/mocks/homeServices";
+import { useHomeServices } from "@/hooks/useHomeServices";
 import { NavigationType } from "@/store/types";
 import {
   IconChevronLeft,
@@ -41,7 +41,10 @@ const HomeServicesScreen: React.FC<{ navigation: NavigationType }> = ({
   const [activeTab, setActiveTab] = useState<TabType>("services");
   const [nutritionsSubTab, setNutritionsSubTab] =
     useState<NutritionsSubTab>("all");
+  const { services, products, loading: homeServicesLoading } = useHomeServices();
   const { products: aiPicksProducts, loading: aiPicksLoading, error: aiPicksError } = useAIPicks();
+
+  const loading = homeServicesLoading;
 
   return (
     <Layout disableHeader>
@@ -121,11 +124,15 @@ const HomeServicesScreen: React.FC<{ navigation: NavigationType }> = ({
           </TouchableOpacity>
         </Div>
 
-        {activeTab === "services" && (
+        {loading ? (
+          <Div py={12} alignItems="center">
+            <ActivityIndicator size="large" color={colorPrimary} />
+          </Div>
+        ) : activeTab === "services" ? (
           <>
-            {/* Row 1: Grooming, Vaccination */}
+            {/* Row 1 */}
             <Div flexDir="row" flexWrap="wrap" style={{ marginHorizontal: -CARD_GAP / 2 }} mt={6} mb={6}>
-              {MOCK_SERVICES.slice(0, 2).map((s) => (
+              {services.slice(0, 2).map((s) => (
                 <TouchableOpacity
                   key={s.id}
                   style={[styles.serviceCard, { width: CARD_WIDTH }]}
@@ -204,7 +211,7 @@ const HomeServicesScreen: React.FC<{ navigation: NavigationType }> = ({
 
             {/* Row 2: Health Checkup, Dental Care */}
             <Div flexDir="row" flexWrap="wrap" style={{ marginHorizontal: -CARD_GAP / 2 }} mb={6}>
-              {MOCK_SERVICES.slice(2, 4).map((s) => (
+              {services.slice(2, 4).map((s) => (
                 <TouchableOpacity
                   key={s.id}
                   style={[styles.serviceCard, { width: CARD_WIDTH }]}
@@ -277,7 +284,7 @@ const HomeServicesScreen: React.FC<{ navigation: NavigationType }> = ({
 
             {/* Row 3: Deworming, Nail Trimming */}
             <Div flexDir="row" flexWrap="wrap" style={{ marginHorizontal: -CARD_GAP / 2 }} mb={6}>
-              {MOCK_SERVICES.slice(4, 6).map((s) => (
+              {services.slice(4, 6).map((s) => (
                 <TouchableOpacity
                   key={s.id}
                   style={[styles.serviceCard, { width: CARD_WIDTH }]}
@@ -312,9 +319,7 @@ const HomeServicesScreen: React.FC<{ navigation: NavigationType }> = ({
               </Text>
             </Div>
           </>
-        )}
-
-        {activeTab === "nutritions" && (
+        ) : activeTab === "nutritions" ? (
           <>
             {/* Sub tabs: All Products | AI Picks */}
             <Div flexDir="row" style={{ gap: 12 }} mt={6} mb={6}>
@@ -341,7 +346,7 @@ const HomeServicesScreen: React.FC<{ navigation: NavigationType }> = ({
               <>
                 {/* Row 1: Premium Kibble, Vitamins */}
                 <Div flexDir="row" flexWrap="wrap" style={{ marginHorizontal: -CARD_GAP / 2 }} mb={6}>
-                  {MOCK_PRODUCTS.slice(0, 2).map((p) => (
+                  {products.slice(0, 2).map((p) => (
                     <TouchableOpacity
                       key={p.id}
                       style={[styles.productCard, { width: CARD_WIDTH }]}
@@ -406,7 +411,7 @@ const HomeServicesScreen: React.FC<{ navigation: NavigationType }> = ({
 
                 {/* Row 2: Flea & Tick, Joint Support */}
                 <Div flexDir="row" flexWrap="wrap" style={{ marginHorizontal: -CARD_GAP / 2 }} mb={6}>
-                  {MOCK_PRODUCTS.slice(2, 4).map((p) => (
+                  {products.slice(2, 4).map((p) => (
                     <TouchableOpacity
                       key={p.id}
                       style={[styles.productCard, { width: CARD_WIDTH }]}
@@ -471,7 +476,7 @@ const HomeServicesScreen: React.FC<{ navigation: NavigationType }> = ({
 
                 {/* Row 3: Probiotics, Calming Treats */}
                 <Div flexDir="row" flexWrap="wrap" style={{ marginHorizontal: -CARD_GAP / 2 }} mb={6}>
-                  {MOCK_PRODUCTS.slice(4, 6).map((p) => (
+                  {products.slice(4, 6).map((p) => (
                     <TouchableOpacity
                       key={p.id}
                       style={[styles.productCard, { width: CARD_WIDTH }]}
@@ -606,7 +611,8 @@ const HomeServicesScreen: React.FC<{ navigation: NavigationType }> = ({
               </Text>
             </Div>
           </>
-        )}
+        ) : null}
+
       </ScrollView>
     </Layout>
   );

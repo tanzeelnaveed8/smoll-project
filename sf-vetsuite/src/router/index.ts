@@ -6,6 +6,7 @@ import InboxView from '@/views/InboxView.vue'
 import CalendarView from '@/views/CalendarView.vue'
 import SettingsView from '@/views/SettingsView.vue'
 import CasesView from '@/views/CasesView.vue'
+import FinanceView from '@/views/FinanceView.vue'
 import VideoView from '@/views/VideoView.vue'
 
 const router = createRouter({
@@ -41,6 +42,13 @@ const router = createRouter({
           component: CasesView,
           meta: {
             title: 'Cases'
+          }
+        },
+        {
+          path: '/finance',
+          component: FinanceView,
+          meta: {
+            title: 'Finance'
           }
         },
         {

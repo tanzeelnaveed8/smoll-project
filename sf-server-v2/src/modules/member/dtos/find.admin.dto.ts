@@ -17,10 +17,10 @@ export class FindAllMemberResDto {
   id: string;
 
   @Expose()
-  name: string;
+  name: string | null;
 
   @Expose()
-  phone: string;
+  phone: string | null;
 
   @Expose()
   isPhoneVerified: boolean;
@@ -51,6 +51,12 @@ export class FindAllMemberResDto {
 
   @Expose()
   createdAt: Date;
+
+  @Expose()
+  petsCount?: number;
+
+  @Expose()
+  visitsCount?: number;
 }
 export class FindSubscriptionDetails {
   @Expose()
