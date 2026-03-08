@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  vetsuite:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    deploy:
+      resources:
+        limits:
+          memory: 250M
+        reservations:
+          memory: 128M
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./src:/app/src
+      - ./public:/app/public
+    environment:
+      - NODE_ENV=production
+    env_file:
+      - .env
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    external: true
+    name: sf-server_default
