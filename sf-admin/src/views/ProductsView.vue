@@ -170,7 +170,9 @@
           <v-switch v-if="editingProduct" v-model="formData.isActive" label="Active" color="primary" hide-details class="mb-3" />
           <v-sheet class="d-flex gap-3 justify-end pt-2">
             <v-btn variant="outlined" @click="showAddDialog = false">Cancel</v-btn>
-            <v-btn color="primary" :loading="saving" @click="handleSave">Save</v-btn>
+            <v-btn color="primary" :loading="saving" :disabled="uploading" @click="handleSave">
+              {{ uploading ? 'Uploading image...' : 'Save' }}
+            </v-btn>
           </v-sheet>
         </v-form>
       </v-card-text>
@@ -209,6 +211,7 @@ const showAddDialog = ref(false)
 const showDeleteDialog = ref(false)
 const saving = ref(false)
 const deleting = ref(false)
+const uploading = ref(false)
 const editingProduct = ref<any>(null)
 const deletingProduct = ref<any>(null)
 const previewError = ref(false)
@@ -302,6 +305,7 @@ const onProductImageSelect = async (files: File[] | File | null) => {
   const fd = new FormData()
   fd.append('files', file)
   try {
+    uploading.value = true
     const uploaded = await uploadStore.uploadFile(fd)
     const first = uploaded?.[0]
     const url = typeof first?.url === 'string' ? first.url : null
@@ -317,9 +321,11 @@ const onProductImageSelect = async (files: File[] | File | null) => {
     }
   } catch {
     toast.error('Image upload failed')
+  } finally {
+    uploading.value = false
+    formData.value.imageFile = null
+    fileInputKey.value += 1
   }
-  formData.value.imageFile = null
-  fileInputKey.value += 1
 }
 
 const handleSave = async () => {

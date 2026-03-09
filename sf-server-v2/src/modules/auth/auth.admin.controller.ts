@@ -37,14 +37,14 @@ export class AuthAdminController {
     res.cookie('sfAccessToken', accessToken, {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24,
-      secure: true,
-      sameSite: !isProduction ? 'none' : undefined,
+      secure: isProduction,
+      sameSite: !isProduction ? 'lax' : undefined,
     });
     res.cookie('sfRefreshToken', refreshToken, {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24,
-      secure: true,
-      sameSite: !isProduction ? 'none' : undefined,
+      secure: isProduction,
+      sameSite: !isProduction ? 'lax' : undefined,
     });
 
     return { message: 'Login successful' };
@@ -52,13 +52,14 @@ export class AuthAdminController {
 
   @Post('/logout')
   async logout(@Res({ passthrough: true }) res: Response): Promise<void> {
+    const isProduction = process.env.ENVIRONMENT === 'production';
     res.clearCookie('sfAccessToken', {
       httpOnly: true,
-      secure: true,
+      secure: isProduction,
     });
     res.clearCookie('sfRefreshToken', {
       httpOnly: true,
-      secure: true,
+      secure: isProduction,
     });
   }
 

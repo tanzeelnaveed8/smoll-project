@@ -63,7 +63,7 @@ import UtilityBar from '@/components/partials/UtilityBar.vue'
 import useMitt from '@/functions/useMitt'
 import type { Vets } from '@/stores/types/veternians'
 import { useVeterniansStore } from '@/stores/veternians'
-import { computed, onMounted, onUnmounted, ref, watch, watchEffect } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute, useRouter, type LocationQueryValue } from 'vue-router'
 
 const route = useRoute()
@@ -89,6 +89,7 @@ const getVeternians = async (isSuspended: boolean, search?: string, page?: numbe
     actionLoading.value = true
     const { data, count } = await veterniansStore.fetchVets(isSuspended, search, page)
     veternians.value = { data, totalRequests: count }
+    maxValue.value = Math.ceil(Number(count) / 10)
   } finally {
     actionLoading.value = false
   }
@@ -98,14 +99,13 @@ const handleReload = () => {
   getVeternians(isSuspended.value)
 }
 
-watchEffect(async () => {
-  const page = Number(route.query.page)
-  const limit = 10
-  const search = (route.query.search as LocationQueryValue) ?? ''
-  await getVeternians(isSuspended.value, search, page)
-
-  maxValue.value = Math.ceil(Number(veternians.value.totalRequests) / limit)
-})
+watch(
+  [isSuspended, () => route.query.page, () => route.query.search],
+  ([suspended, page, search]) => {
+    getVeternians(suspended as boolean, (search as string) ?? '', Number(page) || 1)
+  },
+  { immediate: true }
+)
 
 watch(tab, () => {
   router.replace({ query: undefined })

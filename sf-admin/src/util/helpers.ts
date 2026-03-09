@@ -1,7 +1,8 @@
 import { CaseStatusEnum } from '@/stores/types/cases.d'
 import dayjs from 'dayjs'
 
-export const truncateString = (str: string, num: number) => {
+export const truncateString = (str: string | null | undefined, num: number) => {
+  if (!str) return '-'
   if (str.length > num) {
     return str.slice(0, num) + '...'
   } else {

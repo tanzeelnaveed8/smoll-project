@@ -451,10 +451,12 @@ export class AuthService {
       throw new UnauthorizedException('Invalid email or OTP');
     }
 
-    const check = await this.verifyService.verifyEmailVerificationCode(
-      email,
-      otp,
-    );
+    let check: { status: string };
+    try {
+      check = await this.verifyService.verifyEmailVerificationCode(email, otp);
+    } catch {
+      throw new UnauthorizedException('Invalid OTP');
+    }
     if (check.status !== 'approved') {
       throw new UnauthorizedException('Invalid OTP');
     }
