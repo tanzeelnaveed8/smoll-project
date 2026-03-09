@@ -8,6 +8,7 @@ const extra = (Constants.expoConfig?.extra ?? {}) as {
   API_URL?: string;
   SOCKET_URL?: string;
   SENTRY_DSN?: string;
+  DEV_BYPASS_OTP?: string;
 };
 
 const DEMO_API = "https://api.example.com";
@@ -23,4 +24,5 @@ export default {
   API_URL,
   SOCKET_URL,
   SENTRY_DSN: extra.SENTRY_DSN ?? "",
+  DEV_BYPASS_OTP: extra.DEV_BYPASS_OTP === "true",
 };

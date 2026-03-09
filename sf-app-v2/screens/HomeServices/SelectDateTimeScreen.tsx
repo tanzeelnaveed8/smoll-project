@@ -104,14 +104,14 @@ const SelectDateTimeScreen: React.FC<Props> = ({ navigation }) => {
       >
         {/* Header */}
         <Div pt={8} pb={4}>
-          <Div mb={6}>
+          <Div mb={8}>
             <BackButton onPress={() => navigation.goBack()} />
           </Div>
           <Text
             fontSize={"2xl"}
             fontFamily={fontHauoraBold}
             color="#1A1C1E"
-            mb={4}
+            mb={6}
           >
             Select Date &amp; Time
           </Text>
@@ -125,7 +125,7 @@ const SelectDateTimeScreen: React.FC<Props> = ({ navigation }) => {
         </Div>
 
         {/* Month label */}
-        <Div flexDir="row" alignItems="center" mt={10} mb={4}>
+        <Div flexDir="row" alignItems="center" mt={16} mb={8}>
           <IconCalendar size={18} color={colorPrimary} />
           <Text
             fontSize={"sm"}
@@ -179,7 +179,7 @@ const SelectDateTimeScreen: React.FC<Props> = ({ navigation }) => {
         </ScrollView>
 
         {/* Time slots header */}
-        <Div flexDir="row" alignItems="center" mt={16} mb={6}>
+        <Div flexDir="row" alignItems="center" mt={20} mb={10}>
           <IconClock size={18} color={colorPrimary} />
           <Text
             fontSize={"sm"}
@@ -193,41 +193,41 @@ const SelectDateTimeScreen: React.FC<Props> = ({ navigation }) => {
 
         {/* Slots grid */}
         {slotsLoading ? (
-          <Div py={8} alignItems="center">
+          <Div py={12} alignItems="center">
             <ActivityIndicator size="small" color={colorPrimary} />
           </Div>
         ) : slots.length === 0 ? (
-          <Text fontSize={"sm"} fontFamily={fontHauora} color="#74777F" py={8}>
+          <Text fontSize={"sm"} fontFamily={fontHauora} color="#74777F" py={12}>
             No slots available for this date. Try another day or check back later.
           </Text>
         ) : (
-        <Div flexDir="row" flexWrap="wrap" style={{ marginHorizontal: -6 }}>
-          {slots.map((slot) => {
-            const isActive = slot === selectedSlot;
-            return (
-              <TouchableOpacity
-                key={slot}
-                activeOpacity={0.8}
-                onPress={() => setSelectedSlot(slot)}
-                style={[
-                  styles.slotPill,
-                  isActive && styles.slotPillActive,
-                ]}
-              >
-                <Text
-                  fontSize={"sm"}
-                  fontFamily={fontHauoraBold}
-                  color={isActive ? colorPrimary : "#44474E"}
+          <Div flexDir="row" flexWrap="wrap" style={{ marginHorizontal: -6 }}>
+            {slots.map((slot) => {
+              const isActive = slot === selectedSlot;
+              return (
+                <TouchableOpacity
+                  key={slot}
+                  activeOpacity={0.85}
+                  onPress={() => setSelectedSlot(slot)}
+                  style={[
+                    styles.slotPill,
+                    isActive && styles.slotPillActive,
+                  ]}
                 >
-                  {slot}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
-        </Div>
+                  <Text
+                    fontSize={"sm"}
+                    fontFamily={fontHauoraBold}
+                    color={isActive ? colorPrimary : "#111827"}
+                  >
+                    {slot}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </Div>
         )}
 
-        <Div h={120} />
+        <Div h={140} />
       </ScrollView>
 
       {/* Bottom CTA */}
@@ -238,8 +238,8 @@ const SelectDateTimeScreen: React.FC<Props> = ({ navigation }) => {
         bottom={0}
         bg="#FFFFFF"
         px={20}
-        pt={12}
-        pb={24}
+        pt={14}
+        pb={28}
         borderTopWidth={1}
         borderTopColor="#E5E7EB"
         style={{
@@ -276,8 +276,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingHorizontal: 20,
-    paddingBottom: 160,
+    paddingBottom: 180,
   },
   datePill: {
     width: 62,
@@ -296,20 +295,20 @@ const styles = StyleSheet.create({
     backgroundColor: colorPrimary,
   },
   slotPill: {
-    width: "48%",
+    flexBasis: "30%",
     marginHorizontal: 6,
     marginBottom: 12,
-    height: 48,
-    borderRadius: 12,
+    height: 44,
+    borderRadius: 999,
     backgroundColor: "#FFFFFF",
     borderWidth: 1,
-    borderColor: "transparent",
+    borderColor: "#E5E7EB",
     justifyContent: "center",
     alignItems: "center",
   },
   slotPillActive: {
     borderColor: colorPrimary,
-    backgroundColor: "#ECF4FF",
+    backgroundColor: "#EEF2FF",
   },
   primaryButton: {
     height: 56,

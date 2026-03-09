@@ -91,8 +91,14 @@ async function bootstrap() {
 
   app.enableVersioning();
 
+  const isDev = configService.get('ENVIRONMENT') === 'development';
   app.enableCors({
-    origin: ALLOWED_ORIGIN,
+    origin: (origin, cb) => {
+      // In development allow any origin (Expo app, physical device, emulator)
+      if (isDev) return cb(null, true);
+      if (!origin || ALLOWED_ORIGIN.includes(origin)) return cb(null, true);
+      cb(null, false);
+    },
     credentials: true,
   });
 
@@ -122,8 +128,9 @@ async function bootstrap() {
   await PartnerSpeciality.seed();
   console.log('Seeds done.');
 
-  await app.listen(3000);
-  console.log('Smoll API is running on http://localhost:3000');
+  const port = configService.get<number>('PORT', 3000);
+  await app.listen(port, '0.0.0.0');
+  console.log(`Smoll API is running on http://localhost:${port}`);
   logger.info('Smoll API is running');
 }
 

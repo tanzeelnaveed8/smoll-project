@@ -18,6 +18,7 @@ import { OrgCodeController } from './controllers/member.org-code.controller';
 import { OrgCodeService } from './services/member.org-code.service';
 import { OrganizationModule } from '../organization/organization.module';
 import { MemberAiController } from './controllers/member.ai.controller';
+import { ProductModule } from '../product/product.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { MemberAiController } from './controllers/member.ai.controller';
     VetModule,
     CaseModule,
     OrganizationModule,
+    ProductModule,
   ],
   controllers: [MemberController, MemberAdminController, OrgCodeController, MemberAiController],
   providers: [MemberService, MemberAdminService, OrgCodeService],

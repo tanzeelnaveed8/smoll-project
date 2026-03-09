@@ -65,8 +65,9 @@ const OnboardingAuthModal: React.FC<Props> = (props) => {
 
     // Limit to 10 digits
     cleanedValue = cleanedValue.slice(0, 10).replace(/\s/g, "");
-
-    setPhone(cleanedValue.trim());
+    const normalized = cleanedValue.trim();
+    const uaeNormalized = country.value === "+971" ? normalized.replace(/^0+/, "") : normalized;
+    setPhone(uaeNormalized);
   };
 
   const handleGetOtp = async () => {

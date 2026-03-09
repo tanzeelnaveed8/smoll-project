@@ -8,6 +8,7 @@ import { getUserTimezoneOffset } from "@/utils/helpers";
 import { NavigationType } from "@/store/types";
 import { getAxiosErrMsg } from "@/utils/helpers";
 import { AxiosError } from "axios";
+import Config from "@/utils/config";
 import parsePhoneNumber from "libphonenumber-js";
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -35,7 +36,7 @@ interface Props {
 
 const SignupScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) => {
   const toastRef = useRef<ToastContainer>(null);
-  const { login } = useAuthStore();
+  const { login, devLogin } = useAuthStore();
   const { findUser, updateUser } = useUserStore();
 
   const [showOtpModal, setShowOtpModal] = useState(false);
@@ -82,7 +83,10 @@ const SignupScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) 
       cleanedValue = formattedPhone;
     }
 
-    setPhone(cleanedValue.replace(/\s/g, ""));
+    const normalized = cleanedValue.replace(/\s/g, "");
+    // UAE users often type "05xxxxxxxx" — normalize to "5xxxxxxxx" so demo number matches (+971501111111)
+    const uaeNormalized = country.value === "+971" ? normalized.replace(/^0+/, "") : normalized;
+    setPhone(uaeNormalized);
   };
 
   const handleGetOtp = async () => {
@@ -90,12 +94,19 @@ const SignupScreen: React.FC<{ navigation: NavigationType }> = ({ navigation }) 
       setIsLoading(true);
       Keyboard.dismiss();
 
-      await login({
-        phone: country.value + phone,
-      });
-
-      setShowOtpModal(true);
+      const fullPhone = country.value + phone;
+      if (Config.DEV_BYPASS_OTP) {
+        await devLogin({ phone: fullPhone });
+        navigation.navigate("HomeScreen", { isNewUser: "false" });
+      } else {
+        await login({ phone: fullPhone });
+        setShowOtpModal(true);
+      }
     } catch (err) {
+      const message = getAxiosErrMsg(err as AxiosError);
+      toastRef.current?.show(message, {
+        type: "danger",
+      });
     } finally {
       setIsLoading(false);
     }

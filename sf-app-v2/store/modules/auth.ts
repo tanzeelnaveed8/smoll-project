@@ -25,6 +25,24 @@ export const useAuthStore = create<AuthState>((set) => ({
       await api.post("/member/auth/login", payload);
     }
   },
+  async devLogin(payload) {
+    const res = await api.post("/member/auth/dev-login", payload);
+    const token = res.data.accessToken;
+    const zegoToken = res.data.zegoToken;
+    const envs = res.data.envs as Record<string, string>;
+
+    await AsyncStorage.setItem("accessToken", token);
+    await AsyncStorage.setItem("zegoToken", zegoToken);
+    await AsyncStorage.setItem("envs", JSON.stringify(envs));
+
+    if (envs?.ONESIGNAL_APP_ID) {
+      OneSignal.initialize(envs.ONESIGNAL_APP_ID);
+      const playerId = await OneSignal.User.pushSubscription.getIdAsync();
+      if (playerId) {
+        await api.patch("/members/me", { playerId });
+      }
+    }
+  },
   async verifyOtp(payload) {
     const res = await api.post("/member/auth/verify-otp", payload);
     const token = res.data.accessToken;

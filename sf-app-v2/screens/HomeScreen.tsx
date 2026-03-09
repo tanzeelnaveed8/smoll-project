@@ -1,6 +1,6 @@
 import Layout from "@/components/app/Layout";
 import OnboardingCongratsModal from "@/components/app/onboarding/OnboardingCongratsModal";
-import { fontHauora, fontHauoraBold, fontHeading } from "@/constant/constant";
+import { fontHauora, fontHauoraBold, fontHauoraMedium, fontHeading } from "@/constant/constant";
 import { useNotificationStore } from "@/store/modules/notification";
 import { useUserStore } from "@/store/modules/user";
 import { NavigationType } from "@/store/types";
@@ -277,19 +277,20 @@ const styles = StyleSheet.create({
   },
   secondaryCard: {
     backgroundColor: "#FFFFFF",
-    padding: 24,
-    borderRadius: 40,
+    paddingVertical: 20,
+    paddingHorizontal: 18,
+    borderRadius: 32,
     borderWidth: 1,
     borderColor: "#E5E7EB",
-    aspectRatio: 1,
+    minHeight: 170,
     overflow: "hidden",
   },
   secondaryIconWrap: {
     // no longer used; kept for compatibility
   },
   secondaryIconImage: {
-    width: 72,
-    height: 72,
+    width: 64,
+    height: 64,
     resizeMode: "contain",
     alignSelf: "center",
     marginBottom: 16,

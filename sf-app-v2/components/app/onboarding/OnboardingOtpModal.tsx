@@ -97,6 +97,9 @@ const OnboardingOtpModal: React.FC<Props> = (props) => {
       toastRef.current?.show("The code has been successfully sent to your number.", {
         type: "dark",
       });
+    } catch (err) {
+      const msg = getAxiosErrMsg(err as AxiosError);
+      toastRef.current?.show(msg, { type: "danger" });
     } finally {
       setResendOtpLoading(false);
     }

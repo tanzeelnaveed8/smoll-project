@@ -5,6 +5,7 @@ import {
   fontHauora,
   fontHauoraBold,
   fontHauoraMedium,
+  fontHauoraSemiBold,
 } from "@/constant/constant";
 import { type ProductId, type ProductSummary } from "@/mocks/homeServices";
 import { fetchProductByIdFromApi } from "@/utils/homeServicesApi";
@@ -19,7 +20,7 @@ import {
 } from "@tabler/icons-react-native";
 import { useRoute } from "@react-navigation/native";
 import React, { useEffect, useMemo, useState } from "react";
-import { ScrollView, StyleSheet, TextInput, TouchableOpacity } from "react-native";
+import { ScrollView, StyleSheet, TextInput, TouchableOpacity, Image, ActivityIndicator } from "react-native";
 import { Div, Text } from "react-native-magnus";
 
 /** Quantity/size options with price delta (e.g. 30 / 60 / 90 chews). */
@@ -89,26 +90,49 @@ const ProductDetailsScreen: React.FC<Props> = ({ navigation }) => {
       packageLabel: selectedOption.label,
       notes: specialNotes.trim() || undefined,
     });
-    navigation.goBack();
+    navigation.navigate("YourCartScreen");
   };
 
   const increment = () => setCount((n) => Math.min(10, n + 1));
   const decrement = () => setCount((n) => Math.max(1, n - 1));
+
+  const [showIntro, setShowIntro] = useState(true);
+
+  useEffect(() => {
+    const id = setTimeout(() => setShowIntro(false), 3000);
+    return () => clearTimeout(id);
+  }, []);
+
+  if (showIntro) {
+    return (
+      <Layout disableHeader>
+        <Div
+          style={{
+            flex: 1,
+            backgroundColor: "#FAF8F5",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <ActivityIndicator size="small" color={colorPrimary} />
+        </Div>
+      </Layout>
+    );
+  }
 
   if (loading || !product) {
     return (
       <Layout disableHeader>
         <Div p={20}>
           <BackButton onPress={() => navigation.goBack()} />
-          {loading ? (
-            <Text fontSize="lg" fontFamily={fontHauora} color="#6B7280" mt={12}>
-              Loading…
-            </Text>
-          ) : (
-            <Text fontSize="lg" fontFamily={fontHauora} color="#6B7280" mt={12}>
-              Product not found.
-            </Text>
-          )}
+          <Text
+            fontSize="lg"
+            fontFamily={fontHauora}
+            color="#6B7280"
+            mt={12}
+          >
+            {loading ? "Loading…" : "Product not found."}
+          </Text>
         </Div>
       </Layout>
     );
@@ -122,12 +146,14 @@ const ProductDetailsScreen: React.FC<Props> = ({ navigation }) => {
         showsVerticalScrollIndicator={false}
       >
         {/* Top bar */}
-        <Div pt={8} px={0} pb={0}>
-          <BackButton onPress={() => navigation.goBack()} />
+        <Div pt={8} pb={4}>
+          <Div mb={8}>
+            <BackButton onPress={() => navigation.goBack()} />
+          </Div>
         </Div>
 
         {/* Image area */}
-        <Div mt={16} mb={20}>
+        <Div mb={24}>
           <Div
             h={240}
             rounded={24}
@@ -135,34 +161,35 @@ const ProductDetailsScreen: React.FC<Props> = ({ navigation }) => {
             justifyContent="center"
             alignItems="center"
             position="relative"
+            overflow="hidden"
           >
-            <Text
-              fontSize={"sm"}
-              fontFamily={fontHauoraMedium}
-              color="#9CA3AF"
-            >
-              Product image
-            </Text>
-
-            {/* Carousel dots */}
-            <Div position="absolute" bottom={16} flexDir="row" style={{ gap: 8 }}>
-              <Div w={8} h={8} rounded={999} bg={colorPrimary} />
-              <Div w={8} h={8} rounded={999} bg="#E5E7EB" />
-            </Div>
+            {product.imageUrl ? (
+              <Image
+                source={{ uri: product.imageUrl }}
+                style={{ width: 180, height: 180, borderRadius: 20, alignSelf: "center" }}
+                resizeMode="contain"
+              />
+            ) : (
+              <Image
+                source={require("@/assets/images/no-image.png")}
+                style={{ width: 140, height: 140, borderRadius: 20, alignSelf: "center" }}
+                resizeMode="contain"
+              />
+            )}
           </Div>
         </Div>
 
         {/* Header / description */}
-        <Div mb={20}>
+        <Div mb={24}>
           <Text
             fontSize={"2xl"}
             fontFamily={fontHauoraBold}
             color="#111827"
-            mb={6}
+            mb={8}
           >
             {product.title}
           </Text>
-          <Div flexDir="row" alignItems="center" mb={8}>
+          <Div flexDir="row" alignItems="center" mb={10}>
             <Div
               flexDir="row"
               alignItems="center"
@@ -186,21 +213,21 @@ const ProductDetailsScreen: React.FC<Props> = ({ navigation }) => {
             fontSize={"sm"}
             fontFamily={fontHauora}
             color="#6B7280"
-            lineHeight={20}
+            lineHeight={22}
           >
             {product.description}
           </Text>
         </Div>
 
-        {/* Quantity options */}
-        <Div mb={20}>
+        {/* Size / pack options */}
+        <Div mb={24}>
           <Text
-            fontSize={"sm"}
+            fontSize={"md"}
             fontFamily={fontHauoraBold}
             color="#111827"
-            mb={8}
+            mb={12}
           >
-            Quantity
+            Pack size
           </Text>
           <Div flexDir="row" flexWrap="wrap" style={{ gap: 12 }}>
             {QUANTITY_OPTIONS.map((opt) => {
@@ -237,15 +264,15 @@ const ProductDetailsScreen: React.FC<Props> = ({ navigation }) => {
           </Div>
         </Div>
 
-        {/* Count stepper */}
-        <Div mb={20}>
+        {/* Number of items */}
+        <Div mb={24}>
           <Text
-            fontSize={"sm"}
+            fontSize={"md"}
             fontFamily={fontHauoraBold}
             color="#111827"
-            mb={8}
+            mb={12}
           >
-            Quantity
+            Number of items
           </Text>
           <Div
             flexDir="row"
@@ -256,7 +283,7 @@ const ProductDetailsScreen: React.FC<Props> = ({ navigation }) => {
             borderWidth={1}
             borderColor="#E5E7EB"
             px={16}
-            py={12}
+            py={14}
           >
             <TouchableOpacity
               onPress={decrement}
@@ -279,16 +306,16 @@ const ProductDetailsScreen: React.FC<Props> = ({ navigation }) => {
         </Div>
 
         {/* Delivery info */}
-        <Div mb={16} style={{ gap: 12 }}>
+        <Div mb={24} style={{ gap: 12 }}>
           <Div
             flexDir="row"
             alignItems="center"
             bg="#FFFFFF"
-            rounded={16}
+            rounded={20}
             borderWidth={1}
             borderColor="#E5E7EB"
             px={16}
-            py={12}
+            py={14}
             style={{ gap: 12 }}
           >
             <IconTruck size={20} color={colorPrimary} />
@@ -305,11 +332,11 @@ const ProductDetailsScreen: React.FC<Props> = ({ navigation }) => {
             flexDir="row"
             alignItems="center"
             bg="#FFFFFF"
-            rounded={16}
+            rounded={20}
             borderWidth={1}
             borderColor="#E5E7EB"
             px={16}
-            py={12}
+            py={14}
             style={{ gap: 12 }}
           >
             <IconClock size={20} color={colorPrimary} />
@@ -325,9 +352,9 @@ const ProductDetailsScreen: React.FC<Props> = ({ navigation }) => {
         </Div>
 
         {/* Special instructions */}
-        <Div mb={160}>
-          <Div flexDir="row" alignItems="center" mb={8}>
-            <IconInfoCircle size={18} color={colorPrimary} />
+        <Div mb={24}>
+          <Div flexDir="row" alignItems="center" mb={12}>
+            <IconInfoCircle size={20} color={colorPrimary} />
             <Text
               fontSize={"md"}
               fontFamily={fontHauoraBold}
@@ -363,12 +390,12 @@ const ProductDetailsScreen: React.FC<Props> = ({ navigation }) => {
         borderTopWidth={1}
         borderTopColor="#E5E7EB"
         px={20}
-        pt={12}
-        pb={24}
+        pt={14}
+        pb={28}
         style={{
           shadowColor: "#000",
           shadowOffset: { width: 0, height: -4 },
-          shadowOpacity: 0.05,
+          shadowOpacity: 0.06,
           shadowRadius: 16,
           elevation: 8,
         }}
@@ -399,7 +426,7 @@ const ProductDetailsScreen: React.FC<Props> = ({ navigation }) => {
             <IconShoppingCart size={18} color="#FFFFFF" />
             <Text
               fontSize={"md"}
-              fontFamily={fontHauoraBold}
+              fontFamily={fontHauoraSemiBold}
               color="#FFFFFF"
               ml={8}
             >
@@ -419,14 +446,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingHorizontal: 20,
-    paddingBottom: 160,
+    paddingBottom: 180,
   },
   quantityOption: {
     flexGrow: 1,
     minWidth: "28%",
-    paddingVertical: 12,
-    paddingHorizontal: 12,
+    paddingVertical: 14,
+    paddingHorizontal: 14,
     borderRadius: 16,
     borderWidth: 1,
     borderColor: "#E5E7EB",
@@ -464,8 +490,8 @@ const styles = StyleSheet.create({
   primaryButton: {
     paddingVertical: 14,
     paddingHorizontal: 28,
-    borderRadius: 20,
-    backgroundColor: colorPrimary,
+    borderRadius: 999,
+    backgroundColor: "#111827",
     flexDirection: "row",
     alignItems: "center",
   },

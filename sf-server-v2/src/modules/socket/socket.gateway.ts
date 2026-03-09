@@ -8,9 +8,17 @@ import { SocketService } from './socket.service';
 import { ALLOWED_ORIGIN } from 'src/constants';
 
 // ws://localhost:${port}/${namespace}
+const isDev = process.env.ENVIRONMENT === 'development';
 @WebSocketGateway({
   namespace: 'socket',
-  cors: { origin: ALLOWED_ORIGIN },
+  cors: {
+    origin: (origin, cb) => {
+      if (isDev) return cb(null, true);
+      if (!origin || ALLOWED_ORIGIN.includes(origin)) return cb(null, true);
+      cb(null, false);
+    },
+    credentials: true,
+  },
 })
 export class SocketGateway implements OnGatewayInit {
   constructor(private socketService: SocketService) { }

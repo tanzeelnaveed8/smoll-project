@@ -4,6 +4,7 @@
  */
 
 import api from "@/utils/api";
+import Config from "@/utils/config";
 import type {
   ServiceSummary,
   ProductSummary,
@@ -60,6 +61,11 @@ function mapProductFromApi(
   },
   index: number
 ): ProductSummary {
+  const rawUrl = item.imageUrl ?? null;
+  const imageUrl =
+    rawUrl && !/^https?:\/\//i.test(rawUrl)
+      ? `${Config.API_URL?.replace(/\/+$/, "")}/${rawUrl.replace(/^\/+/, "")}`
+      : rawUrl;
   return {
     id: item.id as ProductId,
     title: item.name,
@@ -68,6 +74,7 @@ function mapProductFromApi(
     basePrice: Number(item.price),
     tag: "Vet approved",
     subtitle: item.description || item.name,
+    imageUrl,
   };
 }
 
@@ -191,6 +198,7 @@ export async function fetchProductByIdFromApi(
     price: number;
     currency?: string;
     category?: string | null;
+    imageUrl?: string | null;
   }>(`/member/products/${id}`);
   if (!data) return null;
   return mapProductFromApi(data, 0);

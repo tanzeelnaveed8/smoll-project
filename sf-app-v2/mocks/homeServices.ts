@@ -96,10 +96,12 @@ export interface ProductSummary {
   priceLabel: string;
   /** Numeric base price used for cart calculations. */
   basePrice: number;
-  /** Short AI tag like \"Good for Bella\". */
+  /** Short AI tag like "Good for Bella". */
   tag: string;
   /** Longer subtitle used in AI Picks list. */
   subtitle: string;
+  /** Optional product image URL from backend. */
+  imageUrl?: string | null;
 }
 
 export const MOCK_PRODUCTS: ProductSummary[] = [

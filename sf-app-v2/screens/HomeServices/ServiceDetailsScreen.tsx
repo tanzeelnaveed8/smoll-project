@@ -8,12 +8,17 @@ import {
   fontHauoraSemiBold,
 } from "@/constant/constant";
 import { type ServiceId, type ServiceSummary } from "@/mocks/homeServices";
+import {
+  getDefaultServiceAddons,
+  getDefaultServicePackages,
+} from "@/mocks/serviceDetails";
 import { fetchServiceDetailFromApi } from "@/utils/homeServicesApi";
 import { useCartStore } from "@/store/modules/cart";
 import { NavigationType } from "@/store/types";
 import {
   IconCheck,
   IconClock,
+  IconCirclePlus,
   IconInfoCircle,
   IconShieldCheck,
   IconStar,
@@ -21,8 +26,8 @@ import {
 } from "@tabler/icons-react-native";
 import { useRoute } from "@react-navigation/native";
 import React, { useEffect, useMemo, useState } from "react";
-import { ScrollView, StyleSheet, TextInput, TouchableOpacity } from "react-native";
-import { Div, Text } from "react-native-magnus";
+import { ScrollView, StyleSheet, TextInput, TouchableOpacity, ActivityIndicator } from "react-native";
+import { Div, Text, Image } from "react-native-magnus";
 
 interface Props {
   navigation: NavigationType;
@@ -33,9 +38,9 @@ const ServiceDetailsScreen: React.FC<Props> = ({ navigation }) => {
   const serviceId = (route.params as { serviceId?: ServiceId | string })?.serviceId;
   const [service, setService] = useState<ServiceSummary | null>(null);
   const [loading, setLoading] = useState(!!serviceId);
-
   const [packages, setPackages] = useState<Array<{ id: string; name: string; priceLabel: string; price: number; perks: string[]; highlighted?: boolean }>>([]);
   const [addons, setAddons] = useState<Array<{ id: string; name: string; priceLabel: string; price: number }>>([]);
+  const [showIntro, setShowIntro] = useState(true);
 
   useEffect(() => {
     if (!serviceId) {
@@ -47,22 +52,41 @@ const ServiceDetailsScreen: React.FC<Props> = ({ navigation }) => {
     }
     let cancelled = false;
     setLoading(true);
-    fetchServiceDetailFromApi(String(serviceId)).then(({ service: s, packages: p, addons: a }) => {
-      if (!cancelled) {
+    fetchServiceDetailFromApi(String(serviceId))
+      .then(({ service: s, packages: p, addons: a }) => {
+        if (cancelled) return;
+
+        // Always have some sensible packages/add-ons, even if backend does not provide them.
+        const fallbackPackages =
+          p && p.length > 0
+            ? p
+            : getDefaultServicePackages((s?.id as ServiceId) ?? (serviceId as ServiceId));
+        const fallbackAddons =
+          a && a.length > 0
+            ? a
+            : getDefaultServiceAddons((s?.id as ServiceId) ?? (serviceId as ServiceId));
+
         setService(s ?? null);
-        setPackages(p);
-        setAddons(a);
-        if (p.length) setSelectedPackageId((prev) => (p.some((pk) => pk.id === prev) ? prev : p[0].id));
-      }
-      setLoading(false);
-    }).catch(() => {
-      if (!cancelled) {
-        setService(null);
-        setPackages([]);
-        setAddons([]);
+        setPackages(fallbackPackages);
+        setAddons(fallbackAddons);
+
+        if (fallbackPackages.length) {
+          setSelectedPackageId((prev) =>
+            fallbackPackages.some((pk) => pk.id === prev) ? prev : fallbackPackages[0].id
+          );
+        }
+
         setLoading(false);
-      }
-    });
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setService(null);
+          // Fallback to defaults even if API fails completely so UI still works.
+          setPackages(getDefaultServicePackages(serviceId as ServiceId));
+          setAddons(getDefaultServiceAddons(serviceId as ServiceId));
+          setLoading(false);
+        }
+      });
     return () => {
       cancelled = true;
     };
@@ -75,6 +99,16 @@ const ServiceDetailsScreen: React.FC<Props> = ({ navigation }) => {
   const [specialNotes, setSpecialNotes] = useState("");
 
   const addOrUpdateItem = useCartStore((s) => s.addOrUpdateItem);
+
+  const safeService: ServiceSummary = service ?? {
+    id: (serviceId as ServiceId) ?? "grooming",
+    title: "",
+    durationLabel: "",
+    priceLabel: "",
+    startingPrice: 0,
+    iconBg: "#F3F4F6",
+    iconColor: colorPrimary,
+  };
 
   const selectedPkg = useMemo(
     () => packages.find((p) => p.id === selectedPackageId),
@@ -124,14 +158,18 @@ const ServiceDetailsScreen: React.FC<Props> = ({ navigation }) => {
   const incrementPets = () => setNumPets((n) => Math.min(5, n + 1));
   const decrementPets = () => setNumPets((n) => Math.max(1, n - 1));
 
-  if (loading || !service) {
+  useEffect(() => {
+    const id = setTimeout(() => setShowIntro(false), 3000);
+    return () => clearTimeout(id);
+  }, []);
+
+  const isInitialLoading = showIntro;
+
+  if (isInitialLoading) {
     return (
       <Layout disableHeader>
-        <Div p={20}>
-          <BackButton onPress={() => navigation.goBack()} />
-          <Text fontSize="lg" fontFamily={fontHauora} color="#6B7280" mt={12}>
-            {loading ? "Loading…" : "Service not found."}
-          </Text>
+        <Div flex={1} bg="#FAF8F5" justifyContent="center" alignItems="center">
+          <ActivityIndicator size="small" color={colorPrimary} />
         </Div>
       </Layout>
     );
@@ -145,25 +183,25 @@ const ServiceDetailsScreen: React.FC<Props> = ({ navigation }) => {
         showsVerticalScrollIndicator={false}
       >
         {/* Back + header */}
-        <Div pt={8} pb={4}>
-          <Div mb={4}>
+        <Div pt={8} pb={4} px={0}>
+          <Div mb={8}>
             <BackButton onPress={() => navigation.goBack()} />
           </Div>
 
-          <Div alignItems="center" mb={16}>
+          <Div alignItems="center" mb={24}>
             <Div
               w={96}
               h={96}
               rounded={24}
-              bg={service.iconBg}
+              bg={safeService.iconBg}
               justifyContent="center"
               alignItems="center"
               mb={12}
             >
-              <IconStar size={40} color={service.iconColor} strokeWidth={1.6} />
+              <IconStar size={40} color={safeService.iconColor} strokeWidth={1.6} />
             </Div>
             <Text fontSize={"2xl"} fontFamily={fontHauoraBold} color="#111827" mb={8}>
-              {service.title}
+              {safeService.title || "Service"}
             </Text>
             <Div flexDir="row" style={{ gap: 8 }}>
               <Div
@@ -181,7 +219,7 @@ const ServiceDetailsScreen: React.FC<Props> = ({ navigation }) => {
                   color="#6B7280"
                   ml={6}
                 >
-                  {service.durationLabel}
+                  {safeService.durationLabel || "30-60 min"}
                 </Text>
               </Div>
               <Div
@@ -217,7 +255,7 @@ const ServiceDetailsScreen: React.FC<Props> = ({ navigation }) => {
           flexDir="row"
           alignItems="center"
           justifyContent="space-between"
-          mb={20}
+          mb={24}
         >
           <Div flexDir="row" alignItems="center" style={{ gap: 8 }}>
             <IconUsers size={20} color={colorPrimary} />
@@ -247,9 +285,9 @@ const ServiceDetailsScreen: React.FC<Props> = ({ navigation }) => {
         </Div>
 
         {/* Packages */}
-        <Div mb={12}>
-          <Div flexDir="row" alignItems="center" mb={10}>
-            <IconShieldCheck size={18} color={colorPrimary} />
+        <Div mb={24}>
+          <Div flexDir="row" alignItems="center" mb={12}>
+            <IconShieldCheck size={20} color={colorPrimary} />
             <Text
               fontSize={"md"}
               fontFamily={fontHauoraBold}
@@ -347,12 +385,14 @@ const ServiceDetailsScreen: React.FC<Props> = ({ navigation }) => {
         </Div>
 
         {/* Add-ons */}
-        <Div mt={12} mb={28}>
-          <Div flexDir="row" alignItems="center" mb={10}>
+        <Div mb={24}>
+          <Div flexDir="row" alignItems="center" mb={12}>
+            <IconCirclePlus size={20} color={colorPrimary} />
             <Text
               fontSize={"md"}
               fontFamily={fontHauoraBold}
               color="#111827"
+              ml={8}
             >
               Add-ons & Extras
             </Text>
@@ -404,9 +444,9 @@ const ServiceDetailsScreen: React.FC<Props> = ({ navigation }) => {
         </Div>
 
         {/* Special instructions */}
-        <Div mb={28}>
-          <Div flexDir="row" alignItems="center" mb={8}>
-            <IconInfoCircle size={18} color={colorPrimary} />
+        <Div mb={24}>
+          <Div flexDir="row" alignItems="center" mb={12}>
+            <IconInfoCircle size={20} color={colorPrimary} />
             <Text
               fontSize={"md"}
               fontFamily={fontHauoraBold}
@@ -442,9 +482,9 @@ const ServiceDetailsScreen: React.FC<Props> = ({ navigation }) => {
         borderTopWidth={1}
         borderTopColor="#E5E7EB"
         px={20}
-        pt={12}
-        pb={24}
-        style={{ shadowColor: "#000", shadowOffset: { width: 0, height: -4 }, shadowOpacity: 0.05, shadowRadius: 16, elevation: 8 }}
+        pt={14}
+        pb={28}
+        style={{ shadowColor: "#000", shadowOffset: { width: 0, height: -4 }, shadowOpacity: 0.06, shadowRadius: 16, elevation: 8 }}
       >
         <Div flexDir="row" alignItems="center" justifyContent="space-between">
           <Div>
@@ -491,8 +531,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingHorizontal: 20,
-    paddingBottom: 140,
+    paddingBottom: 160,
   },
   circleBtn: {
     width: 32,
@@ -508,7 +547,7 @@ const styles = StyleSheet.create({
     position: "relative",
     backgroundColor: "#FFFFFF",
     borderRadius: 20,
-    padding: 16,
+    padding: 18,
     borderWidth: 1,
     borderColor: "#E5E7EB",
   },

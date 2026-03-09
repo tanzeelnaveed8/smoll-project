@@ -24,6 +24,7 @@ import {
   ScrollView,
   StyleSheet,
   TouchableOpacity,
+  Image,
 } from "react-native";
 import { Div, Text } from "react-native-magnus";
 
@@ -131,11 +132,11 @@ const HomeServicesScreen: React.FC<{ navigation: NavigationType }> = ({
         ) : activeTab === "services" ? (
           <>
             {/* Row 1 */}
-            <Div flexDir="row" flexWrap="wrap" style={{ marginHorizontal: -CARD_GAP / 2 }} mt={6} mb={6}>
+            <Div flexDir="row" flexWrap="wrap" style={{ justifyContent: "space-between" }} mt={6} mb={CARD_GAP}>
               {services.slice(0, 2).map((s) => (
                 <TouchableOpacity
                   key={s.id}
-                  style={[styles.serviceCard, { width: CARD_WIDTH }]}
+                  style={styles.serviceCard}
                   activeOpacity={0.8}
                   onPress={() =>
                     navigation.navigate("ServiceDetailsScreen", { serviceId: s.id })
@@ -171,7 +172,7 @@ const HomeServicesScreen: React.FC<{ navigation: NavigationType }> = ({
               mb={10}
               px={20}
               py={16}
-              bg="#D1C6B8"
+              bg="#000000"
             >
               <Text
                 fontSize={10}
@@ -210,11 +211,11 @@ const HomeServicesScreen: React.FC<{ navigation: NavigationType }> = ({
             </Div>
 
             {/* Row 2: Health Checkup, Dental Care */}
-            <Div flexDir="row" flexWrap="wrap" style={{ marginHorizontal: -CARD_GAP / 2 }} mb={6}>
+            <Div flexDir="row" flexWrap="wrap" style={{ justifyContent: "space-between" }} mb={CARD_GAP}>
               {services.slice(2, 4).map((s) => (
                 <TouchableOpacity
                   key={s.id}
-                  style={[styles.serviceCard, { width: CARD_WIDTH }]}
+                  style={styles.serviceCard}
                   activeOpacity={0.8}
                   onPress={() =>
                     navigation.navigate("ServiceDetailsScreen", { serviceId: s.id })
@@ -244,12 +245,12 @@ const HomeServicesScreen: React.FC<{ navigation: NavigationType }> = ({
               mb={10}
               px={20}
               py={16}
-              bg="#E0E3EB"
+              bg="#000000"
             >
               <Text
                 fontSize={10}
                 fontFamily={fontHauoraBold}
-                color="#111827"
+                color="#F9FAFB"
                 style={{ textTransform: "uppercase", letterSpacing: 1.2 }}
                 mb={6}
               >
@@ -258,14 +259,14 @@ const HomeServicesScreen: React.FC<{ navigation: NavigationType }> = ({
               <Text
                 fontSize={"lg"}
                 fontFamily={fontHauoraBold}
-                color="#111827"
+                color="#FFFFFF"
                 mb={10}
               >
                 Free Delivery on Meds
               </Text>
               <TouchableOpacity activeOpacity={0.85}>
                 <Div
-                  bg="#111827"
+                  bg="#FFFFFF"
                   px={18}
                   py={10}
                   rounded={16}
@@ -274,7 +275,7 @@ const HomeServicesScreen: React.FC<{ navigation: NavigationType }> = ({
                   <Text
                     fontSize={11}
                     fontFamily={fontHauoraBold}
-                    color="#FFFFFF"
+                    color="#111827"
                   >
                     Shop Now
                   </Text>
@@ -283,11 +284,11 @@ const HomeServicesScreen: React.FC<{ navigation: NavigationType }> = ({
             </Div>
 
             {/* Row 3: Deworming, Nail Trimming */}
-            <Div flexDir="row" flexWrap="wrap" style={{ marginHorizontal: -CARD_GAP / 2 }} mb={6}>
+            <Div flexDir="row" flexWrap="wrap" style={{ justifyContent: "space-between" }} mb={CARD_GAP}>
               {services.slice(4, 6).map((s) => (
                 <TouchableOpacity
                   key={s.id}
-                  style={[styles.serviceCard, { width: CARD_WIDTH }]}
+                  style={styles.serviceCard}
                   activeOpacity={0.8}
                   onPress={() =>
                     navigation.navigate("ServiceDetailsScreen", { serviceId: s.id })
@@ -357,7 +358,21 @@ const HomeServicesScreen: React.FC<{ navigation: NavigationType }> = ({
                         })
                       }
                     >
-                      <Div w="100%" bg="#f3f4f6" rounded={12} mb={12} style={{ aspectRatio: 1 }} />
+                      <Div mb={12}>
+                        {p.imageUrl ? (
+                          <Image
+                            source={{ uri: p.imageUrl }}
+                            style={{ width: "100%", height: 120, borderRadius: 12 }}
+                            resizeMode="cover"
+                          />
+                        ) : (
+                          <Image
+                            source={require("@/assets/images/no-image.png")}
+                            style={{ width: "100%", height: 120, borderRadius: 12 }}
+                            resizeMode="cover"
+                          />
+                        )}
+                      </Div>
                       <Text fontSize={"sm"} fontFamily={fontHauoraBold} color="#222" mb={4}>{p.title}</Text>
                       <Text fontSize={10} color="#9CA3AF" fontFamily={fontHauora} mb={8}>{p.description}</Text>
                       <Text fontSize={"sm"} fontFamily={fontHauoraBold} color={colorPrimary}>{p.priceLabel}</Text>
@@ -371,7 +386,7 @@ const HomeServicesScreen: React.FC<{ navigation: NavigationType }> = ({
                   mb={10}
                   px={20}
                   py={16}
-                  bg="#D1C6B8"
+                  bg="#000000"
                 >
                   <Text
                     fontSize={10}
@@ -422,7 +437,21 @@ const HomeServicesScreen: React.FC<{ navigation: NavigationType }> = ({
                         })
                       }
                     >
-                      <Div w="100%" bg="#f3f4f6" rounded={12} mb={12} style={{ aspectRatio: 1 }} />
+                      <Div mb={12}>
+                        {p.imageUrl ? (
+                          <Image
+                            source={{ uri: p.imageUrl }}
+                            style={{ width: "100%", height: 120, borderRadius: 12 }}
+                            resizeMode="cover"
+                          />
+                        ) : (
+                          <Image
+                            source={require("@/assets/images/no-image.png")}
+                            style={{ width: "100%", height: 120, borderRadius: 12 }}
+                            resizeMode="cover"
+                          />
+                        )}
+                      </Div>
                       <Text fontSize={"sm"} fontFamily={fontHauoraBold} color="#222" mb={4}>{p.title}</Text>
                       <Text fontSize={10} color="#9CA3AF" fontFamily={fontHauora} mb={8}>{p.description}</Text>
                       <Text fontSize={"sm"} fontFamily={fontHauoraBold} color={colorPrimary}>{p.priceLabel}</Text>
@@ -436,12 +465,12 @@ const HomeServicesScreen: React.FC<{ navigation: NavigationType }> = ({
                   mb={10}
                   px={20}
                   py={16}
-                  bg="#E0E3EB"
+                  bg="#000000"
                 >
                   <Text
                     fontSize={10}
                     fontFamily={fontHauoraBold}
-                    color="#111827"
+                    color="#F9FAFB"
                     style={{ textTransform: "uppercase", letterSpacing: 1.2 }}
                     mb={6}
                   >
@@ -450,14 +479,14 @@ const HomeServicesScreen: React.FC<{ navigation: NavigationType }> = ({
                   <Text
                     fontSize={"lg"}
                     fontFamily={fontHauoraBold}
-                    color="#111827"
+                    color="#FFFFFF"
                     mb={10}
                   >
                     Free Delivery on Meds
                   </Text>
                   <TouchableOpacity activeOpacity={0.85}>
                     <Div
-                      bg="#111827"
+                      bg="#FFFFFF"
                       px={18}
                       py={10}
                       rounded={16}
@@ -466,7 +495,7 @@ const HomeServicesScreen: React.FC<{ navigation: NavigationType }> = ({
                       <Text
                         fontSize={11}
                         fontFamily={fontHauoraBold}
-                        color="#FFFFFF"
+                        color="#111827"
                       >
                         Shop Now
                       </Text>
@@ -487,7 +516,21 @@ const HomeServicesScreen: React.FC<{ navigation: NavigationType }> = ({
                         })
                       }
                     >
-                      <Div w="100%" bg="#f3f4f6" rounded={12} mb={12} style={{ aspectRatio: 1 }} />
+                      <Div mb={12}>
+                        {p.imageUrl ? (
+                          <Image
+                            source={{ uri: p.imageUrl }}
+                            style={{ width: "100%", height: 120, borderRadius: 12 }}
+                            resizeMode="cover"
+                          />
+                        ) : (
+                          <Image
+                            source={require("@/assets/images/no-image.png")}
+                            style={{ width: "100%", height: 120, borderRadius: 12 }}
+                            resizeMode="cover"
+                          />
+                        )}
+                      </Div>
                       <Text fontSize={"sm"} fontFamily={fontHauoraBold} color="#222" mb={4}>{p.title}</Text>
                       <Text fontSize={10} color="#9CA3AF" fontFamily={fontHauora} mb={8}>{p.description}</Text>
                       <Text fontSize={"sm"} fontFamily={fontHauoraBold} color={colorPrimary}>{p.priceLabel}</Text>
@@ -524,22 +567,28 @@ const HomeServicesScreen: React.FC<{ navigation: NavigationType }> = ({
                       })
                     }
                   >
-                    <Div
-                      bg="white"
-                      rounded={16}
-                      p={12}
-                      flexDir="row"
-                      style={{ gap: 16 }}
-                      borderWidth={1}
-                      borderColor="#f9fafb"
-                    >
                       <Div
-                        w={96}
-                        h={96}
-                        bg="#f3f4f6"
-                        rounded={12}
-                        overflow="hidden"
-                      />
+                        bg="white"
+                        rounded={16}
+                        p={12}
+                        flexDir="row"
+                        style={{ gap: 16 }}
+                        borderWidth={1}
+                        borderColor="#f9fafb"
+                      >
+                        {p.imageUrl ? (
+                          <Image
+                            source={{ uri: p.imageUrl }}
+                            style={{ width: 96, height: 96, borderRadius: 12 }}
+                            resizeMode="cover"
+                          />
+                        ) : (
+                          <Image
+                            source={require("@/assets/images/no-image.png")}
+                            style={{ width: 96, height: 96, borderRadius: 12 }}
+                            resizeMode="cover"
+                          />
+                        )}
                       <Div flex={1}>
                         <Div
                           flexDir="row"
@@ -650,11 +699,11 @@ const styles = StyleSheet.create({
     borderColor: colorPrimary,
   },
   serviceCard: {
+    width: "48%",
     backgroundColor: "#fff",
     padding: 20,
     borderRadius: 24,
     marginBottom: CARD_GAP,
-    marginHorizontal: CARD_GAP / 2,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.02,

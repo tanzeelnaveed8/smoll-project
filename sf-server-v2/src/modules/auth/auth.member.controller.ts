@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  ForbiddenException,
   Post,
   Req,
   Res,
@@ -34,6 +35,61 @@ export class AuthMemberController {
   @Post('/login')
   async login(@Body() body: LoginByPhoneDto): Promise<void> {
     return await this.authService.loginWithPhoneOrEmail(body);
+  }
+
+  @Post('/dev-login')
+  async devLogin(
+    @Body() body: LoginByPhoneDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    if (process.env.ENVIRONMENT === 'production') {
+      throw new ForbiddenException('Dev login is disabled in production');
+    }
+
+    let subscription: string = 'smollBasic';
+    let organization: Organization;
+
+    const { accessToken, refreshToken, zegoToken, loginWithEmail } =
+      await this.authService.devLoginBypassOtp(body);
+
+    if (loginWithEmail && body.email) {
+      const domain = body.email.split('@')[1];
+      if (!domain) {
+        throw new UnauthorizedException('Invalid email domain');
+      }
+
+      organization = await this.organizationService.findByDomain(domain);
+
+      if (organization && organization.isSmollVetAccessValid()) {
+        subscription = 'smollVet';
+      }
+    }
+
+    const envs = {
+      ONESIGNAL_APP_ID: process.env.ONESIGNAL_APP_ID,
+      STRIPE_PUBLISHABLE_KEY: process.env.STRIPE_PUBLISHABLE_KEY,
+      ZEGO_APP_ID: process.env.ZEGO_APP_ID,
+      ZEGO_SERVER_SECRET: process.env.ZEGO_SERVER_SECRET,
+      ZEGO_APP_SIGN: process.env.ZEGO_APP_SIGN,
+    };
+
+    res.cookie('sfAccessToken', accessToken, {
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 24,
+    });
+    res.cookie('sfRefreshToken', refreshToken, {
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 24 * 30,
+    });
+
+    return {
+      accessToken,
+      refreshToken,
+      zegoToken,
+      envs,
+      subscription,
+      organization: subscription === 'smollVet' ? organization : null,
+    };
   }
 
   @Post('/verify-otp')

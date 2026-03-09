@@ -6,6 +6,7 @@ import Config from "@/utils/config";
 const api = axios.create({
   baseURL: Config.API_URL,
   withCredentials: true,
+  timeout: 15000,
   headers: {
     Accept: "application/json",
     "Content-Type": "application/json",
@@ -38,8 +39,7 @@ api.interceptors.response.use(
     // Network error (no response) – show clear message instead of logging undefined
     const isNetworkError = !error.response;
     if (isNetworkError) {
-      const networkMsg =
-        "Could not reach server. Check that the app API_URL in .env points to your backend and the server is running.";
+      const networkMsg = `Could not reach server at ${Config.API_URL}. Check API_URL in app .env and that the backend is running (and reachable from this device).`;
       if (!error.config?.url?.includes("skiperr")) {
         showMessage({ message: networkMsg, type: "danger" });
       }

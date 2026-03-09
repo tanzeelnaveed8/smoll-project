@@ -62,6 +62,16 @@ const DEFAULT_ADDONS: ServiceAddonOption[] = [
 const SERVICE_PACKAGES: Partial<Record<ServiceId, ServicePackageOption[]>> = {};
 const SERVICE_ADDONS: Partial<Record<ServiceId, ServiceAddonOption[]>> = {};
 
+/** Returns default packages regardless of service id. Useful as a safe fallback when API does not provide packages. */
+export function getDefaultServicePackages(): ServicePackageOption[] {
+  return DEFAULT_PACKAGES;
+}
+
+/** Returns default add-ons regardless of service id. Useful as a safe fallback when API does not provide add-ons. */
+export function getDefaultServiceAddons(): ServiceAddonOption[] {
+  return DEFAULT_ADDONS;
+}
+
 export function getServicePackages(serviceId: ServiceId): ServicePackageOption[] {
   return SERVICE_PACKAGES[serviceId] ?? DEFAULT_PACKAGES;
 }

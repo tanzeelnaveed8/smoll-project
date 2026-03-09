@@ -1,3 +1,4 @@
+import "react-native-url-polyfill/auto";
 import { AppRegistry } from "react-native";
 import "./fix-native-event-emitter"; // Import the fix before anything else
 import App from "./App";

@@ -273,10 +273,6 @@ export class AuthService {
       }
     }
 
-    if (phone && phone.includes('111111111')) {
-      return;
-    }
-
     try {
       if (phone) {
         // Generate and send otp
@@ -302,6 +298,66 @@ export class AuthService {
       // Re-throw other errors
       throw error;
     }
+  }
+
+  /**
+   * Development-only: bypass OTP and return tokens directly for member login.
+   * Useful when SMS/Email delivery or OTP UX is blocking local testing.
+   */
+  async devLoginBypassOtp(loginUserDto: LoginByPhoneDto): Promise<{
+    accessToken: string;
+    refreshToken: string;
+    zegoToken: string;
+    loginWithEmail: boolean;
+    email?: string;
+  }> {
+    const env = this.configService.get<string>('ENVIRONMENT');
+    if (env === 'production') {
+      throw new ForbiddenException('Dev login is disabled in production');
+    }
+
+    const { phone, email } = loginUserDto;
+    if (!phone && !email) {
+      throw new BadRequestException('Phone or email is required');
+    }
+
+    let member: Member | null = null;
+    let loginWithEmail = false;
+
+    if (phone) {
+      this.logger.warn(`[DEV] Bypass OTP login with phone ${phone}`);
+      member = await this.memberService.findOneByPhone(phone);
+      loginWithEmail = false;
+    } else if (email) {
+      this.logger.warn(`[DEV] Bypass OTP login with email ${email}`);
+      member = await this.memberService.findOneByEmail(email);
+      loginWithEmail = true;
+    }
+
+    if (!member) {
+      throw new NotFoundException('Member not found');
+    }
+
+    if (member.status === MemberStatusEnum.INACTIVE) {
+      throw new ForbiddenException(
+        'User account is deactivated, please contact support',
+      );
+    }
+
+    const payload: AuthUser = {
+      id: member.id,
+      phone: member.phone,
+      name: member.name ?? member.phone,
+      role: member.role,
+      email: member.email,
+      loginWithEmail,
+    };
+
+    const accessToken = this._getAccessToken(payload, '30d');
+    const refreshToken = this._getRefreshToken(payload);
+    const zegoToken = this._getZegoToken(member.id, 30 * 24 * 60 * 60);
+
+    return { accessToken, refreshToken, zegoToken, loginWithEmail, email };
   }
 
   async loginWithEmail(
