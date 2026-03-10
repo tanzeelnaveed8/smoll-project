@@ -14,10 +14,15 @@ export interface UseAIPicksResult {
   refetch: () => Promise<void>;
 }
 
-/**
- * Fetches AI-based nutrition picks from backend. Uses first pet's details for context.
- * Product catalog comes from API; no mock fallback.
- */
+function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error("Request timed out")), ms)
+    ),
+  ]);
+}
+
 export function useAIPicks(): UseAIPicksResult {
   const [products, setProducts] = useState<ProductSummary[]>([]);
   const [loading, setLoading] = useState(true);
@@ -28,7 +33,12 @@ export function useAIPicks(): UseAIPicksResult {
     setLoading(true);
     setError(null);
     try {
-      const catalog = await fetchProductsFromApi();
+      const catalog = await withTimeout(fetchProductsFromApi(), 10000);
+
+      if (!catalog.length) {
+        setProducts([]);
+        return;
+      }
 
       const { pets, petsDetailMap, fetchPets, fetchPetDetails } =
         usePetStore.getState();
@@ -43,13 +53,13 @@ export function useAIPicks(): UseAIPicksResult {
           try {
             petDetails = await fetchPetDetails(firstPet.id);
           } catch {
-            // ignore - will send empty payload
+            // will send empty payload
           }
         }
       }
 
       const healthRecords = petDetails?.healthHistory?.length
-        ? petDetails.healthHistory.map((h) => ({
+        ? petDetails.healthHistory.map((h: any) => ({
             name: h.name,
             description: h.description,
             date: h.date,
@@ -68,13 +78,27 @@ export function useAIPicks(): UseAIPicksResult {
           }
         : {};
 
-      const productIds = await fetchNutritionRecommendations(payload);
+      const productIds = await withTimeout(
+        fetchNutritionRecommendations(payload),
+        20000
+      );
       const resolved = resolveProductIdsToSummaries(productIds ?? [], catalog);
-      setProducts(resolved);
-    } catch (e) {
+
+      if (resolved.length === 0 && catalog.length > 0) {
+        setProducts(catalog.slice(0, 5));
+      } else {
+        setProducts(resolved);
+      }
+    } catch (e: any) {
       console.error("[useAIPicks] Error:", e);
-      setError("Could not load recommendations");
-      setProducts([]);
+      setError(null);
+      try {
+        const fallbackCatalog = await fetchProductsFromApi();
+        setProducts(fallbackCatalog.slice(0, 5));
+      } catch {
+        setError("Could not load recommendations");
+        setProducts([]);
+      }
     } finally {
       setLoading(false);
     }

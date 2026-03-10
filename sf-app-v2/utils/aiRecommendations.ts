@@ -31,7 +31,9 @@ export async function fetchNutritionRecommendations(
   payload: AIRecommendationsRequest
 ): Promise<string[] | null> {
   try {
-    const { data } = await api.post<AIRecommendationsResponse>(ENDPOINT, payload);
+    const { data } = await api.post<AIRecommendationsResponse>(ENDPOINT, payload, {
+      timeout: 20000,
+    });
     if (data?.productIds && Array.isArray(data.productIds)) {
       return data.productIds;
     }

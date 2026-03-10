@@ -17,8 +17,12 @@ import {
   IconShieldCheck,
   IconTruck,
 } from "@tabler/icons-react-native";
-import React, { useEffect } from "react";
-import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { initPaymentSheet, presentPaymentSheet, StripeProvider } from "@stripe/stripe-react-native";
+import { SetupParams } from "@stripe/stripe-react-native/lib/typescript/src/types/PaymentSheet";
+import React, { useEffect, useRef, useState } from "react";
+import { ActivityIndicator, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
+import { showMessage } from "react-native-flash-message";
 import { Div, Text } from "react-native-magnus";
 
 function itemLineTotal(item: CartItem): number {
@@ -28,7 +32,6 @@ function itemLineTotal(item: CartItem): number {
   return base + addonsTotal;
 }
 
-/** Mock travel fee for services (local-only). */
 const TRAVEL_FEE = 0;
 
 interface Props {
@@ -38,357 +41,303 @@ interface Props {
 const CheckoutScreen: React.FC<Props> = ({ navigation }) => {
   const items = useCartStore((s) => s.items);
   const getTotal = useCartStore((s) => s.getTotal);
+  const clearCart = useCartStore((s) => s.clearCart);
+  const setSchedule = useCartStore((s) => s.setSchedule);
   const schedule = useCartStore((s) => s.schedule);
-  const user = useUserStore((s) => s.user);
+  const { user, createPaymentIntent } = useUserStore();
+
+  const [envs, setEnvs] = useState<any>(null);
+  const [btnLoading, setBtnLoading] = useState(false);
 
   const subtotal = getTotal();
   const total = subtotal + TRAVEL_FEE;
 
-  // Redirect back if cart is empty (e.g. user navigated directly or after refresh)
   useEffect(() => {
     if (items.length === 0) {
       navigation.goBack();
     }
   }, [items.length, navigation]);
 
-  return (
-    <Layout disableHeader>
-      <ScrollView
-        style={styles.scroll}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
-        {/* Header */}
-        <Div pt={8} pb={4}>
-          <Div mb={6}>
-            <BackButton onPress={() => navigation.goBack()} />
-          </Div>
-          <Text
-            fontSize={"2xl"}
-            fontFamily={fontHauoraBold}
-            color="#111827"
-            mb={4}
-          >
-            Checkout
-          </Text>
-          <Text
-            fontSize={"sm"}
-            fontFamily={fontHauoraMedium}
-            color="#6B7280"
-          >
-            Review your order details
-          </Text>
-        </Div>
+  useEffect(() => {
+    AsyncStorage.getItem("envs").then((val) => {
+      if (val) setEnvs(JSON.parse(val));
+    });
+  }, []);
 
-        {/* Order summary card */}
-        <Div
-          bg="#FFFFFF"
-          rounded={24}
-          p={20}
-          mb={16}
-          shadow="sm"
-          borderWidth={1}
-          borderColor="#F3F4F6"
+  const handlePay = async () => {
+    setBtnLoading(true);
+    try {
+      if (!user?.stripeCustomerId) {
+        showMessage({ message: "Payment setup failed. Please update your profile.", type: "danger" });
+        return;
+      }
+
+      const amountInCents = Math.round(total * 100);
+
+      const { ephemeralKey, paymentIntent, paymentIntentClientSecret } =
+        await createPaymentIntent(user.stripeCustomerId, amountInCents, "AED");
+
+      const { error: initError } = await initPaymentSheet({
+        customerEphemeralKeySecret: ephemeralKey,
+        paymentIntentClientSecret: paymentIntentClientSecret,
+        merchantDisplayName: "Smoll",
+        customerId: user.stripeCustomerId,
+        applePay: {
+          merchantCountryCode: "AE",
+        },
+        defaultBillingDetails: {
+          name: user?.name ?? undefined,
+        },
+        appearance: {
+          shapes: { borderRadius: 12, borderWidth: 0.5 },
+          primaryButton: {
+            colors: { background: "#000000", text: "#ffffff" },
+            shapes: { borderRadius: 20 },
+          },
+          colors: {
+            primary: "#000000",
+            background: "#ffffff",
+            componentBackground: "#f3f8fa",
+            componentBorder: "#f3f8fa",
+            componentDivider: "#000000",
+            primaryText: "#000000",
+            secondaryText: "#000000",
+            componentText: "#000000",
+            placeholderText: "#73757b",
+          },
+        },
+      } as SetupParams);
+
+      if (initError) {
+        showMessage({ message: `Payment error: ${initError.message}`, type: "danger" });
+        return;
+      }
+
+      const { error: payError } = await presentPaymentSheet();
+
+      if (payError) {
+        showMessage({ message: "Could not process payment, please try again.", type: "danger" });
+        return;
+      }
+
+      clearCart();
+      setSchedule(null);
+      showMessage({ message: "Payment successful! Your booking is confirmed.", type: "success" });
+      navigation.navigate("HomeServicesScreen");
+    } catch (e: any) {
+      console.error("Payment error:", e);
+      showMessage({ message: "Payment failed. Please try again.", type: "danger" });
+    } finally {
+      setBtnLoading(false);
+    }
+  };
+
+  return (
+    <StripeProvider
+      publishableKey={envs?.STRIPE_PUBLISHABLE_KEY ?? "pk_test_placeholder"}
+      merchantIdentifier="merchant.me.smoll.smollapp"
+    >
+      <Layout disableHeader>
+        <ScrollView
+          style={styles.scroll}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
         >
-          <Text
-            fontSize={"sm"}
-            fontFamily={fontHauoraBold}
-            color="#111827"
-            mb={16}
-          >
-            Order Summary
-          </Text>
-          <Div style={{ gap: 12 }}>
-            {items.map((item) => (
+          {/* Header */}
+          <Div pt={8} pb={4}>
+            <Div mb={6}>
+              <BackButton onPress={() => navigation.goBack()} />
+            </Div>
+            <Text fontSize={"2xl"} fontFamily={fontHauoraBold} color="#111827" mb={4}>
+              Checkout
+            </Text>
+            <Text fontSize={"sm"} fontFamily={fontHauoraMedium} color="#6B7280">
+              Review your order details
+            </Text>
+          </Div>
+
+          {/* Order summary card */}
+          <Div bg="#FFFFFF" rounded={24} p={20} mb={16} shadow="sm" borderWidth={1} borderColor="#F3F4F6">
+            <Text fontSize={"sm"} fontFamily={fontHauoraBold} color="#111827" mb={16}>
+              Order Summary
+            </Text>
+            <Div style={{ gap: 12 }}>
+              {items.map((item) => (
+                <Div
+                  key={`${item.type}-${item.id}-${item.packageId ?? ""}`}
+                  flexDir="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
+                  <Text fontSize={"sm"} fontFamily={fontHauoraMedium} color="#4B5563" flex={1} numberOfLines={1}>
+                    {item.quantity}× {item.title}
+                    {item.packageLabel ? ` (${item.packageLabel})` : ""}
+                  </Text>
+                  <Text fontSize={"sm"} fontFamily={fontHauoraBold} color="#111827">
+                    AED {itemLineTotal(item).toFixed(2)}
+                  </Text>
+                </Div>
+              ))}
+              {TRAVEL_FEE > 0 && (
+                <Div flexDir="row" justifyContent="space-between" alignItems="center">
+                  <Div flexDir="row" alignItems="center" style={{ gap: 6 }}>
+                    <IconTruck size={16} color="#9CA3AF" />
+                    <Text fontSize={"sm"} fontFamily={fontHauoraMedium} color="#4B5563">
+                      Travel fee
+                    </Text>
+                  </Div>
+                  <Text fontSize={"sm"} fontFamily={fontHauoraBold} color="#111827">
+                    AED {TRAVEL_FEE.toFixed(2)}
+                  </Text>
+                </Div>
+              )}
               <Div
-                key={`${item.type}-${item.id}-${item.packageId ?? ""}`}
+                mt={8}
+                pt={12}
+                borderTopWidth={1}
+                borderTopColor="#F3F4F6"
                 flexDir="row"
                 justifyContent="space-between"
                 alignItems="center"
               >
-                <Text
-                  fontSize={"sm"}
-                  fontFamily={fontHauoraMedium}
-                  color="#4B5563"
-                  flex={1}
-                  numberOfLines={1}
-                >
-                  {item.quantity}× {item.title}
-                  {item.packageLabel ? ` (${item.packageLabel})` : ""}
+                <Text fontSize={"sm"} fontFamily={fontHauoraMedium} color="#9CA3AF">
+                  Subtotal
                 </Text>
-                <Text
-                  fontSize={"sm"}
-                  fontFamily={fontHauoraBold}
-                  color="#111827"
-                >
-                  AED {itemLineTotal(item).toFixed(2)}
+                <Text fontSize={"sm"} fontFamily={fontHauoraBold} color="#111827">
+                  AED {subtotal.toFixed(2)}
                 </Text>
               </Div>
-            ))}
-            {TRAVEL_FEE > 0 && (
               <Div flexDir="row" justifyContent="space-between" alignItems="center">
-                <Div flexDir="row" alignItems="center" style={{ gap: 6 }}>
-                  <IconTruck size={16} color="#9CA3AF" />
-                  <Text
-                    fontSize={"sm"}
-                    fontFamily={fontHauoraMedium}
-                    color="#4B5563"
-                  >
-                    Travel fee
-                  </Text>
-                </Div>
-                <Text
-                  fontSize={"sm"}
-                  fontFamily={fontHauoraBold}
-                  color="#111827"
-                >
-                  AED {TRAVEL_FEE.toFixed(2)}
+                <Text fontSize={"md"} fontFamily={fontHauoraBold} color="#111827">
+                  Total
+                </Text>
+                <Text fontSize={"xl"} fontFamily={fontHauoraBold} color={colorPrimary}>
+                  AED {total.toFixed(2)}
                 </Text>
               </Div>
-            )}
-            <Div
-              mt={8}
-              pt={12}
-              borderTopWidth={1}
-              borderTopColor="#F3F4F6"
-              flexDir="row"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Text
-                fontSize={"sm"}
-                fontFamily={fontHauoraMedium}
-                color="#9CA3AF"
-              >
-                Subtotal
-              </Text>
-              <Text
-                fontSize={"sm"}
-                fontFamily={fontHauoraBold}
-                color="#111827"
-              >
-                AED {subtotal.toFixed(2)}
-              </Text>
-            </Div>
-            <Div flexDir="row" justifyContent="space-between" alignItems="center">
-              <Text
-                fontSize={"md"}
-                fontFamily={fontHauoraBold}
-                color="#111827"
-              >
-                Total
-              </Text>
-              <Text
-                fontSize={"xl"}
-                fontFamily={fontHauoraBold}
-                color={colorPrimary}
-              >
-                AED {total.toFixed(2)}
-              </Text>
-            </Div>
-          </Div>
-        </Div>
-
-        {/* Details card */}
-        <Div
-          bg="#FFFFFF"
-          rounded={24}
-          p={20}
-          shadow="sm"
-          borderWidth={1}
-          borderColor="#F3F4F6"
-        >
-          {/* Location */}
-          <Div flexDir="row" alignItems="flex-start" mb={16} style={{ gap: 12 }}>
-            <Div
-              w={40}
-              h={40}
-              rounded={999}
-              bg="#FEF3C7"
-              justifyContent="center"
-              alignItems="center"
-            >
-              <IconMapPin size={18} color="#F97316" />
-            </Div>
-            <Div flex={1}>
-              <Text
-                fontSize={10}
-                fontFamily={fontHauoraBold}
-                color="#D1D5DB"
-                style={{ textTransform: "uppercase", letterSpacing: 1 }}
-                mb={2}
-              >
-                Location
-              </Text>
-              <Text
-                fontSize={"sm"}
-                fontFamily={fontHauoraBold}
-                color="#111827"
-              >
-                {user?.address ?? "No address set"}
-              </Text>
-              <Text
-                fontSize={11}
-                fontFamily={fontHauora}
-                color="#9CA3AF"
-                mt={4}
-              >
-                {user?.city && user?.country
-                  ? `${user.city}, ${user.country}`
-                  : "Add address in profile to book"}
-              </Text>
             </Div>
           </Div>
 
-          {/* Appointment */}
-          <Div flexDir="row" alignItems="flex-start" mb={16} style={{ gap: 12 }}>
-            <Div
-              w={40}
-              h={40}
-              rounded={999}
-              bg="#DBEAFE"
-              justifyContent="center"
-              alignItems="center"
-            >
-              <IconClock size={18} color="#3B82F6" />
+          {/* Details card */}
+          <Div bg="#FFFFFF" rounded={24} p={20} shadow="sm" borderWidth={1} borderColor="#F3F4F6">
+            {/* Location */}
+            <Div flexDir="row" alignItems="flex-start" mb={16} style={{ gap: 12 }}>
+              <Div w={40} h={40} rounded={999} bg="#FEF3C7" justifyContent="center" alignItems="center">
+                <IconMapPin size={18} color="#F97316" />
+              </Div>
+              <Div flex={1}>
+                <Text
+                  fontSize={10}
+                  fontFamily={fontHauoraBold}
+                  color="#D1D5DB"
+                  style={{ textTransform: "uppercase", letterSpacing: 1 }}
+                  mb={2}
+                >
+                  Location
+                </Text>
+                <Text fontSize={"sm"} fontFamily={fontHauoraBold} color="#111827">
+                  {user?.address ?? "No address set"}
+                </Text>
+                <Text fontSize={11} fontFamily={fontHauora} color="#9CA3AF" mt={4}>
+                  {user?.city && user?.country
+                    ? `${user.city}, ${user.country}`
+                    : "Add address in profile to book"}
+                </Text>
+              </Div>
             </Div>
-            <Div flex={1}>
-              <Text
-                fontSize={10}
-                fontFamily={fontHauoraBold}
-                color="#D1D5DB"
-                style={{ textTransform: "uppercase", letterSpacing: 1 }}
-                mb={2}
-              >
-                Appointment
-              </Text>
-              <Text
-                fontSize={"sm"}
-                fontFamily={fontHauoraBold}
-                color="#111827"
-              >
-                {schedule
-                  ? `${schedule.labelTop} ${schedule.labelBottom} at ${schedule.time}`
-                  : "No date selected"}
-              </Text>
-            </Div>
-          </Div>
 
-          {/* Payment method */}
-          <Div flexDir="row" alignItems="flex-start" style={{ gap: 12 }}>
-            <Div
-              w={40}
-              h={40}
-              rounded={999}
-              bg="#DBEAFE"
-              justifyContent="center"
-              alignItems="center"
-            >
-              <IconCreditCard size={18} color="#3B82F6" />
+            {/* Appointment */}
+            <Div flexDir="row" alignItems="flex-start" mb={16} style={{ gap: 12 }}>
+              <Div w={40} h={40} rounded={999} bg="#DBEAFE" justifyContent="center" alignItems="center">
+                <IconClock size={18} color="#3B82F6" />
+              </Div>
+              <Div flex={1}>
+                <Text
+                  fontSize={10}
+                  fontFamily={fontHauoraBold}
+                  color="#D1D5DB"
+                  style={{ textTransform: "uppercase", letterSpacing: 1 }}
+                  mb={2}
+                >
+                  Appointment
+                </Text>
+                <Text fontSize={"sm"} fontFamily={fontHauoraBold} color="#111827">
+                  {schedule
+                    ? `${schedule.labelTop} ${schedule.labelBottom} at ${schedule.time}`
+                    : "No date selected"}
+                </Text>
+              </Div>
             </Div>
-            <Div flex={1}>
-              <Div flexDir="row" justifyContent="space-between" alignItems="flex-start">
-                <Div>
-                  <Text
-                    fontSize={10}
-                    fontFamily={fontHauoraBold}
-                    color="#D1D5DB"
-                    style={{ textTransform: "uppercase", letterSpacing: 1 }}
-                    mb={2}
-                  >
-                    Payment Method
-                  </Text>
-                  <Div flexDir="row" alignItems="center" style={{ gap: 8 }}>
-                    <Text
-                      fontSize={"sm"}
-                      fontFamily={fontHauoraBold}
-                      color="#111827"
-                    >
-                      •••• 4242
-                    </Text>
-                    <Text
-                      fontSize={10}
-                      fontFamily={fontHauoraBold}
-                      color="#6B7280"
-                      bg="#F3F4F6"
-                      px={6}
-                      py={2}
-                      rounded={6}
-                    >
-                      VISA
-                    </Text>
-                  </Div>
-                </Div>
-                <TouchableOpacity activeOpacity={0.7}>
-                  <Text
-                    fontSize={11}
-                    fontFamily={fontHauoraBold}
-                    color={colorPrimary}
-                  >
-                    Change
-                  </Text>
-                </TouchableOpacity>
+
+            {/* Payment method */}
+            <Div flexDir="row" alignItems="flex-start" style={{ gap: 12 }}>
+              <Div w={40} h={40} rounded={999} bg="#DBEAFE" justifyContent="center" alignItems="center">
+                <IconCreditCard size={18} color="#3B82F6" />
+              </Div>
+              <Div flex={1}>
+                <Text
+                  fontSize={10}
+                  fontFamily={fontHauoraBold}
+                  color="#D1D5DB"
+                  style={{ textTransform: "uppercase", letterSpacing: 1 }}
+                  mb={2}
+                >
+                  Payment Method
+                </Text>
+                <Text fontSize={"sm"} fontFamily={fontHauoraBold} color="#111827">
+                  Stripe Payment Sheet
+                </Text>
+                <Text fontSize={11} fontFamily={fontHauora} color="#9CA3AF" mt={4}>
+                  Card, Apple Pay, Google Pay
+                </Text>
               </Div>
             </Div>
           </Div>
-        </Div>
 
-        {/* Secure footer text */}
+          {/* Secure footer text */}
+          <Div mt={24} mb={120} flexDir="row" alignItems="center" justifyContent="center" style={{ gap: 6 }}>
+            <IconShieldCheck size={16} color="#9CA3AF" />
+            <Text fontSize={11} fontFamily={fontHauoraMedium} color="#9CA3AF">
+              Secure SSL payment powered by Stripe
+            </Text>
+          </Div>
+        </ScrollView>
+
+        {/* Bottom pay button */}
         <Div
-          mt={24}
-          mb={120}
-          flexDir="row"
-          alignItems="center"
-          justifyContent="center"
-          style={{ gap: 6 }}
-        >
-          <IconShieldCheck size={16} color="#9CA3AF" />
-          <Text
-            fontSize={11}
-            fontFamily={fontHauoraMedium}
-            color="#9CA3AF"
-          >
-            Secure SSL payment
-          </Text>
-        </Div>
-      </ScrollView>
-
-      {/* Bottom pay button */}
-      <Div
-        position="absolute"
-        left={0}
-        right={0}
-        bottom={0}
-        bg="#FFFFFF"
-        px={20}
-        pt={12}
-        pb={24}
-        style={{
-          shadowColor: "#000",
-          shadowOffset: { width: 0, height: -6 },
-          shadowOpacity: 0.06,
-          shadowRadius: 18,
-          elevation: 10,
-        }}
-      >
-        <TouchableOpacity
-          activeOpacity={0.9}
-          style={styles.payButton}
-          disabled={items.length === 0}
-          onPress={() => {
-            // TODO: Integrate payment (e.g. createPaymentIntent / Stripe). On success: call booking API, clearCart(), setSchedule(null), navigate to confirmation.
+          position="absolute"
+          left={0}
+          right={0}
+          bottom={0}
+          bg="#FFFFFF"
+          px={20}
+          pt={12}
+          pb={24}
+          style={{
+            shadowColor: "#000",
+            shadowOffset: { width: 0, height: -6 },
+            shadowOpacity: 0.06,
+            shadowRadius: 18,
+            elevation: 10,
           }}
         >
-          <Text
-            fontSize={"md"}
-            fontFamily={fontHauoraBold}
-            color="#FFFFFF"
+          <TouchableOpacity
+            activeOpacity={0.9}
+            style={[styles.payButton, btnLoading && { opacity: 0.6 }]}
+            disabled={items.length === 0 || btnLoading}
+            onPress={handlePay}
           >
-            Pay AED {total.toFixed(2)}
-          </Text>
-        </TouchableOpacity>
-      </Div>
-    </Layout>
+            {btnLoading ? (
+              <ActivityIndicator color="#FFFFFF" />
+            ) : (
+              <Text fontSize={"md"} fontFamily={fontHauoraBold} color="#FFFFFF">
+                Pay AED {total.toFixed(2)}
+              </Text>
+            )}
+          </TouchableOpacity>
+        </Div>
+      </Layout>
+    </StripeProvider>
   );
 };
 
@@ -409,4 +358,3 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 });
-

@@ -8,6 +8,7 @@ import { SmollCareSubscription } from '../smollcare/entities/smoll-care-subscrip
 import { SmollCarePlan } from '../smollcare/entities/smoll-care-plan.entity';
 import { PaymentLog } from '../payment-log/payment-log.entity';
 import { Pet } from '../pet/entities/pet.entity';
+import { Member } from '../member/member.entity';
 import Stripe from 'stripe';
 import { ConfigModule } from '@nestjs/config';
 import { ConfigService } from '@nestjs/config';
@@ -20,6 +21,7 @@ import { PaymentLogModule } from '../payment-log/payment-log.module';
       SmollCarePlan,
       PaymentLog,
       Pet,
+      Member,
     ]),
     forwardRef(() => MemberModule),
     ConfigModule,
