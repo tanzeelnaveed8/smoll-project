@@ -11,11 +11,17 @@ import { useAIPicks } from "@/hooks/useAIPicks";
 import { useHomeServices } from "@/hooks/useHomeServices";
 import { NavigationType } from "@/store/types";
 import {
+  IconBug,
   IconChevronLeft,
   IconCirclePlus,
+  IconCut,
+  IconDental,
+  IconHeartRateMonitor,
+  IconPaw,
   IconPill,
   IconShieldCheck,
   IconStethoscope,
+  IconVaccine,
 } from "@tabler/icons-react-native";
 import React, { useState } from "react";
 import {
@@ -32,6 +38,25 @@ const { width } = Dimensions.get("window");
 const CARD_GAP = 16; // horizontal gap between cards
 // Two cards per row with 20px horizontal padding on each side and CARD_GAP between them
 const CARD_WIDTH = (width - 40 - CARD_GAP) / 2;
+
+const getServiceIcon = (title: string, color: string) => {
+  const t = title.toLowerCase();
+  if (t.includes("groom") || t.includes("trim"))
+    return <IconCut size={20} color={color} strokeWidth={2} />;
+  if (t.includes("vaccin"))
+    return <IconVaccine size={20} color={color} strokeWidth={2} />;
+  if (t.includes("checkup") || t.includes("health"))
+    return <IconHeartRateMonitor size={20} color={color} strokeWidth={2} />;
+  if (t.includes("dental") || t.includes("teeth"))
+    return <IconDental size={20} color={color} strokeWidth={2} />;
+  if (t.includes("deworm"))
+    return <IconPill size={20} color={color} strokeWidth={2} />;
+  if (t.includes("flea") || t.includes("tick"))
+    return <IconBug size={20} color={color} strokeWidth={2} />;
+  if (t.includes("paw") || t.includes("nail"))
+    return <IconPaw size={20} color={color} strokeWidth={2} />;
+  return <IconStethoscope size={20} color={color} strokeWidth={2} />;
+};
 
 type TabType = "services" | "nutritions";
 type NutritionsSubTab = "all" | "ai";
@@ -151,7 +176,7 @@ const HomeServicesScreen: React.FC<{ navigation: NavigationType }> = ({
                     alignItems="center"
                     mb={12}
                   >
-                    <IconStethoscope size={20} color={s.iconColor} strokeWidth={2} />
+                    {getServiceIcon(s.title, s.iconColor)}
                   </Div>
                   <Text fontSize={"sm"} fontFamily={fontHauoraBold} color="#222" mb={2}>
                     {s.title}
@@ -230,7 +255,7 @@ const HomeServicesScreen: React.FC<{ navigation: NavigationType }> = ({
                     alignItems="center"
                     mb={12}
                   >
-                    <IconStethoscope size={20} color={s.iconColor} strokeWidth={2} />
+                    {getServiceIcon(s.title, s.iconColor)}
                   </Div>
                   <Text fontSize={"sm"} fontFamily={fontHauoraBold} color="#222" mb={2}>{s.title}</Text>
                   <Text fontSize={10} color="#9CA3AF" fontFamily={fontHauora} mb={2}>{s.durationLabel}</Text>
@@ -303,7 +328,7 @@ const HomeServicesScreen: React.FC<{ navigation: NavigationType }> = ({
                     alignItems="center"
                     mb={12}
                   >
-                    <IconStethoscope size={20} color={s.iconColor} strokeWidth={2} />
+                    {getServiceIcon(s.title, s.iconColor)}
                   </Div>
                   <Text fontSize={"sm"} fontFamily={fontHauoraBold} color="#222" mb={2}>{s.title}</Text>
                   <Text fontSize={10} color="#9CA3AF" fontFamily={fontHauora} mb={2}>{s.durationLabel}</Text>
@@ -553,6 +578,13 @@ const HomeServicesScreen: React.FC<{ navigation: NavigationType }> = ({
                   <Div py={12} px={16} mb={8} bg="#FEF2F2" rounded={16} borderWidth={1} borderColor="#FECACA">
                     <Text fontSize="sm" fontFamily={fontHauora} color="#991B1B">
                       {aiPicksError}
+                    </Text>
+                  </Div>
+                ) : null}
+                  {!aiPicksLoading && !aiPicksError && aiPicksProducts.length === 0 ? (
+                  <Div py={24} alignItems="center">
+                    <Text fontSize="sm" fontFamily={fontHauora} color="#9CA3AF" textAlign="center">
+                      No recommendations available right now.{"\n"}Please try again later.
                     </Text>
                   </Div>
                 ) : null}

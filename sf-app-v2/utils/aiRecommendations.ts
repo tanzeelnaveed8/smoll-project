@@ -4,14 +4,16 @@
  * response { productIds: string[] } is resolved against the real product catalog.
  */
 import api from "@/utils/api";
-import type { ProductId, ProductSummary } from "@/mocks/homeServices";
+import type { ProductSummary } from "@/mocks/homeServices";
 
 export interface AIRecommendationsRequest {
   species?: string;
+  breed?: string;
   age?: number;
   weight?: number;
   preExistingConditions?: string;
   petId?: string;
+  healthRecords?: { name: string; description: string; date: string }[];
 }
 
 export interface AIRecommendationsResponse {
@@ -48,8 +50,8 @@ export function resolveProductIdsToSummaries(
   catalog: ProductSummary[]
 ): ProductSummary[] {
   if (!productIds?.length || !catalog?.length) return [];
-  const byId = new Map(catalog.map((p) => [p.id, p]));
+  const byId = new Map(catalog.map((p) => [String(p.id), p]));
   return productIds
-    .map((id) => byId.get(id as ProductId))
+    .map((id) => byId.get(String(id)))
     .filter((p): p is ProductSummary => p != null);
 }

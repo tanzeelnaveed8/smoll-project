@@ -41,6 +41,7 @@ function mapServiceFromApi(
   return {
     id: item.id as ServiceId,
     title: item.name,
+    description: item.description || "",
     durationLabel,
     priceLabel: `From ${item.currency || "AED"} ${price}`,
     startingPrice: price,

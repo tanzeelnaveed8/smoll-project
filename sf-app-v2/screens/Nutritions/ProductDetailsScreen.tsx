@@ -14,8 +14,8 @@ import { NavigationType } from "@/store/types";
 import {
   IconClock,
   IconInfoCircle,
+  IconShieldCheck,
   IconShoppingCart,
-  IconStar,
   IconTruck,
 } from "@tabler/icons-react-native";
 import { useRoute } from "@react-navigation/native";
@@ -23,12 +23,17 @@ import React, { useEffect, useMemo, useState } from "react";
 import { ScrollView, StyleSheet, TextInput, TouchableOpacity, Image, ActivityIndicator } from "react-native";
 import { Div, Text } from "react-native-magnus";
 
-/** Quantity/size options with price delta (e.g. 30 / 60 / 90 chews). */
 const QUANTITY_OPTIONS = [
-  { id: "30", label: "30 chews", badge: "" as string, priceDelta: 0 },
-  { id: "60", label: "60 chews", badge: "+AED 25", priceDelta: 25 },
-  { id: "90", label: "90 chews", badge: "+AED 45", priceDelta: 45 },
+  { id: "1x", label: "1x Pack", badge: "" as string, priceDelta: 0 },
+  { id: "2x", label: "2x Pack", badge: "Save 5%", priceDelta: 0 },
+  { id: "3x", label: "3x Pack", badge: "Save 10%", priceDelta: 0 },
 ];
+
+const QUANTITY_MULTIPLIERS: Record<string, number> = {
+  "1x": 1,
+  "2x": 1.9,
+  "3x": 2.7,
+};
 
 interface Props {
   navigation: NavigationType;
@@ -59,7 +64,7 @@ const ProductDetailsScreen: React.FC<Props> = ({ navigation }) => {
     };
   }, [productId]);
 
-  const [selectedQuantityOption, setSelectedQuantityOption] = useState<string>("30");
+  const [selectedQuantityOption, setSelectedQuantityOption] = useState<string>("1x");
   const [count, setCount] = useState(1);
   const [specialNotes, setSpecialNotes] = useState("");
 
@@ -70,12 +75,9 @@ const ProductDetailsScreen: React.FC<Props> = ({ navigation }) => {
     [selectedQuantityOption]
   );
 
-  const unitPrice = useMemo(() => {
-    if (!product || !selectedOption) return 0;
-    return product.basePrice + selectedOption.priceDelta;
-  }, [product, selectedOption]);
-
-  const totalPrice = unitPrice * count;
+  const unitPrice = product?.basePrice ?? 0;
+  const multiplier = QUANTITY_MULTIPLIERS[selectedQuantityOption] ?? 1;
+  const totalPrice = unitPrice * multiplier * count;
 
   const handleAddToCart = () => {
     if (!product || !selectedOption) return;
@@ -84,7 +86,7 @@ const ProductDetailsScreen: React.FC<Props> = ({ navigation }) => {
       type: "product",
       title: product.title,
       subtitle: product.description,
-      unitPrice,
+      unitPrice: unitPrice * multiplier,
       quantity: count,
       packageId: selectedOption.id,
       packageLabel: selectedOption.label,
@@ -96,31 +98,17 @@ const ProductDetailsScreen: React.FC<Props> = ({ navigation }) => {
   const increment = () => setCount((n) => Math.min(10, n + 1));
   const decrement = () => setCount((n) => Math.max(1, n - 1));
 
-  const [showIntro, setShowIntro] = useState(true);
-
-  useEffect(() => {
-    const id = setTimeout(() => setShowIntro(false), 3000);
-    return () => clearTimeout(id);
-  }, []);
-
-  if (showIntro) {
+  if (loading) {
     return (
       <Layout disableHeader>
-        <Div
-          style={{
-            flex: 1,
-            backgroundColor: "#FAF8F5",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
+        <Div flex={1} bg="#FAF8F5" justifyContent="center" alignItems="center">
           <ActivityIndicator size="small" color={colorPrimary} />
         </Div>
       </Layout>
     );
   }
 
-  if (loading || !product) {
+  if (!product) {
     return (
       <Layout disableHeader>
         <Div p={20}>
@@ -131,7 +119,7 @@ const ProductDetailsScreen: React.FC<Props> = ({ navigation }) => {
             color="#6B7280"
             mt={12}
           >
-            {loading ? "Loading…" : "Product not found."}
+            Product not found.
           </Text>
         </Div>
       </Layout>
@@ -145,81 +133,75 @@ const ProductDetailsScreen: React.FC<Props> = ({ navigation }) => {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Top bar */}
+        {/* Back button */}
         <Div pt={8} pb={4}>
-          <Div mb={8}>
-            <BackButton onPress={() => navigation.goBack()} />
-          </Div>
+          <BackButton onPress={() => navigation.goBack()} />
         </Div>
 
         {/* Image area */}
-        <Div mb={24}>
+        <Div mb={20} mt={4}>
           <Div
-            h={240}
+            h={220}
             rounded={24}
-            bg="#F3F4F6"
-            justifyContent="center"
-            alignItems="center"
-            position="relative"
+            bg="#F9FAFB"
             overflow="hidden"
+            borderWidth={1}
+            borderColor="#F3F4F6"
           >
             {product.imageUrl ? (
               <Image
                 source={{ uri: product.imageUrl }}
-                style={{ width: 180, height: 180, borderRadius: 20, alignSelf: "center" }}
-                resizeMode="contain"
+                style={{ width: "100%", height: "100%", borderRadius: 24 }}
+                resizeMode="cover"
               />
             ) : (
-              <Image
-                source={require("@/assets/images/no-image.png")}
-                style={{ width: 140, height: 140, borderRadius: 20, alignSelf: "center" }}
-                resizeMode="contain"
-              />
+              <Div flex={1} justifyContent="center" alignItems="center">
+                <Image
+                  source={require("@/assets/images/no-image.png")}
+                  style={{ width: 120, height: 120 }}
+                  resizeMode="contain"
+                />
+              </Div>
             )}
           </Div>
         </Div>
 
-        {/* Header / description */}
-        <Div mb={24}>
-          <Text
-            fontSize={"2xl"}
-            fontFamily={fontHauoraBold}
-            color="#111827"
-            mb={8}
-          >
-            {product.title}
-          </Text>
-          <Div flexDir="row" alignItems="center" mb={10}>
-            <Div
-              flexDir="row"
-              alignItems="center"
-              bg="#F3F4F6"
-              px={10}
-              py={6}
-              rounded={999}
-            >
-              <IconStar size={16} color="#F59E0B" fill="#F59E0B" />
-              <Text
-                fontSize={"sm"}
-                fontFamily={fontHauoraBold}
-                color="#4B5563"
-                ml={6}
-              >
-                4.8 (85)
+        {/* Product info */}
+        <Div mb={20}>
+          <Div flexDir="row" alignItems="center" justifyContent="space-between" mb={8}>
+            <Text fontSize={"2xl"} fontFamily={fontHauoraBold} color="#111827" flex={1} mr={12}>
+              {product.title}
+            </Text>
+            <Div bg={colorPrimary} px={14} py={8} rounded={999}>
+              <Text fontSize={"md"} fontFamily={fontHauoraBold} color="white">
+                {product.priceLabel}
               </Text>
             </Div>
           </Div>
-          <Text
-            fontSize={"sm"}
-            fontFamily={fontHauora}
-            color="#6B7280"
-            lineHeight={22}
-          >
+
+          <Div flexDir="row" alignItems="center" style={{ gap: 8 }} mb={12}>
+            {product.tag ? (
+              <Div flexDir="row" alignItems="center" bg="#ECFDF5" px={10} py={6} rounded={999}>
+                <IconShieldCheck size={14} color="#22C55E" />
+                <Text fontSize={11} fontFamily={fontHauoraSemiBold} color="#16A34A" ml={4}>
+                  {product.tag}
+                </Text>
+              </Div>
+            ) : null}
+            <Div flexDir="row" alignItems="center" bg="#F3F4F6" px={10} py={6} rounded={999}>
+              <IconTruck size={14} color="#6B7280" />
+              <Text fontSize={11} fontFamily={fontHauoraSemiBold} color="#4B5563" ml={4}>
+                Fast Delivery
+              </Text>
+            </Div>
+          </Div>
+
+          <Text fontSize={"sm"} fontFamily={fontHauora} color="#6B7280" lineHeight={22}>
             {product.description}
           </Text>
         </Div>
 
-        {/* Size / pack options */}
+        {/* Bundle options */}
         <Div mb={24}>
           <Text
             fontSize={"md"}
@@ -227,7 +209,7 @@ const ProductDetailsScreen: React.FC<Props> = ({ navigation }) => {
             color="#111827"
             mb={12}
           >
-            Pack size
+            Bundle & Save
           </Text>
           <Div flexDir="row" flexWrap="wrap" style={{ gap: 12 }}>
             {QUANTITY_OPTIONS.map((opt) => {

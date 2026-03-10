@@ -352,7 +352,7 @@ export class MemberService {
 
       const member = await queryRunner.manager.save(updatedMember);
 
-      if (body.name || body.email) {
+      if ((body.name || body.email) && member.stripeCustomerId) {
         await this.stripeService.updateStripeCustomer(member.stripeCustomerId, {
           name: body.name,
           email: body.email,
@@ -370,7 +370,11 @@ export class MemberService {
     } catch (err) {
       await queryRunner.rollbackTransaction();
 
-      // Handle duplicate key violations for email or phone
+      this.logger.error(
+        `[LOG: MEMBER_SERVICE] Failed to update member ${id}: ${err?.message}`,
+        err?.stack,
+      );
+
       if (err?.code === '23505') {
         const detail = err?.detail || '';
         if (detail.includes('email')) {

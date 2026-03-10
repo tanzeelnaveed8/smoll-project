@@ -16,18 +16,44 @@ import { fetchServiceDetailFromApi } from "@/utils/homeServicesApi";
 import { useCartStore } from "@/store/modules/cart";
 import { NavigationType } from "@/store/types";
 import {
+  IconBug,
   IconCheck,
   IconClock,
   IconCirclePlus,
+  IconCut,
+  IconDental,
+  IconHeartRateMonitor,
   IconInfoCircle,
+  IconPaw,
+  IconPill,
   IconShieldCheck,
-  IconStar,
+  IconStethoscope,
   IconUsers,
+  IconVaccine,
 } from "@tabler/icons-react-native";
 import { useRoute } from "@react-navigation/native";
 import React, { useEffect, useMemo, useState } from "react";
 import { ScrollView, StyleSheet, TextInput, TouchableOpacity, ActivityIndicator } from "react-native";
-import { Div, Text, Image } from "react-native-magnus";
+import { Div, Text } from "react-native-magnus";
+
+const getServiceIcon = (title: string, color: string, size = 28) => {
+  const t = title.toLowerCase();
+  if (t.includes("groom") || t.includes("trim"))
+    return <IconCut size={size} color={color} strokeWidth={1.8} />;
+  if (t.includes("vaccin"))
+    return <IconVaccine size={size} color={color} strokeWidth={1.8} />;
+  if (t.includes("checkup") || t.includes("health"))
+    return <IconHeartRateMonitor size={size} color={color} strokeWidth={1.8} />;
+  if (t.includes("dental") || t.includes("teeth"))
+    return <IconDental size={size} color={color} strokeWidth={1.8} />;
+  if (t.includes("deworm"))
+    return <IconPill size={size} color={color} strokeWidth={1.8} />;
+  if (t.includes("flea") || t.includes("tick"))
+    return <IconBug size={size} color={color} strokeWidth={1.8} />;
+  if (t.includes("paw") || t.includes("nail"))
+    return <IconPaw size={size} color={color} strokeWidth={1.8} />;
+  return <IconStethoscope size={size} color={color} strokeWidth={1.8} />;
+};
 
 interface Props {
   navigation: NavigationType;
@@ -40,8 +66,6 @@ const ServiceDetailsScreen: React.FC<Props> = ({ navigation }) => {
   const [loading, setLoading] = useState(!!serviceId);
   const [packages, setPackages] = useState<Array<{ id: string; name: string; priceLabel: string; price: number; perks: string[]; highlighted?: boolean }>>([]);
   const [addons, setAddons] = useState<Array<{ id: string; name: string; priceLabel: string; price: number }>>([]);
-  const [showIntro, setShowIntro] = useState(true);
-
   useEffect(() => {
     if (!serviceId) {
       setService(null);
@@ -103,6 +127,7 @@ const ServiceDetailsScreen: React.FC<Props> = ({ navigation }) => {
   const safeService: ServiceSummary = service ?? {
     id: (serviceId as ServiceId) ?? "grooming",
     title: "",
+    description: "",
     durationLabel: "",
     priceLabel: "",
     startingPrice: 0,
@@ -158,14 +183,7 @@ const ServiceDetailsScreen: React.FC<Props> = ({ navigation }) => {
   const incrementPets = () => setNumPets((n) => Math.min(5, n + 1));
   const decrementPets = () => setNumPets((n) => Math.max(1, n - 1));
 
-  useEffect(() => {
-    const id = setTimeout(() => setShowIntro(false), 3000);
-    return () => clearTimeout(id);
-  }, []);
-
-  const isInitialLoading = showIntro;
-
-  if (isInitialLoading) {
+  if (loading) {
     return (
       <Layout disableHeader>
         <Div flex={1} bg="#FAF8F5" justifyContent="center" alignItems="center">
@@ -182,64 +200,60 @@ const ServiceDetailsScreen: React.FC<Props> = ({ navigation }) => {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Back + header */}
-        <Div pt={8} pb={4} px={0}>
-          <Div mb={8}>
-            <BackButton onPress={() => navigation.goBack()} />
-          </Div>
+        {/* Back button */}
+        <Div pt={8} pb={4}>
+          <BackButton onPress={() => navigation.goBack()} />
+        </Div>
 
-          <Div alignItems="center" mb={24}>
+        {/* Hero card */}
+        <Div
+          bg="#EFF6FF"
+          rounded={24}
+          p={20}
+          mb={24}
+          mt={8}
+        >
+          <Div flexDir="row" alignItems="center" mb={14}>
             <Div
-              w={96}
-              h={96}
-              rounded={24}
-              bg={safeService.iconBg}
+              w={52}
+              h={52}
+              rounded={14}
+              bg="white"
               justifyContent="center"
               alignItems="center"
-              mb={12}
+              mr={14}
+              style={{ shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 2 }}
             >
-              <IconStar size={40} color={safeService.iconColor} strokeWidth={1.6} />
+              {getServiceIcon(safeService.title, colorPrimary)}
             </Div>
-            <Text fontSize={"2xl"} fontFamily={fontHauoraBold} color="#111827" mb={8}>
-              {safeService.title || "Service"}
+            <Div flex={1}>
+              <Text fontSize={"xl"} fontFamily={fontHauoraBold} color="#111827">
+                {safeService.title || "Service"}
+              </Text>
+              <Text fontSize={"md"} fontFamily={fontHauoraBold} color={colorPrimary} mt={2}>
+                {safeService.priceLabel}
+              </Text>
+            </Div>
+          </Div>
+
+          {safeService.description ? (
+            <Text fontSize={"sm"} fontFamily={fontHauora} color="#4B5563" lineHeight={22} mb={14}>
+              {safeService.description}
             </Text>
-            <Div flexDir="row" style={{ gap: 8 }}>
-              <Div
-                flexDir="row"
-                alignItems="center"
-                bg="#F3F4F6"
-                px={12}
-                py={6}
-                rounded={999}
-              >
-                <IconClock size={16} color="#6B7280" />
-                <Text
-                  fontSize={"sm"}
-                  fontFamily={fontHauoraMedium}
-                  color="#6B7280"
-                  ml={6}
-                >
-                  {safeService.durationLabel || "30-60 min"}
-                </Text>
-              </Div>
-              <Div
-                flexDir="row"
-                alignItems="center"
-                bg="#FEF3C7"
-                px={12}
-                py={6}
-                rounded={999}
-              >
-                <IconStar size={16} color="#F59E0B" fill="#F59E0B" />
-                <Text
-                  fontSize={"sm"}
-                  fontFamily={fontHauoraMedium}
-                  color="#92400E"
-                  ml={6}
-                >
-                  4.9 (120+)
-                </Text>
-              </Div>
+          ) : null}
+
+          <Div flexDir="row" flexWrap="wrap" style={{ gap: 8 }}>
+            <Div flexDir="row" alignItems="center" bg="white" px={10} py={6} rounded={999}>
+              <IconClock size={13} color="#6B7280" />
+              <Text fontSize={11} fontFamily={fontHauoraSemiBold} color="#4B5563" ml={5}>
+                {safeService.durationLabel || "30-60 min"}
+              </Text>
+            </Div>
+            <Div flexDir="row" alignItems="center" bg="white" px={10} py={6} rounded={999}>
+              <IconShieldCheck size={13} color={colorPrimary} />
+              <Text fontSize={11} fontFamily={fontHauoraSemiBold} color="#4B5563" ml={5}>
+                Licensed Vet
+              </Text>
             </Div>
           </Div>
         </Div>

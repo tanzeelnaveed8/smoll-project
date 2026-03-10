@@ -14,6 +14,7 @@ export type ServiceId =
 export interface ServiceSummary {
   id: ServiceId;
   title: string;
+  description: string;
   durationLabel: string;
   /** Display-friendly price label (e.g. "From AED 40"). */
   priceLabel: string;
@@ -27,6 +28,7 @@ export const MOCK_SERVICES: ServiceSummary[] = [
   {
     id: "grooming",
     title: "Grooming",
+    description: "Full grooming session including bath, haircut, nail trim, and blow-dry.",
     durationLabel: "45-60 min",
     priceLabel: "From AED 40",
     startingPrice: 40,
@@ -36,6 +38,7 @@ export const MOCK_SERVICES: ServiceSummary[] = [
   {
     id: "vaccination",
     title: "Vaccination",
+    description: "Core and non-core vaccines administered by a licensed vet.",
     durationLabel: "15-20 min",
     priceLabel: "From AED 25",
     startingPrice: 25,
@@ -45,6 +48,7 @@ export const MOCK_SERVICES: ServiceSummary[] = [
   {
     id: "health-checkup",
     title: "Health Checkup",
+    description: "Comprehensive wellness exam covering weight, heart, lungs, and more.",
     durationLabel: "30-45 min",
     priceLabel: "From AED 50",
     startingPrice: 50,
@@ -54,6 +58,7 @@ export const MOCK_SERVICES: ServiceSummary[] = [
   {
     id: "dental-care",
     title: "Dental Care",
+    description: "Professional dental scaling and polishing to prevent gum disease.",
     durationLabel: "30-40 min",
     priceLabel: "From AED 45",
     startingPrice: 45,
@@ -63,6 +68,7 @@ export const MOCK_SERVICES: ServiceSummary[] = [
   {
     id: "deworming",
     title: "Deworming",
+    description: "Safe and effective internal parasite treatment for all ages.",
     durationLabel: "10-15 min",
     priceLabel: "From AED 20",
     startingPrice: 20,
@@ -72,6 +78,7 @@ export const MOCK_SERVICES: ServiceSummary[] = [
   {
     id: "nail-trimming",
     title: "Nail Trimming",
+    description: "Quick and gentle nail trimming by certified pet care specialists.",
     durationLabel: "15-20 min",
     priceLabel: "From AED 15",
     startingPrice: 15,

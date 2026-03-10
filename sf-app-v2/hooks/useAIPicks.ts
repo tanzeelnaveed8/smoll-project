@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { ProductSummary } from "@/mocks/homeServices";
 import { usePetStore } from "@/store/modules/pet";
 import {
@@ -19,67 +19,70 @@ export interface UseAIPicksResult {
  * Product catalog comes from API; no mock fallback.
  */
 export function useAIPicks(): UseAIPicksResult {
-  const pets = usePetStore((s) => s.pets);
-  const petsDetailMap = usePetStore((s) => s.petsDetailMap);
-  const fetchPets = usePetStore((s) => s.fetchPets);
-  const fetchPetDetails = usePetStore((s) => s.fetchPetDetails);
-
   const [products, setProducts] = useState<ProductSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const hasFetched = useRef(false);
 
   const load = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
       const catalog = await fetchProductsFromApi();
+
+      const { pets, petsDetailMap, fetchPets, fetchPetDetails } =
+        usePetStore.getState();
+
       let petDetails = null;
-      if (pets?.length) {
-        const firstPet = pets[0];
+      const petsList = pets?.length ? pets : await fetchPets().catch(() => []);
+
+      if (petsList?.length) {
+        const firstPet = petsList[0];
         petDetails = petsDetailMap.get(firstPet.id) ?? null;
         if (!petDetails && firstPet.id) {
           try {
             petDetails = await fetchPetDetails(firstPet.id);
           } catch {
-            // ignore
+            // ignore - will send empty payload
           }
-        }
-      } else {
-        try {
-          const list = await fetchPets();
-          if (list?.length && list[0].id) {
-            petDetails = await fetchPetDetails(list[0].id);
-          }
-        } catch {
-          // no pets
         }
       }
+
+      const healthRecords = petDetails?.healthHistory?.length
+        ? petDetails.healthHistory.map((h) => ({
+            name: h.name,
+            description: h.description,
+            date: h.date,
+          }))
+        : undefined;
 
       const payload = petDetails
         ? {
             species: petDetails.species,
+            breed: petDetails.breed,
             age: petDetails.age,
             weight: petDetails.weight,
             preExistingConditions: petDetails.preExistingConditions || undefined,
             petId: petDetails.id,
+            healthRecords,
           }
         : {};
 
       const productIds = await fetchNutritionRecommendations(payload);
-      const resolved = resolveProductIdsToSummaries(
-        productIds ?? [],
-        catalog
-      );
+      const resolved = resolveProductIdsToSummaries(productIds ?? [], catalog);
       setProducts(resolved);
     } catch (e) {
+      console.error("[useAIPicks] Error:", e);
       setError("Could not load recommendations");
       setProducts([]);
     } finally {
       setLoading(false);
     }
-  }, [pets, petsDetailMap, fetchPets, fetchPetDetails]);
+  }, []);
 
   useEffect(() => {
+    if (hasFetched.current) return;
+    hasFetched.current = true;
     load();
   }, [load]);
 
