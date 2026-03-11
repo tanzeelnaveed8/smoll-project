@@ -28,7 +28,7 @@
           <!-- Reset Password -->
           <v-sheet class="mt-6">
             <h3 class="text-body-1 font-weight-bold mb-2">Login Credentials</h3>
-            <p class="text-grey2 text-body-2 mb-3" style="font-weight: 500">Send a new temporary password to the vet's email address.</p>
+            <p class="text-grey2 text-body-2 mb-3" style="font-weight: 500">Generate a new temporary password for this vet.</p>
             <v-btn color="grey1" variant="outlined" :loading="resettingPassword" @click="handleResetPassword">
               Reset Password
             </v-btn>
@@ -173,7 +173,8 @@ const updateVet = async () => {
   }
 }
 const handleFormSubmit = async () => {
-  if (!isFormValid.value) return
+  const { valid } = await formRef.value.validate()
+  if (!valid) return
   await updateVet()
   toast.success('Vet updated successfully')
 }
@@ -196,6 +197,7 @@ const handleResetPassword = async () => {
     resettingPassword.value = false
   }
 }
+
 
 onMounted(() => {
   getVet()

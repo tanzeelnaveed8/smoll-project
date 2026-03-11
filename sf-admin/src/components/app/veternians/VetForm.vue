@@ -210,7 +210,7 @@ watchEffect(() => {
   const formDetails = props?.formDetails
   if (formDetails) {
     const dob = getDateObject(formDetails?.dob)
-    const country = formDetails?.country.charAt(0).toUpperCase() + formDetails?.country.slice(1)
+    const country = formDetails?.country ? formDetails.country.charAt(0).toUpperCase() + formDetails.country.slice(1) : ''
 
     account.value = {
       ...account.value,

@@ -63,7 +63,8 @@ const addVet = async () => {
 }
 
 const handleFormSubmit = async () => {
-  if (!formIsValid.value) return
+  const { valid } = await formRef.value.validate()
+  if (!valid) return
   await addVet()
   router.push('/experts')
 }
