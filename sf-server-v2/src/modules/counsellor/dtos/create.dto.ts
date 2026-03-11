@@ -1,14 +1,13 @@
 import {
   IsEmail,
   IsNotEmpty,
-  IsPhoneNumber,
   IsString,
   IsTimeZone,
 } from 'class-validator';
 import { FindOneCounsellorResDto } from './find.dto';
 
 export class CreateCounsellorPayloadDto {
-  @IsPhoneNumber()
+  @IsString()
   @IsNotEmpty()
   phone: string;
 

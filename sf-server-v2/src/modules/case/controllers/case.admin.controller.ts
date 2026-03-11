@@ -55,9 +55,12 @@ export class CaseAdminController {
 
   @Post()
   async create(
-    @Body() body: { memberId: string; petId: string; vetId: string; description: string },
+    @Body() body: { memberId: string; petId: string; vetId: string; description: string; scheduledAt?: string },
   ) {
-    return await this.caseService.createCase(body);
+    return await this.caseService.createCase({
+      ...body,
+      scheduledAt: body.scheduledAt ? new Date(body.scheduledAt) : undefined,
+    });
   }
 
   @Post(':id/notes')

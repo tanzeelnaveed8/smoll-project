@@ -91,7 +91,7 @@ export const useCaseStore = defineStore('CaseStore', {
     async cancelCase(caseId: string) {
       await api.post(`/admin/cases/${caseId}/cancel`)
     },
-    async createCase(payload: { memberId: string; petId: string; vetId: string; description: string }) {
+    async createCase(payload: { memberId: string; petId: string; vetId: string; description: string; scheduledAt?: string }) {
       const { data } = await api.post('/admin/cases', payload)
       return data
     }

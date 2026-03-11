@@ -1,7 +1,8 @@
 import { Expose, Transform, Type } from 'class-transformer';
 import { CounsellorSessionStatus } from '../session-status.enum';
 import { FindOneMemberResDto } from 'src/modules/member/dtos/find.dto';
-import { IsEnum } from 'class-validator';
+import { IsBoolean, IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
+import { PaginationQueryDto } from 'src/utils/pagination';
 
 export class FindAllCounsellorSessionQueryDto {
   @IsEnum(CounsellorSessionStatus)
@@ -15,6 +16,17 @@ export class FindAllSessionsQueryDto {
 
 /** Response */
 
+export class FindAllCounsellorsQueryDto extends PaginationQueryDto {
+  @IsBoolean()
+  @IsOptional()
+  @Transform(({ value }) => value === 'true')
+  isSuspended?: boolean;
+
+  @IsString()
+  @IsOptional()
+  search?: string;
+}
+
 export class FindOneCounsellorResDto {
   @Expose()
   id: string;
@@ -24,6 +36,9 @@ export class FindOneCounsellorResDto {
 
   @Expose()
   phone: string;
+
+  @Expose()
+  email: string | null;
 
   @Expose()
   designation: string | null;
@@ -38,7 +53,10 @@ export class FindOneCounsellorResDto {
   isOnline: boolean;
 
   @Expose()
-  timezone: string;
+  isSuspended: boolean;
+
+  @Expose()
+  timeZone: string;
 
   @Expose()
   createdAt: Date;

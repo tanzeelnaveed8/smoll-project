@@ -90,6 +90,7 @@ const navItems = [
   { title: 'Visits', icon: '$tb-writing-sign', to: '/visits' },
   { title: 'Customers', icon: '$tb-users', to: '/members' },
   { title: 'Experts', icon: '$tb-first-aid-kit', to: '/experts' },
+  { title: 'Counsellors', icon: '$tb-user-circle', to: '/counsellors' },
   { title: 'Partner management', icon: '$tb-heart-handshake', to: '/partners' },
   { title: 'Organizations', icon: '$tb-organizations', to: '/organizations' },
   { title: 'Settings', icon: '$tb-settings', to: '/settings' }

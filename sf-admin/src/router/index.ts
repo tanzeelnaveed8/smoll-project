@@ -22,6 +22,9 @@ import ProductsView from '@/views/ProductsView.vue'
 import FinanceView from '@/views/FinanceView.vue'
 import AddMemberView from '@/views/AddMemberView.vue'
 import AddVisitView from '@/views/AddVisitView.vue'
+import CounsellorsView from '@/views/CounsellorsView.vue'
+import AddCounsellorView from '@/views/AddCounsellorView.vue'
+import CounsellorInfoView from '@/views/CounsellorInfoView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -186,6 +189,32 @@ const router = createRouter({
           meta: {
             title: 'Settings'
           }
+        },
+        {
+          path: '/counsellors',
+          children: [
+            {
+              path: '',
+              component: CounsellorsView,
+              meta: {
+                title: 'Counsellors'
+              }
+            },
+            {
+              path: 'add',
+              component: AddCounsellorView,
+              meta: {
+                title: 'Counsellors / Add'
+              }
+            },
+            {
+              path: ':counsellorId',
+              component: CounsellorInfoView,
+              meta: {
+                title: 'Counsellors / Information'
+              }
+            }
+          ]
         },
         {
           path: '/organizations',

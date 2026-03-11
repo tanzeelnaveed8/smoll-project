@@ -59,6 +59,9 @@ export class Case extends BaseEntity {
   @Column({ nullable: true })
   isDirectEscalated: boolean | null;
 
+  @Column({ nullable: true, type: 'timestamptz' })
+  scheduledAt: Date | null;
+
   @OneToOne(() => VetConsultation, (consultation) => consultation.case, {
     cascade: ['update'],
     onDelete: 'CASCADE',

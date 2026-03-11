@@ -1,65 +1,66 @@
 <template>
-  <v-sheet class="rounded-lg px-5 pt-6 pb-11 d-flex justify-space-between" style="border: 1px solid #d0d7dc">
-    <v-sheet class="d-flex flex-column gr-4">
-      <v-sheet>
-        <h1 style="font-family: 'cooper'" class="text-h4 font-weight-regular text-grey1">
-          {{ caseDetails?.id }}
-        </h1>
-        <p class="mt-2">Case number</p>
-      </v-sheet>
-      <v-sheet class="d-flex gc-8">
-        <v-sheet class="d-flex align-center gc-3">
-          <v-avatar
-            color="grey2"
-            style="height: 52px; width: 49px"
-            :image="caseDetails?.pet?.photos[0]?.url"
-          />
-          <v-sheet>
-            <p class="text-body-1" style="font-weight: 600">{{ caseDetails?.pet?.name }}</p>
+  <v-card flat rounded="lg" style="border: 1px solid #e8edf0">
+    <v-card-text class="pa-5">
+      <div class="d-flex justify-space-between align-start">
+
+        <!-- Left: Pet info -->
+        <div class="d-flex align-center gc-4">
+          <v-avatar size="56" color="#f0f0f0" :image="caseDetails?.pet?.photos?.[0]?.url">
+            <v-icon v-if="!caseDetails?.pet?.photos?.[0]?.url" icon="$tb-user-circle" size="28" color="grey" />
+          </v-avatar>
+          <div>
+            <p class="text-body-1 font-weight-bold text-grey1">{{ caseDetails?.pet?.name ?? '-' }}</p>
+            <p class="text-caption text-grey2 mt-1">
+              {{ caseDetails?.pet?.species ?? '' }}
+              <template v-if="caseDetails?.pet?.age != null"> · {{ caseDetails.pet.age }} yrs</template>
+              <template v-if="caseDetails?.pet?.gender"> · {{ caseDetails.pet.gender }}</template>
+            </p>
             <v-btn
               variant="plain"
-              class="mt-1 px-0 text-primary opacity-100"
+              class="px-0 mt-1 text-primary opacity-100"
               flat
-              @click="dialog = true"
+              density="compact"
               min-height="auto"
               height="auto"
               min-width="auto"
-              color="transparent"
-              >Profile</v-btn
-            >
-          </v-sheet>
-        </v-sheet>
-        <v-sheet>
-          <p class="text-caption text-grey2" style="font-weight: 600">Age</p>
-          <p class="text-body-1 mt-1" style="font-weight: 600">{{ caseDetails?.pet?.age }} years</p>
-        </v-sheet>
-        <v-sheet>
-          <p class="text-caption text-grey2" style="font-weight: 600">Gender</p>
-          <p class="text-body-1 mt-1" style="font-weight: 600">{{ caseDetails?.pet?.gender }}</p>
-        </v-sheet>
-        <v-sheet>
-          <p class="text-caption text-grey2" style="font-weight: 600">Date</p>
-          <p class="text-body-1 mt-1" style="font-weight: 600">
-            {{ dayjs(caseDetails?.pet?.createdAt).format('DD.MM.YYYY') }}
-          </p>
-        </v-sheet>
-        <v-sheet>
-          <p class="text-caption text-grey2" style="font-weight: 600">Time</p>
-          <p class="text-body-1 mt-1" style="font-weight: 600">
-            {{ dayjs(caseDetails?.pet?.createdAt).format('hh:mm A') }}
-          </p>
-        </v-sheet>
-      </v-sheet>
-    </v-sheet>
-    <v-chip
-      class="text-caption chip text-grey2 font-weight-medium"
-      density="compact"
-      color="#f7f7f7"
-      style="letter-spacing: 0px !important; line-height: 20px"
-      >{{ getCaseStatusData(caseDetails?.status).label }}</v-chip
-    >
-  </v-sheet>
-  <!-- //PET DETAIL MODAL -->
+              style="font-size: 12px"
+              @click="dialog = true"
+            >View Profile</v-btn>
+          </div>
+        </div>
+
+        <!-- Right: Status + Meta -->
+        <div class="d-flex flex-column align-end gr-3">
+          <v-chip
+            size="small"
+            :color="getCaseStatusData(caseDetails?.status).color ?? '#f7f7f7'"
+            variant="tonal"
+            class="font-weight-medium text-capitalize"
+            style="letter-spacing: 0"
+          >
+            {{ getCaseStatusData(caseDetails?.status).label }}
+          </v-chip>
+          <div class="d-flex gc-4 text-right">
+            <div>
+              <p class="text-caption text-grey2" style="font-weight: 600">Visit Date</p>
+              <p class="text-body-2 font-weight-bold mt-1">
+                {{ caseDetails?.createdAt ? dayjs(caseDetails.createdAt).format('DD MMM YYYY') : '-' }}
+              </p>
+            </div>
+            <div>
+              <p class="text-caption text-grey2" style="font-weight: 600">Time</p>
+              <p class="text-body-2 font-weight-bold mt-1">
+                {{ caseDetails?.createdAt ? dayjs(caseDetails.createdAt).format('hh:mm A') : '-' }}
+              </p>
+            </div>
+          </div>
+          <p class="text-caption text-grey2 font-weight-medium">ID: {{ caseDetails?.id }}</p>
+        </div>
+
+      </div>
+    </v-card-text>
+  </v-card>
+
   <v-dialog v-model="dialog">
     <PetProfileModal :petDetails="caseDetails?.pet" @closeDialog="dialog = false" />
   </v-dialog>

@@ -49,6 +49,7 @@ export class CaseAdminService {
         member: { name: true },
         pet: { name: true },
         createdAt: true,
+        scheduledAt: true,
         status: true,
       },
       order: {
@@ -161,6 +162,7 @@ export class CaseAdminService {
     petId: string;
     vetId: string;
     description: string;
+    scheduledAt?: Date;
   }): Promise<Case> {
     const member = await this.memberRepo.findOne({ where: { id: data.memberId } });
     if (!member) throw new NotFoundException(`Member with id ${data.memberId} not found`);
@@ -173,6 +175,7 @@ export class CaseAdminService {
 
     const _case = this.caseRepo.create({
       description: data.description,
+      scheduledAt: data.scheduledAt ?? null,
       member,
       pet,
       assignedVet: vet,

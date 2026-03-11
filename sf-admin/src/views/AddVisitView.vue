@@ -1,54 +1,104 @@
 <template>
-  <v-sheet class="d-flex justify-center w-100 h-100">
-    <v-sheet class="w-100 pa-6" max-width="800">
-      <v-btn variant="plain" color="grey2" prepend-icon="$tb-arrow-left" class="px-0 mb-4" to="/visits">
+  <v-sheet class="d-flex justify-center w-100 h-100 bg-grey-lighten-4">
+    <v-sheet class="w-100 pa-6" max-width="860" color="transparent">
+      <!-- Header -->
+      <v-btn variant="plain" color="grey2" prepend-icon="$tb-arrow-left" class="px-0 mb-5" to="/visits">
         Back
       </v-btn>
       <h2 class="text-h5 font-weight-bold mb-6">Create New Visit</h2>
+
       <v-form ref="formRef" v-model="isFormValid" @submit.prevent="handleSubmit">
-        <v-sheet class="d-flex flex-column gr-4">
-          <v-autocomplete
-            v-model="form.memberId"
-            label="Customer"
-            :items="members"
-            item-title="name"
-            item-value="id"
-            :loading="loadingMembers"
-            :rules="[required]"
-            @update:search="searchMembers"
-          />
+        <v-sheet class="d-flex flex-column gr-4" color="transparent">
 
-          <v-autocomplete
-            v-model="form.petId"
-            label="Pet"
-            :items="pets"
-            item-title="name"
-            item-value="id"
-            :disabled="!form.memberId"
-            :loading="loadingPets"
-            :rules="[required]"
-          />
+          <!-- Section: Customer & Pet -->
+          <v-sheet class="rounded-lg pa-5" style="border: 1px solid #d0d7dc; background: #fff">
+            <p class="text-body-2 font-weight-bold text-uppercase text-grey2 mb-4" style="letter-spacing: 0.5px">Customer Information</p>
+            <v-sheet class="d-flex flex-column gr-3" color="transparent">
+              <v-autocomplete
+                v-model="form.memberId"
+                label="Customer"
+                :items="members"
+                item-title="name"
+                item-value="id"
+                :loading="loadingMembers"
+                :rules="[required]"
+                hide-details="auto"
+                variant="outlined"
+                density="comfortable"
+                @update:search="searchMembers"
+              />
+              <v-autocomplete
+                v-model="form.petId"
+                label="Pet"
+                :items="pets"
+                item-title="name"
+                item-value="id"
+                :disabled="!form.memberId"
+                :loading="loadingPets"
+                :rules="[required]"
+                hide-details="auto"
+                variant="outlined"
+                density="comfortable"
+                :placeholder="!form.memberId ? 'Select a customer first' : 'Select pet'"
+              />
+            </v-sheet>
+          </v-sheet>
 
-          <v-autocomplete
-            v-model="form.vetId"
-            label="Assigned Veterinarian"
-            :items="vets"
-            item-title="name"
-            item-value="id"
-            :loading="loadingVets"
-            :rules="[required]"
-          />
+          <!-- Section: Vet & Schedule -->
+          <v-sheet class="rounded-lg pa-5" style="border: 1px solid #d0d7dc; background: #fff">
+            <p class="text-body-2 font-weight-bold text-uppercase text-grey2 mb-4" style="letter-spacing: 0.5px">Visit Details</p>
+            <v-sheet class="d-flex flex-column gr-3" color="transparent">
+              <v-autocomplete
+                v-model="form.vetId"
+                label="Assigned Veterinarian"
+                :items="vets"
+                item-title="name"
+                item-value="id"
+                :loading="loadingVets"
+                :rules="[required]"
+                hide-details="auto"
+                variant="outlined"
+                density="comfortable"
+              />
+              <v-text-field
+                v-model="form.scheduledAt"
+                label="Scheduled Date & Time"
+                type="datetime-local"
+                hide-details="auto"
+                variant="outlined"
+                density="comfortable"
+              />
+            </v-sheet>
+          </v-sheet>
 
-          <v-textarea
-            v-model="form.description"
-            label="Visit Description"
-            rows="4"
-            :rules="[required]"
-          />
+          <!-- Section: Description -->
+          <v-sheet class="rounded-lg pa-5" style="border: 1px solid #d0d7dc; background: #fff">
+            <p class="text-body-2 font-weight-bold text-uppercase text-grey2 mb-4" style="letter-spacing: 0.5px">Visit Description</p>
+            <v-textarea
+              v-model="form.description"
+              placeholder="Describe the reason for visit, symptoms, or any relevant details..."
+              rows="4"
+              :rules="[required]"
+              hide-details="auto"
+              variant="outlined"
+              no-resize
+            />
+          </v-sheet>
 
-          <v-btn type="submit" color="grey1" class="align-self-end" :loading="submitting" :disabled="!isFormValid">
-            Create Visit
-          </v-btn>
+          <!-- Submit -->
+          <v-sheet class="d-flex justify-end" color="transparent">
+            <v-btn
+              type="submit"
+              color="grey1"
+              size="large"
+              :loading="submitting"
+              :disabled="!isFormValid"
+              prepend-icon="$tb-plus"
+            >
+              Create Visit
+            </v-btn>
+          </v-sheet>
+
         </v-sheet>
       </v-form>
     </v-sheet>
@@ -83,7 +133,8 @@ const form = ref({
   memberId: '',
   petId: '',
   vetId: '',
-  description: ''
+  description: '',
+  scheduledAt: ''
 })
 
 const required = (v: string) => !!v || 'This field is required'
@@ -130,7 +181,10 @@ const handleSubmit = async () => {
   if (!isFormValid.value) return
   try {
     submitting.value = true
-    await caseStore.createCase(form.value)
+    await caseStore.createCase({
+      ...form.value,
+      scheduledAt: form.value.scheduledAt || undefined
+    })
     toast.success('Visit created successfully')
     router.push('/visits')
   } catch {
