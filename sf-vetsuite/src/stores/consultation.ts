@@ -53,12 +53,6 @@ export const useConsultationStore = defineStore('ConsultationStore', {
     },
     async sendReminder(id: string) {
       await api.post(`/vets/consultations/${id}/send-reminder`)
-    },
-    async acceptConsultation(id: string) {
-      await api.post(`/vets/consultations/${id}/accept`)
-    },
-    async rejectConsultation(id: string) {
-      await api.post(`/vets/consultations/${id}/reject`)
     }
   }
 })

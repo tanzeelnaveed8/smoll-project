@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { Consultation } from '@/stores/types/consultation.d'
+import type { Consultation } from '@/stores/types/consultation'
 import AppointmentItem from './AppointmentItem.vue'
 
 const props = defineProps<{

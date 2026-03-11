@@ -31,15 +31,6 @@ export const useCaseStore = defineStore('CaseStore', {
     },
     async sendNote (caseId:string , payload :SendNotePayload){
       await api.post(`/vet/cases/${caseId}/notes`,payload)
-    },
-    async addAssets(caseId: string, assets: { filename: string; filesize: number; mimetype: string; url: string }[]) {
-      await api.patch(`/vet/cases/${caseId}/assets`, { assets })
-    },
-    async updateServiceChecklist(caseId: string, checklist: { name: string; checked: boolean }[]) {
-      await api.patch(`/vet/cases/${caseId}/service-checklist`, { checklist })
-    },
-    async markCustomerNotReachable(caseId: string) {
-      await api.post(`/vet/cases/${caseId}/customer-not-reachable`)
     }
   }
 })

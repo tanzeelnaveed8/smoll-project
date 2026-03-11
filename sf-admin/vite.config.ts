@@ -10,9 +10,9 @@ export default defineConfig({
   server: {
     port: 5174,
     proxy: {
-      '/admin': { target: 'http://localhost:3000', changeOrigin: true },
-      '/files': { target: 'http://localhost:3000', changeOrigin: true },
-      '/specialities': { target: 'http://localhost:3000', changeOrigin: true },
+      '/admin': { target: 'https://staging-api.smoll.me', changeOrigin: true },
+      '/files': { target: 'https://staging-api.smoll.me', changeOrigin: true },
+      '/specialities': { target: 'https://staging-api.smoll.me', changeOrigin: true },
     },
   },
   plugins: [vue(), Vuetify({

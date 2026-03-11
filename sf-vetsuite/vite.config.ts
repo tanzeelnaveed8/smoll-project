@@ -5,18 +5,6 @@ import { fileURLToPath, URL } from 'node:url'
 
 export default defineConfig(() => {
   return {
-    css: {
-      preprocessorOptions: {
-        scss: {
-          silenceDeprecations: ['mixed-decls'],
-          quietDeps: true,
-        },
-        sass: {
-          silenceDeprecations: ['mixed-decls'],
-          quietDeps: true,
-        },
-      },
-    },
     plugins: [
       vue(),
       Vuetify({
@@ -41,11 +29,7 @@ export default defineConfig(() => {
     },
     server: {
       host: '0.0.0.0',
-      port: 5173,
-      proxy: {
-        '/vet': { target: 'http://localhost:3000', changeOrigin: true },
-        '/vets': { target: 'http://localhost:3000', changeOrigin: true },
-      },
-    },
+      port: 5173
+    }
   }
 })

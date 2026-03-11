@@ -20,7 +20,7 @@
 import UpcomingAppointments from '@/components/app/homepage/UpcomingAppointments.vue'
 import { useAuthStore } from '@/stores/auth'
 import { useConsultationStore } from '@/stores/consultation'
-import type { Consultation } from '@/stores/types/consultation.d'
+import type { Consultation } from '@/stores/types/consultation'
 import { onMounted, onUnmounted, ref } from 'vue'
 import useMitt from '@/functions/useMitt'
 

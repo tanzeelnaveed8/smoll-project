@@ -19,8 +19,6 @@ export interface Consultation {
   scheduledAt?: string
   type: 'instant' | 'scheduled'
   createdAt: string
-  rejectedByVetName?: string | null
-  acceptedAt?: string | null
 }
 
 export interface ConsultationDetail {

@@ -5,7 +5,7 @@
         <v-progress-circular indeterminate color="primary" />
       </v-sheet>
     </template>
-    <template v-else-if="consultation?.case">
+    <template v-else>
       <v-sheet class="d-flex justify-space-between align-center gc-6"
         style="border-bottom: 1px solid #dde7ee; padding: 14px 32px">
         <v-sheet class="d-flex justify-space-between align-center w-100">
@@ -57,17 +57,12 @@
       </v-sheet>
       <v-tabs-window v-model="tab">
         <v-tabs-window-item value="basic-details">
-          <InboxDetailsBasic :consultation="consultation" :type="type" />
+          <InboxDetailsBasic :consultation :type />
         </v-tabs-window-item>
         <v-tabs-window-item value="notes">
           <InboxDetailsNotes :notes="consultation.case.notes ?? []" :readonly="false" :case-id="consultation.case.id" />
         </v-tabs-window-item>
       </v-tabs-window>
-    </template>
-    <template v-else>
-      <v-sheet class="d-flex justify-center align-center pa-8 text-grey2">
-        <p>Visit details could not be loaded. Please try again.</p>
-      </v-sheet>
     </template>
   </v-sheet>
   <!-- ESCALATE DRAWER -->
@@ -170,15 +165,6 @@ const handleInitiateCall = () => {
 }
 
 const handleCloseAppointment = () => {
-  // Validate all services are checked off before allowing close
-  const checklist = props.consultation.case.serviceChecklist ?? []
-  if (checklist.length > 0) {
-    const unchecked = checklist.filter((s: any) => !s.checked)
-    if (unchecked.length > 0) {
-      toast.error(`Please check off all services before closing. ${unchecked.length} service(s) remaining.`)
-      return
-    }
-  }
   closeConsultationModal.value = true
 }
 

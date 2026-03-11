@@ -59,8 +59,6 @@ const links = [
   { title: 'Inbox', icon: '$tb-mail-box', to: '/inbox' },
   { title: 'Calendar', icon: '$tb-calender-month', to: '/calendar' },
   { title: 'Cases', icon: '$tb-writing-sign', to: '/cases' },
-  { title: 'Visits', icon: '$tb-writing-sign', to: '/visits' },
-  { title: 'Finance', icon: '$tb-square-arrow-up', to: '/finance' },
   { title: 'Settings', icon: '$tb-settings', to: '/settings' }
 ]
 const authStore = useAuthStore()

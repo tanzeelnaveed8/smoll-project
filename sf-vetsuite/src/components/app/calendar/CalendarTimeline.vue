@@ -24,7 +24,7 @@ import dayjs from 'dayjs'
 
 import { visTimelineGroups } from '@/constant'
 
-import type { Consultation, ConsultationDetail } from '@/stores/types/consultation.d'
+import type { Consultation, ConsultationDetail } from '@/stores/types/consultation'
 import InboxDetailsDrawer from '@/components/drawer/inboxDetailsDrawer/InboxDetailsDrawer.vue'
 import utc from 'dayjs/plugin/utc'
 import useMitt from '@/functions/useMitt'

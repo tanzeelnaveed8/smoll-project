@@ -146,18 +146,9 @@ const handleLogout = async () => {
   if (inactivityTimeout.value) {
     window.clearTimeout(inactivityTimeout.value)
   }
-  modalConfirmation.value = false
   status.value = 'offline'
-  try {
-    await handleStatusChange()
-  } catch {
-    // ignore – proceed with logout
-  }
-  try {
-    ZimHelper.logout()
-  } catch {
-    // ignore
-  }
+  await handleStatusChange()
+  ZimHelper.logout()
   await authStore.logout()
   Sentry.setUser(null)
   router.replace('/login')

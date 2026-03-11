@@ -1,6 +1,13 @@
 <template>
   <div class="h-100 w-100">
-    <v-main class="d-flex align-center justify-center h-100">
+    <template v-if="loading">
+      <v-sheet class="d-flex justify-center align-center h-100 w-100">
+        <v-progress-circular indeterminate color="primary" />
+      </v-sheet>
+    </template>
+
+    <template v-else>
+      <v-main class="d-flex align-center justify-center h-100">
         <v-sheet max-width="380" class="w-100 d-flex flex-column align-center" style="gap: 32px">
           <v-icon icon="$tb-logo" size="118" style="height: 62px" />
           <v-sheet class="d-flex flex-column w-100 text-center">
@@ -80,22 +87,27 @@
           </v-sheet>
         </v-sheet>
       </v-main>
+    </template>
   </div>
 </template>
 
 <script setup lang="ts">
+import * as Sentry from '@sentry/vue'
 import { useAuthStore } from '@/stores/auth'
-import { ref } from 'vue'
+import { storeToRefs } from 'pinia'
+import { onBeforeMount, onMounted, ref } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
-import { toast } from 'vue3-toastify'
 
 const router = useRouter()
+
 const authStore = useAuthStore()
+const { user } = storeToRefs(authStore)
 
 const formRef = ref()
 const isFormValid = ref()
 const showPassword = ref(false)
 const actionLoading = ref(false)
+const loading = ref(false)
 
 const rules = ref({
   email: [
@@ -110,9 +122,25 @@ const account = ref({
   pwd: ''
 })
 
+onBeforeMount(async () => {
+  try {
+    if (!user.value) {
+      loading.value = true
+      await authStore.fetchUser()
+      if (user.value) {
+        const { id, name, email } = user.value
+        Sentry.setUser({ id, name, email })
+
+        router.replace('/')
+      }
+    }
+  } finally {
+    loading.value = false
+  }
+})
+
 const handleFormSubmit = async () => {
-  const result = await formRef.value?.validate()
-  if (!result?.valid) return
+  if (!isFormValid.value) return
 
   try {
     actionLoading.value = true
@@ -123,13 +151,6 @@ const handleFormSubmit = async () => {
     })
 
     router.replace('/')
-  } catch (err: unknown) {
-    const msg =
-      err && typeof err === 'object' && 'response' in err
-        ? (err as { response?: { data?: { message?: string | string[] } } }).response?.data?.message
-        : null
-    const text = Array.isArray(msg) ? msg[0] : msg
-    if (!text) toast.error('Sign in failed. Check server is running and VITE_API_URL points to it.')
   } finally {
     actionLoading.value = false
   }

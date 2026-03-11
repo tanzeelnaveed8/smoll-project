@@ -19,9 +19,6 @@ export const useAuthStore = defineStore('AuthStore', {
       this.zegoToken = data.tokens.zegoToken
       // save to local storage
       localStorage.setItem('zegoToken', data.tokens.zegoToken)
-
-      // Fetch and set user so dashboard knows we're logged in
-      await this.fetchUser()
     },
     async refreshLoginToken() {
       const { data } = await api.post('/vet/auth/refresh-token')
@@ -30,13 +27,8 @@ export const useAuthStore = defineStore('AuthStore', {
       localStorage.setItem('zegoToken', data.zegoToken)
     },
     async logout() {
-      try {
-        await api.post('/vet/auth/logout')
-      } finally {
-        this.user = null
-        this.zegoToken = null
-        localStorage.removeItem('zegoToken')
-      }
+      await api.post('/vet/auth/logout')
+      this.user = null
     },
     async fetchUser(): Promise<User> {
       const { data } = await api.get('/vets/me')

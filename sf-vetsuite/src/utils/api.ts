@@ -1,15 +1,9 @@
 import axios from 'axios'
 import { toast } from 'vue3-toastify'
 
-// In dev with no VITE_API_URL (or when using proxy), use '' so requests go to same origin and get proxied to backend
-const baseURL =
-  import.meta.env.DEV && !import.meta.env.VITE_API_URL
-    ? ''
-    : (import.meta.env.VITE_API_URL as string) || ''
-
 const api = axios.create({
-  baseURL,
-  withCredentials: true,
+  baseURL: import.meta.env.VITE_API_URL,
+  withCredentials: true
 })
 
 api.interceptors.response.use(

@@ -127,13 +127,6 @@ const stopDragging = () => {
   window.removeEventListener('mouseup', stopDragging)
 }
 
-const isAuthError = (err: unknown) => {
-  const status = err && typeof err === 'object' && 'response' in err
-    ? (err as { response?: { status?: number } }).response?.status
-    : undefined
-  return status === 401
-}
-
 onBeforeMount(async () => {
   initializationComplete.value = false
 
@@ -142,23 +135,15 @@ onBeforeMount(async () => {
     if (!user.value) {
       await authStore.fetchUser()
     }
-    if (!user.value) {
-      router.replace('/login')
-      return
+    if (user.value) {
+      const { id, name, email } = user.value
+      Sentry.setUser({ id, name, email });
     }
-    const { id, name, email } = user.value
-    Sentry.setUser({ id, name, email })
 
-    const tz = user.value.timeZone || 'UTC'
-    dayjs.tz.setDefault(tz)
-    await initializeApp(user.value)
+    dayjs.tz.setDefault(user.value!.timeZone)
+    await initializeApp(user.value!)
   } catch (error) {
-    if (isAuthError(error)) {
-      router.replace('/login')
-    } else {
-      console.error('MainLayout init error:', error)
-      toast.error('Something went wrong loading the app. You can try refreshing.')
-    }
+    router.replace('/login')
   } finally {
     loading.value = false
   }
