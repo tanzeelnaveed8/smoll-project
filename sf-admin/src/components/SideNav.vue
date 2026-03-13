@@ -3,42 +3,19 @@
     <template v-slot:prepend>
       <v-img src="/smoll.png" height="22" width="80" class="mx-8 mb-6 mt-9" />
     </template>
-    <v-list color="transparent" :opened="openedGroups">
-      <template v-for="(item, i) in navItems" :key="i">
-        <v-list-group v-if="item.children" value="smoll-home" class="side-nav--group">
-          <template #activator="{ props: activatorProps }">
-            <v-list-item
-              v-bind="activatorProps"
-              :prepend-icon="item.icon"
-              class="pl-8 side-nav--link text-grey1"
-              style="font-weight: 600"
-            >
-              {{ item.title }}
-            </v-list-item>
-          </template>
-          <v-list-item
-            v-for="(child, j) in item.children"
-            :key="j"
-            :to="child.to"
-            active-class="side-nav--active"
-            class="side-nav--link text-grey1 pl-14"
-            style="font-weight: 600"
-          >
-            {{ child.title }}
-          </v-list-item>
-        </v-list-group>
-        <v-list-item
-          v-else
-          :prepend-icon="item.icon"
-          :active="item.to === '/' ? $route.path === '/' : undefined"
-          :to="item.to"
-          active-class="side-nav--active"
-          class="pl-8 side-nav--link text-grey1"
-          style="font-weight: 600"
-        >
-          {{ item.title }}
-        </v-list-item>
-      </template>
+    <v-list color="transparent">
+      <v-list-item
+        v-for="(item, i) in navItems"
+        :key="i"
+        :prepend-icon="item.icon"
+        :active="item.to === '/' ? $route.path === '/' : undefined"
+        :to="item.to"
+        active-class="side-nav--active"
+        class="pl-8 side-nav--link text-grey1"
+        style="font-weight: 600"
+      >
+        {{ item.title }}
+      </v-list-item>
     </v-list>
 
     <template v-slot:append>
@@ -64,7 +41,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 
@@ -72,25 +48,12 @@ const authStore = useAuthStore()
 const router = useRouter()
 const route = useRoute()
 
-const openedGroups = computed(() =>
-  ['/products', '/services', '/finance'].includes(route.path) ? ['smoll-home'] : []
-)
-
 const navItems = [
   { title: 'Home', icon: '$tb-smart-home', to: '/' },
-  {
-    title: 'smoll®Home',
-    icon: '$tb-heart-handshake',
-    children: [
-      { title: 'Product', to: '/products' },
-      { title: 'Service', to: '/services' },
-      { title: 'Finance', to: '/finance' }
-    ]
-  },
+  { title: 'smoll®Home', icon: '$tb-heart-handshake', to: '/smoll-home' },
   { title: 'Visits', icon: '$tb-writing-sign', to: '/visits' },
   { title: 'Customers', icon: '$tb-users', to: '/members' },
   { title: 'Experts', icon: '$tb-first-aid-kit', to: '/experts' },
-  { title: 'Counsellors', icon: '$tb-user-circle', to: '/counsellors' },
   { title: 'Partner management', icon: '$tb-heart-handshake', to: '/partners' },
   { title: 'Organizations', icon: '$tb-organizations', to: '/organizations' },
   { title: 'Settings', icon: '$tb-settings', to: '/settings' }

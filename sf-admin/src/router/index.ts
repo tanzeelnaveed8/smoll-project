@@ -26,6 +26,16 @@ import CounsellorsView from '@/views/CounsellorsView.vue'
 import AddCounsellorView from '@/views/AddCounsellorView.vue'
 import CounsellorInfoView from '@/views/CounsellorInfoView.vue'
 
+// Smoll Home imports
+import SmollHomeLayout from '@/components/smoll-home/SmollHomeLayout.vue'
+import SmollHomeDashboardView from '@/views/smoll-home/SmollHomeDashboardView.vue'
+import SmollHomeScheduleView from '@/views/smoll-home/SmollHomeScheduleView.vue'
+import SmollHomeVisitsView from '@/views/smoll-home/SmollHomeVisitsView.vue'
+import SmollHomeVisitDetailView from '@/views/smoll-home/SmollHomeVisitDetailView.vue'
+import HomeVetsView from '@/views/smoll-home/HomeVetsView.vue'
+import AddHomeVetView from '@/views/smoll-home/AddHomeVetView.vue'
+import HomeVetInfoView from '@/views/smoll-home/HomeVetInfoView.vue'
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -162,26 +172,18 @@ const router = createRouter({
           path: '/cases/:caseId',
           redirect: (to) => `/visits/${to.params.caseId}`
         },
+        // Redirects for old direct routes
         {
           path: '/services',
-          component: ServicesView,
-          meta: {
-            title: 'Services'
-          }
+          redirect: '/smoll-home/services'
         },
         {
           path: '/products',
-          component: ProductsView,
-          meta: {
-            title: 'Products'
-          }
+          redirect: '/smoll-home/products'
         },
         {
           path: '/finance',
-          component: FinanceView,
-          meta: {
-            title: 'Finance'
-          }
+          redirect: '/smoll-home/finance'
         },
         {
           path: '/settings',
@@ -235,6 +237,73 @@ const router = createRouter({
             }
           ]
         }
+      ]
+    },
+    // Smoll Home routes
+    {
+      path: '/smoll-home',
+      component: SmollHomeLayout,
+      children: [
+        {
+          path: '',
+          component: SmollHomeDashboardView,
+          meta: { title: 'Vet Admin / Dashboard' }
+        },
+        {
+          path: 'schedule',
+          component: SmollHomeScheduleView,
+          meta: { title: 'Vet Admin / Schedule' }
+        },
+        {
+          path: 'history',
+          component: SmollHomeVisitsView,
+          meta: { title: 'Vet Admin / Visit History' }
+        },
+        {
+          path: 'customers',
+          component: MembersView,
+          meta: { title: 'Vet Admin / Customers' }
+        },
+        {
+          path: 'customers/:memberId',
+          component: MemberInfoView,
+          meta: { title: 'Vet Admin / Customer Info' }
+        },
+        {
+          path: 'veterinarians',
+          component: HomeVetsView,
+          meta: { title: 'Vet Admin / Veterinarians' }
+        },
+        {
+          path: 'veterinarians/add',
+          component: AddHomeVetView,
+          meta: { title: 'Vet Admin / Add Veterinarian' }
+        },
+        {
+          path: 'veterinarians/:vetId',
+          component: HomeVetInfoView,
+          meta: { title: 'Vet Admin / Veterinarian Info' }
+        },
+        {
+          path: 'products',
+          component: ProductsView,
+          meta: { title: 'Vet Admin / Products' }
+        },
+        {
+          path: 'services',
+          component: ServicesView,
+          meta: { title: 'Vet Admin / Services' }
+        },
+        {
+          path: 'finance',
+          component: FinanceView,
+          meta: { title: 'Vet Admin / Finance' }
+        },
+        {
+          path: 'visits/:id',
+          component: SmollHomeVisitDetailView,
+          meta: { title: 'Vet Admin / Visit Details' }
+        },
       ]
     },
     {

@@ -1,5 +1,6 @@
 import './assets/global.css'
 import 'vuetify/styles'
+import '@mdi/font/css/materialdesignicons.css'
 import 'vue3-toastify/dist/index.css'
 
 import App from './App.vue'
